@@ -190,6 +190,19 @@ html, body { max-width: 100%; overflow-x: hidden; }
 <script src="pms_generateur.js?v=499" defer></script>
 </head>
 <body>
+<!-- Bandeau « COPIE DE TRAVAIL » : affiché uniquement hors du site officiel nomos-haccp.fr -->
+<script>
+(function(){
+  try {
+    var h = location.hostname;
+    if (h === 'nomos-haccp.fr' || h === 'www.nomos-haccp.fr') return;
+    var b = document.createElement('div');
+    b.textContent = '🧪 HYGIÈNE+ — COPIE DE TRAVAIL (site de test, pas le site client)';
+    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#dc2626;color:#fff;text-align:center;font:800 11px/1 Outfit,Arial,sans-serif;padding:4px 6px;letter-spacing:.3px;pointer-events:none';
+    document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(b); });
+  } catch(e) {}
+})();
+</script>
 <div id="toastNotif" class="toast-notif"></div>
 <div id="haccpLoaderOverlay" class="haccp-loader-overlay" role="status" aria-live="polite">
   <div class="haccp-loader-box">
