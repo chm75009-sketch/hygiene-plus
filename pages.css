@@ -5,24 +5,38 @@
    version partagée pour éviter la duplication.
    ────────────────────────────────────────────────────────────── */
 :root{
+  /* Fonds */
   --bg:#ffffff;
-  --bg-alt:#fafaf9;
-  --bg-dark:#0a0a0a;
-  --ink:#0a0a0a;
-  --ink-2:#404040;
-  --ink-3:#737373;
-  --ink-4:#a3a3a3;
-  --line:#e5e5e5;
-  --line-soft:#f1f1ef;
-  --accent:#064e3b;
-  --accent-2:#065f46;
-  --accent-soft:#ecfdf5;
-  --accent-ring:rgba(6,78,59,.14);
-  --alert:#b91c1c;
-  --alert-soft:#fef2f2;
+  --bg-alt:#f7f6f3;       /* beige papier Nomos, très subtil */
+  --bg-dark:#11352f;       /* vert sapin très foncé Nomos */
+
+  /* Texte */
+  --ink:#0b0f1a;
+  --ink-2:#40516b;
+  --ink-3:#52617a;
+  --ink-4:#8a93a3;
+
+  /* Lignes */
+  --line:#e7e9ef;
+  --line-soft:#eef1ee;
+
+  /* Accents Nomos */
+  --accent:#0f766e;        /* vert teal Nomos (marque) */
+  --accent-2:#0d4a43;       /* vert teal foncé pour hover/CTA sombre */
+  --accent-3:#11352f;       /* vert sapin foncé pour fond sombre */
+  --accent-soft:#ecfdf5;    /* vert très clair pour badge/eyebrow */
+  --accent-ring:rgba(15,118,110,.18);
+  --gold:#d2ad46;           /* or Nomos (highlight, ribbon) */
+  --gold-dk:#8a6f22;
+
+  /* Alertes */
+  --alert:#c2410c;
+  --alert-soft:#fff7ed;
   --warn:#92400e;
   --warn-soft:#fffbeb;
   --warn-border:#fde68a;
+
+  /* Système */
   --r-xs:8px;--r-sm:12px;--r:16px;--r-lg:22px;--r-xl:28px;
   --max:1200px;
 }
@@ -50,8 +64,9 @@ body{
 }
 .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;letter-spacing:-.02em}
 .brand-mark{
-  width:28px;height:28px;border-radius:8px;background:var(--ink);color:#fff;
+  width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;
   display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;
+  box-shadow:0 2px 6px rgba(15,118,110,.25);
 }
 .brand-name{font-size:16px}
 .back{
@@ -73,11 +88,15 @@ body{
   white-space:nowrap;
 }
 .btn:active{transform:scale(.98)}
-.btn-primary{background:var(--ink);color:#fff}
-.btn-primary:hover{background:#262626}
-.btn-outline{background:var(--bg);color:var(--ink);border-color:var(--line)}
-.btn-outline:hover{background:var(--bg-alt);border-color:#d4d4d4}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-2)}
+.btn-outline{background:var(--bg);color:var(--accent-2);border-color:var(--line)}
+.btn-outline:hover{background:var(--bg-alt);border-color:var(--accent)}
 .btn-sm{height:38px;padding:0 16px;font-size:14px}
+.btn-ink{background:var(--ink);color:#fff}
+.btn-ink:hover{background:#1a2535}
+.btn-gold{background:var(--gold);color:#3b2c05}
+.btn-gold:hover{background:#c8a23b}
 
 /* ── DOCUMENT (pages légales, articles longs) ─────────────── */
 main.doc{
@@ -108,7 +127,7 @@ main.doc{
   padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--bg);
   transition:background .12s;
 }
-.nav-legal a.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.nav-legal a.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .nav-legal a:hover:not(.on){background:var(--bg-alt)}
 
 /* Encadré important (dans un doc) */

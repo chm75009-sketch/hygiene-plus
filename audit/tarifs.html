@@ -35,10 +35,17 @@ h2.title{font-size:clamp(26px,4vw,38px);line-height:1.1;letter-spacing:-.03em;fo
   transition:border-color .15s,transform .15s,box-shadow .15s;
 }
 .card-form:hover{border-color:#d4d4d4;transform:translateY(-2px);box-shadow:var(--shadow-sm)}
-.card-form.featured{background:var(--ink);color:#fff;border-color:transparent}
+.card-form.featured{
+  background:
+    radial-gradient(500px 220px at 15% 0%, rgba(210,173,70,.14), transparent 65%),
+    linear-gradient(155deg,var(--accent-3) 0%,#0a2520 100%);
+  color:#fff;border-color:transparent;position:relative;
+}
 .card-form.featured h3,.card-form.featured .price,.card-form.featured .price-unit{color:#fff}
-.card-form.featured li{color:#e5e5e5}
-.card-form.featured .form-mini{color:#86efac}
+.card-form.featured li{color:rgba(255,255,255,.82)}
+.card-form.featured li::before{color:var(--gold)}
+.card-form.featured .form-mini{color:var(--gold)}
+.card-form.featured .ribbon{background:var(--gold);color:#3b2c05}
 .ribbon{
   position:absolute;top:-12px;left:28px;
   background:var(--accent);color:#fff;font-size:11.5px;font-weight:600;
@@ -65,7 +72,12 @@ h2.title{font-size:clamp(26px,4vw,38px);line-height:1.1;letter-spacing:-.03em;fo
 .calc-panel{
   background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;
 }
-.calc-panel.dark{background:var(--ink);color:#fff;border-color:transparent}
+.calc-panel.dark{
+  background:
+    radial-gradient(500px 220px at 15% 0%, rgba(210,173,70,.12), transparent 65%),
+    linear-gradient(155deg,var(--accent-3) 0%,#0a2520 100%);
+  color:#fff;border-color:transparent;
+}
 .calc-panel h3{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
 .calc-panel.dark h3{color:#fff}
 .calc-panel p{font-size:14.5px;color:var(--ink-3);line-height:1.55;margin-bottom:16px}
@@ -123,7 +135,7 @@ h2.title{font-size:clamp(26px,4vw,38px);line-height:1.1;letter-spacing:-.03em;fo
   transition:border-color .12s,background .12s;
 }
 .svc-card:hover{background:var(--bg-alt)}
-.svc-card.selected{border-color:var(--ink);background:var(--bg-alt)}
+.svc-card.selected{border-color:var(--accent);background:var(--accent-soft)}
 .svc-card .svc-name{font-weight:600;font-size:14.5px;color:var(--ink);margin-bottom:2px}
 .svc-card .svc-price{font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-.02em}
 .svc-card .svc-desc{font-size:12.5px;color:var(--ink-3);line-height:1.45;margin-top:4px}
@@ -140,7 +152,7 @@ h2.title{font-size:clamp(26px,4vw,38px);line-height:1.1;letter-spacing:-.03em;fo
 
 /* Toasts (gardés simples) */
 .toasts{position:fixed;bottom:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:6px}
-.toast{background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:13.5px;box-shadow:var(--shadow);min-width:200px}
+.toast{background:var(--accent-3);color:#fff;padding:10px 16px;border-radius:12px;font-size:13.5px;box-shadow:0 6px 22px rgba(10,10,10,.22);min-width:200px}
 @media(max-width:600px){.toasts{right:8px;left:8px;bottom:8px}.toast{min-width:0}}
 
 /* Overrides pour les fonctions legacy (injectNavbar) : on neutralise les conteneurs */
