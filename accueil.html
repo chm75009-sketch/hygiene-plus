@@ -7,8 +7,8 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nomos HACCP — Audit & hygiène alimentaire au quotidien</title>
-<meta name="description" content="Nomos HACCP : audit d'hygiène et application de traçabilité pour les restaurateurs et métiers de bouche. Préparez vos contrôles DDPP sereinement — audit de conformité et Pack DDPP automatisé. Essai gratuit 10 jours, sans carte bancaire.">
+<title>Nomos HACCP — Hygiène alimentaire & contrôles DDPP</title>
+<meta name="description" content="Nomos HACCP : audit d'hygiène et application de traçabilité pour les restaurateurs et métiers de bouche. Préparez vos contrôles DDPP sereinement. Essai gratuit 10 jours, sans carte bancaire.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#ffffff">
 <meta name="mobile-web-app-capable" content="yes">
@@ -17,20 +17,15 @@
 <meta name="apple-mobile-web-app-title" content="Nomos HACCP">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
 <script>
-// Enregistrement du service worker + MISE À JOUR AUTOMATIQUE.
-// L'accueil est le point d'entrée de l'app installée (start_url). On vérifie la
-// nouvelle version à l'ouverture, au retour au premier plan et toutes les minutes,
-// et dès qu'une nouvelle version prend la main, la page se recharge TOUTE SEULE.
-// updateViaCache:'none' => sw.js est toujours revérifié sur le réseau (jamais figé
-// par le cache HTTP du navigateur), sinon l'appareil pouvait rester bloqué sur une
-// très vieille version pendant des heures/jours.
+// Service worker + mise à jour automatique (conservé à l'identique).
 if ('serviceWorker' in navigator) {
   (function () {
     var hadController = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.addEventListener('controllerchange', function () {
-      if (!hadController) { hadController = true; return; } // 1re installation : pas de reload
-      window.location.reload(); // nouvelle version prête → accueil neutre, on recharge
+      if (!hadController) { hadController = true; return; }
+      window.location.reload();
     });
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(function (reg) {
@@ -51,596 +46,853 @@ if ('serviceWorker' in navigator) {
   })();
 }
 </script>
-<!-- Formulaire de démo / RDV : envoi d'email côté client (même service que l'app Audit). -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>try{ emailjs.init({ publicKey: 'EpsrNibYc0mrPUXnR' }); }catch(e){}</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,800;9..144,900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --ink:#0b0f1a; --paper:#f7f6f3;
-    --danger:#c2410c; --danger-dk:#7c2d12;
-    --green:#0f766e; --green-dk:#11352f;
-    --indigo:#4338ca; --indigo-dk:#1e1b4b;
-    --gold:#d2ad46;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{font-family:'Outfit',system-ui,sans-serif;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-  .serif{font-family:'Fraunces',Georgia,serif}
+/* ────────────────────────────────────────────────────────────────
+   NOMOS HACCP — Design system (inspiration ElevenLabs)
+   Palette sobre, typographie unique, composants minimalistes.
+   ──────────────────────────────────────────────────────────────── */
+:root{
+  --bg:#ffffff;
+  --bg-alt:#fafaf9;
+  --bg-dark:#0a0a0a;
 
-  /* ── BARRE TOUJOURS VISIBLE (retour + menu) ── */
-  .navbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
-    border-bottom:1px solid #e7e9ef;color:var(--ink)}
-  .navbar .row{max-width:1080px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px}
-  .nav-btn{display:inline-flex;align-items:center;gap:7px;background:#f2f4f3;border:1px solid #dde3e0;
-    color:var(--ink);font-family:inherit;font-weight:700;font-size:13.5px;padding:9px 14px;border-radius:11px;cursor:pointer;text-decoration:none}
-  .nav-btn.demo{color:#fff}
-  .nav-btn.share{background:#eaf3ef;border-color:#cfe6da;color:#0d4a43}
-  .nav-btn:active{transform:scale(.97)}
-  .nav-brand{flex:1;text-align:center;font-weight:800;font-size:14.5px;letter-spacing:.3px}
-  .nav-brand small{display:block;font-weight:600;font-size:10.5px;color:#52617a;letter-spacing:1px;text-transform:uppercase}
+  --ink:#0a0a0a;
+  --ink-2:#404040;
+  --ink-3:#737373;
+  --ink-4:#a3a3a3;
 
-  /* ── MENU (drawer moderne, groupé) ── */
-  .menu-overlay{position:fixed;inset:0;background:rgba(4,6,12,.62);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:.25s;z-index:70}
-  .menu-overlay.open{opacity:1;visibility:visible}
-  .menu{position:fixed;top:0;right:0;height:100%;width:min(366px,90vw);
-    background:linear-gradient(180deg,#0e1424 0%,#0a0e1a 100%);color:#fff;transform:translateX(103%);
-    transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:80;display:flex;flex-direction:column;
-    box-shadow:-24px 0 70px rgba(0,0,0,.5);overflow-y:auto;-webkit-overflow-scrolling:touch}
-  .menu.open{transform:none}
-  /* En-tête collant */
-  .menu .mh{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 18px 15px;
-    border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:2;
-    background:rgba(14,20,36,.97);backdrop-filter:blur(8px)}
-  .menu .mh .mbrand{font-weight:800;font-size:16px;line-height:1.05}
-  .menu .mh .mbrand small{display:block;font-weight:700;font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold);margin-top:4px}
-  .menu .close{flex-shrink:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#fff;
-    width:38px;height:38px;border-radius:11px;font-size:17px;cursor:pointer;transition:.15s}
-  .menu .close:hover{background:rgba(255,255,255,.16)}
-  .menu .close:active{transform:scale(.95)}
-  /* Corps */
-  .menu .mbody{padding:16px 16px 20px;display:flex;flex-direction:column;gap:5px}
-  /* CTA démo */
-  .menu .m-cta{display:flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;
-    background:linear-gradient(135deg,#e6c163,#d2ad46);color:#231a06;font-weight:800;font-size:15px;
-    padding:15px;border-radius:14px;box-shadow:0 10px 24px rgba(210,173,70,.30);margin-bottom:4px;transition:.15s}
-  .menu .m-cta:active{transform:scale(.98)}
-  /* Intitulé de groupe */
-  .menu .mlabel{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
-    color:rgba(255,255,255,.36);padding:15px 8px 7px}
-  /* Lien simple */
-  .menu a.mlink{display:flex;align-items:center;gap:13px;color:#e7e9ee;text-decoration:none;font-weight:600;
-    font-size:14.5px;padding:12px;border-radius:12px;transition:.15s}
-  .menu a.mlink:hover{background:rgba(255,255,255,.07)}
-  .menu a.mlink:active{transform:scale(.99)}
-  .menu a.mlink .mi{font-size:18px;width:22px;text-align:center;flex-shrink:0}
-  /* Cartes applications */
-  .menu a.mcard{display:flex;align-items:center;gap:13px;text-decoration:none;padding:12px;border-radius:14px;
-    border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);transition:.18s}
-  .menu a.mcard:active{transform:scale(.99)}
-  .menu a.mcard .ico{flex-shrink:0;width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px}
-  .menu a.mcard .tx b{display:block;color:#fff;font-weight:700;font-size:14px;line-height:1.2}
-  .menu a.mcard .tx em{display:block;color:rgba(255,255,255,.55);font-size:11.5px;font-style:normal;margin-top:2px}
-  .menu a.mcard.m-audit .ico{background:rgba(16,118,110,.24);color:#5eead4}
-  .menu a.mcard.m-audit:hover{border-color:rgba(16,118,110,.55);background:rgba(16,118,110,.13)}
-  .menu a.mcard.m-pro .ico{background:rgba(148,163,184,.24);color:#cbd5e1}
-  .menu a.mcard.m-pro:hover{border-color:rgba(148,163,184,.5);background:rgba(148,163,184,.12)}
-  .menu .mfoot{margin-top:10px;padding:15px 10px 0;border-top:1px solid rgba(255,255,255,.07);
-    font-size:11px;color:rgba(255,255,255,.4);line-height:1.5}
+  --line:#e5e5e5;
+  --line-soft:#f1f1ef;
 
-  /* ── ALERTE ── */
-  .topbar{background:var(--danger-dk);color:#fff;font-size:12.5px;font-weight:700;text-align:center;padding:9px 16px}
-  .topbar b{color:#fed7aa}
+  --accent:#064e3b;
+  --accent-2:#065f46;
+  --accent-soft:#ecfdf5;
+  --accent-ring:rgba(6,78,59,.14);
 
-  /* ── HERO ── */
-  .hero{position:relative;background:
-      radial-gradient(900px 500px at 80% -10%, rgba(15,118,110,.12), transparent 60%),
-      radial-gradient(700px 500px at -10% 120%, rgba(15,118,110,.08), transparent 60%),
-      linear-gradient(165deg,#ffffff 0%, #f4f8f6 55%, #eef4f1 100%);
-    color:var(--ink);padding:24px 0 26px;overflow:hidden;border-bottom:1px solid #e6ece9}
-  .hero::before{content:"";position:absolute;inset:0;
-    background-image:linear-gradient(rgba(15,118,110,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(15,118,110,.05) 1px,transparent 1px);
-    background-size:44px 44px;mask:radial-gradient(700px 420px at 50% 20%,#000,transparent 75%)}
-  .eyebrow{position:relative;display:inline-flex;align-items:center;gap:9px;background:rgba(15,118,110,.10);border:1px solid rgba(15,118,110,.26);
-    color:var(--green);font-weight:800;font-size:12px;letter-spacing:.5px;padding:7px 14px;border-radius:999px;text-transform:uppercase}
-  .hero h1{position:relative;font-size:clamp(24px,4.4vw,40px);line-height:1.03;font-weight:900;letter-spacing:-.8px;margin:12px 0 10px;max-width:820px}
-  .hero h1 .q{display:block;color:var(--green);font-style:italic;font-weight:800}
-  .hero .sub{position:relative;color:#52617a;font-size:clamp(14px,2.1vw,17px);line-height:1.55;max-width:640px}
+  --alert:#b91c1c;
+  --alert-soft:#fef2f2;
 
-  /* ── POUR QUI (secteurs ciblés) ── */
-  .audience{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:22px}
-  .aud-label{color:#52617a;font-size:12.5px;font-weight:700;margin-right:4px}
-  .chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #dde3e0;
-    color:var(--ink);font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:999px}
+  --r-xs:8px;
+  --r-sm:12px;
+  --r:16px;
+  --r-lg:22px;
+  --r-xl:28px;
 
-  /* ── FORMULE MISE EN AVANT ── */
-  .formula{position:relative;margin:14px 0 4px;font-size:clamp(17px,2.7vw,24px);line-height:1.16;font-weight:800;color:var(--ink)}
-  .formula span{color:var(--green)}
+  --shadow-xs:0 1px 2px rgba(10,10,10,.04);
+  --shadow-sm:0 2px 8px rgba(10,10,10,.05);
+  --shadow:0 6px 22px rgba(10,10,10,.06);
 
-  /* ── DOUBLE CHOIX IMMÉDIAT (les 2 solutions tout de suite) ── */
-  .pickline{position:relative;color:#52617a;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin:16px 0 10px}
-  .picker{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media(max-width:720px){.picker{grid-template-columns:1fr}}
-  .pick{display:flex;flex-direction:column;border-radius:18px;padding:16px 16px 15px;text-decoration:none;color:#fff;border:1px solid rgba(255,255,255,.12);position:relative;overflow:hidden}
-  .pick.audit{background:linear-gradient(150deg,#0f766e,#11352f)}
-  .pick.pro{background:linear-gradient(150deg,#64748b,#3f4a5c)}
-  .pick .pk-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-  .pick .pk-ico{width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
-  .pick .pk-tag{font-size:10.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.7)}
-  .pick h3{font-size:19px;font-weight:800;line-height:1.12}
-  .pick p{font-size:13px;color:rgba(255,255,255,.8);line-height:1.4;margin-bottom:13px}
-  .pick .go{margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff;font-weight:800;font-size:14.5px;padding:13px;border-radius:12px}
-  .pick.audit .go{color:#0f4a43}
-  .pick.pro .go{color:#3f4a5c}
-  .choice-mini{position:relative;text-align:center;color:#52617a;font-size:13.5px;margin-top:16px;font-weight:600}
-  .choice-mini b{color:var(--ink)}
+  --max:1200px;
+  --gap:clamp(16px,2.5vw,24px);
+}
 
-  /* ── CENTRAGE DU HAUT (hero) ── */
-  .hero .wrap{text-align:center}
-  .hero h1{margin-left:auto;margin-right:auto}
-  .hero .formula{margin-left:auto;margin-right:auto}
-  .hero .sols{text-align:left;margin-top:20px;grid-template-columns:1fr 1fr}
-  /* Mobile : on garde les 2 cartes côte à côte, en version compacte */
-  @media(max-width:560px){
-    .hero .sols{gap:10px;margin-top:16px}
-    .hero .sol{padding:13px 11px 12px;border-radius:15px}
-    .hero .sol .step{font-size:9.5px;letter-spacing:.8px}
-    .hero .sol h3{font-size:16px;margin:6px 0 5px}
-    .hero .sol .pitch{font-size:11.5px;line-height:1.35;margin-bottom:11px}
-    .hero .sol ul{gap:7px;margin-bottom:14px}
-    .hero .sol li{font-size:11px;gap:7px;line-height:1.3}
-    .hero .sol li .d{width:16px;height:16px;font-size:9px}
-    .hero .sol .scta{font-size:12px;padding:11px}
-    .hero .sol .ribbon{font-size:9px;padding:4px 36px;right:-36px}
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
 
-  /* ── BANDEROLE ANIMÉE (chiffres qui défilent) ── */
-  .ticker{background:linear-gradient(90deg,#0d4a43,#0f766e,#0d4a43);color:#fff;overflow:hidden;white-space:nowrap;
-    padding:13px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.18)}
-  .ticker-track{display:inline-flex;align-items:center;animation:ticker 32s linear infinite;will-change:transform}
-  .ticker:hover .ticker-track{animation-play-state:paused}
-  .ticker .it{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14px;padding:0 22px}
-  .ticker .it b{font-family:'Fraunces',serif;font-weight:900;font-size:18px;color:#fff}
-  .ticker .it .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45)}
-  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+/* Conteneur de contenu */
+.container{max-width:var(--max);margin:0 auto;padding:0 clamp(18px,4vw,32px)}
 
-  /* ── SECTIONS ── */
-  section{padding:40px 0}
-  .lead-tag{font-size:12px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--danger)}
-  .lead-tag.calm{color:var(--green)}
-  h2.sec{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(23px,4.2vw,38px);line-height:1.08;letter-spacing:-.5px;margin:12px 0 14px;max-width:760px}
-  .sec-intro{color:#52617a;font-size:16px;line-height:1.6;max-width:680px}
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  height:46px;padding:0 22px;border-radius:999px;
+  font-family:inherit;font-weight:500;font-size:15px;letter-spacing:-.01em;
+  text-decoration:none;cursor:pointer;border:1px solid transparent;
+  transition:background .15s ease,border-color .15s ease,transform .1s ease,color .15s ease;
+  white-space:nowrap;
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:#262626}
+.btn-outline{background:var(--bg);color:var(--ink);border-color:var(--line)}
+.btn-outline:hover{background:var(--bg-alt);border-color:#d4d4d4}
+.btn-ghost{background:transparent;color:var(--ink)}
+.btn-ghost:hover{background:var(--bg-alt)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-2)}
+.btn-sm{height:38px;padding:0 16px;font-size:14px}
+.btn-lg{height:54px;padding:0 28px;font-size:16px}
 
-  /* ── RISQUES ── */
-  .triggers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
-  @media(max-width:820px){.triggers{grid-template-columns:1fr}}
-  .trig{background:#fff;border-radius:18px;padding:24px;border:1px solid #eae4d8;border-top:4px solid var(--danger);box-shadow:0 8px 26px rgba(20,30,25,.05)}
-  .trig .ti{font-size:30px}
-  .trig h3{font-size:17px;font-weight:800;margin:12px 0 7px}
-  .trig p{font-size:13.5px;color:#5b6678;line-height:1.5}
-  .trig .verdict{margin-top:14px;display:inline-flex;align-items:center;gap:7px;background:#fdf3e7;color:var(--danger-dk);font-size:11.5px;font-weight:800;padding:6px 11px;border-radius:999px}
+/* ── NAV ─────────────────────────────────────────────────────── */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-row{
+  max-width:var(--max);margin:0 auto;
+  padding:14px clamp(18px,4vw,32px);
+  display:flex;align-items:center;gap:20px;
+}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;letter-spacing:-.02em}
+.brand-mark{
+  width:28px;height:28px;border-radius:8px;background:var(--ink);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;
+  letter-spacing:0;
+}
+.brand-name{font-size:16px;font-weight:700}
+.nav-links{display:none;align-items:center;gap:8px;flex:1;margin-left:16px}
+.nav-links a{
+  color:var(--ink-2);font-size:14px;font-weight:500;text-decoration:none;
+  padding:8px 12px;border-radius:8px;transition:color .12s,background .12s;
+}
+.nav-links a:hover{color:var(--ink);background:var(--bg-alt)}
+.nav-cta{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-burger{
+  width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:var(--bg);
+  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);
+}
+.nav-burger:hover{background:var(--bg-alt)}
+@media(min-width:900px){
+  .nav-links{display:flex}
+  .nav-burger{display:none}
+}
+@media(max-width:600px){
+  .nav-cta .btn-primary{display:none}
+}
 
-  /* ── SOLUTIONS DÉTAILLÉES ── */
-  .pivot{background:linear-gradient(180deg,#fff,#f1f5f4);text-align:center}
-  .sols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
-  @media(max-width:820px){.sols{grid-template-columns:1fr}}
-  .sol{position:relative;border-radius:24px;padding:30px 28px;color:#fff;overflow:hidden;display:flex;flex-direction:column}
-  .sol.audit{background:linear-gradient(155deg,#0f766e,#11352f)}
-  .sol.pro{background:linear-gradient(155deg,#64748b,#3f4a5c)}
-  .sol .step{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.66)}
-  .sol h3{font-family:'Fraunces',serif;font-size:25px;font-weight:800;line-height:1.1;margin:8px 0 6px}
-  .sol .pitch{color:rgba(255,255,255,.82);font-size:14.5px;line-height:1.55;margin-bottom:18px}
-  .sol ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:24px}
-  .sol li{display:flex;gap:10px;font-size:14px;line-height:1.4}
-  .sol li .d{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:1px}
-  .sol .scta{margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff;font-weight:800;font-size:15px;padding:15px 22px;border-radius:14px;text-decoration:none}
-  .sol.audit .scta{color:#0f4a43}.sol.pro .scta{color:#3f4a5c}
-  .sol .ribbon{position:absolute;top:18px;right:-34px;transform:rotate(45deg);background:var(--gold);color:#3b2c05;font-weight:900;font-size:11px;letter-spacing:1px;padding:5px 44px}
-  /* Noms des deux applications, au-dessus de chaque rectangle */
-  .solwrap{display:flex;flex-direction:column;gap:9px}
-  .solwrap>.sol{flex:1}
-  .solname{font-family:'Fraunces',serif;font-weight:800;font-size:19px;text-align:center;letter-spacing:-.2px}
-  .solname .n{font-weight:900}
-  .solname.audit{color:#0f766e}
-  .solname.pro{color:#5a6675}
+/* ── HERO ────────────────────────────────────────────────────── */
+.hero{
+  position:relative;padding:clamp(60px,10vw,120px) 0 clamp(40px,6vw,64px);
+  text-align:center;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:auto 0 -40% 0;height:70%;
+  background:radial-gradient(ellipse at 50% 100%, var(--accent-soft) 0%, transparent 60%);
+  z-index:0;pointer-events:none;opacity:.6;
+}
+.hero-inner{position:relative;z-index:1}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:999px;
+  background:var(--bg);border:1px solid var(--line);
+  color:var(--ink-2);font-size:13px;font-weight:500;letter-spacing:-.01em;
+  margin-bottom:28px;
+}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+h1.hero-title{
+  font-size:clamp(38px,7vw,78px);
+  line-height:1.02;letter-spacing:-.035em;font-weight:700;
+  margin:0 auto;max-width:900px;color:var(--ink);
+}
+h1.hero-title em{font-style:normal;color:var(--ink-2)}
+.hero-sub{
+  margin:24px auto 0;max-width:620px;
+  font-size:clamp(16px,2vw,19px);line-height:1.55;color:var(--ink-3);font-weight:400;
+}
+.hero-cta{
+  margin-top:36px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+}
+.hero-trust{
+  margin-top:20px;font-size:13.5px;color:var(--ink-3);display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+}
+.hero-trust .pill{display:inline-flex;align-items:center;gap:6px}
+.hero-trust .pill::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}
 
-  /* ── ENSEMBLE ── */
-  .together{background:linear-gradient(120deg,#0f766e 0%,#11352f 100%);border-radius:24px;color:#fff;padding:34px 30px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-top:30px}
-  .together .ti{font-size:40px}
-  .together .tt{flex:1;min-width:260px}
-  .together h3{font-family:'Fraunces',serif;font-size:23px;font-weight:800;margin-bottom:8px}
-  .together p{color:rgba(255,255,255,.84);font-size:14.5px;line-height:1.55}
-  .together .tcta{background:#fff;color:#0f4a43;font-weight:800;font-size:14.5px;padding:14px 22px;border-radius:13px;text-decoration:none;white-space:nowrap}
-  .choice{text-align:center;font-size:15px;color:#33405a;margin-top:24px;font-weight:600}
-  .choice b{color:var(--ink)}
+/* ── TICKER discret ──────────────────────────────────────────── */
+.ticker{
+  background:var(--ink);color:#fafafa;overflow:hidden;white-space:nowrap;
+  border-top:1px solid #171717;border-bottom:1px solid #171717;
+}
+.ticker-track{
+  display:inline-flex;align-items:center;padding:12px 0;
+  animation:ticker 48s linear infinite;will-change:transform;
+}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker .it{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:400;color:#a3a3a3;letter-spacing:-.005em;padding:0 22px;
+}
+.ticker .it b{font-weight:600;color:#fafafa}
+.ticker .it .sep{width:3px;height:3px;border-radius:50%;background:#404040}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
 
-  footer{padding:36px 0 44px;text-align:center;color:#8a93a3;font-size:12px;line-height:1.7;border-top:1px solid #e7e9ef;margin-top:24px}
-  .disclaimer{max-width:1080px;margin:24px auto 0;padding:13px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;color:#9a3412;font-size:12px;line-height:1.5}
+/* ── SECTIONS GENERIQUES ─────────────────────────────────────── */
+section{padding:clamp(60px,9vw,110px) 0}
+.sec-head{max-width:720px;margin:0 auto 48px;text-align:center}
+.sec-tag{
+  display:inline-block;font-size:13px;font-weight:600;color:var(--accent);
+  letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px;
+}
+h2.sec-title{
+  font-size:clamp(28px,4.5vw,46px);line-height:1.08;letter-spacing:-.03em;
+  font-weight:700;color:var(--ink);margin-bottom:14px;
+}
+.sec-intro{font-size:17px;line-height:1.55;color:var(--ink-3);font-weight:400}
 
-  /* Apparition douce uniquement si JS actif ; sinon tout reste visible (pas de vide blanc). */
-  .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
-  .js .reveal.in{opacity:1;transform:none}
+/* ── GRID 2 SOLUTIONS ────────────────────────────────────────── */
+.solutions-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);
+}
+@media(max-width:820px){.solutions-grid{grid-template-columns:1fr}}
+.card-sol{
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);
+  padding:clamp(28px,4vw,40px);display:flex;flex-direction:column;gap:18px;
+  transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease;
+  text-decoration:none;color:inherit;position:relative;overflow:hidden;
+}
+.card-sol:hover{border-color:#d4d4d4;transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.card-sol.dark{background:var(--ink);color:#fff;border-color:transparent}
+.card-sol.dark:hover{background:#171717}
+.card-sol .mini{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink-3);
+}
+.card-sol.dark .mini{color:#a3a3a3}
+.card-sol .mini::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent)}
+.card-sol.dark .mini::before{background:#d4d4d4}
+.card-sol h3{font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:-.025em;line-height:1.1}
+.card-sol p{font-size:15.5px;line-height:1.55;color:var(--ink-3)}
+.card-sol.dark p{color:#a3a3a3}
+.card-sol ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin:4px 0}
+.card-sol li{font-size:14.5px;color:var(--ink-2);display:flex;gap:10px;align-items:flex-start;line-height:1.45}
+.card-sol.dark li{color:#e5e5e5}
+.card-sol li::before{
+  content:"";flex-shrink:0;width:16px;height:16px;border-radius:50%;margin-top:2px;
+  background:var(--accent-soft);
+  position:relative;
+}
+.card-sol.dark li::before{background:#1f1f1f}
+.card-sol li{position:relative}
+.card-sol li .check{
+  position:absolute;left:0;top:2px;width:16px;height:16px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--accent);font-size:10px;font-weight:700;
+}
+.card-sol.dark li .check{color:#86efac}
+.card-sol .cta-row{margin-top:auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.card-sol .link-arrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-weight:500;font-size:14.5px;color:var(--ink-3);text-decoration:none;
+}
+.card-sol.dark .link-arrow{color:#a3a3a3}
+.card-sol .link-arrow:hover{color:var(--ink)}
+.card-sol.dark .link-arrow:hover{color:#fff}
+.card-sol .badge-trial{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12.5px;font-weight:500;color:var(--accent-2);
+  background:var(--accent-soft);padding:5px 10px;border-radius:999px;
+}
+.card-sol.dark .badge-trial{background:rgba(134,239,172,.1);color:#86efac}
 
-  /* ── BOUTON DÉMO (navbar + flottant) ── */
-  .nav-btn.demo{background:linear-gradient(135deg,#0f766e,#0d4a43);border-color:transparent}
-  .fab-demo{position:fixed;right:16px;bottom:18px;z-index:65;display:inline-flex;align-items:center;gap:8px;
-    background:linear-gradient(135deg,#0f766e,#0d4a43);color:#fff;border:none;border-radius:999px;
-    padding:14px 20px;font-family:inherit;font-weight:800;font-size:14.5px;cursor:pointer;
-    box-shadow:0 10px 30px rgba(15,118,110,.38);}
-  .fab-demo:active{transform:scale(.97)}
-  @media(max-width:560px){.fab-demo{padding:13px 17px;font-size:13.5px}}
+/* ── RISQUES ─────────────────────────────────────────────────── */
+.risques-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+@media(max-width:820px){.risques-grid{grid-template-columns:1fr}}
+.risk{
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:28px;transition:border-color .15s,transform .15s;
+}
+.risk:hover{border-color:#d4d4d4;transform:translateY(-2px)}
+.risk .ico{
+  width:42px;height:42px;border-radius:12px;background:var(--bg-alt);
+  display:inline-flex;align-items:center;justify-content:center;font-size:22px;
+  margin-bottom:18px;
+}
+.risk h3{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
+.risk p{font-size:14.5px;line-height:1.55;color:var(--ink-3)}
+.risk .ok{
+  margin-top:16px;display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:500;color:var(--accent-2);
+  background:var(--accent-soft);padding:6px 11px;border-radius:999px;
+}
 
-  /* ── MODALE DÉMO / RDV ── */
-  .rdv-overlay{position:fixed;inset:0;background:rgba(4,6,12,.66);backdrop-filter:blur(3px);
-    opacity:0;visibility:hidden;transition:.22s;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px}
-  .rdv-overlay.open{opacity:1;visibility:visible}
-  .rdv{width:min(460px,100%);max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
-    background:linear-gradient(165deg,#0d1322,#0b0f1a);border:1px solid rgba(255,255,255,.12);
-    border-radius:22px;padding:26px 22px 22px;color:#fff;position:relative;
-    transform:translateY(14px) scale(.98);transition:transform .24s ease;box-shadow:0 30px 80px rgba(0,0,0,.5)}
-  .rdv-overlay.open .rdv{transform:none}
-  .rdv .x{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;color:#fff;
-    width:38px;height:38px;border-radius:11px;font-size:18px;cursor:pointer}
-  .rdv .pre{display:inline-block;background:rgba(52,211,153,.16);border:1px solid rgba(52,211,153,.35);
-    color:#6ee7b7;font-weight:800;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:12px}
-  .rdv h3{font-family:'Fraunces',serif;font-size:25px;font-weight:800;line-height:1.1;margin-bottom:8px}
-  .rdv h3 span{color:#5eead4}
-  .rdv .lead{color:rgba(255,255,255,.72);font-size:13.5px;line-height:1.55;margin-bottom:16px}
-  .rdv .f{display:flex;flex-direction:column;gap:10px}
-  .rdv input,.rdv textarea,.rdv select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);
-    color:#fff;font-family:inherit;font-size:15px;padding:13px 14px;border-radius:12px;outline:none}
-  .rdv input::placeholder,.rdv textarea::placeholder{color:rgba(255,255,255,.45)}
-  .rdv input:focus,.rdv textarea:focus,.rdv select:focus{border-color:#34d399;background:rgba(255,255,255,.09)}
-  .rdv select{appearance:none}
-  .rdv .pref{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .rdv .pref label{display:flex;align-items:center;justify-content:center;gap:7px;background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px;font-size:13.5px;font-weight:700;cursor:pointer}
-  .rdv .pref input{display:none}
-  .rdv .pref input:checked+span{color:#6ee7b7}
-  .rdv .pref label:has(input:checked){border-color:#34d399;background:rgba(52,211,153,.12)}
-  .rdv .send{margin-top:4px;background:linear-gradient(135deg,#0f766e,#0d4a43);color:#fff;border:none;
-    border-radius:13px;padding:15px;font-family:inherit;font-weight:800;font-size:15.5px;cursor:pointer}
-  .rdv .send:disabled{opacity:.6;cursor:default}
-  .rdv .note{margin-top:10px;font-size:11px;color:rgba(255,255,255,.45);line-height:1.5;text-align:center}
-  .rdv .ok{text-align:center;padding:18px 6px}
-  .rdv .ok .big{font-size:46px;margin-bottom:6px}
-  .rdv .ok h4{font-family:'Fraunces',serif;font-size:22px;margin-bottom:8px}
-  .rdv .ok p{color:rgba(255,255,255,.74);font-size:14px;line-height:1.55}
+/* ── COMBO (section sombre) ──────────────────────────────────── */
+.combo{
+  background:var(--ink);color:#fff;
+}
+.combo .sec-tag{color:#86efac}
+.combo h2.sec-title{color:#fff}
+.combo .sec-intro{color:#a3a3a3}
+.combo .cta-row{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.combo .btn-primary{background:#fff;color:var(--ink)}
+.combo .btn-primary:hover{background:#f5f5f5}
+.combo .btn-outline{background:transparent;color:#fff;border-color:#262626}
+.combo .btn-outline:hover{background:#171717;border-color:#404040}
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+footer.site{
+  background:var(--bg);border-top:1px solid var(--line);
+  padding:60px 0 32px;
+}
+.foot-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+}
+@media(max-width:820px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
+@media(max-width:480px){.foot-grid{grid-template-columns:1fr}}
+.foot-col h5{
+  font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink);margin-bottom:14px;
+}
+.foot-col a{
+  display:block;color:var(--ink-3);text-decoration:none;font-size:14px;
+  padding:5px 0;transition:color .12s;
+}
+.foot-col a:hover{color:var(--ink)}
+.foot-about p{font-size:13.5px;color:var(--ink-3);line-height:1.55;max-width:320px;margin-top:10px}
+.foot-bottom{
+  margin-top:48px;padding-top:24px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  font-size:12.5px;color:var(--ink-4);
+}
+.foot-bottom .legal{display:flex;gap:16px;flex-wrap:wrap}
+.foot-bottom a{color:var(--ink-4);text-decoration:none}
+.foot-bottom a:hover{color:var(--ink-2)}
+
+/* ── MENU DRAWER ────────────────────────────────────────────── */
+.menu-overlay{
+  position:fixed;inset:0;background:rgba(10,10,10,.4);
+  opacity:0;visibility:hidden;transition:.2s;z-index:70;
+}
+.menu-overlay.open{opacity:1;visibility:visible}
+.menu{
+  position:fixed;top:0;right:0;height:100%;width:min(360px,88vw);
+  background:var(--bg);border-left:1px solid var(--line);
+  transform:translateX(102%);transition:transform .24s cubic-bezier(.4,0,.2,1);
+  z-index:80;display:flex;flex-direction:column;overflow-y:auto;
+}
+.menu.open{transform:none}
+.menu-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 20px;border-bottom:1px solid var(--line);
+}
+.menu-close{
+  width:38px;height:38px;border-radius:10px;border:1px solid var(--line);
+  background:var(--bg);color:var(--ink);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;font-size:16px;
+}
+.menu-close:hover{background:var(--bg-alt)}
+.menu-body{padding:12px 16px 24px;display:flex;flex-direction:column;gap:2px}
+.menu-group{
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-4);padding:16px 12px 6px;
+}
+.menu a.mlink{
+  display:flex;align-items:center;gap:12px;
+  color:var(--ink);text-decoration:none;font-weight:500;font-size:15px;
+  padding:12px;border-radius:12px;transition:background .12s;
+}
+.menu a.mlink:hover{background:var(--bg-alt)}
+.menu .mcta{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--ink);color:#fff;font-weight:500;font-size:15px;
+  padding:14px;border-radius:999px;text-decoration:none;margin:4px 0 12px;
+}
+.menu .mcta:hover{background:#262626}
+
+/* ── FAB démo ───────────────────────────────────────────────── */
+.fab-demo{
+  position:fixed;right:18px;bottom:18px;z-index:40;
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--ink);color:#fff;border:none;border-radius:999px;
+  padding:14px 20px;font-family:inherit;font-weight:500;font-size:14.5px;cursor:pointer;
+  box-shadow:0 10px 30px rgba(10,10,10,.22);
+  transition:transform .12s;
+}
+.fab-demo:hover{transform:translateY(-2px)}
+.fab-demo:active{transform:scale(.97)}
+@media(max-width:600px){.fab-demo{padding:12px 16px;font-size:13.5px;right:14px;bottom:14px}}
+
+/* ── MODALE DÉMO ────────────────────────────────────────────── */
+.rdv-overlay{
+  position:fixed;inset:0;background:rgba(10,10,10,.6);
+  opacity:0;visibility:hidden;transition:.2s;z-index:90;
+  display:flex;align-items:center;justify-content:center;padding:16px;
+}
+.rdv-overlay.open{opacity:1;visibility:visible}
+.rdv{
+  width:min(480px,100%);max-height:92vh;overflow-y:auto;
+  background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);
+  padding:32px 28px 28px;position:relative;color:var(--ink);
+  transform:translateY(12px) scale(.98);transition:transform .22s ease;
+  box-shadow:0 30px 80px rgba(10,10,10,.24);
+}
+.rdv-overlay.open .rdv{transform:none}
+.rdv .x{
+  position:absolute;top:14px;right:14px;background:var(--bg-alt);border:1px solid var(--line);
+  color:var(--ink);width:36px;height:36px;border-radius:10px;font-size:15px;cursor:pointer;
+}
+.rdv .x:hover{background:var(--line-soft)}
+.rdv .pre{
+  display:inline-block;font-size:12px;font-weight:600;color:var(--accent-2);
+  background:var(--accent-soft);padding:4px 10px;border-radius:999px;
+  letter-spacing:.03em;margin-bottom:14px;
+}
+.rdv h3{font-size:24px;font-weight:700;letter-spacing:-.025em;line-height:1.12;margin-bottom:8px}
+.rdv .lead{color:var(--ink-3);font-size:14.5px;line-height:1.55;margin-bottom:20px}
+.rdv .f{display:flex;flex-direction:column;gap:10px}
+.rdv input,.rdv textarea,.rdv select{
+  width:100%;background:var(--bg);border:1px solid var(--line);
+  color:var(--ink);font-family:inherit;font-size:15px;
+  padding:12px 14px;border-radius:12px;outline:none;transition:border-color .12s,box-shadow .12s;
+}
+.rdv input:focus,.rdv textarea:focus,.rdv select:focus{
+  border-color:var(--ink);box-shadow:0 0 0 3px var(--accent-ring);
+}
+.rdv input::placeholder,.rdv textarea::placeholder{color:var(--ink-4)}
+.rdv .send{
+  margin-top:6px;background:var(--ink);color:#fff;border:none;border-radius:999px;
+  padding:14px;font-family:inherit;font-weight:500;font-size:15px;cursor:pointer;
+  transition:background .12s;
+}
+.rdv .send:hover{background:#262626}
+.rdv .send:disabled{opacity:.6;cursor:default}
+.rdv .note{margin-top:10px;font-size:11.5px;color:var(--ink-4);line-height:1.55;text-align:center}
+.rdv .note a{color:var(--accent-2)}
+.rdv .ok{text-align:center;padding:12px 6px}
+.rdv .ok .big{font-size:42px;margin-bottom:8px}
+.rdv .ok h4{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.rdv .ok p{color:var(--ink-3);font-size:14.5px;line-height:1.55}
+
+/* ── UTILS ───────────────────────────────────────────────────── */
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Apparition douce (reveal) */
+.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.js .reveal.in{opacity:1;transform:none}
 </style>
 </head>
 <body>
 
-  <!-- ══ BARRE TOUJOURS VISIBLE : RETOUR + MENU ══ -->
-  <div class="navbar">
-    <div class="row">
-      <button class="nav-btn" onclick="history.length>1?history.back():location.href='accueil.html'">← Retour</button>
-      <div class="nav-brand">Nomos HACCP<small>Hygiène alimentaire</small></div>
-      <button class="nav-btn share" onclick="partagerNomos()" aria-label="Partager Nomos" title="Partager Nomos">📤</button>
-      <button class="nav-btn" onclick="openMenu()">☰ Menu</button>
+<!-- Bandeau COPIE DE TRAVAIL — règle Hygiène+ (JS). -->
+<script>
+(function(){
+  try{
+    var h=location.hostname;
+    if(h==='nomos-haccp.fr'||h==='www.nomos-haccp.fr') return;
+    var b=document.createElement('div');
+    b.textContent='🧪 HYGIÈNE+ — COPIE DE TRAVAIL (site de test, pas le site client)';
+    b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#b91c1c;color:#fff;text-align:center;font:600 11px/1 Inter,system-ui,sans-serif;padding:4px 6px;letter-spacing:.3px;pointer-events:none';
+    document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(b);});
+  }catch(e){}
+})();
+</script>
+
+<!-- ══ NAV ══ -->
+<header class="nav">
+  <div class="nav-row">
+    <a class="brand" href="accueil.html">
+      <span class="brand-mark">N</span>
+      <span class="brand-name">Nomos HACCP</span>
+    </a>
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a href="#solutions">Produits</a>
+      <a href="#risques">Pourquoi Nomos</a>
+      <a href="blog/index.html">Blog</a>
+      <a href="audit/tarifs.html">Tarifs</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="haccp.html">Se connecter</a>
+      <a class="btn btn-primary btn-sm" href="#" onclick="openRdv('Nav');return false;">Demander une démo</a>
+      <button class="nav-burger" aria-label="Ouvrir le menu" onclick="openMenu()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
     </div>
   </div>
+</header>
 
-  <!-- ══ MENU (drawer) ══ -->
-  <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
-  <nav class="menu" id="menu" aria-hidden="true">
-    <div class="mh">
-      <div class="mbrand">Nomos HACCP<small>Hygiène alimentaire</small></div>
-      <button class="close" onclick="closeMenu()" aria-label="Fermer le menu">✕</button>
-    </div>
-    <div class="mbody">
+<!-- ══ MENU DRAWER ══ -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+<nav class="menu" id="menu" aria-hidden="true">
+  <div class="menu-head">
+    <a class="brand" href="accueil.html" style="font-size:15px">
+      <span class="brand-mark">N</span>
+      <span class="brand-name">Nomos HACCP</span>
+    </a>
+    <button class="menu-close" onclick="closeMenu()" aria-label="Fermer">✕</button>
+  </div>
+  <div class="menu-body">
+    <a class="mcta" href="#" onclick="closeMenu();openRdv('Menu');return false;">Demander une démo</a>
 
-      <a class="m-cta" href="#" onclick="closeMenu();openRdv('Menu');return false;">📅 Demander une démo gratuite</a>
+    <div class="menu-group">Produits</div>
+    <a class="mlink" href="audit/index.html">Nomos Audit — préparer un contrôle</a>
+    <a class="mlink" href="haccp.html">Nomos Traça — gestion quotidienne</a>
+    <a class="mlink" href="audit/tarifs.html">Tarifs</a>
 
-      <div class="mlabel">Les 2 applications</div>
-      <a class="mcard m-audit" href="audit/index.html">
-        <span class="ico">🔍</span>
-        <span class="tx"><b>Auditer &amp; préparer le contrôle</b><em>Faire le point et repérer les risques</em></span>
-      </a>
-      <a class="mcard m-pro" href="haccp.html">
-        <span class="ico">⚡</span>
-        <span class="tx"><b>Nomos Traça</b><em>Gérer &amp; prouver la conformité au quotidien</em></span>
-      </a>
+    <div class="menu-group">Ressources</div>
+    <a class="mlink" href="#risques" onclick="closeMenu()">Pourquoi Nomos</a>
+    <a class="mlink" href="blog/index.html">Blog · Guides HACCP</a>
 
-      <div class="mlabel">Découvrir</div>
-      <a class="mlink" href="#top" onclick="closeMenu()"><span class="mi">🏠</span> Accueil</a>
-      <a class="mlink" href="#risques" onclick="closeMenu()"><span class="mi">⚠️</span> Risques &amp; sanctions</a>
-      <a class="mlink" href="blog/index.html"><span class="mi">📖</span> Blog · Guides HACCP</a>
+    <div class="menu-group">Compte</div>
+    <a class="mlink" href="haccp.html">Se connecter</a>
+    <a class="mlink" href="#" onclick="closeMenu();installNomos();return false;">Installer l'app</a>
+    <a class="mlink" href="#" onclick="closeMenu();partagerNomos();return false;">Partager Nomos</a>
+  </div>
+</nav>
 
-      <div class="mlabel">Installer &amp; contact</div>
-      <a class="mlink" href="#" onclick="closeMenu();installNomos();return false;"><span class="mi">⬇️</span> Installer Nomos (PC / mobile)</a>
-      <a class="mlink" href="#" onclick="closeMenu();openRdv('Menu-contact');return false;"><span class="mi">✉️</span> Être recontacté</a>
-
-      <div class="mfoot">Outils d'aide à la gestion et à la mise en conformité HACCP.</div>
-    </div>
-  </nav>
+<main>
 
   <!-- ══ HERO ══ -->
-  <header class="hero" id="top">
-    <div class="wrap">
-      <span class="eyebrow">🛡️ Hygiène alimentaire · Contrôles DDPP</span>
-      <h1 class="serif">Votre hygiène alimentaire, sans stress.<span class="q">Et prête pour chaque contrôle.</span></h1>
-
-      <!-- LE SLOGAN -->
-      <p class="formula serif">Deux solutions, un seul objectif :<br><span>votre tranquillité face aux contrôles.</span></p>
-      <p class="choice-mini">Utiliser <b>l'une</b> ou <b>l'autre</b> ou <b>les deux</b>.</p>
-
-      <!-- LES 2 SOLUTIONS DÉTAILLÉES, TOUT DE SUITE -->
-      <div class="sols" id="solutions">
-        <div class="solwrap">
-          <div class="solname audit"><span class="n">Nomos</span> Audit</div>
-          <article class="sol audit reveal">
-            <h3>Auditer & préparez le contrôle</h3>
-            <p class="pitch">On vous accompagne pour <strong>évaluer votre établissement</strong> comme le ferait un inspecteur et vous <strong>mettre en conformité</strong> à temps.</p>
-            <a class="scta" href="audit/index.html">Préparer mon contrôle →</a>
-          </article>
-        </div>
-        <div class="solwrap">
-          <div class="solname pro"><span class="n">Nomos</span> Traça</div>
-          <article class="sol pro reveal">
-            <div class="ribbon">Au quotidien</div>
-            <h3>Automatiser & gagnez du temps</h3>
-            <p class="pitch">L'application qui <strong>construit vos preuves toute seule</strong> : relevés, traçabilité et Pack DDPP prêts à présenter <strong>en quelques secondes</strong>.</p>
-            <a class="scta" href="haccp.html">Sécuriser mon quotidien →</a>
-            <a href="haccp.html?essai=1" style="display:block;margin-top:12px;background:rgba(210,173,70,.15);border:1px solid rgba(210,173,70,.5);border-radius:14px;padding:12px 13px;text-decoration:none;color:#fff;text-align:center">
-              <span style="display:block;font-size:13.5px;font-weight:800">Essai gratuit 10 jours</span>
-              <span style="display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,.78);margin:2px 0 9px">sans carte bancaire</span>
-              <span style="display:block;background:var(--gold);color:#3b2c05;border-radius:9px;padding:11px;font-size:13.5px;font-weight:900">Activer mes 10 jours →</span>
-            </a>
-          </article>
-        </div>
+  <section class="hero" id="top">
+    <div class="container hero-inner">
+      <span class="eyebrow"><span class="dot"></span> Hygiène alimentaire · Contrôles DDPP</span>
+      <h1 class="hero-title">Votre hygiène, enfin simple.<br><em>Et prête pour chaque contrôle.</em></h1>
+      <p class="hero-sub">Deux applications pour les restaurateurs et métiers de bouche. Auditez votre établissement, pilotez votre traçabilité, imprimez votre Pack DDPP en quelques secondes.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="haccp.html?essai=1">Démarrer gratuitement</a>
+        <a class="btn btn-outline btn-lg" href="#solutions">Découvrir les 2 outils</a>
+      </div>
+      <div class="hero-trust">
+        <span class="pill">Essai 10 jours gratuit</span>
+        <span class="pill">Sans carte bancaire</span>
+        <span class="pill">Hébergement UE / RGPD</span>
       </div>
     </div>
-  </header>
+  </section>
 
-  <!-- ══ BANDEROLE ANIMÉE — CHIFFRES ══ -->
+  <!-- ══ TICKER DISCRET ══ -->
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
-      <span class="it">🚫 Fermetures administratives à <b>Paris</b></span><span class="it"><span class="dot"></span></span>
-      <span class="it">🚫 <b>Seine-Saint-Denis (93)</b> : ~300 fermetures en 2024 · +80 vs 2023</span><span class="it"><span class="dot"></span></span>
-      <span class="it">🚫 Contrôles renforcés en <b>Île-de-France</b></span><span class="it"><span class="dot"></span></span>
-      <span class="it"><b>1</b> contrôle inopiné suffit</span><span class="it"><span class="dot"></span></span>
-      <span class="it">⏱️ Fermeture possible <b>le jour même</b></span><span class="it"><span class="dot"></span></span>
-      <span class="it">📢 Résultat <b>publié</b> sur Alim'confiance</span><span class="it"><span class="dot"></span></span>
-      <span class="it">🌡️ Chaîne du froid : <b>cause n°1</b></span><span class="it"><span class="dot"></span></span>
-      <span class="it">📦 Traçabilité absente : <b>PV quasi systématique</b></span><span class="it"><span class="dot"></span></span>
+      <span class="it"><b>Seine-Saint-Denis</b> · ~300 fermetures administratives en 2024</span><span class="it"><span class="sep"></span></span>
+      <span class="it">Contrôles DDPP renforcés en <b>Île-de-France</b></span><span class="it"><span class="sep"></span></span>
+      <span class="it"><b>1</b> contrôle inopiné suffit</span><span class="it"><span class="sep"></span></span>
+      <span class="it">Fermeture possible <b>le jour même</b></span><span class="it"><span class="sep"></span></span>
+      <span class="it">Résultats publiés sur <b>Alim'confiance</b></span><span class="it"><span class="sep"></span></span>
+      <span class="it">Chaîne du froid — <b>cause n°1</b> des PV</span><span class="it"><span class="sep"></span></span>
+      <span class="it">Traçabilité absente — <b>PV quasi systématique</b></span><span class="it"><span class="sep"></span></span>
       <!-- duplicata pour défilement continu -->
-      <span class="it">🚫 Fermetures administratives à <b>Paris</b></span><span class="it"><span class="dot"></span></span>
-      <span class="it">🚫 <b>Seine-Saint-Denis (93)</b> : ~300 fermetures en 2024 · +80 vs 2023</span><span class="it"><span class="dot"></span></span>
-      <span class="it">🚫 Contrôles renforcés en <b>Île-de-France</b></span><span class="it"><span class="dot"></span></span>
-      <span class="it"><b>1</b> contrôle inopiné suffit</span><span class="it"><span class="dot"></span></span>
-      <span class="it">⏱️ Fermeture possible <b>le jour même</b></span><span class="it"><span class="dot"></span></span>
-      <span class="it">📢 Résultat <b>publié</b> sur Alim'confiance</span><span class="it"><span class="dot"></span></span>
-      <span class="it">🌡️ Chaîne du froid : <b>cause n°1</b></span><span class="it"><span class="dot"></span></span>
-      <span class="it">📦 Traçabilité absente : <b>PV quasi systématique</b></span><span class="it"><span class="dot"></span></span>
+      <span class="it"><b>Seine-Saint-Denis</b> · ~300 fermetures administratives en 2024</span><span class="it"><span class="sep"></span></span>
+      <span class="it">Contrôles DDPP renforcés en <b>Île-de-France</b></span><span class="it"><span class="sep"></span></span>
+      <span class="it"><b>1</b> contrôle inopiné suffit</span><span class="it"><span class="sep"></span></span>
+      <span class="it">Fermeture possible <b>le jour même</b></span><span class="it"><span class="sep"></span></span>
+      <span class="it">Résultats publiés sur <b>Alim'confiance</b></span><span class="it"><span class="sep"></span></span>
+      <span class="it">Chaîne du froid — <b>cause n°1</b> des PV</span><span class="it"><span class="sep"></span></span>
+      <span class="it">Traçabilité absente — <b>PV quasi systématique</b></span><span class="it"><span class="sep"></span></span>
     </div>
   </div>
+
+  <!-- ══ SOLUTIONS ══ -->
+  <section id="solutions">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-tag">Deux outils, un objectif</span>
+        <h2 class="sec-title">L'audit pour savoir. L'app pour prouver.</h2>
+        <p class="sec-intro">Utilisez-les séparément ou combinés — le fil conducteur reste le même : zéro stress face aux inspecteurs.</p>
+      </div>
+
+      <div class="solutions-grid">
+
+        <a class="card-sol reveal" href="audit/index.html">
+          <span class="mini">Nomos Audit</span>
+          <h3>Auditez votre établissement comme un inspecteur.</h3>
+          <p>On passe en revue les points critiques et on vous remet un rapport clair, avec un plan d'action priorisé à présenter en cas de contrôle.</p>
+          <ul>
+            <li><span class="check">✓</span>Contrôle de conformité guidé</li>
+            <li><span class="check">✓</span>Rapport DDPP imprimable</li>
+            <li><span class="check">✓</span>Plan d'action priorisé</li>
+          </ul>
+          <div class="cta-row">
+            <span class="btn btn-outline btn-sm">Préparer mon contrôle</span>
+            <span class="link-arrow">En savoir plus →</span>
+          </div>
+        </a>
+
+        <a class="card-sol dark reveal" href="haccp.html">
+          <span class="mini">Nomos Traça</span>
+          <h3>Pilotez l'hygiène au quotidien, sans y penser.</h3>
+          <p>Relevés, traçabilité, nettoyage, DLC, plats témoins — l'app construit vos preuves toute seule et génère le Pack DDPP en un clic.</p>
+          <ul>
+            <li><span class="check">✓</span>Relevés de température automatisés</li>
+            <li><span class="check">✓</span>Traçabilité & étiquettes DLC</li>
+            <li><span class="check">✓</span>Pack DDPP prêt à présenter</li>
+          </ul>
+          <div class="cta-row">
+            <span class="btn btn-outline btn-sm" style="background:transparent;color:#fff;border-color:#404040">Ouvrir l'application</span>
+            <span class="badge-trial">Essai 10 j · sans CB</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
 
   <!-- ══ RISQUES ══ -->
-  <section id="risques">
-    <div class="wrap">
-      <span class="lead-tag">La réalité du terrain</span>
-      <h2 class="sec serif">Les 3 points que l'inspecteur regarde en premier.</h2>
-      <p class="sec-intro">Rien de compliqué : ce sont les 3 essentiels de l'hygiène. Nomos vous aide à les garder sous contrôle, sans y penser.</p>
-      <div class="triggers">
-        <div class="trig reveal"><div class="ti">🌡️</div><h3>Chaîne du froid rompue</h3><p>Enceinte hors température, relevé manquant, aucune preuve de surveillance.</p><div class="verdict">✅ Surveillé et prouvé avec Nomos</div></div>
-        <div class="trig reveal"><div class="ti">📦</div><h3>Traçabilité absente</h3><p>Origine d'un produit impossible à remonter, bons introuvables, DLC non maîtrisées.</p><div class="verdict">✅ Tracé automatiquement avec Nomos</div></div>
-        <div class="trig reveal"><div class="ti">🐀</div><h3>Locaux & nuisibles</h3><p>Plan de nettoyage non tenu, présence de nuisibles, PMS écrit absent.</p><div class="verdict">✅ Guidé pas à pas avec Nomos</div></div>
+  <section id="risques" style="background:var(--bg-alt)">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-tag">Les priorités de l'inspecteur</span>
+        <h2 class="sec-title">Trois points, rien de plus. On les garde sous contrôle pour vous.</h2>
+        <p class="sec-intro">Ce sont les trois chapitres qui concentrent la majorité des PV DDPP. Les ignorer coûte cher, les tenir est plus simple qu'il n'y paraît.</p>
+      </div>
+
+      <div class="risques-grid">
+        <div class="risk reveal">
+          <div class="ico">🌡️</div>
+          <h3>Chaîne du froid</h3>
+          <p>Enceinte hors température, relevé manquant, aucune preuve de surveillance : première cause de non-conformité.</p>
+          <span class="ok">✓ Surveillée et prouvée par Nomos</span>
+        </div>
+        <div class="risk reveal">
+          <div class="ico">📦</div>
+          <h3>Traçabilité</h3>
+          <p>Origine produit impossible à remonter, bons introuvables, DLC non maîtrisées. L'inspecteur veut une piste écrite.</p>
+          <span class="ok">✓ Tracée automatiquement</span>
+        </div>
+        <div class="risk reveal">
+          <div class="ico">🧼</div>
+          <h3>Locaux & nuisibles</h3>
+          <p>Plan de nettoyage non tenu, présence de nuisibles, PMS écrit absent : la cuisine doit raconter son hygiène.</p>
+          <span class="ok">✓ Guidé pas à pas</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ LE COMBO (les deux ensemble) ══ -->
-  <section id="ensemble" class="pivot">
-    <div class="wrap" style="text-align:left">
-      <div class="together reveal">
-        <div class="ti">🛡️</div>
-        <div class="tt">
-          <h3>Le combo qui vous met à l'abri</h3>
-          <p>Faire l'<strong>audit</strong> pour savoir où vous en êtes, puis laissez <strong>Nomos Traça</strong> entretenir et prouver votre conformité jour après jour. Vous êtes prêt en permanence.</p>
-        </div>
+  <!-- ══ COMBO (CTA final) ══ -->
+  <section class="combo">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-tag">Le combo qui met à l'abri</span>
+        <h2 class="sec-title">Faites l'audit. Laissez Nomos Traça entretenir la conformité.</h2>
+        <p class="sec-intro">D'abord savoir où vous en êtes, puis prouver chaque jour que ça tient la route. Vous êtes prêt en permanence — sans y penser.</p>
       </div>
-      <p class="choice">Utiliser <b>l'une</b> ou <b>l'autre</b> ou <b>les deux</b>.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-lg" href="#" onclick="openRdv('Combo');return false;">Demander une démo gratuite</a>
+        <a class="btn btn-outline btn-lg" href="haccp.html?essai=1">Démarrer les 10 jours d'essai</a>
+      </div>
     </div>
   </section>
 
-  <div class="disclaimer">Source du chiffre Seine-Saint-Denis : ~3 000 contrôles → ~300 fermetures en 2024 (+80 vs 2023) — France Bleu / ICI, 2024. · Outils d'aide à la gestion HACCP : ne remplacent pas l'obligation de formation ni la mise en place d'un Plan de Maîtrise Sanitaire.</div>
+</main>
 
-  <footer>
-    Nomos HACCP — Outils d'aide à la gestion et à la mise en conformité HACCP.<br>
-    Ne remplace pas l'obligation légale de formation ni la mise en place d'un Plan de Maîtrise Sanitaire.<br>
-    <a href="blog/index.html" style="color:inherit">Blog</a> &nbsp;·&nbsp;
-    <a href="mentions.html" style="color:inherit">Mentions légales</a> &nbsp;·&nbsp;
-    <a href="politique-confidentialite.html" style="color:inherit">Politique de confidentialité</a> &nbsp;·&nbsp;
-    <a href="cgv.html" style="color:inherit">CGV</a> &nbsp;·&nbsp;
-    <a href="cgu.html" style="color:inherit">CGU</a> &nbsp;·&nbsp;
-    <a href="registre-traitements.html" style="color:inherit">Registre RGPD</a><br>
-    <span id="nomosVer" style="opacity:.6">Version V298</span>
-  </footer>
-  <script>
-  /* Badge de version : lit ver.txt à la racine pour afficher la vraie version
-     déployée (ne devient jamais périmé). Hors-ligne : garde la valeur en dur. */
-  (function(){
-    try{
-      fetch('ver.txt?t=' + Date.now(), { cache: 'no-store' })
-        .then(function(r){ return r.ok ? r.text() : null; })
-        .then(function(t){
-          if (t && /\d/.test(t)) {
-            var el = document.getElementById('nomosVer');
-            if (el) el.textContent = 'Version V' + t.trim();
-          }
-        }).catch(function(){});
-    }catch(e){}
-  })();
-  </script>
+<!-- ══ FOOTER ══ -->
+<footer class="site">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-col foot-about">
+        <a class="brand" href="accueil.html">
+          <span class="brand-mark">N</span>
+          <span class="brand-name">Nomos HACCP</span>
+        </a>
+        <p>Outils d'aide à la gestion et à la mise en conformité HACCP, pensés pour les restaurateurs et les métiers de bouche.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Produits</h5>
+        <a href="audit/index.html">Nomos Audit</a>
+        <a href="haccp.html">Nomos Traça</a>
+        <a href="audit/tarifs.html">Tarifs</a>
+      </div>
+      <div class="foot-col">
+        <h5>Ressources</h5>
+        <a href="blog/index.html">Blog</a>
+        <a href="#risques">Pourquoi Nomos</a>
+        <a href="#" onclick="installNomos();return false;">Installer l'app</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="#" onclick="openRdv('Footer');return false;">Demander une démo</a>
+        <a href="mailto:lea@nomos-haccp.fr">lea@nomos-haccp.fr</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© Nomos HACCP · <span id="nomosVer">Version V298</span></div>
+      <div class="legal">
+        <a href="mentions.html">Mentions légales</a>
+        <a href="politique-confidentialite.html">Confidentialité</a>
+        <a href="cgv.html">CGV</a>
+        <a href="cgu.html">CGU</a>
+        <a href="registre-traitements.html">Registre RGPD</a>
+      </div>
+    </div>
+    <p style="margin-top:20px;font-size:11.5px;color:var(--ink-4);line-height:1.5;max-width:720px">
+      Nomos HACCP est un outil d'aide à la gestion et à la mise en conformité. Il ne remplace pas l'obligation légale de formation ni la mise en place d'un Plan de Maîtrise Sanitaire.
+    </p>
+  </div>
+</footer>
 
-  <!-- ══ MODALE DÉMO / RDV (inspiration libre, design & texte Nomos) ══ -->
-  <div class="rdv-overlay" id="rdvOverlay" onclick="if(event.target===this)closeRdv()">
-    <div class="rdv" role="dialog" aria-modal="true" aria-labelledby="rdvTitle">
-      <button class="x" onclick="closeRdv()" aria-label="Fermer">✕</button>
-      <div id="rdvForm">
-        <span class="pre">Démo gratuite · 10 min</span>
-        <h3 id="rdvTitle">Et si on en <span>parlait ?</span></h3>
-        <p class="lead">On vous présente Nomos en direct — relevés, audit et Pack DDPP — et on répond à toutes vos questions. On s'organise selon vous.</p>
-        <div class="f">
-          <!-- Champ piège anti-spam (honeypot) : invisible pour les humains, mais
-               souvent rempli par les robots. S'il est rempli, on ignore l'envoi. -->
-          <input type="text" id="rdvWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
-          <input type="text" id="rdvNom" placeholder="Votre nom / établissement" autocomplete="name">
-          <input type="email" id="rdvEmail" placeholder="Email" autocomplete="email">
-          <input type="tel" id="rdvTel" placeholder="Téléphone" autocomplete="tel">
-          <input type="text" id="rdvCp" placeholder="Code postal" inputmode="numeric" autocomplete="postal-code">
-          <textarea id="rdvMsg" rows="2" placeholder="Un message ? (facultatif)"></textarea>
-          <button class="send" id="rdvSend" onclick="sendRdv()">Réserver ma démo →</button>
-          <div class="note">Vos coordonnées servent uniquement à vous recontacter. Aucune donnée revendue. En validant, vos données sont traitées conformément à notre <a href="politique-confidentialite.html" style="color:#6ee7b7;text-decoration:underline">politique de confidentialité</a>.</div>
-        </div>
+<!-- ══ FAB DÉMO ══ -->
+<button class="fab-demo" onclick="openRdv('FAB')" aria-label="Demander une démo">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+  Demander une démo
+</button>
+
+<!-- ══ MODALE DÉMO ══ -->
+<div class="rdv-overlay" id="rdvOverlay" onclick="if(event.target===this)closeRdv()">
+  <div class="rdv" role="dialog" aria-modal="true" aria-labelledby="rdvTitle">
+    <button class="x" onclick="closeRdv()" aria-label="Fermer">✕</button>
+    <div id="rdvForm">
+      <span class="pre">Démo gratuite · 10 min</span>
+      <h3 id="rdvTitle">Et si on en parlait ?</h3>
+      <p class="lead">On vous montre Nomos en direct — relevés, audit, Pack DDPP — et on répond à toutes vos questions. On s'organise selon vous.</p>
+      <div class="f">
+        <input type="text" id="rdvWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+        <input type="text" id="rdvNom" placeholder="Votre nom / établissement" autocomplete="name">
+        <input type="email" id="rdvEmail" placeholder="Email" autocomplete="email">
+        <input type="tel" id="rdvTel" placeholder="Téléphone" autocomplete="tel">
+        <input type="text" id="rdvCp" placeholder="Code postal" inputmode="numeric" autocomplete="postal-code">
+        <textarea id="rdvMsg" rows="2" placeholder="Un message ? (facultatif)"></textarea>
+        <button class="send" id="rdvSend" onclick="sendRdv()">Réserver ma démo →</button>
+        <div class="note">Vos coordonnées servent uniquement à vous recontacter. Aucune donnée revendue. Traitement conforme à notre <a href="politique-confidentialite.html">politique de confidentialité</a>.</div>
       </div>
-      <div id="rdvOk" class="ok" style="display:none">
-        <div class="big">✅</div>
-        <h4>C'est noté, merci !</h4>
-        <p>On vous recontacte très vite pour convenir d'un créneau. À tout de suite 👋</p>
-        <button class="send" style="margin-top:16px" onclick="closeRdv()">Fermer</button>
-      </div>
+    </div>
+    <div id="rdvOk" class="ok" style="display:none">
+      <div class="big">✓</div>
+      <h4>C'est noté, merci.</h4>
+      <p>On vous recontacte très vite pour convenir d'un créneau.</p>
+      <button class="send" style="margin-top:16px" onclick="closeRdv()">Fermer</button>
     </div>
   </div>
+</div>
 
-  <script>
-    // Partage du lien Nomos : ouvre la fenêtre de partage native du téléphone
-    // (WhatsApp, SMS, Mail…) ; sinon copie le lien dans le presse-papier.
-    function partagerNomos(){
-      var url='https://nomos-haccp.fr';
-      var data={title:'Nomos HACCP',text:'Nomos — audit & hygiène alimentaire, prêt pour vos contrôles DDPP.',url:url};
-      try{
-        if(navigator.share){ navigator.share(data).catch(function(){}); return; }
-      }catch(e){}
-      try{
-        if(navigator.clipboard&&navigator.clipboard.writeText){
-          navigator.clipboard.writeText(url).then(function(){ alert('Lien copié : '+url); }).catch(function(){ window.prompt('Copiez le lien :',url); });
-          return;
+<script>
+/* ── Reveal animations (apparition douce une fois) ── */
+document.documentElement.classList.add('js');
+requestAnimationFrame(function(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});});
+
+/* ── Menu drawer ── */
+function openMenu(){
+  document.getElementById('menu').classList.add('open');
+  document.getElementById('menuOverlay').classList.add('open');
+  document.getElementById('menu').setAttribute('aria-hidden','false');
+}
+function closeMenu(){
+  document.getElementById('menu').classList.remove('open');
+  document.getElementById('menuOverlay').classList.remove('open');
+  document.getElementById('menu').setAttribute('aria-hidden','true');
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeMenu();closeRdv();}});
+
+/* ── Partage natif ── */
+function partagerNomos(){
+  var url='https://nomos-haccp.fr';
+  var data={title:'Nomos HACCP',text:'Nomos — audit & hygiène alimentaire, prêt pour vos contrôles DDPP.',url:url};
+  try{ if(navigator.share){ navigator.share(data).catch(function(){}); return; } }catch(e){}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ alert('Lien copié : '+url); }).catch(function(){ window.prompt('Copiez le lien :',url); });
+      return;
+    }
+  }catch(e){}
+  window.prompt('Copiez le lien :',url);
+}
+
+/* ── Modale Démo / RDV ── */
+var _rdvSource='';
+function openRdv(src){
+  _rdvSource=src||'';
+  document.getElementById('rdvForm').style.display='block';
+  document.getElementById('rdvOk').style.display='none';
+  document.getElementById('rdvOverlay').classList.add('open');
+  closeMenu();
+}
+function closeRdv(){ document.getElementById('rdvOverlay').classList.remove('open'); }
+
+/* ── Installation PWA ── */
+var _deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); _deferredPrompt=e; });
+function installNomos(){
+  if(_deferredPrompt){
+    _deferredPrompt.prompt();
+    if(_deferredPrompt.userChoice){ _deferredPrompt.userChoice.then(function(){ _deferredPrompt=null; }); }
+    return;
+  }
+  var ua=navigator.userAgent||'';
+  if(/iPhone|iPad|iPod/i.test(ua)){
+    alert("Installer Nomos sur iPhone / iPad :\n\n1. Toucher le bouton Partager (↑) en bas de Safari.\n2. Choisir « Sur l'écran d'accueil ».\n3. Valider — l'icône Nomos apparaît sur votre écran d'accueil.");
+  } else {
+    alert("Installer Nomos sur votre PC :\n\n• Microsoft Edge : menu ··· (en haut à droite) → Applications → « Installer ce site en tant qu'application ».\n• Google Chrome : menu ⋮ → « Installer l'application… », ou l'icône d'installation (⊞) dans la barre d'adresse.");
+  }
+}
+
+/* ── Badge version (ver.txt déployé) ── */
+(function(){
+  try{
+    fetch('ver.txt?t='+Date.now(),{cache:'no-store'})
+      .then(function(r){return r.ok?r.text():null;})
+      .then(function(t){
+        if(t&&/\d/.test(t)){
+          var el=document.getElementById('nomosVer');
+          if(el) el.textContent='Version V'+t.trim();
         }
-      }catch(e){}
-      window.prompt('Copiez le lien :',url);
-    }
-    function openMenu(){document.getElementById('menu').classList.add('open');document.getElementById('menuOverlay').classList.add('open');document.getElementById('menu').setAttribute('aria-hidden','false');}
-    function closeMenu(){document.getElementById('menu').classList.remove('open');document.getElementById('menuOverlay').classList.remove('open');document.getElementById('menu').setAttribute('aria-hidden','true');}
-    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
-    // Apparition douce une seule fois au chargement — tout finit visible (jamais de vide).
-    document.documentElement.classList.add('js');
-    requestAnimationFrame(function(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});});
+      }).catch(function(){});
+  }catch(e){}
+})();
 
-    // ── Modale Démo / RDV ──
-    var _rdvSource = '';
-    function openRdv(src){
-      _rdvSource = src || '';
-      document.getElementById('rdvForm').style.display = 'block';
-      document.getElementById('rdvOk').style.display = 'none';
-      document.getElementById('rdvOverlay').classList.add('open');
-      closeMenu();
-    }
-    function closeRdv(){ document.getElementById('rdvOverlay').classList.remove('open'); }
-    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeRdv();});
+/* ── Envoi formulaire démo (Supabase principal + EmailJS de secours) ── */
+function sendRdv(){
+  var _hp=document.getElementById('rdvWebsite');
+  if(_hp&&_hp.value.trim()!==''){
+    document.getElementById('rdvForm').style.display='none';
+    document.getElementById('rdvOk').style.display='block';
+    return;
+  }
+  var nom=(document.getElementById('rdvNom').value||'').trim();
+  var email=(document.getElementById('rdvEmail').value||'').trim();
+  var tel=(document.getElementById('rdvTel').value||'').trim();
+  var cp=(document.getElementById('rdvCp').value||'').trim();
+  var msg=(document.getElementById('rdvMsg').value||'').trim();
+  if(!nom||(!tel&&!email)){
+    alert("Merci d'indiquer au moins votre nom et un téléphone ou un email pour qu'on puisse vous recontacter.");
+    return;
+  }
+  if(email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    alert("L'email saisi ne semble pas valide. Corrigez-le ou laissez-le vide si vous préférez être rappelé.");
+    return;
+  }
+  var btn=document.getElementById('rdvSend');
+  btn.disabled=true; btn.textContent='Envoi…';
+  var corps='Code postal : '+(cp||'—')+(msg?('\nMessage : '+msg):'')+'\nDepuis : accueil Nomos ('+_rdvSource+')';
+  var blocInfos='📅 DÉMO/RDV  |  Nom : '+nom+'  |  Tél : '+(tel||'—')+'  |  Email : '+(email||'—')+'  |  CP : '+(cp||'—')+(msg?('  |  Message : '+msg):'');
 
-    // ── Installation de Nomos (PWA, PC et mobile) ──
-    var _deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', function(e){
-      e.preventDefault();        // on garde la main pour déclencher l'install au bon moment
-      _deferredPrompt = e;
-    });
-    function installNomos(){
-      if(_deferredPrompt){       // Chrome / Edge (PC & Android) : vraie boîte d'installation native
-        _deferredPrompt.prompt();
-        if(_deferredPrompt.userChoice){ _deferredPrompt.userChoice.then(function(){ _deferredPrompt=null; }); }
-        return;
-      }
-      var ua = navigator.userAgent || '';
-      if(/iPhone|iPad|iPod/i.test(ua)){
-        alert("Installer Nomos sur iPhone / iPad :\n\n1. Toucher le bouton Partager (le carré avec une flèche ↑) en bas de Safari.\n2. Choisir « Sur l'écran d'accueil ».\n3. Valider — l'icône Nomos apparaît sur votre écran d'accueil.");
-      } else {
-        alert("Installer Nomos sur votre PC portable :\n\n• Microsoft Edge : menu ··· (en haut à droite) → Applications → « Installer ce site en tant qu'application ».\n• Google Chrome : menu ⋮ → « Installer l'application… », ou l'icône d'installation (⊞) dans la barre d'adresse.\n\nUne icône Nomos sera créée sur le Bureau et dans le menu Démarrer — elle s'ouvre comme un vrai logiciel.");
-      }
+  function done(ok){
+    if(ok){
+      document.getElementById('rdvForm').style.display='none';
+      document.getElementById('rdvOk').style.display='block';
+    } else {
+      var sujet=encodeURIComponent('Demande de démo Nomos — '+nom);
+      var body=encodeURIComponent('Nom : '+nom+'\nEmail : '+email+'\nTéléphone : '+tel+'\n'+corps);
+      window.location.href='mailto:lea@nomos-haccp.fr?subject='+sujet+'&body='+body;
     }
-
-    function sendRdv(){
-      // Anti-spam : si le champ piège (honeypot) est rempli, c'est un robot.
-      // On fait comme si tout s'était bien passé, mais on n'envoie rien.
-      var _hp = document.getElementById('rdvWebsite');
-      if (_hp && _hp.value.trim() !== '') {
-        document.getElementById('rdvForm').style.display = 'none';
-        document.getElementById('rdvOk').style.display = 'block';
-        return;
-      }
-      var nom = (document.getElementById('rdvNom').value||'').trim();
-      var email = (document.getElementById('rdvEmail').value||'').trim();
-      var tel = (document.getElementById('rdvTel').value||'').trim();
-      var cp = (document.getElementById('rdvCp').value||'').trim();
-      var msg = (document.getElementById('rdvMsg').value||'').trim();
-      // Validation minimale : un moyen de recontact (tél ou email) + un nom.
-      if(!nom || (!tel && !email)){
-        alert('Merci d\'indiquer au moins votre nom et un téléphone ou un email pour qu\'on puisse vous recontacter.');
-        return;
-      }
-      if(email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
-        alert('L\'email saisi ne semble pas valide. Le corriger, ou laissez-le vide si vous préférez être rappelé par téléphone.');
-        return;
-      }
-      var btn = document.getElementById('rdvSend');
-      btn.disabled = true; btn.textContent = 'Envoi…';
-      var corps = 'Code postal : ' + (cp||'—') + (msg ? ('\nMessage : ' + msg) : '') + '\nDepuis : page d\'accueil Nomos (' + _rdvSource + ')';
-      // Dépannage : le modèle d'email actuel n'affiche que le champ {{code}}. On y met
-      // donc TOUTES les coordonnées sur une ligne, pour que l'admin puisse rappeler.
-      var blocInfos = '📅 DÉMO/RDV  |  Nom : ' + nom
-        + '  |  Tél : ' + (tel || '—')
-        + '  |  Email : ' + (email || '—')
-        + '  |  CP : ' + (cp || '—')
-        + (msg ? ('  |  Message : ' + msg) : '');
-      function done(ok){
-        if(ok){
-          document.getElementById('rdvForm').style.display = 'none';
-          document.getElementById('rdvOk').style.display = 'block';
-        } else {
-          // Repli : ouvrir le client mail pré-rempli pour ne jamais perdre la demande.
-          var sujet = encodeURIComponent('Demande de démo Nomos — ' + nom);
-          var body = encodeURIComponent('Nom : ' + nom + '\nEmail : ' + email + '\nTéléphone : ' + tel + '\n' + corps);
-          window.location.href = 'mailto:lea@nomos-haccp.fr?subject=' + sujet + '&body=' + body;
-        }
-        btn.disabled = false; btn.textContent = 'Réserver ma démo →';
-      }
-      // Anti-blocage (réseau faible) : si rien ne répond en 12 s, on bascule sur le
-      // repli mailto au lieu de rester bloqué sur « Envoi… ».
-      var _fini = false;
-      var _terminer = function(ok){ if(_fini) return; _fini = true; done(ok); };
-      var _to = setTimeout(function(){ _terminer(false); }, 12000);
-      // Repli EmailJS (ancien système) — n'est utilisé que si OVH échoue.
-      var _repliEmailJS = function(){
-        try{
-          if(typeof emailjs === 'undefined' || !emailjs.send){ clearTimeout(_to); _terminer(false); return; }
-          emailjs.send('service_84lz31w','template_ti43bkh',{
-            to_name:'Administrateur Nomos', to_email:'lea@nomos-haccp.fr', email:'lea@nomos-haccp.fr',
-            code:blocInfos, service:corps, business:nom, resp:nom, tel:tel,
-            client_email:email, lien_site:location.href, date:new Date().toLocaleDateString('fr-FR')
-          }).then(function(){ clearTimeout(_to); _terminer(true); }, function(err){ console.warn('RDV email KO',err); clearTimeout(_to); _terminer(false); });
-        }catch(e){ clearTimeout(_to); _terminer(false); }
-      };
-      // 1) OVH (fonction Supabase « envoyer-email ») — voie principale, UE / RGPD.
-      try{
-        var NOMOS_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtpa25heHV6cG92dml2a2pxenNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NjQ3OTcsImV4cCI6MjA5MjQ0MDc5N30._LY5my720EJOo-9byuA65zVbUv7PsGeXUK_R2kzkxHA';
-        fetch('https://kiknaxuzpovvivkjqzss.supabase.co/functions/v1/envoyer-email', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+NOMOS_ANON, 'apikey':NOMOS_ANON },
-          body: JSON.stringify({ type:'admin', params:{
-            etablissement: nom, responsable: nom, email_client: email, telephone: tel,
-            formule: 'Demande de démo (site)',
-            message: 'Nouvelle demande de démo depuis le site.\n\n' + corps + '\n\n' + blocInfos
-          }})
-        }).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
-          if(j && j.ok){ clearTimeout(_to); _terminer(true); } else { _repliEmailJS(); }
-        }).catch(function(){ _repliEmailJS(); });
-      }catch(e){ _repliEmailJS(); }
-    }
-  </script>
-
+    btn.disabled=false; btn.textContent='Réserver ma démo →';
+  }
+  var _fini=false;
+  var _terminer=function(ok){ if(_fini) return; _fini=true; done(ok); };
+  var _to=setTimeout(function(){ _terminer(false); },12000);
+  var _repliEmailJS=function(){
+    try{
+      if(typeof emailjs==='undefined'||!emailjs.send){ clearTimeout(_to); _terminer(false); return; }
+      emailjs.send('service_84lz31w','template_ti43bkh',{
+        to_name:'Administrateur Nomos', to_email:'lea@nomos-haccp.fr', email:'lea@nomos-haccp.fr',
+        code:blocInfos, service:corps, business:nom, resp:nom, tel:tel,
+        client_email:email, lien_site:location.href, date:new Date().toLocaleDateString('fr-FR')
+      }).then(function(){ clearTimeout(_to); _terminer(true); },function(err){ console.warn('RDV email KO',err); clearTimeout(_to); _terminer(false); });
+    }catch(e){ clearTimeout(_to); _terminer(false); }
+  };
+  try{
+    var NOMOS_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtpa25heHV6cG92dml2a2pxenNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NjQ3OTcsImV4cCI6MjA5MjQ0MDc5N30._LY5my720EJOo-9byuA65zVbUv7PsGeXUK_R2kzkxHA';
+    fetch('https://kiknaxuzpovvivkjqzss.supabase.co/functions/v1/envoyer-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+NOMOS_ANON,'apikey':NOMOS_ANON},
+      body:JSON.stringify({ type:'admin', params:{
+        etablissement:nom, responsable:nom, email_client:email, telephone:tel,
+        formule:'Demande de démo (site)',
+        message:'Nouvelle demande de démo depuis le site.\n\n'+corps+'\n\n'+blocInfos
+      }})
+    }).then(function(r){return r.ok?r.json():null;}).then(function(j){
+      if(j&&j.ok){ clearTimeout(_to); _terminer(true); } else { _repliEmailJS(); }
+    }).catch(function(){ _repliEmailJS(); });
+  }catch(e){ _repliEmailJS(); }
+}
+</script>
 </body>
 </html>
