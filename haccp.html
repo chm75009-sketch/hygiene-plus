@@ -62,7 +62,7 @@
           if (document.getElementById('majBanner') || !document.body) return;
           var b = document.createElement('div');
           b.id = 'majBanner';
-          b.style.cssText = 'position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:2147483646;background:#16a34a;color:#fff;padding:11px 14px 11px 16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.28);font-family:Outfit,system-ui,sans-serif;font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:12px;max-width:92vw';
+          b.style.cssText = 'position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:2147483646;background:#16a34a;color:#fff;padding:11px 14px 11px 16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.28);font-family:Inter,system-ui,sans-serif;font-size:13.5px;font-weight:700;display:flex;align-items:center;gap:12px;max-width:92vw';
           b.appendChild(document.createTextNode('🔄 Nouvelle version disponible'));
           var btn = document.createElement('button');
           btn.textContent = 'Mettre à jour';
@@ -162,7 +162,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer onerror="console.warn('CDN non chargé: https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2')"></script>
     <script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.js" defer onerror="console.warn('CDN non chargé: https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.js')"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer onerror="console.warn('CDN non chargé: https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js')"></script>
@@ -198,7 +198,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
     if (h === 'nomos-haccp.fr' || h === 'www.nomos-haccp.fr') return;
     var b = document.createElement('div');
     b.textContent = '🧪 HYGIÈNE+ — COPIE DE TRAVAIL (site de test, pas le site client)';
-    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#dc2626;color:#fff;text-align:center;font:800 11px/1 Outfit,Arial,sans-serif;padding:4px 6px;letter-spacing:.3px;pointer-events:none';
+    b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#dc2626;color:#fff;text-align:center;font:800 11px/1 Inter,system-ui,sans-serif;padding:4px 6px;letter-spacing:.3px;pointer-events:none';
     document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(b); });
   } catch(e) {}
 })();
@@ -238,7 +238,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <div style="display:flex;align-items:center;gap:8px">
       <div class="date-pill" id="datePill"></div>
       <button id="topbarLogoutBtn" onclick="seDeconnecter()" title="Se déconnecter" aria-label="Se déconnecter"
-        style="display:inline-flex;align-items:center;gap:5px;background:rgba(220,38,38,.18);border:1px solid rgba(248,113,113,.5);color:#fca5a5;border-radius:9px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif;white-space:nowrap">🔓<span style="font-size:11px">Quitter</span></button>
+        style="display:inline-flex;align-items:center;gap:5px;background:rgba(220,38,38,.18);border:1px solid rgba(248,113,113,.5);color:#fca5a5;border-radius:9px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;white-space:nowrap">🔓<span style="font-size:11px">Quitter</span></button>
     </div>
   </div>
   <!-- NAV-1 — Boutons flottants d'aide à la navigation (additifs, n'altèrent aucune
@@ -252,7 +252,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- ════════════════════════════════════════════════════════════════ -->
     <!-- V90 — PAGE PRÉSENTATION (landing commerciale) — affichée avant login -->
     <!-- ════════════════════════════════════════════════════════════════ -->
-    <div class="page active" id="page-presentation" style="min-height:100vh;background:linear-gradient(165deg,#ffffff 0%,#f4f8f6 55%,#eef4f1 100%);color:#0b0f1a;font-family:Outfit,sans-serif">
+    <div class="page active" id="page-presentation" style="min-height:100vh;background:linear-gradient(165deg,#ffffff 0%,#f4f8f6 55%,#eef4f1 100%);color:#0b0f1a;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">
       <!-- BLOC GRIS ARDOISE — identité Nomos Traça (comme la carte du site) -->
       <div style="position:relative;background:linear-gradient(155deg,#64748b,#3f4a5c);color:#fff;overflow:hidden">
         <div style="position:absolute;top:16px;right:-42px;transform:rotate(45deg);background:#d2ad46;color:#3b2c05;font-weight:900;font-size:10px;letter-spacing:.06em;padding:5px 50px;box-shadow:0 6px 16px -6px rgba(0,0,0,.4);z-index:6">Au quotidien</div>
@@ -270,7 +270,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
               <a href="#section-demo" onclick="event.preventDefault();document.getElementById('section-demo').scrollIntoView({behavior:'smooth'})" style="color:rgba(255,255,255,0.8);font-size:13px;font-weight:700;text-decoration:none">Démo</a>
             </nav>
             <div style="display:flex;gap:10px;align-items:center">
-              <button onclick="showPage('page-login')" style="background:#fff;color:#3f4a5c;border:none;padding:9px 18px;border-radius:9px;font-weight:800;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif;white-space:nowrap">🔐 Se connecter</button>
+              <button onclick="showPage('page-login')" style="background:#fff;color:#3f4a5c;border:none;padding:9px 18px;border-radius:9px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;white-space:nowrap">🔐 Se connecter</button>
               <button class="nav-burger" onclick="document.getElementById('navMobileMenu').classList.toggle('open')" style="display:none;background:rgba(255,255,255,0.14);color:white;border:1px solid rgba(255,255,255,0.3);padding:8px 11px;border-radius:9px;cursor:pointer;font-size:16px">☰</button>
             </div>
           </div>
@@ -293,9 +293,9 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <h1 style="font-size:clamp(24px,3.4vw,34px);font-weight:900;line-height:1.15;margin:0 0 12px;color:#fff">Votre HACCP en règle,<br><span style="color:#e8d9a6">sans paperasse, sans stress.</span></h1>
             <p style="font-size:clamp(13px,1.4vw,14px);color:rgba(255,255,255,0.82);max-width:580px;margin:0 auto 20px;line-height:1.5">L'application HACCP intuitive pour restaurateurs, boulangers, traiteurs et bouchers. Tous vos contrôles et votre Pack DDPP en 1 clic.</p>
             <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:24px">
-              <button onclick="showPage('page-login')" style="background:#fff;color:#3f4a5c;border:none;padding:11px 22px;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">🔐 Se connecter</button>
-              <button onclick="showPage('page-inscription')" style="background:rgba(255,255,255,0.1);color:#fff;border:1.5px solid rgba(255,255,255,0.4);padding:11px 22px;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">📝 S'inscrire</button>
-              <button onclick="document.getElementById('section-demo').scrollIntoView({behavior:'smooth'})" style="background:rgba(255,255,255,0.06);color:#fff;border:1.5px solid rgba(255,255,255,0.22);padding:11px 22px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">▶️ Voir la démo</button>
+              <button onclick="showPage('page-login')" style="background:#fff;color:#3f4a5c;border:none;padding:11px 22px;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🔐 Se connecter</button>
+              <button onclick="showPage('page-inscription')" style="background:rgba(255,255,255,0.1);color:#fff;border:1.5px solid rgba(255,255,255,0.4);padding:11px 22px;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">📝 S'inscrire</button>
+              <button onclick="document.getElementById('section-demo').scrollIntoView({behavior:'smooth'})" style="background:rgba(255,255,255,0.06);color:#fff;border:1.5px solid rgba(255,255,255,0.22);padding:11px 22px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">▶️ Voir la démo</button>
             </div>
             <div style="display:flex;gap:22px;justify-content:center;flex-wrap:wrap;padding-top:14px;border-top:1px solid rgba(255,255,255,0.15)">
               <div style="text-align:center"><div style="font-size:18px;font-weight:900;color:#e8d9a6">19</div><div style="font-size:10px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.5px">Modules HACCP</div></div>
@@ -418,7 +418,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
             <div style="display:flex;align-items:center;gap:8px">
               <button id="demoPrev" onclick="demoPrev()" style="background:#eef2f0;color:#3f4a5c;border:1px solid #dde3e0;width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">←</button>
-              <button id="demoPlay" onclick="demoTogglePlay()" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:0 16px;height:36px;border-radius:9px;cursor:pointer;font-weight:800;font-size:13px;font-family:Outfit,sans-serif">⏸ Pause</button>
+              <button id="demoPlay" onclick="demoTogglePlay()" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:0 16px;height:36px;border-radius:9px;cursor:pointer;font-weight:800;font-size:13px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">⏸ Pause</button>
               <button id="demoNext" onclick="demoNext()" style="background:#eef2f0;color:#3f4a5c;border:1px solid #dde3e0;width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">→</button>
             </div>
             <!-- Indicateurs -->
@@ -435,7 +435,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
 
         <!-- ============ OFFRE SPÉCIALE — Suivi & Accompagnement ============ -->
-        <div style="max-width:900px;margin:0 auto 26px;background:linear-gradient(135deg,#e9c766 0%,#d2ad46 45%,#b79029 100%);border-radius:18px;padding:20px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:0 14px 34px rgba(183,144,41,0.35);font-family:Outfit,sans-serif">
+        <div style="max-width:900px;margin:0 auto 26px;background:linear-gradient(135deg,#e9c766 0%,#d2ad46 45%,#b79029 100%);border-radius:18px;padding:20px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:0 14px 34px rgba(183,144,41,0.35);font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">
           <div style="flex:1;min-width:230px">
             <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;margin-bottom:9px;background:rgba(32,24,6,0.14);color:#201806;border:1px solid rgba(32,24,6,0.22)">★ Offre spéciale</span>
             <div style="font-size:20px;font-weight:800;color:#201806;margin:0 0 4px;line-height:1.15">Suivi &amp; accompagnement personnalisé</div>
@@ -443,7 +443,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:11px;text-align:right">
             <div style="font-size:32px;font-weight:900;color:#201806;line-height:1;white-space:nowrap">900,00 €&nbsp;<span style="font-size:14px;font-weight:700">HT / mois</span></div>
-            <button onclick="showPage('page-inscription')" style="background:#131929;color:#fff;border:none;border-radius:12px;padding:12px 22px;font-family:Outfit,sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(10,14,26,0.3)">Contactez-nous pour en savoir plus →</button>
+            <button onclick="showPage('page-inscription')" style="background:#131929;color:#fff;border:none;border-radius:12px;padding:12px 22px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(10,14,26,0.3)">Contactez-nous pour en savoir plus →</button>
           </div>
         </div>
 
@@ -451,8 +451,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
         <h3 style="font-size:17px;font-weight:800;color:#0b0f1a;margin:6px 0 12px;text-align:center">📱 Logiciel Nomos&nbsp;Traça</h3>
         <div style="text-align:center;margin-bottom:14px">
           <div style="display:inline-flex;background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:4px;gap:2px">
-            <button id="engTab12" onclick="setEngTarif('eng')" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:9px 16px;border-radius:9px;font-weight:800;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif">Avec engagement 12 mois<span style="display:block;font-size:9px;font-weight:700;margin-top:1px;opacity:0.85">(jusqu'à -33%)</span></button>
-            <button id="engTabLibre" onclick="setEngTarif('libre')" style="background:transparent;color:#52617a;border:none;padding:9px 16px;border-radius:9px;font-weight:700;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif">Sans engagement</button>
+            <button id="engTab12" onclick="setEngTarif('eng')" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:9px 16px;border-radius:9px;font-weight:800;font-size:12px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Avec engagement 12 mois<span style="display:block;font-size:9px;font-weight:700;margin-top:1px;opacity:0.85">(jusqu'à -33%)</span></button>
+            <button id="engTabLibre" onclick="setEngTarif('libre')" style="background:transparent;color:#52617a;border:none;padding:9px 16px;border-radius:9px;font-weight:700;font-size:12px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Sans engagement</button>
           </div>
         </div>
         <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid #e7ece9;border-radius:14px;margin-bottom:12px">
@@ -509,7 +509,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <div style="background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:14px"><div style="font-weight:800;color:#0b0f1a;font-size:13px;margin-bottom:5px">Dois-je sauvegarder mes contrôles ?</div><div style="font-size:12px;color:#52617a;line-height:1.6">Oui — pensez à exporter et conserver régulièrement vos contrôles (Pack DDPP / PDF). Vous restez responsable de la conservation de vos enregistrements.</div></div>
         </div>
         <div style="text-align:center;margin-top:22px">
-          <button onclick="showPage('page-inscription')" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:13px 28px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;font-family:Outfit,sans-serif;box-shadow:0 8px 24px rgba(210,173,70,0.3)">Démarrer l'essai gratuit</button>
+          <button onclick="showPage('page-inscription')" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:13px 28px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 8px 24px rgba(210,173,70,0.3)">Démarrer l'essai gratuit</button>
         </div>
         <script>
         window.setEngTarif = function(mode){
@@ -560,7 +560,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
             '<div style="font-size:11px;color:#9a7518;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Inclus dans la formule</div>'+
             '<ul style="padding:0 0 0 18px;margin:0 0 14px;font-size:13px;color:#0b0f1a;line-height:1.6">'+li+'</ul>'+
             extra +
-            '<button onclick="closeFormuleDetail();showPage(\'page-inscription\')" style="width:100%;background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:13px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;font-family:Outfit,sans-serif">Démarrer l\'essai gratuit</button>';
+            '<button onclick="closeFormuleDetail();showPage(\'page-inscription\')" style="width:100%;background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:13px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Démarrer l\'essai gratuit</button>';
           m.style.display = 'flex';
           document.body.style.overflow = 'hidden';
         };
@@ -573,7 +573,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
         <!-- Fenêtre détail formule -->
         <div id="modalFormule" onclick="if(event.target===this)closeFormuleDetail()" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto">
           <div style="background:linear-gradient(160deg,#0f1729,#131929);border:1.5px solid rgba(210,173,70,0.3);border-radius:18px;max-width:520px;width:100%;padding:24px;position:relative;box-shadow:0 24px 80px rgba(0,0,0,0.6);margin:auto">
-            <button onclick="closeFormuleDetail()" aria-label="Fermer" style="position:absolute;top:14px;right:14px;background:#ffffff;border:1px solid #e7ece9;color:#0b0f1a;width:34px;height:34px;border-radius:50%;font-size:16px;font-weight:900;cursor:pointer;font-family:Outfit,sans-serif">✕</button>
+            <button onclick="closeFormuleDetail()" aria-label="Fermer" style="position:absolute;top:14px;right:14px;background:#ffffff;border:1px solid #e7ece9;color:#0b0f1a;width:34px;height:34px;border-radius:50%;font-size:16px;font-weight:900;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">✕</button>
             <div id="modalFormuleContent"></div>
           </div>
         </div>
@@ -582,8 +582,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
       <section style="padding:34px 20px 22px;max-width:1000px;margin:0 auto;text-align:center">
         <h2 style="font-size:clamp(20px,2.5vw,26px);font-weight:900;color:#0b0f1a;margin:0 0 10px">Prêt à dire adieu à la paperasse ?</h2>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
-          <button onclick="showPage('page-login')" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;font-family:Outfit,sans-serif;box-shadow:0 8px 24px rgba(210,173,70,0.3)">🔐 Se connecter</button>
-          <button onclick="showPage('page-inscription')" style="background:rgba(210,173,70,0.12);color:#9a7518;border:1.5px solid rgba(210,173,70,0.4);padding:14px 32px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;font-family:Outfit,sans-serif">📝 S'inscrire</button>
+          <button onclick="showPage('page-login')" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 8px 24px rgba(210,173,70,0.3)">🔐 Se connecter</button>
+          <button onclick="showPage('page-inscription')" style="background:rgba(210,173,70,0.12);color:#9a7518;border:1.5px solid rgba(210,173,70,0.4);padding:14px 32px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">📝 S'inscrire</button>
         </div>
       </section>
       <!-- FOOTER -->
@@ -605,14 +605,14 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
       </footer>
       <!-- V92 — Bouton flottant "Haut de page" -->
-      <button id="btnScrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Retour en haut" style="position:fixed;bottom:84px;right:24px;z-index:90;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 8px 24px rgba(210,173,70,0.4);display:none;align-items:center;justify-content:center;font-family:Outfit,sans-serif">↑</button>
+      <button id="btnScrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Retour en haut" style="position:fixed;bottom:84px;right:24px;z-index:90;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 8px 24px rgba(210,173,70,0.4);display:none;align-items:center;justify-content:center;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">↑</button>
     </div>
     <!-- V92 — Bouton flottant "← Retour" — TOUJOURS visible (icône seule, compact), sauf sur la page-presentation (point d'entrée) -->
-    <button id="btnAppBack" onclick="appGoBack()" aria-label="Retour à la page précédente" title="Retour" style="position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px;z-index:9000;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);color:#0b0f1a;border:1px solid #e7ece9;width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:900;cursor:pointer;font-family:Outfit,sans-serif;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.4);padding:0;line-height:1">←</button>
+    <button id="btnAppBack" onclick="appGoBack()" aria-label="Retour à la page précédente" title="Retour" style="position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px;z-index:9000;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);color:#0b0f1a;border:1px solid #e7ece9;width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:900;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.4);padding:0;line-height:1">←</button>
     <!-- PAGE LOGIN -->
     <div class="page" id="page-login" style="min-height:100vh;background:linear-gradient(160deg,#0a0e1a,#131929);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;position:relative">
       <!-- V92 — Bouton retour vers la présentation -->
-      <button onclick="showPage('page-presentation')" aria-label="Retour à la page de présentation" style="position:absolute;top:calc(16px + env(safe-area-inset-top,0px));left:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.85);padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;display:inline-flex;align-items:center;gap:6px">← Retour à la présentation</button>
+      <button onclick="showPage('page-presentation')" aria-label="Retour à la page de présentation" style="position:absolute;top:calc(16px + env(safe-area-inset-top,0px));left:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.85);padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;display:inline-flex;align-items:center;gap:6px">← Retour à la présentation</button>
       <div style="width:100%;max-width:420px">
         <div style="text-align:center;margin-bottom:36px">
           <div style="font-size:48px;margin-bottom:12px">🛡️</div>
@@ -640,7 +640,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <div id="login_error" role="alert" aria-live="assertive" style="display:none;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#fca5a5;font-weight:600;margin-bottom:14px;text-align:center"></div>
           <button onclick="connexion()" id="login_btn"
             aria-label="Se connecter à votre établissement"
-            style="width:100%;padding:16px;background:linear-gradient(135deg,#0f766e,#14b8a6);border:none;border-radius:12px;color:white;font-size:15px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif;transition:opacity .2s">
+            style="width:100%;padding:16px;background:linear-gradient(135deg,#0f766e,#14b8a6);border:none;border-radius:12px;color:white;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;transition:opacity .2s">
             🔑 Se connecter
           </button>
           <div style="text-align:center;margin-top:14px">
@@ -660,7 +660,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
                 style="background:#eef2ff;border:none;border-radius:12px;width:54px;height:54px;font-size:20px;cursor:pointer;flex-shrink:0">🎤</button>
             </div>
             <button type="button" onclick="connexionParPin(document.getElementById('pinv_input').value)"
-              style="width:100%;margin-top:10px;padding:14px;background:linear-gradient(135deg,#0f766e,#14b8a6);border:none;border-radius:12px;color:white;font-size:14px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif">🔓 Se connecter par PIN</button>
+              style="width:100%;margin-top:10px;padding:14px;background:linear-gradient(135deg,#0f766e,#14b8a6);border:none;border-radius:12px;color:white;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🔓 Se connecter par PIN</button>
             <div style="text-align:center;margin-top:8px"><span onclick="desactiverPinVocal()" style="font-size:11px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:underline">Supprimer le PIN de cet appareil</span></div>
           </div>
           <div id="pinActiverWrap" style="display:none;text-align:center;margin-top:14px">
@@ -686,7 +686,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <div class="page" id="page-onboarding" style="min-height:100vh;background:linear-gradient(160deg,#0a0e1a,#131929)">
       <div style="padding:32px 20px 20px">
         <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-          <button onclick="seDeconnecter()" aria-label="Se déconnecter" style="display:inline-flex;align-items:center;gap:6px;background:rgba(220,38,38,.15);border:1px solid rgba(248,113,113,.45);color:#fca5a5;font-size:13px;font-weight:700;cursor:pointer;padding:9px 16px;border-radius:10px;font-family:Outfit,sans-serif">🔓 Déconnexion</button>
+          <button onclick="seDeconnecter()" aria-label="Se déconnecter" style="display:inline-flex;align-items:center;gap:6px;background:rgba(220,38,38,.15);border:1px solid rgba(248,113,113,.45);color:#fca5a5;font-size:13px;font-weight:700;cursor:pointer;padding:9px 16px;border-radius:10px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🔓 Déconnexion</button>
         </div>
         <div style="text-align:center;margin-bottom:28px">
           <div style="font-size:40px;margin-bottom:10px">🛡️</div>
@@ -696,7 +696,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
         <!-- ETAPE 1 : SECTEUR -->
         <div id="onb_step1">
           <div id="onb_back_btn" style="display:none;margin-bottom:16px">
-            <button onclick="goHome()" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;font-size:13px;font-weight:600;cursor:pointer;padding:10px 16px;border-radius:10px;font-family:Outfit,sans-serif">← Retour à l'accueil</button>
+            <button onclick="goHome()" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;font-size:13px;font-weight:600;cursor:pointer;padding:10px 16px;border-radius:10px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Retour à l'accueil</button>
           </div>
           <div style="font-size:15px;font-weight:800;color:white;margin-bottom:16px;text-align:center">Quel est votre secteur d'activité ?</div>
           <div id="modeTestBadge" style="display:none"></div>
@@ -728,7 +728,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
         <!-- ETAPE 2 : FICHE ÉTABLISSEMENT -->
         <div id="onb_step2" style="display:none">
-          <button onclick="document.getElementById('onb_step1').style.display='block';document.getElementById('onb_step2').style.display='none'" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px;padding:10px 16px;border-radius:10px;font-family:Outfit,sans-serif">← Changer de secteur</button>
+          <button onclick="document.getElementById('onb_step1').style.display='block';document.getElementById('onb_step2').style.display='none'" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px;padding:10px 16px;border-radius:10px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Changer de secteur</button>
           <div id="onb_secteur_label" style="font-size:15px;font-weight:800;color:white;margin-bottom:16px;text-align:center"></div>
           <!-- CHAMPS COMMUNS -->
           <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px">
@@ -761,7 +761,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <div id="onb_error" style="display:none;background:rgba(220,38,38,.2);border:1px solid rgba(220,38,38,.4);border-radius:10px;padding:10px 14px;font-size:12px;color:#fca5a5;margin-bottom:12px">
             ⚠️ Remplir les champs obligatoires (*)
           </div>
-          <button onclick="validerOnboarding()" style="width:100%;padding:16px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif">
+          <button onclick="validerOnboarding()" style="width:100%;padding:16px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">
             ✓ Accéder à Nomos Traça
           </button>
         </div>
@@ -770,19 +770,19 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- PAGE CHOIX — SÉLECTION MODE — NE PAS MODIFIER -->
     <div class="page" id="page-choix">
       <div style="min-height:100vh;background:#0a0a1a;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px">
-        <button onclick="showPage('page-login')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;margin-bottom:20px;align-self:flex-start">← Retour</button>
-        <div style="color:white;font-size:26px;font-weight:900;margin-bottom:24px;text-align:center;font-family:Outfit,sans-serif;line-height:1.2">Choisir votre mode de navigation</div>
+        <button onclick="showPage('page-login')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;margin-bottom:20px;align-self:flex-start">← Retour</button>
+        <div style="color:white;font-size:26px;font-weight:900;margin-bottom:24px;text-align:center;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.2">Choisir votre mode de navigation</div>
         <!-- Bouton 1 — Je suis guidé -->
         <div role="button" tabindex="0" aria-label="Démarrer en mode guidé pas à pas" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="lsSet('haccp_mode','guide'); var _s = {etabId: ETAB_ID||lsGet('haccp_etab_id')||'local', etabNom: ETAB.nom||lsGet('haccp_etab')||'Mon établissement', secteur: SECTEUR_ACTIF||'resto', pwdOk:true, loginAt: Date.now()}; sessionWrite(JSON.stringify(_s)); showPage('page-guide');" style="width:100%;max-width:360px;background:linear-gradient(135deg,#14b8a6,#0f766e);border-radius:20px;padding:28px 24px;cursor:pointer;margin-bottom:16px;box-shadow:0 8px 24px rgba(20,184,166,.3)">
           <div style="font-size:32px;margin-bottom:10px">🧭</div>
-          <div style="color:white;font-weight:900;font-size:20px;font-family:Outfit,sans-serif;margin-bottom:6px">Je suis guidé</div>
+          <div style="color:white;font-weight:900;font-size:20px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;margin-bottom:6px">Je suis guidé</div>
           <div style="color:rgba(255,255,255,.7);font-size:13px;line-height:1.5">On me pose des questions simples et je suis dirigé vers le bon contrôle.</div>
           <div style="color:rgba(255,255,255,.5);font-size:11px;margin-top:10px;font-weight:700">RECOMMANDÉ POUR DÉBUTER →</div>
         </div>
         <!-- Bouton 2 — Mode Expert -->
         <div role="button" tabindex="0" aria-label="Démarrer en mode expert" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="lsSet('haccp_mode','expert'); var _s = {etabId: ETAB_ID||lsGet('haccp_etab_id')||'local', etabNom: ETAB.nom||lsGet('haccp_etab')||'Mon établissement', secteur: SECTEUR_ACTIF||'resto', pwdOk:true, loginAt: Date.now()}; sessionWrite(JSON.stringify(_s)); showPage('page-home');renderMods('quotidien');" style="width:100%;max-width:360px;background:linear-gradient(135deg,#2d2b5e,#1e1b4b);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:28px 24px;cursor:pointer;box-shadow:0 8px 24px rgba(30,27,75,.4)">
           <div style="font-size:32px;margin-bottom:10px">⚡</div>
-          <div style="color:white;font-weight:900;font-size:20px;font-family:Outfit,sans-serif;margin-bottom:6px">Mode Expert</div>
+          <div style="color:white;font-weight:900;font-size:20px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;margin-bottom:6px">Mode Expert</div>
           <div style="color:rgba(255,255,255,.6);font-size:13px;line-height:1.5">Accéder directement à tous les modules et contrôles HACCP.</div>
           <div style="color:rgba(255,255,255,.35);font-size:11px;margin-top:10px;font-weight:700">POUR LES UTILISATEURS CONFIRMÉS →</div>
         </div>
@@ -792,16 +792,16 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- PAGE GUIDE — MODE ACCUEIL SIMPLIFIÉ -->
     <div class="page" id="page-guide">
       <div id="modeExpertBtn" style="background:#2d2b5e;padding:16px 0;cursor:pointer;width:100%;text-align:center;overflow:hidden">
-        <div style="color:white;font-weight:900;font-family:Outfit,sans-serif;font-size:clamp(28px,8vw,48px);letter-spacing:-.5px;white-space:nowrap;width:100%;display:block;line-height:1">MODE EXPERT ›</div>
+        <div style="color:white;font-weight:900;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;font-size:clamp(28px,8vw,48px);letter-spacing:-.5px;white-space:nowrap;width:100%;display:block;line-height:1">MODE EXPERT ›</div>
         <div style="color:rgba(255,255,255,.5);font-size:13px;margin-top:8px;font-weight:600">Accéder à tous vos contrôles HACCP</div>
       </div>
       <div style="background:#1a1a2e;padding:10px 16px">
-        <button onclick="showPage('page-choix')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">← Retour</button>
-        <a href="accueil.html" style="margin-left:8px;display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.85);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;text-decoration:none;font-family:Outfit,sans-serif">🏠 Accueil</a>
+        <button onclick="showPage('page-choix')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Retour</button>
+        <a href="accueil.html" style="margin-left:8px;display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.85);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;text-decoration:none;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🏠 Accueil</a>
       </div>
       <div style="background:linear-gradient(135deg,#1a1a2e,#2d2b5e);padding:22px 16px 18px;text-align:center">
         <div style="font-size:24px;margin-bottom:6px">👋</div>
-        <h1 style="color:white;font-size:19px;font-weight:900;margin-bottom:4px;font-family:Outfit,sans-serif">Que voulez-vous faire ?</h1>
+        <h1 style="color:white;font-size:19px;font-weight:900;margin-bottom:4px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Que voulez-vous faire ?</h1>
         <p style="color:rgba(255,255,255,.5);font-size:12px">Choisir une action — nous vous guidons directement</p>
       </div>
       <!-- Recherche « je veux… » (voix ou texte) — remplie par script.js -->
@@ -848,11 +848,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- ═══ MODULE ÉQUIPE — registre des personnes (utilisateurs) ═══ -->
     <div class="page" id="page-equipe">
       <div style="background:#1a1a2e;padding:10px 16px">
-        <button onclick="navTo('home')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">← Retour</button>
+        <button onclick="navTo('home')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Retour</button>
       </div>
       <div style="background:linear-gradient(135deg,#1a1a2e,#4338ca);padding:22px 16px 18px;text-align:center">
         <div style="font-size:30px;margin-bottom:6px">👥</div>
-        <h1 style="color:white;font-size:19px;font-weight:900;margin-bottom:4px;font-family:Outfit,sans-serif">Mon équipe</h1>
+        <h1 style="color:white;font-size:19px;font-weight:900;margin-bottom:4px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Mon équipe</h1>
         <p style="color:rgba(255,255,255,.6);font-size:12px">Enregistrer les personnes qui utilisent l'application — leurs noms apparaîtront dans les menus de signature de chaque module.</p>
       </div>
       <div style="padding:16px 16px 90px;background:#f8f9fc;min-height:calc(100vh - 200px)">
@@ -872,24 +872,24 @@ html, body { max-width: 100%; overflow-x: hidden; }
               <input type="text" id="equipeNom" placeholder="Nom" style="width:100%;box-sizing:border-box;border:1px solid #e5e7eb;border-radius:10px;padding:11px 12px;font-size:14px;font-family:inherit">
             </div>
           </div>
-          <button id="equipeSubmitBtn" onclick="ajouterMembreEquipe()" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#4338ca,#6366f1);color:white;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif;box-shadow:0 4px 14px rgba(67,56,202,.3)">Enregistrer la personne</button>
-          <button id="equipeCancelBtn" onclick="annulerEditionEquipe()" style="display:none;width:100%;margin-top:8px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;border-radius:12px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">Annuler la modification</button>
+          <button id="equipeSubmitBtn" onclick="ajouterMembreEquipe()" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#4338ca,#6366f1);color:white;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 4px 14px rgba(67,56,202,.3)">Enregistrer la personne</button>
+          <button id="equipeCancelBtn" onclick="annulerEditionEquipe()" style="display:none;width:100%;margin-top:8px;background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb;border-radius:12px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Annuler la modification</button>
         </div>
         <!-- LISTE DE L'ÉQUIPE -->
         <div style="display:flex;align-items:center;justify-content:space-between;margin:4px 2px 10px">
           <div style="font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#9ca3af">Équipe enregistrée</div>
           <div style="font-size:11px;font-weight:800;color:#6366f1;background:#eef2ff;padding:2px 9px;border-radius:20px"><span id="equipeCount">0</span> personne(s)</div>
         </div>
-        <button onclick="synchroniserEquipeManuel()" aria-label="Synchroniser l'équipe sur tous les appareils" style="width:100%;margin:0 0 12px;background:#eef2ff;border:1px solid #c7d2fe;color:#4338ca;border-radius:12px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif">🔄 Synchroniser sur tous mes appareils</button>
+        <button onclick="synchroniserEquipeManuel()" aria-label="Synchroniser l'équipe sur tous les appareils" style="width:100%;margin:0 0 12px;background:#eef2ff;border:1px solid #c7d2fe;color:#4338ca;border-radius:12px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🔄 Synchroniser sur tous mes appareils</button>
         <div id="equipeListe"></div>
-        <button onclick="navTo('home')" style="width:100%;margin-top:18px;background:white;border:1.5px solid #e5e7eb;color:#4338ca;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">← Retour aux modules</button>
+        <button onclick="navTo('home')" style="width:100%;margin-top:18px;background:white;border:1.5px solid #e5e7eb;color:#4338ca;border-radius:14px;padding:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px">← Retour aux modules</button>
       </div>
     </div>
     <!-- ═══ FIN MODULE ÉQUIPE ═══ -->
     <!-- ═══ V52 — PAGE PACK DDPP (depuis Mode Guidé) ═══ -->
     <div class="page" id="page-pack-ddpp">
       <div style="background:#1a1a2e;padding:10px 16px">
-        <button onclick="ouvrirModeInspecteur()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">← Retour</button>
+        <button onclick="ouvrirModeInspecteur()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Retour</button>
       </div>
       <div style="background:linear-gradient(135deg,#1e1b4b,#4338ca);padding:22px 16px 18px;text-align:center">
         <div style="font-size:32px;margin-bottom:6px">📋</div>
@@ -961,14 +961,14 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- ═══ FIN MODE INSPECTEUR ═══ -->
     <div class="page" id="page-home">
       <div class="hero">
-        <div style="text-align:center;padding-bottom:10px"><button onclick="showPage('page-guide')" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:8px 24px;font-size:13px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif">← Retour à l'accueil</button></div>
+        <div style="text-align:center;padding-bottom:10px"><button onclick="showPage('page-guide')" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:8px 24px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Retour à l'accueil</button></div>
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div>
             <div class="hero-greeting" id="heroEtab">Mon établissement</div>
             <div class="hero-title">Tableau de bord <em>HACCP</em></div>
             <div class="hero-sub" id="heroDate"></div>
           </div>
-          <button onclick="ouvrirReglages()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 12px;color:white;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif;flex-shrink:0;margin-top:4px">⚙️ Réglages</button>
+          <button onclick="ouvrirReglages()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 12px;color:white;font-size:12px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;flex-shrink:0;margin-top:4px">⚙️ Réglages</button>
         </div>
         <div class="kpi-row">
           <div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Contrôles aujourd'hui</div></div>
@@ -977,7 +977,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
         <div role="button" tabindex="0" aria-label="Un contrôle ? Présenter ma conformité" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="ouvrirModeInspecteur('page-home')" style="background:linear-gradient(135deg,#dc2626,#ef4444);border-radius:14px;padding:14px;margin-top:12px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 6px 22px rgba(220,38,38,.4)">
           <div style="font-size:26px;flex-shrink:0">🚨</div>
-          <div style="flex:1"><div style="color:white;font-weight:900;font-size:15px;font-family:Outfit,sans-serif;line-height:1.2">Un contrôle ? Appuyer ici</div><div style="color:rgba(255,255,255,.85);font-size:11px;margin-top:2px">Présenter votre conformité en 10 secondes</div></div>
+          <div style="flex:1"><div style="color:white;font-weight:900;font-size:15px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.2">Un contrôle ? Appuyer ici</div><div style="color:rgba(255,255,255,.85);font-size:11px;margin-top:2px">Présenter votre conformité en 10 secondes</div></div>
           <div style="color:rgba(255,255,255,.7);font-size:20px">›</div>
         </div>
       </div>
@@ -1160,8 +1160,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
              + configuration des capteurs (avant, il fallait passer par Réglages → Capteurs).
              Appellent les fonctions existantes (additif, aucune logique modifiée). -->
         <div style="display:flex;gap:8px;padding:2px 4px 12px;flex-wrap:wrap">
-          <button onclick="ouvrirTableauTemp()" style="flex:1;min-width:150px;background:#0f766e;color:#fff;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif">📊 Tableau Excel des relevés</button>
-          <button onclick="ouvrirCapteursBeta()" style="flex:1;min-width:150px;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:Outfit,sans-serif">🌡️ Capteurs</button>
+          <button onclick="ouvrirTableauTemp()" style="flex:1;min-width:150px;background:#0f766e;color:#fff;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">📊 Tableau Excel des relevés</button>
+          <button onclick="ouvrirCapteursBeta()" style="flex:1;min-width:150px;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🌡️ Capteurs</button>
         </div>
         <!-- V54 — Toggle champs facultatifs (masquage par défaut des champs non réglementaires) -->
         <div style="text-align:right;padding:0 4px 8px">
@@ -1181,8 +1181,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <span style="font-size:20px">+</span> Ajouter une enceinte
           </button>
           <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-            <button onclick="enregistrerMesEnceintes()" title="Mémoriser vos enceintes pour les retrouver à chaque session, sur tous vos appareils" style="background:#ecfeff;border:1px solid #67e8f9;color:#0e7490;font-size:13px;font-weight:800;padding:11px 16px;border-radius:10px;cursor:pointer;font-family:Outfit,sans-serif">💾 Enregistrer mes enceintes</button>
-            <button onclick="reinitMesEnceintes()" title="Revenir aux enceintes par défaut" style="background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;font-size:13px;font-weight:700;padding:11px 14px;border-radius:10px;cursor:pointer;font-family:Outfit,sans-serif">↺ Réinitialiser</button>
+            <button onclick="enregistrerMesEnceintes()" title="Mémoriser vos enceintes pour les retrouver à chaque session, sur tous vos appareils" style="background:#ecfeff;border:1px solid #67e8f9;color:#0e7490;font-size:13px;font-weight:800;padding:11px 16px;border-radius:10px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">💾 Enregistrer mes enceintes</button>
+            <button onclick="reinitMesEnceintes()" title="Revenir aux enceintes par défaut" style="background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;font-size:13px;font-weight:700;padding:11px 14px;border-radius:10px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">↺ Réinitialiser</button>
           </div>
           <div id="mesEnceintesHint" style="font-size:11px;color:#0891b2;margin-top:8px;text-align:center"></div>
         <div class="fblock haccp-adv" id="tempCategoriesBlock" style="display:none">
@@ -1405,14 +1405,14 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <div class="module-header-sub">Choisir le type de contrôle</div>
   </div>
   <div style="padding:24px 16px;display:flex;flex-direction:column;gap:16px">
-    <button onclick="openModule('ouverture')" style="background:linear-gradient(135deg,#f97316,#fb923c);color:white;border:none;border-radius:14px;padding:24px 20px;font-size:16px;font-weight:800;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;font-family:Outfit,sans-serif;box-shadow:0 4px 12px rgba(249,115,22,.3)">
+    <button onclick="openModule('ouverture')" style="background:linear-gradient(135deg,#f97316,#fb923c);color:white;border:none;border-radius:14px;padding:24px 20px;font-size:16px;font-weight:800;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 4px 12px rgba(249,115,22,.3)">
       <span style="font-size:28px">🌅</span>
       <div>
         <div>Nettoyage Ouverture</div>
         <div style="font-size:12px;font-weight:400;opacity:.85;margin-top:4px">Vérification avant service — nettoyage du jour précédent</div>
       </div>
     </button>
-    <button onclick="openModule('fermeture')" style="background:linear-gradient(135deg,#1e1b4b,#4338ca);color:white;border:none;border-radius:14px;padding:24px 20px;font-size:16px;font-weight:800;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;font-family:Outfit,sans-serif;box-shadow:0 4px 12px rgba(30,27,75,.3)">
+    <button onclick="openModule('fermeture')" style="background:linear-gradient(135deg,#1e1b4b,#4338ca);color:white;border:none;border-radius:14px;padding:24px 20px;font-size:16px;font-weight:800;cursor:pointer;text-align:left;display:flex;align-items:center;gap:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 4px 12px rgba(30,27,75,.3)">
       <span style="font-size:28px">🧽</span>
       <div>
         <div>Nettoyage Fermeture</div>
@@ -1722,8 +1722,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <span style="font-size:20px">+</span> Ajouter friteuse suivante
         </button>
         <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-          <button onclick="enregistrerMesFriteuses()" title="Mémoriser vos friteuses pour les retrouver à chaque session, sur tous vos appareils" style="background:#fff7ed;border:1px solid #fdba74;color:#b45309;font-size:13px;font-weight:800;padding:11px 16px;border-radius:10px;cursor:pointer;font-family:Outfit,sans-serif">💾 Enregistrer mes friteuses</button>
-          <button onclick="reinitMesFriteuses()" title="Repartir d'une friteuse vierge" style="background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;font-size:13px;font-weight:700;padding:11px 14px;border-radius:10px;cursor:pointer;font-family:Outfit,sans-serif">↺ Réinitialiser</button>
+          <button onclick="enregistrerMesFriteuses()" title="Mémoriser vos friteuses pour les retrouver à chaque session, sur tous vos appareils" style="background:#fff7ed;border:1px solid #fdba74;color:#b45309;font-size:13px;font-weight:800;padding:11px 16px;border-radius:10px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">💾 Enregistrer mes friteuses</button>
+          <button onclick="reinitMesFriteuses()" title="Repartir d'une friteuse vierge" style="background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;font-size:13px;font-weight:700;padding:11px 14px;border-radius:10px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">↺ Réinitialiser</button>
         </div>
         <div id="mesFriteusesHint" style="font-size:11px;color:#b45309;margin-top:8px;text-align:center"></div>
         <!-- COLLECTE HUILE USAGÉE -->
@@ -1798,7 +1798,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
         <!-- FORMAT D'ÉTIQUETTE (choix + dimensions personnalisées, mémorisé) -->
         <div class="fblock" style="border-left:4px solid #0f766e">
           <div class="fblock-title">📐 Format d'étiquette</div>
-          <select id="etiq_format" onchange="_etiqOnFormatChange()" style="width:100%;padding:11px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:Outfit,sans-serif;background:#fff">
+          <select id="etiq_format" onchange="_etiqOnFormatChange()" style="width:100%;padding:11px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;background:#fff">
             <option value="a4_99x38">Planche A4 — 99×38 mm (14/feuille)</option>
             <option value="a4_63x38">Planche A4 — 63,5×38 mm (21/feuille)</option>
             <option value="a4_70x37">Planche A4 — 70×37 mm (24/feuille)</option>
@@ -1810,8 +1810,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <option value="custom">Dimensions personnalisées…</option>
           </select>
           <div id="etiq_custom_row" style="display:none;gap:8px;margin-top:8px">
-            <input id="etiq_cw" type="number" step="1" min="10" placeholder="Largeur (mm)" oninput="_etiqSaveCustom()" style="flex:1;width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:Outfit,sans-serif">
-            <input id="etiq_ch" type="number" step="1" min="10" placeholder="Hauteur (mm)" oninput="_etiqSaveCustom()" style="flex:1;width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:Outfit,sans-serif">
+            <input id="etiq_cw" type="number" step="1" min="10" placeholder="Largeur (mm)" oninput="_etiqSaveCustom()" style="flex:1;width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">
+            <input id="etiq_ch" type="number" step="1" min="10" placeholder="Hauteur (mm)" oninput="_etiqSaveCustom()" style="flex:1;width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">
           </div>
           <div style="font-size:10.5px;color:#6b7280;margin-top:6px;line-height:1.4">Planche A4 = imprimante classique · Rouleau / perso = imprimante d'étiquettes. Impression WiFi/AirPrint ou PDF. (Réglage mémorisé.)</div>
         </div>
@@ -3140,7 +3140,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
               </div>
               <div class="frow"><div class="flabel">ARS contactée</div>
                 <div class="status-group">
-                  <button class="status-btn" onclick="selHyg(this,'ok')">✅ Oui — Heure : <input type="time" id="tiac_ars_heure" style="border:none;background:transparent;font-family:Outfit;font-weight:600;width:70px"/></button>
+                  <button class="status-btn" onclick="selHyg(this,'ok')">✅ Oui — Heure : <input type="time" id="tiac_ars_heure" style="border:none;background:transparent;font-family:Inter;font-weight:600;width:70px"/></button>
                   <button class="status-btn" onclick="selHyg(this,'bad')">✗ Non encore</button>
                 </div>
               </div>
@@ -3315,10 +3315,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <div class="frow" style="margin:0"><div class="flabel">Au</div><input type="date" id="db_date_to" class="finput" style="padding:6px" onchange="initDashboard()"/></div>
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <button onclick="imprimerDashboard()" style="flex:1;padding:8px;background:linear-gradient(135deg,#374151,#6b7280);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">🖨️ Imprimer</button>
-            <button onclick="exportDashboardPDF()" style="flex:1;padding:8px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">⬇️ PDF</button>
-            <button onclick="exportDashboardWord()" style="flex:1;padding:8px;background:linear-gradient(135deg,#1d4ed8,#6366f1);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">📝 Word</button>
-            <button onclick="initDashboard()" style="padding:8px 12px;background:#f0fdf4;border:1.5px solid #86efac;color:#16a34a;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">🔄</button>
+            <button onclick="imprimerDashboard()" style="flex:1;padding:8px;background:linear-gradient(135deg,#374151,#6b7280);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🖨️ Imprimer</button>
+            <button onclick="exportDashboardPDF()" style="flex:1;padding:8px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">⬇️ PDF</button>
+            <button onclick="exportDashboardWord()" style="flex:1;padding:8px;background:linear-gradient(135deg,#1d4ed8,#6366f1);color:white;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">📝 Word</button>
+            <button onclick="initDashboard()" style="padding:8px 12px;background:#f0fdf4;border:1.5px solid #86efac;color:#16a34a;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🔄</button>
           </div>
         </div>
         <!-- SCORE CONFORMITÉ RÉEL -->
@@ -3398,7 +3398,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <div style="font-size:40px;margin-bottom:10px">🔴</div>
           <div style="font-weight:900;font-size:20px;margin-bottom:8px">Pack contrôle DDPP</div>
           <div style="font-size:12px;opacity:.7;margin-bottom:20px;line-height:1.5">16 modules · PDF unique horodaté · Ordre exact de l'inspecteur DDPP</div>
-          <button onclick="_PACK_DDPP_SELECTION=null; genererPackDDPP()" style="width:100%;padding:16px;background:white;color:#312e81;border:none;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif">⬇️ Générer le Pack DDPP</button>
+          <button onclick="_PACK_DDPP_SELECTION=null; genererPackDDPP()" style="width:100%;padding:16px;background:white;color:#312e81;border:none;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">⬇️ Générer le Pack DDPP</button>
         </div>
         <!-- ORDRE PACK DDPP -->
         <div class="fblock" style="border-left:4px solid #6366f1">
@@ -3947,7 +3947,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
 </div>
 <div class="modal-overlay" id="modalPdf">
   <div class="modal-box">
-        <button class="btn-retour-haut" onclick="document.getElementById('modalPdf').classList.remove('visible'); resetReception(); showPage('page-reception', true)" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:none;color:white;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;margin-bottom:12px;font-family:Outfit,sans-serif">← Retour au module</button>
+        <button class="btn-retour-haut" onclick="document.getElementById('modalPdf').classList.remove('visible'); resetReception(); showPage('page-reception', true)" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:none;color:white;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;margin-bottom:12px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Retour au module</button>
     <div class="modal-ico">📄</div>
     <div class="modal-title">Enregistrement validé !</div>
     <div class="modal-desc">Votre contrôle de réception a été enregistré avec succès et horodaté.</div>
@@ -3962,9 +3962,9 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- ════════════════════════════════════════════════════════════════ -->
     <!-- V95 — PAGE INSCRIPTION (commercialisation) -->
     <!-- ════════════════════════════════════════════════════════════════ -->
-    <div class="page" id="page-inscription" style="min-height:100vh;background:linear-gradient(160deg,#0a0e1a,#131929);color:white;font-family:Outfit,sans-serif;padding:60px 20px 40px;position:relative">
+    <div class="page" id="page-inscription" style="min-height:100vh;background:linear-gradient(160deg,#0a0e1a,#131929);color:white;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;padding:60px 20px 40px;position:relative">
       <div style="max-width:680px;margin:0 auto">
-        <button type="button" onclick="showPage('page-presentation')" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.18);padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;font-family:Outfit,sans-serif;margin-bottom:18px">← Retour</button>
+        <button type="button" onclick="showPage('page-presentation')" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.9);border:1px solid rgba(255,255,255,0.18);padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;margin-bottom:18px">← Retour</button>
         <div style="text-align:center;margin-bottom:28px">
           <div style="width:60px;height:60px;background:linear-gradient(135deg,#4ade80,#22c55e);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px;box-shadow:0 8px 24px rgba(74,222,128,0.3)">📝</div>
           <h1 style="font-size:clamp(22px,3vw,28px);font-weight:900;margin:0 0 8px;color:white">Inscription Nomos Traça</h1>
@@ -3975,11 +3975,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <div style="font-size:11px;color:#4ade80;font-weight:800;letter-spacing:1.5px;text-transform:uppercase">Informations obligatoires</div>
           <div>
             <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">Nom de l'établissement <span style="color:#dc2626">*</span></label>
-            <input type="text" id="insc_etab" required style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box">
+            <input type="text" id="insc_etab" required style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box">
           </div>
           <div>
             <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">Type d'établissement <span style="color:#dc2626">*</span></label>
-            <select id="insc_secteur" required style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box">
+            <select id="insc_secteur" required style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box">
               <option value="" style="background:#ffffff;color:#1a1a2e">— Choisir —</option>
               <option value="resto_trad" style="background:#ffffff;color:#1a1a2e">🍽️ Restauration traditionnelle</option>
               <option value="boulangerie" style="background:#ffffff;color:#1a1a2e">🥖 Boulangerie / Pâtisserie</option>
@@ -3990,36 +3990,36 @@ html, body { max-width: 100%; overflow-x: hidden; }
           </div>
           <div>
             <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">Nombre de repas par jour <span style="color:rgba(255,255,255,0.4);font-weight:600">(facultatif)</span></label>
-            <input type="number" id="insc_repas" min="1" placeholder="Ex: 80 — seulement en restauration collective" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box">
+            <input type="number" id="insc_repas" min="1" placeholder="Ex: 80 — seulement en restauration collective" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box">
           </div>
           <div>
             <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">Nom du responsable <span style="color:#dc2626">*</span></label>
-            <input type="text" id="insc_resp" required placeholder="Prénom NOM" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box">
+            <input type="text" id="insc_resp" required placeholder="Prénom NOM" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box">
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
             <div>
               <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">Email <span style="color:#dc2626">*</span></label>
-              <input type="email" id="insc_email" required placeholder="vous@email.fr" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box">
+              <input type="email" id="insc_email" required placeholder="vous@email.fr" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box">
             </div>
             <div>
               <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">Téléphone <span style="color:#dc2626">*</span></label>
-              <input type="tel" id="insc_tel" required placeholder="06 XX XX XX XX" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box">
+              <input type="tel" id="insc_tel" required placeholder="06 XX XX XX XX" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box">
             </div>
           </div>
           <!-- V102 — Adresse + SIRET obligatoires (preuves légales DDPP) -->
           <div>
             <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">Adresse complète <span style="color:#dc2626">*</span></label>
-            <input type="text" id="insc_adresse" required placeholder="N°, rue, code postal, ville" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box">
+            <input type="text" id="insc_adresse" required placeholder="N°, rue, code postal, ville" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box">
           </div>
           <div>
             <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">SIREN / SIRET <span style="color:#dc2626">*</span></label>
-            <input type="text" id="insc_siret" required pattern="[0-9 .]{9,20}" maxlength="20" placeholder="SIREN (9 chiffres) ou SIRET (14 chiffres)" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box">
+            <input type="text" id="insc_siret" required pattern="[0-9 .]{9,20}" maxlength="20" placeholder="SIREN (9 chiffres) ou SIRET (14 chiffres)" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box">
             <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px">Apparaîtra automatiquement sur tous vos PDF de preuve DDPP</div>
           </div>
           <div style="font-size:11px;color:rgba(255,255,255,0.5);font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-top:8px">Facultatif</div>
           <div>
             <label style="display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:5px">Message</label>
-            <textarea id="insc_message" rows="3" placeholder="Question ou commentaire éventuel" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box;resize:vertical"></textarea>
+            <textarea id="insc_message" rows="3" placeholder="Question ou commentaire éventuel" style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box;resize:vertical"></textarea>
           </div>
           <!-- RGPD -->
           <div style="display:flex;gap:10px;align-items:flex-start;background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);border-radius:9px;padding:12px">
@@ -4027,7 +4027,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <label for="insc_rgpd" style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.5;cursor:pointer">J'accepte que mes données soient utilisées pour traiter ma demande. <strong>Elles ne sont pas communiquées à des tiers</strong> et servent uniquement à vous recontacter au sujet de votre demande. Aucun email commercial. Données conservées 3 ans (durée légale). Conformité RGPD.</label>
           </div>
           <!-- Bouton -->
-          <button type="submit" id="btnSubmitInscription" style="width:100%;background:linear-gradient(135deg,#4ade80,#22c55e);color:#0a0e1a;border:none;padding:14px;border-radius:11px;font-weight:800;font-size:15px;cursor:pointer;font-family:Outfit,sans-serif;box-shadow:0 8px 24px rgba(74,222,128,0.3);margin-top:8px">🚀 Envoyer ma demande</button>
+          <button type="submit" id="btnSubmitInscription" style="width:100%;background:linear-gradient(135deg,#4ade80,#22c55e);color:#0a0e1a;border:none;padding:14px;border-radius:11px;font-weight:800;font-size:15px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 8px 24px rgba(74,222,128,0.3);margin-top:8px">🚀 Envoyer ma demande</button>
           <!-- Message status -->
           <div id="inscriptionStatus" style="display:none;padding:14px;border-radius:9px;font-size:13px;text-align:center"></div>
         </form>
@@ -4039,15 +4039,15 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- ════════════════════════════════════════════════════════════════ -->
     <!-- V95 — PAGE ADMIN -->
     <!-- ════════════════════════════════════════════════════════════════ -->
-    <div class="page" id="page-admin" style="min-height:100vh;background:linear-gradient(160deg,#0a0e1a,#131929);color:white;font-family:Outfit,sans-serif;padding:50px 20px 40px;position:relative">
+    <div class="page" id="page-admin" style="min-height:100vh;background:linear-gradient(160deg,#0a0e1a,#131929);color:white;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;padding:50px 20px 40px;position:relative">
       <div style="max-width:1100px;margin:0 auto">
         <!-- Login admin -->
         <div id="adminLoginBox" style="max-width:380px;margin:60px auto 0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:30px;text-align:center">
           <div style="width:60px;height:60px;background:linear-gradient(135deg,#dc2626,#f59e0b);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px">🔒</div>
           <h2 style="font-size:20px;font-weight:900;margin:0 0 6px">Accès administrateur</h2>
           <p style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:20px">Zone réservée à l'administration Nomos Traça</p>
-          <input type="password" id="adminPwd" placeholder="Mot de passe" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:Outfit,sans-serif;box-sizing:border-box;margin-bottom:12px;text-align:center">
-          <button onclick="loginAdmin()" style="width:100%;background:linear-gradient(135deg,#dc2626,#f59e0b);color:white;border:none;padding:12px;border-radius:9px;font-weight:800;font-size:14px;cursor:pointer;font-family:Outfit,sans-serif">Se connecter</button>
+          <input type="password" id="adminPwd" placeholder="Mot de passe" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.15);border-radius:9px;color:white;font-size:14px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-sizing:border-box;margin-bottom:12px;text-align:center">
+          <button onclick="loginAdmin()" style="width:100%;background:linear-gradient(135deg,#dc2626,#f59e0b);color:white;border:none;padding:12px;border-radius:9px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Se connecter</button>
           <div id="adminLoginErr" style="display:none;color:#dc2626;font-size:12px;margin-top:10px"></div>
         </div>
         <!-- Dashboard admin (caché par défaut) -->
@@ -4057,15 +4057,15 @@ html, body { max-width: 100%; overflow-x: hidden; }
               <h1 style="font-size:clamp(17px,5.5vw,24px);font-weight:900;margin:0;overflow-wrap:anywhere;line-height:1.15">🛠️ Administration Nomos Traça</h1>
               <p style="font-size:12px;color:rgba(255,255,255,0.6);margin:4px 0 0">Gestion des inscriptions et abonnements · <span id="adminVersion" style="color:#14b8a6;font-weight:700"></span></p>
             </div>
-            <button onclick="logoutAdmin()" style="background:rgba(220,38,38,0.15);color:#dc2626;border:1px solid rgba(220,38,38,0.3);padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif">Se déconnecter</button>
+            <button onclick="logoutAdmin()" style="background:rgba(220,38,38,0.15);color:#dc2626;border:1px solid rgba(220,38,38,0.3);padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Se déconnecter</button>
           </div>
           <!-- Onglets -->
           <div style="display:flex;gap:6px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:20px;flex-wrap:wrap">
-            <button onclick="adminTab('demandes')" id="tabDemandes" class="adminTab" style="background:rgba(74,222,128,0.15);color:#4ade80;border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">📥 Demandes <span id="cntDemandes" style="background:rgba(74,222,128,0.3);padding:2px 8px;border-radius:10px;margin-left:6px;font-size:11px">0</span></button>
-            <button onclick="adminTab('clients')" id="tabClients" class="adminTab" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">👥 Clients actifs <span id="cntClients" style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:10px;margin-left:6px;font-size:11px">0</span></button>
-            <button onclick="adminTab('historique')" id="tabHistorique" class="adminTab" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">📜 Historique</button>
-            <button onclick="adminTab('essais')" id="tabEssais" class="adminTab" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">🎁 Essais</button>
-            <button onclick="adminTab('capteurs')" id="tabCapteurs" class="adminTab" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">🌡️ Capteurs</button>
+            <button onclick="adminTab('demandes')" id="tabDemandes" class="adminTab" style="background:rgba(74,222,128,0.15);color:#4ade80;border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">📥 Demandes <span id="cntDemandes" style="background:rgba(74,222,128,0.3);padding:2px 8px;border-radius:10px;margin-left:6px;font-size:11px">0</span></button>
+            <button onclick="adminTab('clients')" id="tabClients" class="adminTab" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">👥 Clients actifs <span id="cntClients" style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:10px;margin-left:6px;font-size:11px">0</span></button>
+            <button onclick="adminTab('historique')" id="tabHistorique" class="adminTab" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">📜 Historique</button>
+            <button onclick="adminTab('essais')" id="tabEssais" class="adminTab" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🎁 Essais</button>
+            <button onclick="adminTab('capteurs')" id="tabCapteurs" class="adminTab" style="background:transparent;color:rgba(255,255,255,0.7);border:none;padding:10px 16px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🌡️ Capteurs</button>
           </div>
           <!-- Contenu onglets -->
           <div id="adminContent" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:18px;min-height:300px;margin-bottom:130px">
@@ -4085,7 +4085,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <style>
       #nomosBarHaccp{position:fixed;left:0;right:0;bottom:0;z-index:8000;display:flex;align-items:center;gap:8px;
         padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
-        background:rgba(10,14,26,.97);box-shadow:0 -4px 18px rgba(0,0,0,.45);font-family:Outfit,sans-serif}
+        background:rgba(10,14,26,.97);box-shadow:0 -4px 18px rgba(0,0,0,.45);font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif}
       #nomosBarHaccp button{flex-shrink:0;border:none;border-radius:10px;font-family:inherit;font-weight:800;font-size:.82rem;padding:10px 14px;cursor:pointer}
       #nomosBarHaccp .nb-back{background:rgba(255,255,255,.12);color:#fff}
       #nomosBarHaccp .nb-home{background:linear-gradient(135deg,#4ade80,#22c55e);color:#0a0e1a}
@@ -4100,7 +4100,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
     </div>
 <!-- ============ MODAL — DEVIS CAPTEURS / RELEVÉS AUTOMATIQUES ============ -->
 <div id="modalDevisCapteurs" style="display:none;position:fixed;inset:0;z-index:100050;background:rgba(8,17,13,.72);overflow-y:auto;padding:16px" onclick="if(event.target===this)fermerDevisCapteurs()">
-  <div style="background:#fff;max-width:560px;margin:22px auto;border-radius:18px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.35);font-family:'Source Sans 3',system-ui,sans-serif">
+  <div style="background:#fff;max-width:560px;margin:22px auto;border-radius:18px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.35);font-family:'Inter',system-ui,sans-serif">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px">
       <div><div style="font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#0a8a4a">Relevés automatiques</div>
       <h2 style="margin:2px 0 0;font-size:1.25rem;color:#0f2e20">Demander un devis — capteurs</h2></div>

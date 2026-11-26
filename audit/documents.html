@@ -19,7 +19,7 @@ window.addEventListener('load', function() {
   }
 });
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --navy:#153e35; --navy2:#1f5649; --teal:#2d6f60; --teal2:#3b8a77;
@@ -28,7 +28,7 @@ window.addEventListener('load', function() {
   color-scheme: light only;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:#f5f2ea;font-family:'Source Sans 3',Arial,sans-serif;color:#17211d}
+html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#17211d}
 
 /* ── TOASTS ── */
 .toasts{position:fixed;bottom:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:6px}
@@ -39,7 +39,7 @@ html,body{background:#f5f2ea;font-family:'Source Sans 3',Arial,sans-serif;color:
 .toast.inf{border-left:4px solid #2d6f60}
 
 /* ── DOCS CLIENT PANEL ── */
-.doc-btn{padding:15px;border:none;border-radius:10px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:10px;width:100%;text-align:left;color:#fff;transition:opacity .2s}
+.doc-btn{padding:15px;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:10px;width:100%;text-align:left;color:#fff;transition:opacity .2s}
 .doc-btn:hover{opacity:.88}
 .doc-btn .icon{font-size:1.4rem;flex-shrink:0}
 .doc-btn .label{display:flex;flex-direction:column;gap:2px}
@@ -93,12 +93,12 @@ html,body{background:#f5f2ea;font-family:'Source Sans 3',Arial,sans-serif;color:
 
 <!-- BOUTON RETOUR -->
 <div style="max-width:1180px;margin:0 auto;padding:12px 24px 0">
-  <button onclick="history.back()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:#fff;border:1.5px solid rgba(21,62,53,.18);border-radius:999px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.82rem;font-weight:700;color:#153e35">← Retour</button>
+  <button onclick="history.back()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:#fff;border:1.5px solid rgba(21,62,53,.18);border-radius:999px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;font-weight:700;color:#153e35">← Retour</button>
 </div>
 
 
 <!-- ══ BANDEAU CLIENT DOCS (affiché si connecté avec code DOCS ou FULL) ══ -->
-<div id="clientDocsBar" style="display:none;background:linear-gradient(135deg,#153e35,#1f5649);padding:16px 24px;font-family:'Source Sans 3',sans-serif">
+<div id="clientDocsBar" style="display:none;background:linear-gradient(135deg,#153e35,#1f5649);padding:16px 24px;font-family:'Inter',system-ui,sans-serif">
   <div style="max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
     <div style="color:#fff">
       <div style="font-weight:700;font-size:.9rem">📦 Vos documents sont prêts à télécharger</div>
@@ -112,7 +112,7 @@ html,body{background:#f5f2ea;font-family:'Source Sans 3',Arial,sans-serif;color:
     <div style="max-width:1180px;margin:0 auto;padding:0 24px">
       <div style="text-align:center;max-width:860px;margin:0 auto 36px">
         <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,86,73,.12);color:#1f5649;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Documents Réglementaires</span>
-        <h2 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.9rem;color:#153e35;margin:0 0 8px">Documents réglementaires : protéger votre établissement, éviter les sanctions</h2>
+        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.9rem;color:#153e35;margin:0 0 8px">Documents réglementaires : protéger votre établissement, éviter les sanctions</h2>
         <p style="font-size:1rem;color:#65716b">Ce que dit la loi, les sanctions encourues et les données de contrôle en France.</p>
       </div>
 
@@ -238,13 +238,13 @@ html,body{background:#f5f2ea;font-family:'Source Sans 3',Arial,sans-serif;color:
     <div style="background:#fff;border-radius:18px;padding:36px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
       <div style="text-align:center;margin-bottom:24px">
         <div style="font-size:2.5rem;margin-bottom:8px">📦</div>
-        <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:1.4rem;color:#153e35;margin-bottom:4px">Vos Documents Réglementaires</h2>
+        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.4rem;color:#153e35;margin-bottom:4px">Vos Documents Réglementaires</h2>
         <p id="clientDocsEtabName" style="color:#65716b;font-size:.83rem"></p>
       </div>
       <div id="clientDocsInfoBox" style="background:#f0faf8;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:.8rem;color:#2d4a3e;line-height:1.8;border:1px solid rgba(0,168,150,.3)"></div>
       <div id="clientDocsBtns" style="display:flex;flex-direction:column;gap:10px"></div>
       <p style="margin-top:16px;font-size:.74rem;color:#8a9e95;text-align:center">Documents au format Word (.docx) — Ouvrir avec Word, LibreOffice ou Google Docs</p>
-      <button onclick="logoutAndRedirect()" style="width:100%;margin-top:12px;padding:10px;background:#f5f2ea;border:1px solid #dfe6e0;border-radius:8px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:#65716b">⏻ Se déconnecter</button>
+      <button onclick="logoutAndRedirect()" style="width:100%;margin-top:12px;padding:10px;background:#f5f2ea;border:1px solid #dfe6e0;border-radius:8px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#65716b">⏻ Se déconnecter</button>
     </div>
   </div>
 </div>

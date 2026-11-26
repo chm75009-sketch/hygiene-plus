@@ -50,7 +50,7 @@ if ('serviceWorker' in navigator) {
     b.type = 'button';
     b.setAttribute('aria-label', "Installer l'application");
     b.textContent = "📥 Installer l'application";
-    b.style.cssText = 'position:fixed;right:16px;top:14px;z-index:99999;background:#153e35;color:#fff;border:none;border-radius:999px;padding:11px 18px;font-family:\'Source Sans 3\',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.32)';
+    b.style.cssText = 'position:fixed;right:16px;top:14px;z-index:99999;background:#153e35;color:#fff;border:none;border-radius:999px;padding:11px 18px;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.32)';
     b.onclick = function () {
       if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -100,7 +100,7 @@ if ('serviceWorker' in navigator) {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>(function(){ emailjs.init({ publicKey: 'EpsrNibYc0mrPUXnR' }); })();</script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════
    ÉCRAN D'AUTHENTIFICATION
@@ -120,7 +120,7 @@ if ('serviceWorker' in navigator) {
   text-align:center; margin-bottom:28px;
 }
 .auth-logo h1 {
-  font-family:'DM Serif Display',serif; font-size:1.6rem; color:#153e35; margin-bottom:4px;
+  font-family:'Instrument Serif',Georgia,serif; font-size:1.6rem; color:#153e35; margin-bottom:4px;
 }
 .auth-logo p { font-size:.8rem; color:#65716b; }
 .auth-logo .dot-big {
@@ -189,7 +189,7 @@ if ('serviceWorker' in navigator) {
   min-height:58px; box-shadow:0 2px 16px rgba(0,0,0,.2);
 }
 .admin-topbar .brand {
-  font-family:'DM Serif Display',serif; font-size:1.1rem;
+  font-family:'Instrument Serif',Georgia,serif; font-size:1.1rem;
   display:flex; align-items:center; gap:8px; color:#fff;
 }
 .admin-wrap { max-width:900px; margin:0 auto; padding:28px 16px; }
@@ -279,7 +279,7 @@ if ('serviceWorker' in navigator) {
   width:90%; text-align:center;
 }
 #clientWait .wait-card h2 {
-  font-family:'DM Serif Display',serif; font-size:1.3rem; color:#153e35; margin-bottom:10px;
+  font-family:'Instrument Serif',Georgia,serif; font-size:1.3rem; color:#153e35; margin-bottom:10px;
 }
 #clientWait .wait-card p { font-size:.85rem; color:#65716b; line-height:1.6; }
 .spinner {
@@ -307,11 +307,11 @@ if ('serviceWorker' in navigator) {
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{background-color:#f5f2ea !important}
-body{font-family:'Source Sans 3',Arial,sans-serif;background-color:#f5f2ea !important;background:#f5f2ea;color:#17211d;-webkit-text-fill-color:#17211d}
+body{font-family:'Inter',system-ui,sans-serif;background-color:#f5f2ea !important;background:#f5f2ea;color:#17211d;-webkit-text-fill-color:#17211d}
 
 /* ── TOPBAR ── */
 .topbar{background-color:#153e35 !important;color:#fff !important;padding:0 16px;display:flex;align-items:center;justify-content:space-between;min-height:58px;height:auto;padding-top:8px;padding-bottom:8px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(21,62,53,.3);flex-wrap:wrap;gap:8px}
-.brand{font-family:'Playfair Display',Georgia,serif;font-size:1.15rem;display:flex;align-items:center;gap:8px;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important}
+.brand{font-family:'Instrument Serif',Georgia,serif;font-size:1.15rem;display:flex;align-items:center;gap:8px;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important}
 .brand .dot{width:8px;height:8px;background:var(--teal);border-radius:50%;box-shadow:0 0 8px var(--teal)}
 .tbtns{display:flex;gap:5px;flex-wrap:wrap}
 .tb{padding:6px 10px;border-radius:6px;border:none;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.75rem;cursor:pointer;transition:all .2s;white-space:nowrap}
@@ -325,7 +325,7 @@ body{font-family:'Source Sans 3',Arial,sans-serif;background-color:#f5f2ea !impo
 
 /* ── SCORE HEADER ── */
 .score-hd{background-color:#153e35 !important;background:#153e35 !important;background-image:linear-gradient(135deg,#153e35,#1f5649) !important;border-radius:14px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;box-shadow:0 4px 24px rgba(26,35,50,.10);gap:16px;flex-wrap:wrap}
-.score-hd h2{font-family:'DM Serif Display',serif;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;font-size:1.4rem;margin-bottom:3px;text-shadow:none}
+.score-hd h2{font-family:'Instrument Serif',Georgia,serif;color:#ffffff !important;-webkit-text-fill-color:#ffffff !important;font-size:1.4rem;margin-bottom:3px;text-shadow:none}
 .score-hd p{color:#aac4d0 !important;-webkit-text-fill-color:#aac4d0 !important;font-size:.8rem}
 .pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;flex:1}
 .pill{padding:5px 13px;border-radius:50px;font-size:.76rem;font-weight:600;display:flex;align-items:center;gap:4px}
@@ -429,7 +429,7 @@ body{font-family:'Source Sans 3',Arial,sans-serif;background-color:#f5f2ea !impo
 /* ── HISTORY ── */
 .hist-panel{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:960px;max-height:70vh;overflow-y:auto;padding:24px;animation:sUp .3s ease}
 @keyframes sUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
-.hist-panel h2{font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center}
+.hist-panel h2{font-family:'Instrument Serif',Georgia,serif;font-size:1.2rem;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center}
 .hclose{background:var(--bg);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:.95rem;color:var(--muted)}
 .hlist{display:flex;flex-direction:column;gap:8px}
 .hitem{border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;transition:all .2s}
@@ -585,17 +585,17 @@ body{background:#fff}
 </div>
 
 <!-- ══ ÉCRAN AUTH ══ -->
-<div id="authScreen" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#153e35 0%,#1f5649 60%,#1a3a3a 100%);font-family:'Source Sans 3',sans-serif">
+<div id="authScreen" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#153e35 0%,#1f5649 60%,#1a3a3a 100%);font-family:'Inter',system-ui,sans-serif">
 
   <!-- LOGIN SCREEN -->
   <div id="loginScreen" style="width:100%;max-width:420px;padding:20px">
     <div style="text-align:center;margin-bottom:20px">
-      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;background:#ffffff22;border:none;color:#fff;font-size:.9rem;font-weight:700;padding:10px 18px;border-radius:999px;cursor:pointer;text-decoration:none;font-family:'Source Sans 3',sans-serif">← Retour au site</a>
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;background:#ffffff22;border:none;color:#fff;font-size:.9rem;font-weight:700;padding:10px 18px;border-radius:999px;cursor:pointer;text-decoration:none;font-family:'Inter',system-ui,sans-serif">← Retour au site</a>
     </div>
     <div class="auth-card">
       <div class="auth-logo" style="text-align:center;margin-bottom:22px">
         <div style="width:52px;height:52px;border-radius:14px;background:#153e35;color:#fff;font-weight:900;font-size:15px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px;border:2px solid rgba(45,111,96,.4)">N</div>
-        <h1 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:#153e35;margin-bottom:4px">ExpertAudit HACCP</h1>
+        <h1 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.4rem;color:#153e35;margin-bottom:4px">ExpertAudit HACCP</h1>
         <p style="font-size:.8rem;color:#65716b">Accès sécurisé à votre espace</p>
       </div>
       <div class="auth-tabs" id="authTabsBar">
@@ -632,11 +632,11 @@ body{background:#fff}
           </div>
           <p style="margin:0 0 8px;font-size:.85rem;color:#153e35;font-weight:600">Vous n'avez pas encore de code ?</p>
           <p style="margin:0 0 10px;font-size:.8rem;color:#65716b">S'inscrire sur notre site — notre équipe vous enverra votre code sous 24h.</p>
-          <a href="tarifs.html#contact-tarifs" id="btnInscriptionAudit" style="display:block;width:100%;padding:12px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-weight:800;font-size:.92rem;text-decoration:none;text-align:center;box-sizing:border-box">📩 Choisir ma formule & m'inscrire</a>
+          <a href="tarifs.html#contact-tarifs" id="btnInscriptionAudit" style="display:block;width:100%;padding:12px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-weight:800;font-size:.92rem;text-decoration:none;text-align:center;box-sizing:border-box">📩 Choisir ma formule & m'inscrire</a>
         </div>
       </div>
       <div class="auth-footer" style="color:#8a9e95">ExpertAudit HACCP 2026 · Accès restreint<br>
-        <button onclick="switchAuthTab('admin')" style="background:none;border:none;color:#c8d8d3;font-size:.68rem;cursor:pointer;margin-top:6px;padding:0;font-family:'Source Sans 3',sans-serif">Accès administrateur</button>
+        <button onclick="switchAuthTab('admin')" style="background:none;border:none;color:#c8d8d3;font-size:.68rem;cursor:pointer;margin-top:6px;padding:0;font-family:'Inter',system-ui,sans-serif">Accès administrateur</button>
       </div>
     </div>
   </div>
@@ -648,7 +648,7 @@ body{background:#fff}
     <div style="padding:20px 24px 16px;border-bottom:1px solid #dfe6e0;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#153e35,#1f5649)">
       <div>
         <div style="font-size:.72rem;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Compte administrateur</div>
-        <h3 style="font-family:'DM Serif Display',Georgia,serif;font-size:1.4rem;color:#fff;margin:0">👤 Profil Admin</h3>
+        <h3 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.4rem;color:#fff;margin:0">👤 Profil Admin</h3>
       </div>
       <button onclick="closeAdminProfile()" style="width:36px;height:36px;border:none;border-radius:10px;background:rgba(255,255,255,.15);cursor:pointer;font-size:1rem;color:#fff">✕</button>
     </div>
@@ -667,17 +667,17 @@ body{background:#fff}
       <!-- Changer mot de passe -->
       <div style="margin-bottom:16px">
         <label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:6px">🔐 Changer le mot de passe</label>
-        <input type="password" id="profile_pwd_new" placeholder="Nouveau mot de passe" style="width:100%;padding:10px 12px;border:1.5px solid #dfe6e0;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.88rem;box-sizing:border-box;margin-bottom:8px">
-        <input type="password" id="profile_pwd_confirm" placeholder="Confirmer le mot de passe" style="width:100%;padding:10px 12px;border:1.5px solid #dfe6e0;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.88rem;box-sizing:border-box;margin-bottom:8px">
-        <button onclick="changerMotDePasseAdmin()" style="padding:9px 18px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Source Sans 3',sans-serif">💾 Enregistrer le mot de passe</button>
+        <input type="password" id="profile_pwd_new" placeholder="Nouveau mot de passe" style="width:100%;padding:10px 12px;border:1.5px solid #dfe6e0;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.88rem;box-sizing:border-box;margin-bottom:8px">
+        <input type="password" id="profile_pwd_confirm" placeholder="Confirmer le mot de passe" style="width:100%;padding:10px 12px;border:1.5px solid #dfe6e0;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.88rem;box-sizing:border-box;margin-bottom:8px">
+        <button onclick="changerMotDePasseAdmin()" style="padding:9px 18px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Inter',system-ui,sans-serif">💾 Enregistrer le mot de passe</button>
       </div>
 
       <!-- Email admin -->
       <div style="margin-bottom:16px">
         <label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:6px">📧 Email de notification admin</label>
         <div style="display:flex;gap:8px">
-          <input type="email" id="profile_email" placeholder="votre@email.com" style="flex:1;padding:10px 12px;border:1.5px solid #dfe6e0;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.88rem">
-          <button onclick="sauverEmailAdmin()" style="padding:9px 16px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Source Sans 3',sans-serif">💾 Sauver</button>
+          <input type="email" id="profile_email" placeholder="votre@email.com" style="flex:1;padding:10px 12px;border:1.5px solid #dfe6e0;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.88rem">
+          <button onclick="sauverEmailAdmin()" style="padding:9px 16px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Inter',system-ui,sans-serif">💾 Sauver</button>
         </div>
       </div>
 
@@ -686,8 +686,8 @@ body{background:#fff}
         <label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:4px">🛡️ Sauvegarde des données (clients + historique)</label>
         <div style="font-size:.74rem;color:#65716b;line-height:1.5;margin-bottom:10px">Exporter régulièrement un fichier de sauvegarde et conservez-le. Après une réinstallation ou un changement d'appareil, réimportez-le pour tout récupérer.</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button onclick="exportBackup()" style="flex:1;min-width:150px;padding:10px 14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Source Sans 3',sans-serif">💾 Exporter la sauvegarde</button>
-          <button onclick="document.getElementById('restoreFile').click()" style="flex:1;min-width:150px;padding:10px 14px;background:#fff;color:#153e35;border:1.5px solid #2d6f60;border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Source Sans 3',sans-serif">📥 Restaurer un fichier</button>
+          <button onclick="exportBackup()" style="flex:1;min-width:150px;padding:10px 14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Inter',system-ui,sans-serif">💾 Exporter la sauvegarde</button>
+          <button onclick="document.getElementById('restoreFile').click()" style="flex:1;min-width:150px;padding:10px 14px;background:#fff;color:#153e35;border:1.5px solid #2d6f60;border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Inter',system-ui,sans-serif">📥 Restaurer un fichier</button>
         </div>
         <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" onchange="importBackup(this)">
       </div>
@@ -695,7 +695,7 @@ body{background:#fff}
       <div id="profile_msg" style="display:none;padding:10px;border-radius:8px;font-size:.84rem;margin-top:8px"></div>
     </div>
     <div style="padding:14px 24px;border-top:1px solid #dfe6e0;background:#f9f8f4">
-      <button onclick="closeAdminProfile()" style="padding:10px 24px;background:#f5f2ea;color:#153e35;border:1px solid rgba(21,62,53,.15);border-radius:999px;cursor:pointer;font-weight:700;font-size:.88rem;font-family:'Source Sans 3',sans-serif">Fermer</button>
+      <button onclick="closeAdminProfile()" style="padding:10px 24px;background:#f5f2ea;color:#153e35;border:1px solid rgba(21,62,53,.15);border-radius:999px;cursor:pointer;font-weight:700;font-size:.88rem;font-family:'Inter',system-ui,sans-serif">Fermer</button>
     </div>
   </div>
 </div>
@@ -713,7 +713,7 @@ body{background:#fff}
   <!-- ÉCRAN DE CHOIX ADMIN -->
   <div id="adminChoixScreen" style="display:none;min-height:calc(100vh - 58px);background:#f5f2ea;align-items:center;justify-content:center;padding:30px 16px">
     <div style="max-width:700px;width:100%">
-      <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:1.6rem;color:#153e35;text-align:center;margin-bottom:6px">Que souhaitez-vous faire ?</h1>
+      <h1 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.6rem;color:#153e35;text-align:center;margin-bottom:6px">Que souhaitez-vous faire ?</h1>
       <p style="text-align:center;color:#65716b;font-size:.85rem;margin-bottom:28px">Choisir une action pour commencer</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
         <!-- Nouveau client -->
@@ -742,7 +742,7 @@ body{background:#fff}
         </div>
       </div>
       <div style="text-align:center">
-        <button onclick="showAdminPanel()" style="background:none;border:1px solid #dfe6e0;border-radius:8px;padding:10px 20px;font-family:'Source Sans 3',sans-serif;font-size:.83rem;color:#65716b;cursor:pointer">⚙️ Panneau d'administration</button>
+        <button onclick="showAdminPanel()" style="background:none;border:1px solid #dfe6e0;border-radius:8px;padding:10px 20px;font-family:'Inter',system-ui,sans-serif;font-size:.83rem;color:#65716b;cursor:pointer">⚙️ Panneau d'administration</button>
       </div>
     </div>
   </div>
@@ -751,9 +751,9 @@ body{background:#fff}
   <div id="adminNouveauClientScreen" style="display:none;background:#f5f2ea;min-height:calc(100vh - 58px);padding:24px 16px">
     <div style="max-width:700px;margin:0 auto">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
-        <button onclick="showAdminChoix()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:8px 14px;font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:#65716b;cursor:pointer">← Retour</button>
-        <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:1.3rem;color:#153e35">Nouveau client</h2>
-        <button onclick="prefillNouveauClient()" title="Pré-remplir le formulaire avec une fiche établissement enregistrée" style="margin-left:auto;background:#f0faf8;border:1px solid rgba(31,86,73,.25);border-radius:8px;padding:8px 14px;font-family:'Source Sans 3',sans-serif;font-size:.8rem;color:#1f5649;font-weight:700;cursor:pointer">📋 Pré-remplir</button>
+        <button onclick="showAdminChoix()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:8px 14px;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#65716b;cursor:pointer">← Retour</button>
+        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.3rem;color:#153e35">Nouveau client</h2>
+        <button onclick="prefillNouveauClient()" title="Pré-remplir le formulaire avec une fiche établissement enregistrée" style="margin-left:auto;background:#f0faf8;border:1px solid rgba(31,86,73,.25);border-radius:8px;padding:8px 14px;font-family:'Inter',system-ui,sans-serif;font-size:.8rem;color:#1f5649;font-weight:700;cursor:pointer">📋 Pré-remplir</button>
       </div>
       <div class="admin-section">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -805,38 +805,38 @@ body{background:#fff}
   <div id="adminClientExistantScreen" style="display:none;background:#f5f2ea;min-height:calc(100vh - 58px);padding:24px 16px">
     <div style="max-width:700px;margin:0 auto">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
-        <button onclick="showAdminChoix()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:8px 14px;font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:#65716b;cursor:pointer">← Retour</button>
-        <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:1.3rem;color:#153e35">Client existant</h2>
+        <button onclick="showAdminChoix()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:8px 14px;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#65716b;cursor:pointer">← Retour</button>
+        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.3rem;color:#153e35">Client existant</h2>
       </div>
       <div class="admin-section">
         <div class="gen-field" style="margin-bottom:14px">
           <label>Sélectionner un client</label>
-          <select id="existant_client_sel" onchange="onExistantClientChange(this)" style="padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.85rem;color:#153e35;background:#fafbfd;width:100%">
+          <select id="existant_client_sel" onchange="onExistantClientChange(this)" style="padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;color:#153e35;background:#fafbfd;width:100%">
             <option value="">-- Choisir un client --</option>
           </select>
         </div>
         <!-- Fiche client sélectionné -->
         <div id="existantClientInfo" style="display:none;background:#f0faf8;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:.8rem;color:#2d4a3e;line-height:1.8;border:1px solid rgba(0,168,150,.2)"></div>
-        <button id="btnEditClient" onclick="openEditModal()" style="display:none;width:100%;margin-bottom:14px;padding:9px;background:#fff;border:1.5px solid #2d6f60;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:#2d6f60;font-weight:600;cursor:pointer">✏️ Modifier les informations de ce client</button>
+        <button id="btnEditClient" onclick="openEditModal()" style="display:none;width:100%;margin-bottom:14px;padding:9px;background:#fff;border:1.5px solid #2d6f60;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#2d6f60;font-weight:600;cursor:pointer">✏️ Modifier les informations de ce client</button>
 
         <!-- 8 Documents réglementaires — zone FIXE jamais écrasée par JS -->
         <div id="existantDocsBlock" style="display:none;margin-bottom:14px;background:#f5f2ea;border-radius:10px;padding:14px 16px">
           <div style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#153e35;margin-bottom:10px">
             <span style="background:#153e35;color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;margin-right:6px">📄</span>Documents réglementaires — Word pré-rempli
           </div>
-          <button onclick="existantGenAllDocs()" style="width:100%;margin-bottom:10px;padding:10px;background:linear-gradient(135deg,#153e35,#2d6f60);color:#fff;border:none;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer">📦 Télécharger tous les documents (11)</button>
+          <button onclick="existantGenAllDocs()" style="width:100%;margin-bottom:10px;padding:10px;background:linear-gradient(135deg,#153e35,#2d6f60);color:#fff;border:none;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;font-weight:700;cursor:pointer">📦 Télécharger tous les documents (11)</button>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <button onclick="existantGenDoc('pms')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">📋 Plan de Maîtrise Sanitaire (PMS) <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('pnd')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🧹 Plan de Nettoyage &amp; Désinfection <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('duerp')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">⚠️ Document Unique <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('temperatures')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🌡️ Relevé des Températures <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('reception')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">📦 Fiche de Réception <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('tracabilite')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🔍 Traçabilité <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('allergenes')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🌾 Allergènes <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('nonconformites')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">❌ Gestion des Non-Conformités <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('etiquette')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🏷️ Étiquettes Traçabilité Interne <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('lavagemains')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🖐️ Affiche Lavage des Mains <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
-            <button onclick="existantGenDoc('huiles')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🍟 Contrôle Huiles de Friture <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('pms')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">📋 Plan de Maîtrise Sanitaire (PMS) <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('pnd')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🧹 Plan de Nettoyage &amp; Désinfection <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('duerp')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">⚠️ Document Unique <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('temperatures')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🌡️ Relevé des Températures <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('reception')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">📦 Fiche de Réception <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('tracabilite')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🔍 Traçabilité <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('allergenes')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🌾 Allergènes <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('nonconformites')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">❌ Gestion des Non-Conformités <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('etiquette')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🏷️ Étiquettes Traçabilité Interne <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('lavagemains')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🖐️ Affiche Lavage des Mains <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
+            <button onclick="existantGenDoc('huiles')" style="padding:8px 10px;background:#fff;border:1px solid #dfe6e0;border-radius:7px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#153e35;font-weight:600;text-align:left">🍟 Contrôle Huiles de Friture <span style="color:#2d6f60;font-size:.68rem">⬇ .docx</span></button>
           </div>
         </div>
 
@@ -846,7 +846,7 @@ body{background:#fff}
             <div style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#153e35">
               <span style="background:#153e35;color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;margin-right:6px">📊</span>Audits sauvegardés
             </div>
-            <button onclick="loadAuditsExistant()" style="background:none;border:1px solid #dfe6e0;border-radius:6px;padding:3px 9px;font-family:'Source Sans 3',sans-serif;font-size:.72rem;color:#65716b;cursor:pointer">🔄 Rafraîchir</button>
+            <button onclick="loadAuditsExistant()" style="background:none;border:1px solid #dfe6e0;border-radius:6px;padding:3px 9px;font-family:'Inter',system-ui,sans-serif;font-size:.72rem;color:#65716b;cursor:pointer">🔄 Rafraîchir</button>
           </div>
           <div id="existantAuditsWrap">
             <div style="font-size:.82rem;color:#8a9e95;text-align:center;padding:12px">Chargement en cours...</div>
@@ -854,7 +854,7 @@ body{background:#fff}
         </div>
 
         <!-- Bouton principal : lancer l'audit pour ce client -->
-        <button id="btnLancerAuditExistant" onclick="auditerClientExistant()" style="display:none;width:100%;margin-bottom:10px;padding:14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.95rem;font-weight:700">
+        <button id="btnLancerAuditExistant" onclick="auditerClientExistant()" style="display:none;width:100%;margin-bottom:10px;padding:14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.95rem;font-weight:700">
           🚀 Lancer l'audit pour ce client
         </button>
 
@@ -875,8 +875,8 @@ body{background:#fff}
   <div id="adminTeamScreen" style="display:none;background:#f5f2ea;min-height:calc(100vh - 58px);padding:24px 16px">
     <div style="max-width:700px;margin:0 auto">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
-        <button onclick="showAdminChoix()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:8px 14px;font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:#65716b;cursor:pointer">← Retour</button>
-        <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:1.3rem;color:#153e35">Mon équipe</h2>
+        <button onclick="showAdminChoix()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:8px 14px;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#65716b;cursor:pointer">← Retour</button>
+        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.3rem;color:#153e35">Mon équipe</h2>
       </div>
       <div class="admin-section">
         <div id="teamFormTitre" style="font-weight:700;color:#153e35;font-size:.95rem;margin-bottom:14px">➕ Ajouter un auditeur</div>
@@ -894,20 +894,20 @@ body{background:#fff}
           </div>
         </div>
         <button id="teamSubmitBtn" class="gen-btn" onclick="teamAdd()" style="width:100%;margin-top:14px;padding:12px;background:#2d6f60">Enregistrer</button>
-        <button id="teamCancelBtn" onclick="teamCancelEdit()" style="display:none;width:100%;margin-top:8px;padding:10px;background:#f5f2ea;border:1px solid #dfe6e0;border-radius:8px;color:#65716b;font-family:'Source Sans 3',sans-serif;font-size:.85rem;cursor:pointer">Annuler la modification</button>
+        <button id="teamCancelBtn" onclick="teamCancelEdit()" style="display:none;width:100%;margin-top:8px;padding:10px;background:#f5f2ea;border:1px solid #dfe6e0;border-radius:8px;color:#65716b;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;cursor:pointer">Annuler la modification</button>
       </div>
 
       <div style="display:flex;align-items:center;justify-content:space-between;margin:18px 2px 10px">
         <div style="font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#8a9e95">Équipe d'auditeurs</div>
         <div style="font-size:.72rem;font-weight:800;color:#2d6f60;background:#f0faf8;padding:2px 9px;border-radius:20px"><span id="teamCount">0</span> personne(s)</div>
       </div>
-      <button onclick="syncTeamManual()" style="width:100%;margin-bottom:12px;background:#f0faf8;border:1px solid rgba(45,111,96,.3);color:#1f5649;border-radius:10px;padding:11px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">🔄 Synchroniser sur tous mes appareils</button>
+      <button onclick="syncTeamManual()" style="width:100%;margin-bottom:12px;background:#f0faf8;border:1px solid rgba(45,111,96,.3);color:#1f5649;border-radius:10px;padding:11px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,sans-serif">🔄 Synchroniser sur tous mes appareils</button>
       <div id="teamListe"></div>
 
       <!-- Maintenance / données de test -->
       <div style="margin-top:24px;padding-top:16px;border-top:1px solid #e6e0d4">
         <div style="font-size:.7rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#8a9e95;margin-bottom:8px">🧹 Maintenance</div>
-        <button onclick="viderHistoriqueAudits()" style="width:100%;background:#fdecec;border:1px solid #f5b7b1;color:#c0392b;border-radius:10px;padding:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">🗑 Vider toutes les photos &amp; l'historique d'audits</button>
+        <button onclick="viderHistoriqueAudits()" style="width:100%;background:#fdecec;border:1px solid #f5b7b1;color:#c0392b;border-radius:10px;padding:12px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,sans-serif">🗑 Vider toutes les photos &amp; l'historique d'audits</button>
         <div style="font-size:.72rem;color:#8a9e95;margin-top:6px;line-height:1.4">Supprime tous les audits enregistrés (rapports + photos), sur le cloud et sur cet appareil. Votre équipe d'auditeurs est conservée.</div>
       </div>
     </div>
@@ -928,7 +928,7 @@ body{background:#fff}
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <h2 style="margin:0"><span style="background:#153e35;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem">👥</span>&nbsp; Suivi clients</h2>
         <div style="display:flex;gap:8px">
-          <select id="suiviClientSel" onchange="afficherSuiviClient(this.value)" style="padding:6px 10px;border:1.5px solid #dfe6e0;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:#153e35;background:#fbfaf7">
+          <select id="suiviClientSel" onchange="afficherSuiviClient(this.value)" style="padding:6px 10px;border:1.5px solid #dfe6e0;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#153e35;background:#fbfaf7">
             <option value="">-- Sélectionner un client --</option>
           </select>
         </div>
@@ -942,13 +942,13 @@ body{background:#fff}
     <div class="admin-section" style="border:1px solid rgba(231,76,60,.3)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
         <h2 style="margin:0"><span style="background:#c0392b;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem">📬</span>&nbsp; Demandes en attente <span id="demandesBadge" style="display:none;background:#c0392b;color:#fff;font-size:.65rem;padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle"></span></h2>
-        <button onclick="clearDemandesTraitees()" style="background:none;border:1px solid #dfe6e0;border-radius:6px;padding:4px 10px;font-family:'Source Sans 3',sans-serif;font-size:.75rem;color:#65716b;cursor:pointer">🗑 Supprimer traitées</button>
+        <button onclick="clearDemandesTraitees()" style="background:none;border:1px solid #dfe6e0;border-radius:6px;padding:4px 10px;font-family:'Inter',system-ui,sans-serif;font-size:.75rem;color:#65716b;cursor:pointer">🗑 Supprimer traitées</button>
       </div>
       <!-- Email admin config -->
       <div style="background:#fbfaf7;border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;border:1px solid #dfe6e0">
         <span style="font-size:.8rem;color:#65716b;white-space:nowrap">📧 Email admin :</span>
-        <input type="email" id="adminEmailInput" placeholder="votre@email.com" style="flex:1;padding:6px 10px;border:1.5px solid #dfe6e0;border-radius:6px;font-family:'Source Sans 3',sans-serif;font-size:.82rem">
-        <button onclick="saveAdminEmailFromInput()" style="padding:6px 12px;background:#153e35;color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.78rem">💾 Sauver</button>
+        <input type="email" id="adminEmailInput" placeholder="votre@email.com" style="flex:1;padding:6px 10px;border:1.5px solid #dfe6e0;border-radius:6px;font-family:'Inter',system-ui,sans-serif;font-size:.82rem">
+        <button onclick="saveAdminEmailFromInput()" style="padding:6px 12px;background:#153e35;color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.78rem">💾 Sauver</button>
       </div>
       <div id="demandesWrap">
         <div style="font-size:.82rem;color:#8a9e95;text-align:center;padding:16px">Aucune demande en attente.</div>
@@ -967,8 +967,8 @@ body{background:#fff}
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
         <h2 style="margin:0"><span style="background:#153e35;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem">🗂️</span>&nbsp; Historique des audits</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button onclick="loadAudits_remote()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:7px 14px;font-family:'Source Sans 3',sans-serif;font-size:.8rem;color:#1f5649;font-weight:600;cursor:pointer">🔄 Actualiser</button>
-          <button onclick="viderHistoriqueAudits()" title="Supprimer tous les audits et photos (cloud + local) — l'équipe est conservée" style="background:#fdecec;border:1px solid #f5b7b1;border-radius:8px;padding:7px 14px;font-family:'Source Sans 3',sans-serif;font-size:.8rem;color:#c0392b;font-weight:600;cursor:pointer">🗑 Vider photos &amp; historique</button>
+          <button onclick="loadAudits_remote()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:7px 14px;font-family:'Inter',system-ui,sans-serif;font-size:.8rem;color:#1f5649;font-weight:600;cursor:pointer">🔄 Actualiser</button>
+          <button onclick="viderHistoriqueAudits()" title="Supprimer tous les audits et photos (cloud + local) — l'équipe est conservée" style="background:#fdecec;border:1px solid #f5b7b1;border-radius:8px;padding:7px 14px;font-family:'Inter',system-ui,sans-serif;font-size:.8rem;color:#c0392b;font-weight:600;cursor:pointer">🗑 Vider photos &amp; historique</button>
         </div>
       </div>
       <p style="font-size:.8rem;color:#65716b;margin:6px 0 12px">Audits enregistrés (cloud). Cliquer « 📋 Détail » pour consulter, modifier ou télécharger un rapport professionnel.</p>
@@ -988,10 +988,10 @@ body{background:#fff}
 </div>
 
 <!-- ══ ÉCRAN ACCUEIL CLIENT ══ -->
-<div id="clientWelcomeScreen" style="display:none;min-height:100vh;background:linear-gradient(135deg,#153e35,#1f5649);align-items:center;justify-content:center;font-family:'Source Sans 3',sans-serif;padding:20px">
+<div id="clientWelcomeScreen" style="display:none;min-height:100vh;background:linear-gradient(135deg,#153e35,#1f5649);align-items:center;justify-content:center;font-family:'Inter',system-ui,sans-serif;padding:20px">
   <div style="background:#fff;border-radius:18px;padding:36px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center">
     <div style="font-size:2.5rem;margin-bottom:12px">🛡️</div>
-    <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:1.5rem;color:#153e35;margin-bottom:6px">Bienvenue</h1>
+    <h1 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.5rem;color:#153e35;margin-bottom:6px">Bienvenue</h1>
     <div id="welcomeClientName" style="font-size:.9rem;color:#2d6f60;font-weight:600;margin-bottom:10px"></div>
     <div id="welcomeCodeBadge" style="display:none;color:#fff;font-size:.78rem;font-weight:600;padding:5px 14px;border-radius:20px;margin-bottom:14px;display:inline-block"></div>
     <div id="welcomeClientInfo" style="background:#f0faf8;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:.8rem;color:#2d4a3e;line-height:1.8;border:1px solid rgba(21,62,53,.15);text-align:left"></div>
@@ -1002,59 +1002,59 @@ body{background:#fff}
         <p style="margin:0 0 6px;font-size:.88rem;color:#153e35;font-weight:700">🎯 Votre accès complet inclut :</p>
         <p style="margin:0;font-size:.82rem;color:#65716b">✅ Audit HACCP &nbsp;·&nbsp; ✅ Documents réglementaires (PMS, Nettoyage, Document Unique)</p>
       </div>
-      <button onclick="demarrerAuditClient()" style="width:100%;padding:15px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:10px;font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:700;cursor:pointer">
+      <button onclick="demarrerAuditClient()" style="width:100%;padding:15px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:10px;font-family:'Inter',system-ui,sans-serif;font-size:1rem;font-weight:700;cursor:pointer">
         🚀 Accéder à mon espace
       </button>
     </div>
 
     <!-- Bouton Audit seul (code HACCP) -->
-    <button id="welcomeBtnAudit" onclick="demarrerAuditClient()" style="width:100%;padding:14px;background:linear-gradient(135deg,#2d6f60,#3b8a77);color:#fff;border:none;border-radius:10px;font-family:'Source Sans 3',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-bottom:10px">
+    <button id="welcomeBtnAudit" onclick="demarrerAuditClient()" style="width:100%;padding:14px;background:linear-gradient(135deg,#2d6f60,#3b8a77);color:#fff;border:none;border-radius:10px;font-family:'Inter',system-ui,sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-bottom:10px">
       🚀 Accéder à mon audit et à mes documents
     </button>
     <!-- Bouton Documents seul (code DOCS) -->
-    <button id="welcomeBtnDocs" onclick="voirPourquoiDocs()" style="width:100%;padding:14px;background:linear-gradient(135deg,#b79029,#d2ad46);color:#201806;border:none;border-radius:10px;font-family:'Source Sans 3',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-bottom:10px">
+    <button id="welcomeBtnDocs" onclick="voirPourquoiDocs()" style="width:100%;padding:14px;background:linear-gradient(135deg,#b79029,#d2ad46);color:#201806;border:none;border-radius:10px;font-family:'Inter',system-ui,sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-bottom:10px">
       📄 Accéder à mes documents réglementaires
     </button>
-    <button onclick="logout()" style="width:100%;margin-top:4px;padding:10px;background:none;border:none;font-family:'Source Sans 3',sans-serif;font-size:.78rem;color:#8a9e95;cursor:pointer">⏻ Se déconnecter</button>
-    <button onclick="window.location.href='index.html'" style="width:100%;margin-top:4px;padding:10px;background:none;border:1px solid #dfe6e0;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.78rem;color:#65716b;cursor:pointer">← Retour à l'accueil</button>
+    <button onclick="logout()" style="width:100%;margin-top:4px;padding:10px;background:none;border:none;font-family:'Inter',system-ui,sans-serif;font-size:.78rem;color:#8a9e95;cursor:pointer">⏻ Se déconnecter</button>
+    <button onclick="window.location.href='index.html'" style="width:100%;margin-top:4px;padding:10px;background:none;border:1px solid #dfe6e0;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.78rem;color:#65716b;cursor:pointer">← Retour à l'accueil</button>
   </div>
 </div>
 
 <!-- ══ ÉCRAN COMMANDE DOCUMENTS ══ -->
 <!-- ══ ÉCRAN CHOIX SECTEUR (si non défini par admin) ══ -->
-<div id="secteurChoixScreen" style="display:none;min-height:100vh;background:linear-gradient(135deg,#153e35,#1f5649);align-items:center;justify-content:center;font-family:'Source Sans 3',sans-serif;padding:20px">
+<div id="secteurChoixScreen" style="display:none;min-height:100vh;background:linear-gradient(135deg,#153e35,#1f5649);align-items:center;justify-content:center;font-family:'Inter',system-ui,sans-serif;padding:20px">
   <div style="background:#fff;border-radius:18px;padding:36px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center">
     <div style="font-size:2.5rem;margin-bottom:12px">🍽️</div>
-    <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:1.4rem;color:#153e35;margin-bottom:6px">Votre secteur d'activité</h1>
+    <h1 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.4rem;color:#153e35;margin-bottom:6px">Votre secteur d'activité</h1>
     <p style="font-size:.83rem;color:#65716b;margin-bottom:24px">Sélectionner votre secteur pour accéder à l'audit adapté à votre activité.</p>
     <div style="display:flex;flex-direction:column;gap:10px">
-      <button onclick="choisirSecteur('RESTAURATION')" style="padding:16px;background:#fff;border:2px solid #dfe6e0;border-radius:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.9rem;font-weight:600;color:#153e35;text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s" onmouseover="this.style.borderColor='#2d6f60';this.style.background='#f0faf8'" onmouseout="this.style.borderColor='#dfe6e0';this.style.background='#fff'">
+      <button onclick="choisirSecteur('RESTAURATION')" style="padding:16px;background:#fff;border:2px solid #dfe6e0;border-radius:12px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.9rem;font-weight:600;color:#153e35;text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s" onmouseover="this.style.borderColor='#2d6f60';this.style.background='#f0faf8'" onmouseout="this.style.borderColor='#dfe6e0';this.style.background='#fff'">
         <span style="font-size:1.6rem">🍽️</span>
         <div><div>Restauration Traditionnelle</div><div style="font-size:.75rem;color:#65716b;font-weight:400">Restaurant, brasserie, traiteur…</div></div>
       </button>
-      <button onclick="choisirSecteur('RESTAURATION_RAPIDE')" style="padding:16px;background:#fff;border:2px solid #dfe6e0;border-radius:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.9rem;font-weight:600;color:#153e35;text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s" onmouseover="this.style.borderColor='#2d6f60';this.style.background='#f0faf8'" onmouseout="this.style.borderColor='#dfe6e0';this.style.background='#fff'">
+      <button onclick="choisirSecteur('RESTAURATION_RAPIDE')" style="padding:16px;background:#fff;border:2px solid #dfe6e0;border-radius:12px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.9rem;font-weight:600;color:#153e35;text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s" onmouseover="this.style.borderColor='#2d6f60';this.style.background='#f0faf8'" onmouseout="this.style.borderColor='#dfe6e0';this.style.background='#fff'">
         <span style="font-size:1.6rem">🍔</span>
         <div><div>Restauration Rapide</div><div style="font-size:.75rem;color:#65716b;font-weight:400">Fast-food, kebab, sandwich, food truck…</div></div>
       </button>
-      <button onclick="choisirSecteur('BOULANGERIE')" style="padding:16px;background:#fff;border:2px solid #dfe6e0;border-radius:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.9rem;font-weight:600;color:#153e35;text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s" onmouseover="this.style.borderColor='#2d6f60';this.style.background='#f0faf8'" onmouseout="this.style.borderColor='#dfe6e0';this.style.background='#fff'">
+      <button onclick="choisirSecteur('BOULANGERIE')" style="padding:16px;background:#fff;border:2px solid #dfe6e0;border-radius:12px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.9rem;font-weight:600;color:#153e35;text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s" onmouseover="this.style.borderColor='#2d6f60';this.style.background='#f0faf8'" onmouseout="this.style.borderColor='#dfe6e0';this.style.background='#fff'">
         <span style="font-size:1.6rem">🥖</span>
         <div><div>Boulangerie / Pâtisserie</div><div style="font-size:.75rem;color:#65716b;font-weight:400">Boulangerie, pâtisserie, viennoiserie…</div></div>
       </button>
-      <button onclick="choisirSecteur('BOUCHERIE')" style="padding:16px;background:#fff;border:2px solid #dfe6e0;border-radius:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;font-size:.9rem;font-weight:600;color:#153e35;text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s" onmouseover="this.style.borderColor='#2d6f60';this.style.background='#f0faf8'" onmouseout="this.style.borderColor='#dfe6e0';this.style.background='#fff'">
+      <button onclick="choisirSecteur('BOUCHERIE')" style="padding:16px;background:#fff;border:2px solid #dfe6e0;border-radius:12px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.9rem;font-weight:600;color:#153e35;text-align:left;display:flex;align-items:center;gap:14px;transition:all .15s" onmouseover="this.style.borderColor='#2d6f60';this.style.background='#f0faf8'" onmouseout="this.style.borderColor='#dfe6e0';this.style.background='#fff'">
         <span style="font-size:1.6rem">🥩</span>
         <div><div>Boucherie / Charcuterie</div><div style="font-size:.75rem;color:#65716b;font-weight:400">Boucherie, charcuterie, triperie…</div></div>
       </button>
     </div>
-    <button onclick="showClientWelcome()" style="width:100%;margin-top:10px;padding:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:#ffffff;cursor:pointer;border-radius:8px;font-weight:500">← Retour</button>
-    <button onclick="logout()" style="width:100%;margin-top:8px;padding:10px;background:none;border:none;font-family:'Source Sans 3',sans-serif;font-size:.78rem;color:#8a9e95;cursor:pointer">⏻ Se déconnecter</button>
+    <button onclick="showClientWelcome()" style="width:100%;margin-top:10px;padding:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#ffffff;cursor:pointer;border-radius:8px;font-weight:500">← Retour</button>
+    <button onclick="logout()" style="width:100%;margin-top:8px;padding:10px;background:none;border:none;font-family:'Inter',system-ui,sans-serif;font-size:.78rem;color:#8a9e95;cursor:pointer">⏻ Se déconnecter</button>
   </div>
 </div>
 
-<div id="pourquoiDocsScreen" style="display:none;min-height:100vh;background:#f5f2ea;font-family:'Source Sans 3',sans-serif;padding:24px 16px">
+<div id="pourquoiDocsScreen" style="display:none;min-height:100vh;background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;padding:24px 16px">
   <div style="max-width:640px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
-      <button onclick="retourWelcome()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:8px 14px;font-family:'Source Sans 3',sans-serif;font-size:.82rem;color:#65716b;cursor:pointer">← Retour</button>
-      <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:1.3rem;color:#153e35">Documents réglementaires</h2>
+      <button onclick="retourWelcome()" style="background:#fff;border:1px solid #dfe6e0;border-radius:8px;padding:8px 14px;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#65716b;cursor:pointer">← Retour</button>
+      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.3rem;color:#153e35">Documents réglementaires</h2>
     </div>
 
     <!-- Pourquoi -->
@@ -1116,7 +1116,7 @@ body{background:#fff}
           Ils doivent impérativement être <strong>complétés, personnalisés et mis à jour</strong> par vos soins selon l'évolution de votre activité. Les tableaux de relevés (températures, nettoyage, traçabilité, etc.) doivent être <strong>remplis régulièrement</strong> et conservés pour tout contrôle officiel.
         </div>
       </div>
-      <button onclick="demanderDocs()" style="width:100%;padding:14px;background:linear-gradient(135deg,#153e35,#1f5649);color:#fff;border:none;border-radius:10px;font-family:'Source Sans 3',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer">📩 Envoyer ma demande</button>
+      <button onclick="demanderDocs()" style="width:100%;padding:14px;background:linear-gradient(135deg,#153e35,#1f5649);color:#fff;border:none;border-radius:10px;font-family:'Inter',system-ui,sans-serif;font-size:.95rem;font-weight:600;cursor:pointer">📩 Envoyer ma demande</button>
       <p style="font-size:.74rem;color:#8a9e95;margin-top:10px">Votre demande sera transmise à votre auditeur qui vous enverra un code d'accès après validation.</p>
     </div>
   </div>
@@ -1193,7 +1193,7 @@ body{background:#fff}
   <div class="reg" id="regBanner"><strong>Base réglementaire :</strong> Règl. CE 852/2004 · Arrêté 21/12/2009 · Règl. 178/2002 · Critères : ≥85% Conforme · 60-84% Surveillance · &lt;60% Danger</div>
 
   <div style="text-align:center;margin:10px 0">
-    <button onclick="openAllerg()" style="background:#fff;border:1.5px solid rgba(31,86,73,.3);border-radius:999px;padding:8px 18px;font-family:'Source Sans 3',sans-serif;font-size:.84rem;font-weight:700;color:#1f5649;cursor:pointer">🥗 Allergènes (14) &amp; Étiquetage / Traçabilité</button>
+    <button onclick="openAllerg()" style="background:#fff;border:1.5px solid rgba(31,86,73,.3);border-radius:999px;padding:8px 18px;font-family:'Inter',system-ui,sans-serif;font-size:.84rem;font-weight:700;color:#1f5649;cursor:pointer">🥗 Allergènes (14) &amp; Étiquetage / Traçabilité</button>
   </div>
 
   <div class="legend">
@@ -1299,10 +1299,10 @@ body{background:#fff}
 <div class="overlay" id="ovRpt" onclick="closeRpt(event)">
   <div class="rpt-panel" onclick="event.stopPropagation()">
     <div class="rpt-topbar">
-      <span style="font-family:'Playfair Display',Georgia,serif;font-size:1rem">📄 Rapport d'Audit HACCP avec Recommandations</span>
+      <span style="font-family:'Instrument Serif',Georgia,serif;font-size:1rem">📄 Rapport d'Audit HACCP avec Recommandations</span>
       <div style="display:flex;gap:7px;align-items:center">
         <button class="tb tb-pdf" onclick="printRpt()" id="btnPrintRpt">🖨 Imprimer / PDF</button>
-        <button onclick="closeRpt()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:.85rem;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:'Source Sans 3',sans-serif">← Retour</button>
+        <button onclick="closeRpt()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:.85rem;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:'Inter',system-ui,sans-serif">← Retour</button>
         <button class="hclose" onclick="closeRpt()" title="Fermer">✕</button>
       </div>
     </div>
@@ -3521,7 +3521,7 @@ function toggleFaq(btn) {
     if(step>=quizQuestions.length){ showSignup(); return; }
     var item=quizQuestions[step];
     c.style.display="block";
-    c.innerHTML='<div style="padding:16px 0">'+interimAlert()+'<p style="font-size:.76rem;text-transform:uppercase;color:#b79029;font-weight:800">Question '+(step+1)+' / '+quizQuestions.length+'</p><p style="font-size:1rem;font-weight:700;margin-bottom:16px;color:#153e35">'+item.q+'</p><div style="display:grid;gap:10px">'+item.options.map(function(opt,i){return '<button type="button" data-index="'+i+'" style="display:inline-flex;align-items:center;justify-content:flex-start;border:1px solid rgba(31,86,73,.12);border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;background:#fff;color:#153e35;text-align:left;font-family:\'Source Sans 3\',sans-serif;font-size:.92rem">'+String.fromCharCode(65+i)+'. '+opt+'</button>';}).join('')+'</div></div>';
+    c.innerHTML='<div style="padding:16px 0">'+interimAlert()+'<p style="font-size:.76rem;text-transform:uppercase;color:#b79029;font-weight:800">Question '+(step+1)+' / '+quizQuestions.length+'</p><p style="font-size:1rem;font-weight:700;margin-bottom:16px;color:#153e35">'+item.q+'</p><div style="display:grid;gap:10px">'+item.options.map(function(opt,i){return '<button type="button" data-index="'+i+'" style="display:inline-flex;align-items:center;justify-content:flex-start;border:1px solid rgba(31,86,73,.12);border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;background:#fff;color:#153e35;text-align:left;font-family:'Inter',sans-serif;font-size:.92rem">'+String.fromCharCode(65+i)+'. '+opt+'</button>';}).join('')+'</div></div>';
     c.querySelectorAll('button[data-index]').forEach(function(btn){
       btn.addEventListener('click',function(){
         var idx=Number(this.dataset.index);
@@ -4630,7 +4630,7 @@ function injectLibreClientPicker() {
   bar.id = 'libreClientPicker';
   bar.style.cssText = 'background:#f0faf8;border:1px solid rgba(0,168,150,.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap';
   var html = '<span style="font-size:.82rem;color:#00796b;font-weight:700;white-space:nowrap">👥 Client existant :</span>';
-  html += '<select id="libre_client_sel" onchange="onLibreClientPick(this.value)" style="flex:1;min-width:200px;padding:8px 10px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:\'Source Sans 3\',sans-serif;font-size:.85rem;background:#fff">';
+  html += '<select id="libre_client_sel" onchange="onLibreClientPick(this.value)" style="flex:1;min-width:200px;padding:8px 10px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',sans-serif;font-size:.85rem;background:#fff">';
   html += '<option value="">— Saisie libre (aucun client) —</option>';
   clients.forEach(function(c, i){
     var nom = (c.info && c.info.etab && c.info.etab.trim()) ? c.info.etab.trim() : (c.client || '').trim();
@@ -4760,27 +4760,27 @@ function showAdminDocs() {
   panel.innerHTML = '<div style="background:#fff;border-radius:20px;width:min(640px,100%);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 28px 80px rgba(0,0,0,.3)">' +
     '<div style="padding:20px 24px 16px;border-bottom:1px solid #dfe6e0;background:linear-gradient(135deg,#153e35,#1f5649);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">' +
     '<div><div style="font-size:.72rem;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Documents réglementaires</div>' +
-    '<h3 style="font-family:\'DM Serif Display\',serif;font-size:1.3rem;color:#fff;margin:0">📦 ' + info.etab + '</h3>' +
+    '<h3 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.3rem;color:#fff;margin:0">📦 ' + info.etab + '</h3>' +
     '<div style="font-size:.78rem;color:rgba(255,255,255,.7);margin-top:3px">Secteur : ' + (info.secteur||'').replace(/_/g,' ') + (info.siret ? ' — SIRET : '+info.siret : '') + '</div></div>' +
     '<button onclick="document.getElementById(\'adminDocsPanel\').style.display=\'none\'" style="width:36px;height:36px;background:rgba(255,255,255,.15);border:none;border-radius:10px;cursor:pointer;font-size:1.1rem;color:#fff;flex-shrink:0">✕</button>' +
     '</div>' +
     '<div style="overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:8px">' +
     '<p style="font-size:.82rem;color:#65716b;margin:0 0 8px">Cliquer sur un document pour le télécharger en format Word (.docx), personnalisé avec les coordonnées du client.</p>' +
-    '<button onclick="genDocsPMS(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#153e35,#1f5649);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">📄</span><div><div>Plan de Maîtrise Sanitaire (PMS)</div><div style="font-size:.73rem;opacity:.75;font-weight:400">18 sections — tous secteurs — Règl. CE 852/2004</div></div></button>' +
-    '<button onclick="genDocsNettoyage(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🧹</span><div><div>Plan de Nettoyage & Désinfection</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Zones & fréquences par secteur — Arrêté 21/12/2009</div></div></button>' +
-    '<button onclick="genDocsDUERP(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#6b3fa0,#9b59b6);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">⚠️</span><div><div>Document Unique d\'évaluation des risques professionnels</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Risques par poste — Art. R.4121-1 Code du Travail</div></div></button>' +
-    '<button onclick="genDocsTemperatures(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#0277bd,#0288d1);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🌡️</span><div><div>Relevé des Températures</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Fiche quotidienne + récapitulatif annuel — Règl. CE 852/2004</div></div></button>' +
-    '<button onclick="genDocsReception(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#e65100,#f57c00);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">📦</span><div><div>Fiche Réception Marchandises</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Contrôle livraisons — Règl. CE 178/2002</div></div></button>' +
-    '<button onclick="genDocsTracabilite(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🔗</span><div><div>Registre de Traçabilité</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Entrées/sorties lots — Règl. CE 178/2002 Art.18-19</div></div></button>' +
-    '<button onclick="genDocsAllergenes(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#c62828,#e53935);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🥜</span><div><div>Fiche Gestion Allergènes</div><div style="font-size:.73rem;opacity:.75;font-weight:400">14 allergènes obligatoires — Règl. UE 1169/2011</div></div></button>' +
-    '<button onclick="genDocsNonConformites(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#4a148c,#7b1fa2);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">📋</span><div><div>Registre Non-Conformités</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Actions correctives — Règl. CE 852/2004 Art.5</div></div></button>' +
-    '<button onclick="genDocsEtiquette(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#00695c,#00897b);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🏷️</span><div><div>Étiquettes de Traçabilité Interne</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Format 70×45mm</div></div></button>' +
-    '<button onclick="genDocsLavageMains(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#1565c0,#42a5f5);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🖐️</span><div><div>Affiche Lavage des Mains</div><div style="font-size:.73rem;opacity:.75;font-weight:400">7 étapes obligatoires</div></div></button>' +
-    '<button onclick="genDocsHuiles(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#e65100,#ff8f00);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🍟</span><div><div>Fiche Contrôle Huiles de Friture</div><div style="font-size:.73rem;opacity:.75;font-weight:400">CPT + sanctions</div></div></button>' +
+    '<button onclick="genDocsPMS(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#153e35,#1f5649);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">📄</span><div><div>Plan de Maîtrise Sanitaire (PMS)</div><div style="font-size:.73rem;opacity:.75;font-weight:400">18 sections — tous secteurs — Règl. CE 852/2004</div></div></button>' +
+    '<button onclick="genDocsNettoyage(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🧹</span><div><div>Plan de Nettoyage & Désinfection</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Zones & fréquences par secteur — Arrêté 21/12/2009</div></div></button>' +
+    '<button onclick="genDocsDUERP(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#6b3fa0,#9b59b6);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">⚠️</span><div><div>Document Unique d\'évaluation des risques professionnels</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Risques par poste — Art. R.4121-1 Code du Travail</div></div></button>' +
+    '<button onclick="genDocsTemperatures(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#0277bd,#0288d1);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🌡️</span><div><div>Relevé des Températures</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Fiche quotidienne + récapitulatif annuel — Règl. CE 852/2004</div></div></button>' +
+    '<button onclick="genDocsReception(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#e65100,#f57c00);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">📦</span><div><div>Fiche Réception Marchandises</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Contrôle livraisons — Règl. CE 178/2002</div></div></button>' +
+    '<button onclick="genDocsTracabilite(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🔗</span><div><div>Registre de Traçabilité</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Entrées/sorties lots — Règl. CE 178/2002 Art.18-19</div></div></button>' +
+    '<button onclick="genDocsAllergenes(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#c62828,#e53935);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🥜</span><div><div>Fiche Gestion Allergènes</div><div style="font-size:.73rem;opacity:.75;font-weight:400">14 allergènes obligatoires — Règl. UE 1169/2011</div></div></button>' +
+    '<button onclick="genDocsNonConformites(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#4a148c,#7b1fa2);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">📋</span><div><div>Registre Non-Conformités</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Actions correctives — Règl. CE 852/2004 Art.5</div></div></button>' +
+    '<button onclick="genDocsEtiquette(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#00695c,#00897b);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🏷️</span><div><div>Étiquettes de Traçabilité Interne</div><div style="font-size:.73rem;opacity:.75;font-weight:400">Format 70×45mm</div></div></button>' +
+    '<button onclick="genDocsLavageMains(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#1565c0,#42a5f5);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🖐️</span><div><div>Affiche Lavage des Mains</div><div style="font-size:.73rem;opacity:.75;font-weight:400">7 étapes obligatoires</div></div></button>' +
+    '<button onclick="genDocsHuiles(\''+tempCode+'\')" style="padding:13px 16px;background:linear-gradient(135deg,#e65100,#ff8f00);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🍟</span><div><div>Fiche Contrôle Huiles de Friture</div><div style="font-size:.73rem;opacity:.75;font-weight:400">CPT + sanctions</div></div></button>' +
     '</div>' +
     '<div style="padding:14px 24px;border-top:1px solid #dfe6e0;background:#f9f8f4;flex-shrink:0;display:flex;justify-content:space-between;align-items:center">' +
     '<span style="font-size:.75rem;color:#8a9e95">Documents personnalisés avec les coordonnées du client</span>' +
-    '<button onclick="document.getElementById(\'adminDocsPanel\').style.display=\'none\'" style="padding:9px 20px;background:#f5f2ea;color:#153e35;border:1px solid rgba(21,62,53,.15);border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:\'Source Sans 3\',sans-serif">Fermer</button>' +
+    '<button onclick="document.getElementById(\'adminDocsPanel\').style.display=\'none\'" style="padding:9px 20px;background:#f5f2ea;color:#153e35;border:1px solid rgba(21,62,53,.15);border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;font-family:'Inter',sans-serif">Fermer</button>' +
     '</div></div>';
 }
 
@@ -4990,9 +4990,9 @@ function afficherSuiviClient(code) {
   html += '<div style="margin-top:14px;padding-top:14px;border-top:1px solid #dfe6e0">';
   html += '<div style="font-weight:700;color:#153e35;font-size:.85rem;margin-bottom:10px">⚡ Actions</div>';
   html += '<div style="display:flex;flex-wrap:wrap;gap:8px">';
-  html += '<button onclick="lancerAuditPourClient(\'' + code + '\')" style="padding:10px 16px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-weight:700;font-size:.82rem">🧪 Faire l\'audit</button>';
-  html += '<button onclick="accederDocsClient(\'' + code + '\')" style="padding:10px 16px;background:linear-gradient(135deg,#b79029,#d2ad46);color:#201806;border:none;border-radius:999px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-weight:700;font-size:.82rem">📄 Accéder aux documents</button>';
-  html += '<button onclick="genererNouveauCodeClient(\'' + code + '\')" style="padding:10px 16px;background:#f5f2ea;color:#153e35;border:1px solid rgba(21,62,53,.2);border-radius:999px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-weight:700;font-size:.82rem">🔑 Nouveau code</button>';
+  html += '<button onclick="lancerAuditPourClient(\'' + code + '\')" style="padding:10px 16px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;font-size:.82rem">🧪 Faire l\'audit</button>';
+  html += '<button onclick="accederDocsClient(\'' + code + '\')" style="padding:10px 16px;background:linear-gradient(135deg,#b79029,#d2ad46);color:#201806;border:none;border-radius:999px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;font-size:.82rem">📄 Accéder aux documents</button>';
+  html += '<button onclick="genererNouveauCodeClient(\'' + code + '\')" style="padding:10px 16px;background:#f5f2ea;color:#153e35;border:1px solid rgba(21,62,53,.2);border-radius:999px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;font-size:.82rem">🔑 Nouveau code</button>';
   html += '</div></div>';
 
   html += '</div>';
@@ -5182,7 +5182,7 @@ function showDocsOnly() {
   screen.innerHTML =
     '<div style="background:#fff;border-radius:18px;padding:28px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-height:90vh;overflow-y:auto">' +
     '<div style="text-align:center;margin-bottom:20px"><div style="font-size:2.2rem;margin-bottom:6px">📦</div>' +
-    '<h1 style="font-family:\'DM Serif Display\',serif;font-size:1.3rem;color:#153e35;margin-bottom:4px">Vos Documents Réglementaires</h1>' +
+    '<h1 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.3rem;color:#153e35;margin-bottom:4px">Vos Documents Réglementaires</h1>' +
     '<p style="color:#65716b;font-size:.82rem">'+(info.etab||'')+'</p></div>' +
     '<div style="background:#f0faf8;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:.79rem;color:#2d4a3e;line-height:1.7;border:1px solid rgba(0,168,150,.3)">' +
     '<div style="color:#00796b;font-weight:700;font-size:.72rem;text-transform:uppercase;margin-bottom:5px">📋 Établissement</div>' +
@@ -5768,8 +5768,8 @@ function refreshAdminTable() {
   }).join('');
   wrap.innerHTML =
     '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center">' +
-      '<button onclick="deleteSelectedCodes()" style="background:#fdecec;border:1px solid #f5b7b1;border-radius:8px;padding:7px 12px;font-family:\'Source Sans 3\',sans-serif;font-size:.78rem;color:#c0392b;font-weight:600;cursor:pointer">🗑 Supprimer la sélection</button>' +
-      '<button onclick="deleteAllCodes()" style="background:#c0392b;border:1px solid #c0392b;border-radius:8px;padding:7px 12px;font-family:\'Source Sans 3\',sans-serif;font-size:.78rem;color:#fff;font-weight:600;cursor:pointer">🗑 Tout supprimer</button>' +
+      '<button onclick="deleteSelectedCodes()" style="background:#fdecec;border:1px solid #f5b7b1;border-radius:8px;padding:7px 12px;font-family:'Inter',sans-serif;font-size:.78rem;color:#c0392b;font-weight:600;cursor:pointer">🗑 Supprimer la sélection</button>' +
+      '<button onclick="deleteAllCodes()" style="background:#c0392b;border:1px solid #c0392b;border-radius:8px;padding:7px 12px;font-family:'Inter',sans-serif;font-size:.78rem;color:#fff;font-weight:600;cursor:pointer">🗑 Tout supprimer</button>' +
       '<span style="font-size:.74rem;color:#8a9e95">Cocher des codes, puis « Supprimer la sélection ».</span>' +
     '</div>' +
     '<table class="codes-table"><thead><tr>' +
@@ -6782,7 +6782,7 @@ function printRpt() {
   ov.style.cssText = 'position:fixed;inset:0;z-index:9999999;background:#525659;display:flex;flex-direction:column';
   var bar = document.createElement('div');
   bar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;background:#153e35;color:#fff;flex-shrink:0';
-  bar.innerHTML = '<span style="font-weight:700;font-size:.95rem;font-family:\'Source Sans 3\',sans-serif">📄 Rapport</span>';
+  bar.innerHTML = '<span style="font-weight:700;font-size:.95rem;font-family:'Inter',sans-serif">📄 Rapport</span>';
   var grp = document.createElement('div'); grp.style.cssText = 'display:flex;gap:8px';
   var bP = document.createElement('button'); bP.innerHTML = '🖨 Imprimer';
   bP.style.cssText = 'background:#c5a368;border:none;color:#153e35;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer';
@@ -6799,7 +6799,7 @@ function printRpt() {
   win.document.write('<!DOCTYPE html><html lang="fr"><head>');
   win.document.write('<meta charset="UTF-8">');
   win.document.write('<title>Rapport Audit HACCP</title>');
-  win.document.write('<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet">');
+  win.document.write('<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">');
   win.document.write('<style>');
   win.document.write(':root{--navy:#153e35;--teal:#2d6f60;--ok:#3aaa7a;--warn:#e8913a;--danger:#e05252;--bg:#f5f2ea;--border:#dfe6e0;--text:#153e35;--muted:#65716b;}');
   win.document.write('*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}');
@@ -7747,10 +7747,10 @@ function loadAuditsExistant() {
       if (a.auditeur) html += '<div style="font-size:.75rem;color:#65716b;margin-top:2px">🔍 ' + escHtml(a.auditeur) + '</div>';
       html += '</div><span style="font-size:1rem;font-weight:800;color:' + scoreCol + ';flex-shrink:0">' + score + '</span></div>';
       html += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
-      html += '<button data-dl-coords="'+i+'" style="padding:5px 10px;background:#f0faf8;border:1px solid rgba(21,62,53,.2);border-radius:6px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.72rem;color:#153e35;font-weight:600">⬇️ Coordonnées .csv</button>';
-      html += '<button data-dl-audit="'+i+'" style="padding:5px 10px;background:#f0faf8;border:1px solid rgba(45,111,96,.3);border-radius:6px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.72rem;color:#2d6f60;font-weight:600">📋 Détail audit</button>';
-      html += '<button data-dl-audit-word="'+i+'" style="padding:5px 10px;background:#f0faf8;border:1px solid rgba(45,111,96,.4);border-radius:6px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.72rem;color:#1f5649;font-weight:600">📝 Score audit</button>';
-      if (a.rapport_html) html += '<button data-dl-rapport="'+i+'" style="padding:5px 10px;background:#fff8f0;border:1px solid rgba(183,144,41,.35);border-radius:6px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.72rem;color:#b79029;font-weight:600">📄 Rapport .docx</button>';
+      html += '<button data-dl-coords="'+i+'" style="padding:5px 10px;background:#f0faf8;border:1px solid rgba(21,62,53,.2);border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.72rem;color:#153e35;font-weight:600">⬇️ Coordonnées .csv</button>';
+      html += '<button data-dl-audit="'+i+'" style="padding:5px 10px;background:#f0faf8;border:1px solid rgba(45,111,96,.3);border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.72rem;color:#2d6f60;font-weight:600">📋 Détail audit</button>';
+      html += '<button data-dl-audit-word="'+i+'" style="padding:5px 10px;background:#f0faf8;border:1px solid rgba(45,111,96,.4);border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.72rem;color:#1f5649;font-weight:600">📝 Score audit</button>';
+      if (a.rapport_html) html += '<button data-dl-rapport="'+i+'" style="padding:5px 10px;background:#fff8f0;border:1px solid rgba(183,144,41,.35);border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.72rem;color:#b79029;font-weight:600">📄 Rapport .docx</button>';
       html += '</div></div>';
     });
     html += '</div>';
@@ -7841,8 +7841,8 @@ function showDocPreview(a, type, info) {
   var html = '<div style="background:#fff;border-radius:16px;max-width:760px;width:100%;max-height:90vh;display:flex;flex-direction:column;overflow:hidden">';
   // Barre du haut : Retour + titre + ✕
   html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid #e2e8f0;background:#f5f2ea;gap:10px;flex-shrink:0">';
-  html += '<button onclick="closeDocPreview()" style="background:#fff;border:1px solid #dfe6e0;color:#153e35;font-size:.85rem;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif">← Retour</button>';
-  html += '<span style="font-family:\'Playfair Display\',serif;font-weight:700;color:#153e35;font-size:1rem">' + titre + '</span>';
+  html += '<button onclick="closeDocPreview()" style="background:#fff;border:1px solid #dfe6e0;color:#153e35;font-size:.85rem;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif">← Retour</button>';
+  html += '<span style="font-family:'Instrument Serif',Georgia,serif;font-weight:700;color:#153e35;font-size:1rem">' + titre + '</span>';
   html += '<button onclick="closeDocPreview()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#65716b" title="Fermer">✕</button>';
   html += '</div>';
   // Contenu scrollable
@@ -7897,8 +7897,8 @@ function showDocPreview(a, type, info) {
   html += '</div>'; // fin contenu scrollable
   // Barre du bas : bouton Télécharger
   html += '<div style="padding:14px 18px;border-top:1px solid #e2e8f0;background:#f5f2ea;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-shrink:0">';
-  html += '<button onclick="closeDocPreview()" style="background:#fff;border:1px solid #dfe6e0;color:#153e35;font-size:.85rem;font-weight:700;padding:10px 18px;border-radius:8px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif">← Retour</button>';
-  html += '<button id="btnDlFromPreview" style="background:#1f5649;color:#fff;border:none;font-size:.85rem;font-weight:700;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif">📥 Télécharger en Word</button>';
+  html += '<button onclick="closeDocPreview()" style="background:#fff;border:1px solid #dfe6e0;color:#153e35;font-size:.85rem;font-weight:700;padding:10px 18px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif">← Retour</button>';
+  html += '<button id="btnDlFromPreview" style="background:#1f5649;color:#fff;border:none;font-size:.85rem;font-weight:700;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif">📥 Télécharger en Word</button>';
   html += '</div>';
   html += '</div>'; // fin modal panel
 
@@ -8407,7 +8407,7 @@ function loadAudits_remote() {
       html += '</div>';
       html += '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">';
       html += '<span style="font-size:1rem;font-weight:800;color:' + scoreCol + '">' + score + '</span>';
-      html += '<button data-audit-idx="' + i + '" style="padding:5px 10px;background:#f0faf8;border:1px solid rgba(21,62,53,.15);border-radius:6px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.72rem;color:#153e35;font-weight:600">📋 Détail</button>';
+      html += '<button data-audit-idx="' + i + '" style="padding:5px 10px;background:#f0faf8;border:1px solid rgba(21,62,53,.15);border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.72rem;color:#153e35;font-weight:600">📋 Détail</button>';
       html += '</div></div>';
       if (a.secteur) html += '<div style="font-size:.72rem;background:#f5f2ea;padding:3px 8px;border-radius:4px;display:inline-block;color:#65716b">' + escHtml(a.secteur.replace('_',' ')) + '</div>';
       html += '</div>';
@@ -8765,10 +8765,10 @@ function showAuditDetail(idx) {
   }
   var html = '<div style="background:#fff;border-radius:16px;padding:28px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;position:relative">';
   html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px">';
-  html += '<button onclick="document.getElementById(\'auditDetailModal\').style.display=\'none\'" style="background:#f5f2ea;border:1px solid #dfe6e0;color:#153e35;font-size:.85rem;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif">← Retour</button>';
+  html += '<button onclick="document.getElementById(\'auditDetailModal\').style.display=\'none\'" style="background:#f5f2ea;border:1px solid #dfe6e0;color:#153e35;font-size:.85rem;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif">← Retour</button>';
   html += '<button onclick="document.getElementById(\'auditDetailModal\').style.display=\'none\'" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#65716b;padding:4px 8px" title="Fermer">✕</button>';
   html += '</div>';
-  html += '<h2 style="font-family:\'Playfair Display\',serif;font-size:1.2rem;color:#153e35;margin:0 0 16px">' + escHtml(a.etab || 'Audit') + '</h2>';
+  html += '<h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.2rem;color:#153e35;margin:0 0 16px">' + escHtml(a.etab || 'Audit') + '</h2>';
   // Coordonnées
   html += '<div style="background:#f0faf8;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:.82rem;color:#2d4a3e;line-height:1.8;border:1px solid rgba(21,62,53,.12)">';
   html += '<div style="font-weight:700;color:#00796b;font-size:.72rem;text-transform:uppercase;margin-bottom:6px">📋 Coordonnées</div>';
@@ -8799,8 +8799,8 @@ function showAuditDetail(idx) {
   }
   // Boutons : Modifier l'audit + Télécharger en Word
   html += '<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0 6px">';
-  html += '<button id="btnEditAuditDetail" style="padding:10px 20px;background:#fff;color:#2d6f60;border:1.5px solid #2d6f60;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.85rem;font-weight:700">✏️ Modifier l\'audit</button>';
-  html += '<button id="btnDlDetailWord" style="padding:10px 20px;background:#1f5649;color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:\'Source Sans 3\',sans-serif;font-size:.85rem;font-weight:700">⬇ Télécharger en Word</button>';
+  html += '<button id="btnEditAuditDetail" style="padding:10px 20px;background:#fff;color:#2d6f60;border:1.5px solid #2d6f60;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700">✏️ Modifier l\'audit</button>';
+  html += '<button id="btnDlDetailWord" style="padding:10px 20px;background:#1f5649;color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700">⬇ Télécharger en Word</button>';
   html += '</div>';
   html += '</div>';
   modal.innerHTML = html;
@@ -9220,39 +9220,39 @@ function saveEditClient() {
 
 <!-- ══ MODAL MODIFIER INFOS CLIENT ══ -->
 <div id="modalEditClient" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;padding:20px">
-  <div style="background:#fff;border-radius:18px;padding:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);font-family:'Source Sans 3',sans-serif">
+  <div style="background:#fff;border-radius:18px;padding:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);font-family:'Inter',system-ui,sans-serif">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:1.2rem;color:#153e35;margin:0">✏️ Modifier les infos client</h2>
+      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.2rem;color:#153e35;margin:0">✏️ Modifier les infos client</h2>
       <button onclick="closeEditModal()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:#65716b;padding:4px">✕</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
       <div style="grid-column:1/-1">
         <label style="font-size:.78rem;font-weight:600;color:#153e35;display:block;margin-bottom:4px">🏢 Nom de l'établissement *</label>
-        <input type="text" id="edit_etab" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.85rem;box-sizing:border-box">
+        <input type="text" id="edit_etab" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;box-sizing:border-box">
       </div>
       <div>
         <label style="font-size:.78rem;font-weight:600;color:#153e35;display:block;margin-bottom:4px">👤 Responsable *</label>
-        <input type="text" id="edit_resp" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.85rem;box-sizing:border-box">
+        <input type="text" id="edit_resp" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;box-sizing:border-box">
       </div>
       <div>
         <label style="font-size:.78rem;font-weight:600;color:#153e35;display:block;margin-bottom:4px">📞 Téléphone</label>
-        <input type="text" id="edit_tel" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.85rem;box-sizing:border-box">
+        <input type="text" id="edit_tel" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;box-sizing:border-box">
       </div>
       <div style="grid-column:1/-1">
         <label style="font-size:.78rem;font-weight:600;color:#153e35;display:block;margin-bottom:4px">✉️ Email</label>
-        <input type="email" id="edit_email" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.85rem;box-sizing:border-box">
+        <input type="email" id="edit_email" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;box-sizing:border-box">
       </div>
       <div style="grid-column:1/-1">
         <label style="font-size:.78rem;font-weight:600;color:#153e35;display:block;margin-bottom:4px">📍 Adresse</label>
-        <input type="text" id="edit_adresse" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.85rem;box-sizing:border-box">
+        <input type="text" id="edit_adresse" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;box-sizing:border-box">
       </div>
       <div>
         <label style="font-size:.78rem;font-weight:600;color:#153e35;display:block;margin-bottom:4px">🔢 SIRET</label>
-        <input type="text" id="edit_siret" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.85rem;box-sizing:border-box">
+        <input type="text" id="edit_siret" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;box-sizing:border-box">
       </div>
       <div>
         <label style="font-size:.78rem;font-weight:600;color:#153e35;display:block;margin-bottom:4px">🍽 Secteur</label>
-        <select id="edit_secteur" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Source Sans 3',sans-serif;font-size:.85rem;box-sizing:border-box">
+        <select id="edit_secteur" style="width:100%;padding:9px 12px;border:1.5px solid #dfe6e0;border-radius:7px;font-family:'Inter',system-ui,sans-serif;font-size:.85rem;box-sizing:border-box">
           <option value="RESTAURATION">🍽 Restauration Traditionnelle</option>
           <option value="RESTAURATION_RAPIDE">🍔 Restauration Rapide</option>
           <option value="BOULANGERIE">🥖 Boulangerie / Pâtisserie</option>
@@ -9262,8 +9262,8 @@ function saveEditClient() {
     </div>
     <div id="edit_msg" style="display:none;padding:10px;border-radius:8px;font-size:.83rem;margin-top:12px"></div>
     <div style="display:flex;gap:10px;margin-top:20px">
-      <button onclick="closeEditModal()" style="flex:1;padding:11px;background:#f5f2ea;border:1px solid #dfe6e0;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.88rem;color:#65716b;cursor:pointer">Annuler</button>
-      <button onclick="saveEditClient()" style="flex:2;padding:11px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:8px;font-family:'Source Sans 3',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer">💾 Enregistrer les modifications</button>
+      <button onclick="closeEditModal()" style="flex:1;padding:11px;background:#f5f2ea;border:1px solid #dfe6e0;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.88rem;color:#65716b;cursor:pointer">Annuler</button>
+      <button onclick="saveEditClient()" style="flex:2;padding:11px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:8px;font-family:'Inter',system-ui,sans-serif;font-size:.88rem;font-weight:700;cursor:pointer">💾 Enregistrer les modifications</button>
     </div>
   </div>
 </div>
@@ -9520,7 +9520,7 @@ function viderHistoriqueAudits(){
 <style>
   #nomosBar{position:fixed;left:0;right:0;bottom:0;z-index:2147483600;display:flex;align-items:center;gap:8px;
     padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
-    background:rgba(21,62,53,.97);box-shadow:0 -4px 18px rgba(0,0,0,.28);font-family:'Source Sans 3',sans-serif}
+    background:rgba(21,62,53,.97);box-shadow:0 -4px 18px rgba(0,0,0,.28);font-family:'Inter',system-ui,sans-serif}
   #nomosBar button{flex-shrink:0;border:none;border-radius:10px;font-family:inherit;font-weight:800;font-size:.82rem;padding:10px 14px;cursor:pointer}
   #nomosBar .nb-back{background:#fff;color:#153e35}
   #nomosBar .nb-home{background:#d2ad46;color:#201806}
