@@ -122,6 +122,7 @@
   }
 
   // ── 6. Rotation de mots (data-rotate="A|B|C") ──
+  // Reste inline pour ne pas casser le flow du titre ; fade opacity seulement.
   function initRotateWords() {
     var els = document.querySelectorAll('[data-rotate]');
     els.forEach(function (el) {
@@ -129,22 +130,16 @@
       if (!words.length) return;
       var i = 0;
       el.textContent = words[0];
-      el.style.transition = 'opacity .25s ease, transform .25s ease';
-      el.style.display = 'inline-block';
-      el.style.willChange = 'opacity, transform';
+      el.style.transition = 'opacity .3s ease';
+      el.style.willChange = 'opacity';
       if (reduced) return;
       setInterval(function () {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(-6px)';
         setTimeout(function () {
           i = (i + 1) % words.length;
           el.textContent = words[i];
-          el.style.transform = 'translateY(6px)';
-          requestAnimationFrame(function () {
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-          });
-        }, 250);
+          el.style.opacity = '1';
+        }, 300);
       }, 2800);
     });
   }
