@@ -713,89 +713,113 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
       </section>
       <!-- TARIFS (refonte : comparatif détaillé, prix HT, sans choix de formule par le client) -->
-      <section id="section-tarifs" style="padding:40px 20px;max-width:1100px;margin:0 auto">
-        <div style="text-align:center;margin-bottom:24px">
-          <div style="font-size:11px;color:#9a7518;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Nos formules</div>
-          <h2 style="font-size:clamp(22px,3vw,30px);font-weight:900;color:#0b0f1a;margin:0 0 8px">Tarifs clairs, sans surprise.</h2>
-          <p style="font-size:13px;color:#52617a;margin:0">Logiciel Nomos Traça &amp; service Audit sur place. Tous les prix sont indiqués <strong>HT</strong>.</p>
-        </div>
+      <section id="section-tarifs" class="pr-sec pr-alt">
+        <div class="pr-container">
+          <div class="pr-sec-head" data-pr-reveal>
+            <span class="pr-sec-eyebrow">Tarifs</span>
+            <h2 class="pr-sec-title">Tarifs clairs, <em>sans surprise.</em></h2>
+            <p class="pr-sec-sub">Logiciel Nomos Traça &amp; service Audit sur place. Tous les prix sont HT.</p>
+          </div>
 
-        <!-- ============ OFFRE SPÉCIALE — Suivi & Accompagnement ============ -->
-        <div style="max-width:900px;margin:0 auto 26px;background:linear-gradient(135deg,#e9c766 0%,#d2ad46 45%,#b79029 100%);border-radius:18px;padding:20px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;box-shadow:0 14px 34px rgba(183,144,41,0.35);font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">
-          <div style="flex:1;min-width:230px">
-            <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px;margin-bottom:9px;background:rgba(32,24,6,0.14);color:#201806;border:1px solid rgba(32,24,6,0.22)">★ Offre spéciale</span>
-            <div style="font-size:20px;font-weight:800;color:#201806;margin:0 0 4px;line-height:1.15">Suivi &amp; accompagnement personnalisé</div>
-            <div style="font-size:13px;color:#3a2f10;line-height:1.5">Un expert vous accompagne dans le suivi de votre conformité HACCP.</div>
+          <!-- Offre Suivi & Accompagnement -->
+          <div class="pr-offer" data-pr-reveal>
+            <div style="flex:1;min-width:230px">
+              <span class="pr-offer-tag">Sur mesure</span>
+              <div class="pr-offer-h">Suivi &amp; accompagnement personnalisé</div>
+              <div class="pr-offer-p">Un expert vous accompagne dans le suivi de votre conformité HACCP.</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px;text-align:right">
+              <div class="pr-offer-price">900,00&nbsp;€ <small>HT / mois</small></div>
+              <button class="pr-btn pr-btn-primary pr-btn-sm pr-btn-arrow" onclick="showPage('page-inscription')">En savoir plus <i>→</i></button>
+            </div>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:11px;text-align:right">
-            <div style="font-size:32px;font-weight:900;color:#201806;line-height:1;white-space:nowrap">900,00 €&nbsp;<span style="font-size:14px;font-weight:700">HT / mois</span></div>
-            <button onclick="showPage('page-inscription')" style="background:#131929;color:#fff;border:none;border-radius:12px;padding:12px 22px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(10,14,26,0.3)">Contactez-nous pour en savoir plus →</button>
-          </div>
-        </div>
 
-        <!-- ============ LOGICIEL HACCP PRO ============ -->
-        <h3 style="font-size:17px;font-weight:800;color:#0b0f1a;margin:6px 0 12px;text-align:center">📱 Logiciel Nomos&nbsp;Traça</h3>
-        <div style="text-align:center;margin-bottom:14px">
-          <div style="display:inline-flex;background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:4px;gap:2px">
-            <button id="engTab12" onclick="setEngTarif('eng')" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:9px 16px;border-radius:9px;font-weight:800;font-size:12px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Avec engagement 12 mois<span style="display:block;font-size:9px;font-weight:700;margin-top:1px;opacity:0.85">(jusqu'à -33%)</span></button>
-            <button id="engTabLibre" onclick="setEngTarif('libre')" style="background:transparent;color:#52617a;border:none;padding:9px 16px;border-radius:9px;font-weight:700;font-size:12px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">Sans engagement</button>
+          <!-- Toggle engagement -->
+          <div class="pr-engage" data-pr-reveal>
+            <div class="pr-engage-switch" role="tablist" aria-label="Choix de l'engagement">
+              <button id="engTab12" class="pr-on" onclick="setEngTarif('eng')" role="tab" aria-selected="true">Engagement 12 mois <small>jusqu'à −33 %</small></button>
+              <button id="engTabLibre" onclick="setEngTarif('libre')" role="tab" aria-selected="false">Sans engagement</button>
+            </div>
           </div>
-        </div>
-        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid #e7ece9;border-radius:14px;margin-bottom:12px">
-          <table style="width:100%;border-collapse:collapse;min-width:0;font-size:13px">
-            <thead>
-              <tr style="background:#ffffff">
-                <th style="text-align:left;padding:11px 7px;color:#52617a;font-weight:700;font-size:12px">Fonctionnalité</th>
-                <th onclick="openFormuleDetail('essentiel')" style="padding:11px 4px;color:#0b0f1a;text-align:center;cursor:pointer">Essentiel<br><span class="px-eng" style="color:#9a7518;font-size:15px;font-weight:900">9,90 €</span><span class="px-libre" style="color:#9a7518;font-size:15px;font-weight:900;display:none">14,90 €</span><br><span style="font-size:10px;color:#64748b">HT / mois</span><br><span style="font-size:10px;color:#9a7518;text-decoration:underline">détail&nbsp;›</span></th>
-                <th onclick="openFormuleDetail('solo')" style="padding:11px 4px;color:#0b0f1a;text-align:center;cursor:pointer">Solo<br><span class="px-eng" style="color:#9a7518;font-size:15px;font-weight:900">29,90 €</span><span class="px-libre" style="color:#9a7518;font-size:15px;font-weight:900;display:none">39,90 €</span><br><span style="font-size:10px;color:#64748b">HT / mois</span><br><span style="font-size:10px;color:#9a7518;text-decoration:underline">détail&nbsp;›</span></th>
-                <th onclick="openFormuleDetail('pro')" style="padding:11px 4px;color:#0b0f1a;text-align:center;cursor:pointer;background:rgba(210,173,70,0.07);border-left:1px solid rgba(210,173,70,0.2);border-right:1px solid rgba(210,173,70,0.2)">Pro<br><span class="px-eng" style="color:#9a7518;font-size:15px;font-weight:900">79,90 €</span><span class="px-libre" style="color:#9a7518;font-size:15px;font-weight:900;display:none">99,90 €</span><br><span style="font-size:10px;color:#64748b">HT / mois</span><br><span style="font-size:10px;color:#9a7518;text-decoration:underline">détail&nbsp;›</span></th>
-              </tr>
-            </thead>
-            <tbody style="color:#52617a">
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Relevés température</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Réception &amp; traçabilité</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Huiles de friture</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Planning nettoyage</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Cuisson · refroidissement · remise en T°</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Étiquetage interne &amp; DLC</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Pertes &amp; invendus</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Nuisibles &amp; déchets</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Documents &amp; affichages obligatoires</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Matrice allergènes (14 INCO)</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Tableau de bord &amp; non-conformités</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900">✓</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Pack DDPP <span style="color:#64748b;font-size:11px">(PDF inspecteur)</span></td><td style="text-align:center;font-size:11px;color:#52617a">Édition illimitée<br>des 3 contrôles</td><td style="text-align:center;font-size:11px;color:#52617a">Édition illimitée<br>tous les contrôles</td><td style="text-align:center;font-size:11px;color:#52617a;background:rgba(210,173,70,0.05)">Édition illimitée<br>tous les contrôles</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">Utilisateur</td><td style="text-align:center">1</td><td style="text-align:center">1</td><td style="text-align:center;background:rgba(210,173,70,0.05)">1</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">🛡️ PMS personnalisé</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">🛡️ DUERP personnalisé</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">📌 Affiches obligatoires fournies</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9aa7b2">—</td><td style="text-align:center;color:#9a7518;font-weight:900;background:rgba(210,173,70,0.05)">✓</td></tr>
-              <tr style="border-top:1px solid #eef0ec"><td style="padding:9px 7px">📡 Capteurs connectés <span style="color:#64748b;font-size:11px">(option)</span></td><td style="text-align:center;font-size:11px;color:#52617a">Sur devis</td><td style="text-align:center;font-size:11px;color:#52617a">Sur devis</td><td style="text-align:center;font-size:11px;color:#52617a;background:rgba(210,173,70,0.05)">Sur devis</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- ============ RELEVÉS AUTOMATIQUES — DEVIS CAPTEURS ============ -->
-        <div style="max-width:720px;margin:4px auto 26px;background:linear-gradient(135deg,rgba(210,173,70,0.10),rgba(255,255,255,0.03));border:1px solid rgba(210,173,70,0.28);border-radius:16px;padding:18px 20px">
-          <div style="font-weight:800;color:#0b0f1a;font-size:15px;margin-bottom:6px">🌡️ Relevés de température automatiques</div>
-          <p style="font-size:12.5px;color:rgba(255,255,255,0.82);line-height:1.6;margin:0 0 10px">Couplée à des <strong>capteurs connectés</strong>, l'application enregistre vos températures d'enceintes <strong>automatiquement, 24h/24</strong> (même fermée), sans aucune saisie. <strong>Alertes</strong> en cas de dépassement de seuil · conformité DDPP · zéro oubli.</p>
-          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-            <button type="button" onclick="ouvrirDevisCapteurs()" style="background:#9a7518;color:#0a1f14;border:none;border-radius:999px;padding:11px 22px;font-weight:800;font-size:13.5px;cursor:pointer;font-family:inherit">📩 Demander un devis</button>
-            <span style="font-size:11.5px;color:#52617a">Devis gratuit et sans engagement · capteurs sur devis</span>
-          </div>
-        </div>
-        <p style="text-align:center;font-size:12.5px;color:#52617a;margin:0 0 30px">✨ <strong style="color:#9a7518">Essai gratuit 10 jours</strong> sur toutes les formules — sans carte bancaire.</p>
 
-        <!-- ============ FAQ ============ -->
-        <h3 style="font-size:17px;font-weight:800;color:#0b0f1a;margin:10px 0 14px;text-align:center">Questions fréquentes</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;max-width:920px;margin:0 auto 8px">
-          <div style="background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:14px"><div style="font-weight:800;color:#0b0f1a;font-size:13px;margin-bottom:5px">Puis-je essayer gratuitement ?</div><div style="font-size:12px;color:#52617a;line-height:1.6">Oui — 10 jours, toutes les fonctions, sans carte bancaire.</div></div>
-          <div style="background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:14px"><div style="font-weight:800;color:#0b0f1a;font-size:13px;margin-bottom:5px">Comment j'obtiens ma formule ?</div><div style="font-size:12px;color:#52617a;line-height:1.6">C'est nous qui activons votre accès selon votre besoin. Vous nous contactez, on crée votre code en quelques minutes.</div></div>
-          <div style="background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:14px"><div style="font-weight:800;color:#0b0f1a;font-size:13px;margin-bottom:5px">Y a-t-il un engagement ?</div><div style="font-size:12px;color:#52617a;line-height:1.6">Au choix : <strong>avec engagement 12 mois</strong> (tarif réduit, jusqu'à -33 %) ou <strong>sans engagement</strong>, résiliable à tout moment.</div></div>
-          <div style="background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:14px"><div style="font-weight:800;color:#0b0f1a;font-size:13px;margin-bottom:5px">Comment se passe le paiement ?</div><div style="font-size:12px;color:#52617a;line-height:1.6">Sur facture, par virement — pas de prélèvement automatique.</div></div>
-          <div style="background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:14px"><div style="font-weight:800;color:#0b0f1a;font-size:13px;margin-bottom:5px">Puis-je changer de formule plus tard ?</div><div style="font-size:12px;color:#52617a;line-height:1.6">Oui — vous nous contactez et on ajuste votre accès, sans perdre vos données.</div></div>
-          <div style="background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:14px"><div style="font-weight:800;color:#0b0f1a;font-size:13px;margin-bottom:5px">Mes données sont-elles sécurisées ?</div><div style="font-size:12px;color:#52617a;line-height:1.6">Oui — connexion HTTPS et accès cloisonné par établissement.</div></div>
-          <div style="background:#ffffff;border:1px solid #e7ece9;border-radius:12px;padding:14px"><div style="font-weight:800;color:#0b0f1a;font-size:13px;margin-bottom:5px">Dois-je sauvegarder mes contrôles ?</div><div style="font-size:12px;color:#52617a;line-height:1.6">Oui — pensez à exporter et conserver régulièrement vos contrôles (Pack DDPP / PDF). Vous restez responsable de la conservation de vos enregistrements.</div></div>
-        </div>
-        <div style="text-align:center;margin-top:22px">
-          <button onclick="showPage('page-inscription')" style="background:linear-gradient(135deg,#64748b,#3f4a5c);color:#fff;border:none;padding:13px 28px;border-radius:10px;font-weight:800;font-size:14px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;box-shadow:0 8px 24px rgba(210,173,70,0.3)">Démarrer l'essai gratuit</button>
+          <!-- Tableau comparatif -->
+          <div class="pr-tarif-wrap" data-pr-reveal>
+            <table class="pr-tarif-table">
+              <thead>
+                <tr>
+                  <th>Logiciel Nomos&nbsp;Traça</th>
+                  <th class="pr-th-f" onclick="openFormuleDetail('essentiel')">
+                    Essentiel
+                    <span class="pr-price"><span class="px-eng">9,90&nbsp;€</span><span class="px-libre" style="display:none">14,90&nbsp;€</span></span>
+                    <span class="pr-price-sub">HT / mois</span>
+                    <span class="pr-price-link">détail ›</span>
+                  </th>
+                  <th class="pr-th-f" onclick="openFormuleDetail('solo')">
+                    Solo
+                    <span class="pr-price"><span class="px-eng">29,90&nbsp;€</span><span class="px-libre" style="display:none">39,90&nbsp;€</span></span>
+                    <span class="pr-price-sub">HT / mois</span>
+                    <span class="pr-price-link">détail ›</span>
+                  </th>
+                  <th class="pr-th-f pr-highlight" onclick="openFormuleDetail('pro')">
+                    Pro
+                    <span class="pr-price"><span class="px-eng">79,90&nbsp;€</span><span class="px-libre" style="display:none">99,90&nbsp;€</span></span>
+                    <span class="pr-price-sub">HT / mois</span>
+                    <span class="pr-price-link">détail ›</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Relevés température</td><td class="pr-check">✓</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Réception &amp; traçabilité</td><td class="pr-check">✓</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Huiles de friture</td><td class="pr-check">✓</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Planning nettoyage</td><td class="pr-dash">—</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Cuisson · refroidissement · remise en T°</td><td class="pr-dash">—</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Étiquetage interne &amp; DLC</td><td class="pr-dash">—</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Pertes &amp; invendus</td><td class="pr-dash">—</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Nuisibles &amp; déchets</td><td class="pr-dash">—</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Documents &amp; affichages obligatoires</td><td class="pr-dash">—</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Matrice allergènes (14 INCO)</td><td class="pr-dash">—</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Tableau de bord &amp; non-conformités</td><td class="pr-dash">—</td><td class="pr-check">✓</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Pack DDPP <small style="color:var(--pr-ink-3)">(PDF inspecteur)</small></td><td class="pr-mini">Illimité<br>3 contrôles</td><td class="pr-mini">Illimité<br>tous contrôles</td><td class="pr-mini pr-highlight">Illimité<br>tous contrôles</td></tr>
+                <tr><td>Utilisateur</td><td class="pr-mini">1</td><td class="pr-mini">1</td><td class="pr-mini pr-highlight">1</td></tr>
+                <tr><td>PMS personnalisé</td><td class="pr-dash">—</td><td class="pr-dash">—</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>DUERP personnalisé</td><td class="pr-dash">—</td><td class="pr-dash">—</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Affiches obligatoires fournies</td><td class="pr-dash">—</td><td class="pr-dash">—</td><td class="pr-check pr-highlight">✓</td></tr>
+                <tr><td>Capteurs connectés <small style="color:var(--pr-ink-3)">(option)</small></td><td class="pr-mini">Sur devis</td><td class="pr-mini">Sur devis</td><td class="pr-mini pr-highlight">Sur devis</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Capteurs -->
+          <div class="pr-capteurs" data-pr-reveal>
+            <div class="pr-capteurs-h">Relevés de température automatiques</div>
+            <p class="pr-capteurs-p">Couplée à des <strong>capteurs connectés</strong>, l'application enregistre vos températures d'enceintes <strong>24h/24</strong>, même fermée, sans aucune saisie. Alertes en cas de dépassement de seuil, conformité DDPP, zéro oubli.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+              <button type="button" class="pr-btn pr-btn-gold pr-btn-sm pr-btn-arrow" onclick="ouvrirDevisCapteurs()">Demander un devis <i>→</i></button>
+              <span style="font-size:12px;color:var(--pr-ink-3)">Gratuit, sans engagement.</span>
+            </div>
+          </div>
+
+          <p class="pr-trial" data-pr-reveal><strong>Essai gratuit 10 jours</strong> sur toutes les formules, sans carte bancaire.</p>
+
+          <!-- FAQ -->
+          <div class="pr-sec-head" style="margin-top:8px" data-pr-reveal>
+            <span class="pr-sec-eyebrow">FAQ</span>
+            <h2 class="pr-sec-title">Questions <em>fréquentes</em>.</h2>
+          </div>
+          <div class="pr-faq-grid" data-pr-reveal>
+            <div class="pr-faq"><div class="pr-faq-h">Puis-je essayer gratuitement ?</div><div class="pr-faq-p">Oui — 10 jours, toutes les fonctions, sans carte bancaire.</div></div>
+            <div class="pr-faq"><div class="pr-faq-h">Comment j'obtiens ma formule ?</div><div class="pr-faq-p">C'est nous qui activons votre accès selon votre besoin. Vous nous contactez, on crée votre code en quelques minutes.</div></div>
+            <div class="pr-faq"><div class="pr-faq-h">Y a-t-il un engagement ?</div><div class="pr-faq-p">Au choix : <strong>avec engagement 12 mois</strong> (jusqu'à −33 %) ou <strong>sans engagement</strong>, résiliable à tout moment.</div></div>
+            <div class="pr-faq"><div class="pr-faq-h">Comment se passe le paiement ?</div><div class="pr-faq-p">Sur facture, par virement, pas de prélèvement automatique.</div></div>
+            <div class="pr-faq"><div class="pr-faq-h">Puis-je changer de formule plus tard ?</div><div class="pr-faq-p">Oui — vous nous contactez et on ajuste votre accès, sans perdre vos données.</div></div>
+            <div class="pr-faq"><div class="pr-faq-h">Mes données sont-elles sécurisées ?</div><div class="pr-faq-p">Oui — connexion HTTPS et accès cloisonné par établissement.</div></div>
+            <div class="pr-faq"><div class="pr-faq-h">Dois-je sauvegarder mes contrôles ?</div><div class="pr-faq-p">Oui — exportez régulièrement vos Pack DDPP (PDF). Vous restez responsable de la conservation de vos enregistrements.</div></div>
+          </div>
+
+          <div style="text-align:center;margin-top:28px" data-pr-reveal>
+            <button class="pr-btn pr-btn-primary pr-btn-lg pr-btn-arrow" onclick="showPage('page-inscription')">Démarrer l'essai gratuit <i>→</i></button>
+          </div>
         </div>
         <script>
         window.setEngTarif = function(mode){
@@ -804,15 +828,15 @@ html, body { max-width: 100%; overflow-x: hidden; }
           sec.querySelectorAll('.px-eng').forEach(function(e){ e.style.display = on ? 'none' : ''; });
           sec.querySelectorAll('.px-libre').forEach(function(e){ e.style.display = on ? '' : 'none'; });
           var t12 = document.getElementById('engTab12'), tl = document.getElementById('engTabLibre');
-          if(t12){ t12.style.background = on ? 'transparent' : 'linear-gradient(135deg,#64748b,#3f4a5c)'; t12.style.color = on ? '#52617a' : '#0a0e1a'; }
-          if(tl){ tl.style.background = on ? 'linear-gradient(135deg,#64748b,#3f4a5c)' : 'transparent'; tl.style.color = on ? '#0a0e1a' : '#52617a'; }
+          if(t12){ t12.classList.toggle('pr-on', !on); t12.setAttribute('aria-selected', String(!on)); }
+          if(tl){ tl.classList.toggle('pr-on', on); tl.setAttribute('aria-selected', String(on)); }
         };
 
         // Détail d'une formule au clic
         window._FORMULES = {
           essentiel: { nom:'Essentiel', sub:'Les 3 contrôles essentiels', eng:'9,90 €', libre:'14,90 €', items:['Relevés de température','Réception & traçabilité','Huiles de friture','Pack DDPP — édition illimitée des 3 contrôles','1 utilisateur','Capteurs connectés en option (sur devis)'] },
           solo: { nom:'Solo', sub:'Tous les contrôles HACCP du quotidien', eng:'29,90 €', libre:'39,90 €', items:['Tout l\'Essentiel, plus :','Planning nettoyage','Cuisson · refroidissement · remise en T°','Étiquetage interne & DLC','Pertes & invendus','Nuisibles & déchets','Documents & affichages obligatoires','Matrice allergènes (14 INCO)','Tableau de bord & non-conformités','Pack DDPP — tous les contrôles','1 utilisateur'] },
-          pro: { nom:'Pro', sub:'Tout Solo + services de conformité', eng:'79,90 €', libre:'99,90 €', items:['Tout le Solo, plus :','🛡️ PMS personnalisé','🛡️ DUERP personnalisé','📑 Documents obligatoires (liste ci-dessous)','📌 Affiches obligatoires fournies (liste ci-dessous)','1 utilisateur'] }
+          pro: { nom:'Pro', sub:'Tout Solo + services de conformité', eng:'79,90 €', libre:'99,90 €', items:['Tout le Solo, plus :','PMS personnalisé','DUERP personnalisé','Documents obligatoires (liste ci-dessous)','Affiches obligatoires fournies (liste ci-dessous)','1 utilisateur'] }
         };
         window._DOCS_OBL = ['Plan de Maîtrise Sanitaire (PMS) + procédures HACCP','Plan de nettoyage & désinfection','Plan de lutte contre les nuisibles (+ contrat dératisation)','Relevés de températures (frigos / congélateurs)','Traçabilité : étiquettes, bons de livraison, factures','Registre des non-conformités & actions correctives','Attestation de formation hygiène (≥ 1 personne formée)','Déclaration d\'activité auprès de la DDPP (+ agrément si concerné)','Protocole huiles de friture','Plats témoins (restauration collective)','DUERP (document unique des risques)','Contrats d\'entretien (hotte, bac à graisse…) + analyses microbio si applicable'];
         window._AFF_OBL = ['Information allergènes','Consignes de lavage des mains','Interdiction de fumer / vapoter','Mention « eau potable / eau non potable » sur les points d\'eau','Origine des viandes','Protocole de nettoyage en cuisine','Affichage des prix (clientèle)'];
@@ -831,8 +855,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
           var extra = '';
           if(key === 'pro'){
             extra = '<div style="font-size:11px;color:#9a7518;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:2px 0 8px">Documents &amp; affiches fournis</div>'
-                  + window._detailsList('📑 Documents obligatoires', window._DOCS_OBL)
-                  + window._detailsList('📌 Affiches obligatoires', window._AFF_OBL)
+                  + window._detailsList('Documents obligatoires', window._DOCS_OBL)
+                  + window._detailsList('Affiches obligatoires', window._AFF_OBL)
                   + '<p style="font-size:10.5px;color:#64748b;font-style:italic;line-height:1.6;margin:8px 2px 14px">Listes indicatives, non exhaustives, selon la réglementation en vigueur. Le client reste responsable de la conformité de son établissement.</p>';
           }
           c.innerHTML =
