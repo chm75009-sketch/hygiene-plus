@@ -22,28 +22,54 @@ window.addEventListener('load', function() {
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy:#153e35; --navy2:#1f5649; --teal:#2d6f60; --teal2:#3b8a77;
-  --bg:#f5f2ea; --card:#fff; --border:#dfe6e0;
-  --text:#17211d; --muted:#65716b;
+  --pr-bg:#faf8f3;--pr-cream:#f5f2ea;--pr-line:#e7e3d9;--pr-line-soft:#efece4;
+  --pr-ink:#0a0a0a;--pr-ink-2:#4a4a4a;--pr-ink-3:#8a8a8a;--pr-ink-4:#b4b4b4;
+  --pr-accent:#0f766e;--pr-accent-2:#0d4a43;--pr-accent-soft:#eefaf6;
+  --pr-gold:#d2ad46;--pr-gold-dk:#8a6f22;--pr-danger:#d84f43;
+  /* Compat */
+  --navy:#0a0a0a;--navy2:#0a0a0a;--teal:#0f766e;--teal2:#0d4a43;
+  --bg:#faf8f3;--card:#fff;--border:#e7e3d9;
+  --text:#0a0a0a;--muted:#8a8a8a;
   color-scheme: light only;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#17211d}
+html,body{background:var(--pr-bg);font-family:'Inter',system-ui,sans-serif;color:var(--pr-ink);-webkit-font-smoothing:antialiased}
 
 /* ── TOASTS ── */
 .toasts{position:fixed;bottom:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:6px}
-.toast{background:#153e35;color:#fff;padding:10px 15px;border-radius:8px;font-size:.82rem;box-shadow:0 4px 20px rgba(0,0,0,.25);animation:tIn .3s ease;min-width:220px}
+.toast{background:var(--pr-ink);color:#fff;padding:10px 15px;border-radius:10px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:tIn .3s ease;min-width:220px}
 @keyframes tIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
-.toast.ok{border-left:4px solid #2a9a57}
-.toast.err{border-left:4px solid #d84f43}
-.toast.inf{border-left:4px solid #2d6f60}
+.toast.ok{border-left:3px solid var(--pr-accent)}
+.toast.err{border-left:3px solid var(--pr-danger)}
+.toast.inf{border-left:3px solid var(--pr-accent)}
 
 /* ── DOCS CLIENT PANEL ── */
-.doc-btn{padding:15px;border:none;border-radius:10px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:10px;width:100%;text-align:left;color:#fff;transition:opacity .2s}
-.doc-btn:hover{opacity:.88}
-.doc-btn .icon{font-size:1.4rem;flex-shrink:0}
+.doc-btn{padding:14px 16px;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:500;display:flex;align-items:center;gap:12px;width:100%;text-align:left;color:#fff;transition:background .18s,transform .12s}
+.doc-btn:active{transform:scale(.98)}
+.doc-btn:hover{filter:brightness(1.05)}
+.doc-btn .icon{font-size:20px;flex-shrink:0;opacity:.9}
 .doc-btn .label{display:flex;flex-direction:column;gap:2px}
-.doc-btn .sublabel{font-size:.75rem;opacity:.8;font-weight:400}
+.doc-btn .sublabel{font-size:12px;opacity:.75;font-weight:400}
+
+/* ── pr-* helpers ── */
+.pr-container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,3vw,28px)}
+.pr-serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-style:italic}
+.pr-sec{padding:clamp(40px,5vw,72px) 0;position:relative}
+.pr-sec-head{text-align:center;max-width:720px;margin:0 auto 32px}
+.pr-sec-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--pr-accent);letter-spacing:.06em;text-transform:uppercase;background:var(--pr-accent-soft);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+.pr-sec-title{font-size:clamp(24px,3.2vw,36px);line-height:1.1;letter-spacing:-.025em;font-weight:600;color:var(--pr-ink);margin:0}
+.pr-sec-title em{font-style:normal;color:var(--pr-accent)}
+.pr-sec-sub{margin-top:10px;font-size:15px;color:var(--pr-ink-2);line-height:1.55}
+.pr-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 18px;border-radius:999px;font-family:inherit;font-weight:500;font-size:14px;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .18s,border-color .18s,color .18s,transform .12s;white-space:nowrap}
+.pr-btn:active{transform:scale(.98)}
+.pr-btn-primary{background:var(--pr-ink);color:#fff}
+.pr-btn-primary:hover{background:#262626}
+.pr-btn-gold{background:var(--pr-gold);color:#3b2c05}
+.pr-btn-gold:hover{background:#c8a23b}
+.pr-btn-sm{height:34px;padding:0 14px;font-size:13px}
+.pr-btn-lg{height:46px;padding:0 22px;font-size:15px}
+.pr-btn-arrow i{display:inline-block;transition:transform .2s;font-style:normal}
+.pr-btn-arrow:hover i{transform:translateX(3px)}
 
 /* ══════════════════════════════════════════
    MOBILE RESPONSIVE — correctif global
@@ -92,34 +118,34 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
 <div id="siteNavbar"></div>
 
 <!-- BOUTON RETOUR -->
-<div style="max-width:1180px;margin:0 auto;padding:12px 24px 0">
-  <button onclick="history.back()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 16px;background:#fff;border:1.5px solid rgba(21,62,53,.18);border-radius:999px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;font-weight:700;color:#153e35">← Retour</button>
+<div class="pr-container" style="padding-top:14px;padding-bottom:4px">
+  <button onclick="history.back()" class="pr-btn pr-btn-sm" style="background:#fff;color:var(--pr-ink);border:1px solid var(--pr-line)">← Retour</button>
 </div>
 
 
 <!-- ══ BANDEAU CLIENT DOCS (affiché si connecté avec code DOCS ou FULL) ══ -->
-<div id="clientDocsBar" style="display:none;background:linear-gradient(135deg,#153e35,#1f5649);padding:16px 24px;font-family:'Inter',system-ui,sans-serif">
-  <div style="max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+<div id="clientDocsBar" style="display:none;background:var(--pr-ink);padding:18px 24px;font-family:inherit">
+  <div class="pr-container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
     <div style="color:#fff">
-      <div style="font-weight:700;font-size:.9rem">📦 Vos documents sont prêts à télécharger</div>
-      <div id="clientDocsEtab" style="font-size:.8rem;color:rgba(255,255,255,.7);margin-top:2px"></div>
+      <div style="font-weight:500;font-size:14px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Vos documents sont prêts à télécharger</div>
+      <div id="clientDocsEtab" style="font-size:12.5px;color:rgba(255,255,255,.6);margin-top:3px"></div>
     </div>
-    <button onclick="scrollToClientDocs()" style="padding:10px 22px;background:#d2ad46;color:#201806;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:.88rem">⬇ Accéder à mes documents</button>
+    <button onclick="scrollToClientDocs()" class="pr-btn pr-btn-gold pr-btn-arrow">Accéder à mes documents <i>→</i></button>
   </div>
 </div>
 
-  <section style="padding:56px 0;background:#fff" id="documents">
-    <div style="max-width:1180px;margin:0 auto;padding:0 24px">
-      <div style="text-align:center;max-width:860px;margin:0 auto 36px">
-        <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,86,73,.12);color:#1f5649;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Documents Réglementaires</span>
-        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.9rem;color:#153e35;margin:0 0 8px">Documents réglementaires : protéger votre établissement, éviter les sanctions</h2>
-        <p style="font-size:1rem;color:#65716b">Ce que dit la loi, les sanctions encourues et les données de contrôle en France.</p>
+  <section class="pr-sec" id="documents" style="background:#fff">
+    <div class="pr-container">
+      <div class="pr-sec-head">
+        <span class="pr-sec-eyebrow">Documents réglementaires</span>
+        <h2 class="pr-sec-title">Protégez votre établissement, évitez les <em>sanctions</em>.</h2>
+        <p class="pr-sec-sub">Ce que dit la loi, les sanctions encourues et les données de contrôle en France.</p>
       </div>
 
       <!-- Textes de référence -->
-      <div style="background:#f0f4f8;border-radius:14px;padding:18px 24px;margin-bottom:28px;text-align:center">
-        <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#4a6080;margin-bottom:8px">Textes de référence</div>
-        <div style="font-size:.85rem;color:#2d4a5e;line-height:1.8">
+      <div style="background:var(--pr-cream);border:1px solid var(--pr-line);border-radius:14px;padding:18px 24px;margin-bottom:28px;text-align:center">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--pr-ink-3);margin-bottom:10px">Textes de référence</div>
+        <div style="font-size:13.5px;color:var(--pr-ink-2);line-height:1.7">
           Règlement CE 852/2004 &nbsp;·&nbsp; Règlement CE 178/2002 &nbsp;·&nbsp; Règlement CE 1169/2011 &nbsp;·&nbsp; Arrêté du 21/12/2009 &nbsp;·&nbsp; Art. R.4121-1 Code du Travail &nbsp;·&nbsp; Art. L218-1 Code de la Consommation
         </div>
       </div>
@@ -129,80 +155,80 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
 
         <!-- FLOUTÉS -->
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #153e35;filter:blur(3px);user-select:none;pointer-events:none;position:relative">
-          <div style="font-weight:700;color:#153e35;margin-bottom:6px">📄 Plan de Maîtrise Sanitaire (PMS)</div>
+          <div style="font-weight:700;color:#153e35;margin-bottom:6px">Plan de Maîtrise Sanitaire (PMS)</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Règlement CE 852/2004 — Obligatoire pour tout établissement manipulant des denrées alimentaires.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 1 500 € à 7 500 €</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 1 500 € à 7 500 €</div>
         </div>
 
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #2d6a4f;filter:blur(3px);user-select:none;pointer-events:none">
           <div style="font-weight:700;color:#2d6a4f;margin-bottom:6px">🧹 Plan de Nettoyage & Désinfection</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Arrêté du 21/12/2009 — Art. L218-1 Code de la Consommation — Inclus dans le PMS.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : de la mise en demeure à la fermeture administrative — amende pouvant aller de 1 500 € à 15 000 €</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : de la mise en demeure à la fermeture administrative — amende pouvant aller de 1 500 € à 15 000 €</div>
         </div>
 
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #6b3fa0;filter:blur(3px);user-select:none;pointer-events:none">
-          <div style="font-weight:700;color:#6b3fa0;margin-bottom:6px">⚠️ Document Unique d'évaluation des risques professionnels</div>
+          <div style="font-weight:700;color:#6b3fa0;margin-bottom:6px">Document Unique d'évaluation des risques professionnels</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Art. R.4121-1 Code du Travail — Obligatoire dès le 1er salarié.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : amende pouvant aller de 3 750 € à 9 000 € — récidive : jusqu'à 1 an d'emprisonnement</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : amende pouvant aller de 3 750 € à 9 000 € — récidive : jusqu'à 1 an d'emprisonnement</div>
         </div>
 
         <!-- VISIBLE 1 : Relevé des Températures -->
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #0277bd">
-          <div style="font-weight:700;color:#0277bd;margin-bottom:6px">🌡️ Relevé des Températures</div>
+          <div style="font-weight:700;color:#0277bd;margin-bottom:6px">Relevé des Températures</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Règlement CE 852/2004 — Enregistrement obligatoire des températures de conservation des denrées.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 750 € à 1 500 €</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 750 € à 1 500 €</div>
         </div>
 
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #c0392b;filter:blur(3px);user-select:none;pointer-events:none">
-          <div style="font-weight:700;color:#c0392b;margin-bottom:6px">📦 Fiche de Réception</div>
+          <div style="font-weight:700;color:#c0392b;margin-bottom:6px">Fiche de Réception</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Règlement CE 178/2002 — Traçabilité obligatoire à la réception de toute denrée alimentaire.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 750 € à 1 500 €</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 750 € à 1 500 €</div>
         </div>
 
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #e67e22;filter:blur(3px);user-select:none;pointer-events:none">
-          <div style="font-weight:700;color:#e67e22;margin-bottom:6px">🔍 Traçabilité</div>
+          <div style="font-weight:700;color:#e67e22;margin-bottom:6px">Traçabilité</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Règlement CE 178/2002 — Obligation de traçabilité de toutes les denrées alimentaires.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 750 € à 1 500 €</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 750 € à 1 500 €</div>
         </div>
 
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #27ae60;filter:blur(3px);user-select:none;pointer-events:none">
-          <div style="font-weight:700;color:#27ae60;margin-bottom:6px">🌾 Allergènes</div>
+          <div style="font-weight:700;color:#27ae60;margin-bottom:6px">Allergènes</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Règlement CE 1169/2011 — Information obligatoire des consommateurs sur les 14 allergènes majeurs.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 750 € à 1 500 €</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : de l'avertissement à la fermeture administrative — amende pouvant aller de 750 € à 1 500 €</div>
         </div>
 
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #7f8c8d;filter:blur(3px);user-select:none;pointer-events:none">
-          <div style="font-weight:700;color:#7f8c8d;margin-bottom:6px">❌ Gestion des Non-Conformités</div>
+          <div style="font-weight:700;color:#7f8c8d;margin-bottom:6px">Gestion des Non-Conformités</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Règlement CE 852/2004 — Enregistrement obligatoire de toute non-conformité détectée et des actions correctives.</div>
-          <div style="background:#f0f4f8;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#4a6080">📋 Pas de sanction directe — mais preuve indispensable en cas de contrôle DDPP ou d'intoxication alimentaire</div>
+          <div style="background:#f0f4f8;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#4a6080">Pas de sanction directe — mais preuve indispensable en cas de contrôle DDPP ou d'intoxication alimentaire</div>
         </div>
 
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #00695c;filter:blur(3px);user-select:none;pointer-events:none">
-          <div style="font-weight:700;color:#00695c;margin-bottom:6px">🏷️ Étiquettes de Traçabilité Interne (70×45mm)</div>
+          <div style="font-weight:700;color:#00695c;margin-bottom:6px">Étiquettes de Traçabilité Interne (70×45mm)</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Règlement CE 178/2002 Art.18 — Étiquetage obligatoire de toutes les préparations conservées : produit, N° lot, DLC, date ouverture, DLC secondaire, estampille sanitaire.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : amende jusqu'à 1 500 € par produit non tracé — responsabilité pénale en cas de crise sanitaire</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : amende jusqu'à 1 500 € par produit non tracé — responsabilité pénale en cas de crise sanitaire</div>
         </div>
 
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #1565c0;filter:blur(3px);user-select:none;pointer-events:none">
-          <div style="font-weight:700;color:#1565c0;margin-bottom:6px">🖐️ Affiche Lavage des Mains</div>
+          <div style="font-weight:700;color:#1565c0;margin-bottom:6px">Affiche Lavage des Mains</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Règlement CE 852/2004 Annexe II Ch.VIII — Affichage obligatoire dans les zones de préparation. 7 étapes, durée minimale 30 secondes.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : mise en demeure immédiate — fermeture administrative possible — amende jusqu'à 1 500 € par infraction</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : mise en demeure immédiate — fermeture administrative possible — amende jusqu'à 1 500 € par infraction</div>
         </div>
 
         <!-- VISIBLE 2 : Fiche Contrôle des Huiles de Friture -->
         <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px;border-left:4px solid #e65100">
-          <div style="font-weight:700;color:#e65100;margin-bottom:6px">🍟 Fiche Contrôle des Huiles de Friture</div>
+          <div style="font-weight:700;color:#e65100;margin-bottom:6px">Fiche Contrôle des Huiles de Friture</div>
           <div style="font-size:.78rem;color:#65716b;margin-bottom:8px">Arrêté du 28 mai 1997 modifié — Décret n°2008-184 — Contrôle obligatoire : CPT ≤ 25%, température ≤ 180°C. Registre de suivi obligatoire.</div>
-          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">⚖️ Sanction : amende jusqu'à 1 500 € — mise en danger du consommateur jusqu'à 3 750 € — élimination incorrecte jusqu'à 75 000 €</div>
+          <div style="background:#fff3cd;border-radius:8px;padding:8px 12px;font-size:.75rem;color:#856404">Sanction : amende jusqu'à 1 500 € — mise en danger du consommateur jusqu'à 3 750 € — élimination incorrecte jusqu'à 75 000 €</div>
         </div>
 
         <!-- Bandeau cadenas sur les 9 floutés -->
         <div style="grid-column:1/-1;background:linear-gradient(135deg,#153e35,#1f5649);border-radius:14px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div>
-            <div style="font-weight:800;color:#fff;font-size:.95rem;margin-bottom:4px">🔒 9 documents supplémentaires réservés aux clients</div>
+            <div style="font-weight:800;color:#fff;font-size:.95rem;margin-bottom:4px">9 documents supplémentaires réservés aux clients</div>
             <div style="font-size:.82rem;color:rgba(255,255,255,.75)">PMS, Nettoyage, Document Unique, Réception, Traçabilité, Allergènes, Non-Conformités, Étiquettes, Lavage des mains</div>
           </div>
-          <a href="audit.html" style="display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:linear-gradient(135deg,#d2ad46,#b79029);color:#201806;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:.88rem;text-decoration:none;white-space:nowrap">📩 Accéder à tous les documents</a>
+          <a href="audit.html" style="display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:linear-gradient(135deg,#d2ad46,#b79029);color:#201806;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:.88rem;text-decoration:none;white-space:nowrap">Accéder à tous les documents</a>
         </div>
 
       </div>
@@ -210,19 +236,19 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
       <!-- Mention base de travail -->
       <div style="background:#f0f4f8;border:1px solid #b0c4d8;border-radius:12px;padding:16px 20px;margin-bottom:32px">
         <div style="font-size:.82rem;color:#4a6080;line-height:1.7">
-          <strong>⚠️ Important :</strong> Les documents fournis (PMS, Plan de Nettoyage &amp; Désinfection, Document Unique, etc.) constituent une base de travail adaptée à votre secteur d'activité. Ils doivent être personnalisés et complétés par vos soins en fonction de l'évolution de votre activité. Ces documents n'ont pas valeur contractuelle.
+          <strong>Important :</strong> Les documents fournis (PMS, Plan de Nettoyage &amp; Désinfection, Document Unique, etc.) constituent une base de travail adaptée à votre secteur d'activité. Ils doivent être personnalisés et complétés par vos soins en fonction de l'évolution de votre activité. Ces documents n'ont pas valeur contractuelle.
         </div>
       </div>
 
       <!-- Liens vers pages dédiées -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px">
-        <a href="sanctions.html" style="display:flex;align-items:center;gap:14px;background:#fdecea;border:1px solid rgba(216,79,67,.2);border-radius:14px;padding:18px;text-decoration:none">
-          <span style="font-size:1.8rem">⚖️</span>
-          <div><div style="font-weight:800;color:#c0392b;font-size:.92rem">Cas Réels & Sanctions</div><div style="font-size:.78rem;color:#65716b;margin-top:3px">Jurisprudence et condamnations réelles</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px" class="pr-docs-links">
+        <a href="sanctions.html" style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--pr-line);border-radius:14px;padding:18px;text-decoration:none;transition:border-color .2s,transform .2s;color:inherit">
+          <span style="width:40px;height:40px;border-radius:10px;background:rgba(216,79,67,.08);color:var(--pr-danger);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 21h20L12 3z"/><line x1="12" y1="10" x2="12" y2="15"/><circle cx="12" cy="18" r="1"/></svg></span>
+          <div><div style="font-weight:600;color:var(--pr-ink);font-size:14px;letter-spacing:-.01em">Cas réels &amp; sanctions</div><div style="font-size:12.5px;color:var(--pr-ink-3);margin-top:3px">Jurisprudence et condamnations réelles</div></div>
         </a>
-        <a href="controles.html" style="display:flex;align-items:center;gap:14px;background:#e8f5e9;border:1px solid rgba(45,111,96,.2);border-radius:14px;padding:18px;text-decoration:none">
-          <span style="font-size:1.8rem">📊</span>
-          <div><div style="font-weight:800;color:#1f5649;font-size:.92rem">Contrôles dans votre département</div><div style="font-size:.78rem;color:#65716b;margin-top:3px">Statistiques DGAL 2024 par département</div></div>
+        <a href="controles.html" style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--pr-line);border-radius:14px;padding:18px;text-decoration:none;transition:border-color .2s,transform .2s;color:inherit">
+          <span style="width:40px;height:40px;border-radius:10px;background:var(--pr-accent-soft);color:var(--pr-accent);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></span>
+          <div><div style="font-weight:600;color:var(--pr-ink);font-size:14px;letter-spacing:-.01em">Contrôles dans votre département</div><div style="font-size:12.5px;color:var(--pr-ink-3);margin-top:3px">Statistiques DGAL 2024 par département</div></div>
         </a>
       </div>
 
@@ -244,7 +270,7 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
       <div id="clientDocsInfoBox" style="background:#f0faf8;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:.8rem;color:#2d4a3e;line-height:1.8;border:1px solid rgba(0,168,150,.3)"></div>
       <div id="clientDocsBtns" style="display:flex;flex-direction:column;gap:10px"></div>
       <p style="margin-top:16px;font-size:.74rem;color:#8a9e95;text-align:center">Documents au format Word (.docx) — Ouvrir avec Word, LibreOffice ou Google Docs</p>
-      <button onclick="logoutAndRedirect()" style="width:100%;margin-top:12px;padding:10px;background:#f5f2ea;border:1px solid #dfe6e0;border-radius:8px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#65716b">⏻ Se déconnecter</button>
+      <button onclick="logoutAndRedirect()" style="width:100%;margin-top:12px;padding:10px;background:#f5f2ea;border:1px solid #dfe6e0;border-radius:8px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:.82rem;color:#65716b">Se déconnecter</button>
     </div>
   </div>
 </div>

@@ -229,67 +229,74 @@ function goToHomePage() {
 // ══════════════════════════════════════════
 function buildNavbar(activePage) {
   var sess = getSession();
-  var authLabel = sess ? '🚪 Déconnexion' : '🔑 Accès';
+  var authLabel = sess ? 'Déconnexion' : 'Accès';
   var authAction = sess ? 'logoutAndRedirect()' : "window.location.href='audit.html'";
 
   var pages = [
-    { href: 'index.html',                 label: 'Accueil',                              id: 'home' },
-    { href: 'documents.html',             label: '📋 Vos Documents',                     id: 'documents' },
-    { href: 'controles.html',             label: '📊 Contrôles dans votre département',  id: 'controles' },
-    { href: 'sanctions.html',             label: '⚖️ Cas Réels & Sanctions',             id: 'sanctions' },
-    { href: 'tarifs.html',                label: '💶 Tarifs',                            id: 'tarifs' },
-    { href: 'audit.html',                 label: '🔍 Mon Audit',                         id: 'audit' },
-    { href: 'tarifs.html#contact-tarifs', label: '📩 Contact',                           id: 'contact' },
-    { href: 'tarifs.html#faq',            label: '❓ FAQ',                               id: 'faq' }
+    { href: '../accueil.html',            label: 'Accueil',          id: 'home' },
+    { href: 'index.html',                 label: 'Audit',            id: 'audit-home' },
+    { href: 'documents.html',             label: 'Documents',        id: 'documents' },
+    { href: 'controles.html',             label: 'Contrôles DDPP',   id: 'controles' },
+    { href: 'sanctions.html',             label: 'Sanctions',        id: 'sanctions' },
+    { href: 'tarifs.html',                label: 'Tarifs',           id: 'tarifs' }
   ];
 
   var desktopLinks = pages.map(function(p) {
     var a = p.id === activePage;
-    return '<a href="' + p.href + '" style="color:' + (a?'#153e35':'#65716b') + ';font-weight:' + (a?'900':'700') + ';font-size:.88rem;text-decoration:none;white-space:nowrap' + (a?';background:rgba(21,62,53,.07);padding:4px 11px;border-radius:999px':'') + '">' + p.label + '</a>';
+    return '<a href="' + p.href + '"' + (a?' class="on"':'') + '>' + p.label + '</a>';
   }).join('');
 
   var mobileLinks = pages.map(function(p) {
-    return '<a href="' + p.href + '" onclick="document.getElementById(\'cfMobNav\').style.display=\'none\'" style="display:flex;align-items:center;padding:13px 16px;color:#153e35;font-weight:700;font-size:.88rem;text-decoration:none;border-bottom:1px solid rgba(21,62,53,.06);gap:8px">' + p.label + '</a>';
-  }).join('');
+    var a = p.id === activePage;
+    return '<a href="' + p.href + '"' + (a?' class="on"':'') + ' onclick="document.getElementById(\'prMobNav\').classList.remove(\'open\')">' + p.label + '</a>';
+  }).join('') + '<a href="tarifs.html#contact-tarifs" onclick="document.getElementById(\'prMobNav\').classList.remove(\'open\')">Contact</a>';
 
   var css = '<style id="cf-nav-css">' +
-    '.cf-nav{position:sticky;top:0;z-index:1000;background:rgba(248,246,239,.97);backdrop-filter:blur(14px);border-bottom:1px solid rgba(21,62,53,.08);box-shadow:0 2px 16px rgba(21,62,53,.06);position:relative}' +
-    '.cf-nav-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;min-height:64px;gap:12px}' +
-    '.cf-nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}' +
-    '.cf-nav-links{display:flex;gap:16px;align-items:center;flex:1;justify-content:center;flex-wrap:wrap}' +
-    '.cf-nav-auth{padding:8px 16px;background:#fff;color:#153e35;border:2px solid #153e35;border-radius:999px;cursor:pointer;font-weight:900;font-size:.85rem;white-space:nowrap;flex-shrink:0;font-family:inherit}' +
-    '.cf-nav-burger{display:none;flex-direction:column;gap:5px;width:38px;height:38px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;flex-shrink:0;align-items:center;justify-content:center}' +
-    '.cf-nav-burger span{display:block;height:2px;width:22px;background:#153e35;border-radius:2px}' +
-    '.cf-mob-nav{display:none;flex-direction:column;background:rgba(248,246,239,.99);border-top:1px solid rgba(21,62,53,.08);padding-bottom:12px;position:absolute;top:100%;left:0;right:0;z-index:999;box-shadow:0 8px 24px rgba(21,62,53,.12)}' +
-    '.cf-mob-nav-grid{display:grid;grid-template-columns:1fr 1fr}' +
-    '.cf-mob-nav-grid a{border-right:1px solid rgba(21,62,53,.06)}' +
-    '.cf-mob-nav-grid a:nth-child(even){border-right:none}' +
-    '.cf-mob-nav-btn{display:block;margin:10px 16px 0;padding:12px;background:#153e35;color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:900;font-size:.9rem;font-family:inherit;width:calc(100% - 32px);text-align:center}' +
-    '@media(max-width:768px){' +
-    '.cf-nav-links{display:none!important}' +
-    '.cf-nav-auth{display:none!important}' +
-    '.cf-nav-burger{display:flex!important}' +
-    '}' +
+    '.pr-nav{position:sticky;top:0;z-index:1000;background:rgba(250,248,243,.82);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid #efece4;font-family:Inter,system-ui,sans-serif}' +
+    '.pr-nav-row{max-width:1200px;margin:0 auto;padding:12px clamp(16px,3vw,28px);display:flex;align-items:center;gap:18px}' +
+    '.pr-brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:#0a0a0a;font-weight:600;font-size:15px;letter-spacing:-.02em}' +
+    '.pr-brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#0f766e,#0d4a43);color:#fff;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(15,118,110,.25)}' +
+    '.pr-brand-mark svg{width:14px;height:14px}' +
+    '.pr-brand em{font-style:normal;color:#8a6f22;font-weight:600}' +
+    '.pr-nav-links{display:none;flex:1;justify-content:center;gap:4px}' +
+    '.pr-nav-links a{color:#4a4a4a;font-size:13.5px;font-weight:500;text-decoration:none;padding:7px 12px;border-radius:999px;transition:background .15s,color .15s}' +
+    '.pr-nav-links a:hover{color:#0a0a0a;background:#efece4}' +
+    '.pr-nav-links a.on{color:#0a0a0a;background:#f5f2ea}' +
+    '.pr-nav-cta{margin-left:auto;display:flex;align-items:center;gap:8px}' +
+    '@media(min-width:960px){.pr-nav-links{display:flex}.pr-nav-burger{display:none!important}}' +
+    '.pr-nav-burger{width:38px;height:38px;border:1px solid #e7e3d9;border-radius:10px;background:#faf8f3;cursor:pointer;color:#0a0a0a;display:inline-flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:10px}' +
+    '.pr-nav-burger span{display:block;width:16px;height:2px;background:#0a0a0a;border-radius:2px}' +
+    '.pr-nav-btn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 14px;border-radius:999px;font-family:inherit;font-weight:500;font-size:13px;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .18s,color .18s}' +
+    '.pr-nav-btn-primary{background:#0a0a0a;color:#fff}' +
+    '.pr-nav-btn-primary:hover{background:#262626}' +
+    '.pr-nav-btn-ghost{background:transparent;color:#4a4a4a}' +
+    '.pr-nav-btn-ghost:hover{color:#0a0a0a;background:#efece4}' +
+    '.pr-nav-btn i{font-style:normal;transition:transform .2s}' +
+    '.pr-nav-btn:hover i{transform:translateX(3px)}' +
+    '#prMobNav{display:none;flex-direction:column;background:rgba(250,248,243,.98);border-top:1px solid #efece4;padding:8px 16px 16px}' +
+    '#prMobNav a{display:block;padding:11px 10px;color:#4a4a4a;font-size:14px;font-weight:500;text-decoration:none;border-radius:10px}' +
+    '#prMobNav a:hover,#prMobNav a:active{background:#efece4;color:#0a0a0a}' +
+    '#prMobNav a.on{color:#0a0a0a;background:#f5f2ea}' +
+    '#prMobNav.open{display:flex}' +
     '</style>';
 
   return css +
-    '<header class="cf-nav">' +
-    '<div class="cf-nav-inner">' +
-    '<a href="index.html" class="cf-nav-logo">' +
-    '<div style="width:42px;height:42px;border-radius:12px;background:#1f5649;color:#fff;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center;letter-spacing:.06em;flex-shrink:0">N</div>' +
-    '<div><div style="font-weight:900;font-size:.95rem;letter-spacing:.08em;color:#153e35;line-height:1">NOMOS</div>' +
-    '<div style="font-size:.62rem;color:#65716b;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:2px">Audit Hygiène &amp; Sécurité Alimentaire</div></div>' +
+    '<header class="pr-nav">' +
+    '<div class="pr-nav-row">' +
+    '<a href="../accueil.html" class="pr-brand" aria-label="Nomos Audit">' +
+    '<span class="pr-brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>' +
+    'Nomos <em>Audit</em>' +
     '</a>' +
-    '<nav class="cf-nav-links">' + desktopLinks + '</nav>' +
-    '<button class="cf-nav-auth" onclick="' + authAction + '">' + authLabel + '</button>' +
-    '<button class="cf-nav-burger" onclick="var m=document.getElementById(\'cfMobNav\');m.style.display=m.style.display===\'flex\'?\'none\':\'flex\'" aria-label="Menu">' +
+    '<nav class="pr-nav-links">' + desktopLinks + '</nav>' +
+    '<div class="pr-nav-cta">' +
+    '<a href="tarifs.html#contact-tarifs" class="pr-nav-btn pr-nav-btn-ghost">Contact</a>' +
+    '<button class="pr-nav-btn pr-nav-btn-primary" onclick="' + authAction + '">' + authLabel + ' <i>→</i></button>' +
+    '<button class="pr-nav-burger" onclick="document.getElementById(\'prMobNav\').classList.toggle(\'open\')" aria-label="Menu">' +
     '<span></span><span></span><span></span>' +
     '</button>' +
     '</div>' +
-    '<nav id="cfMobNav" class="cf-mob-nav">' +
-    '<div class="cf-mob-nav-grid">' + mobileLinks + '</div>' +
-    '<button class="cf-mob-nav-btn" onclick="' + authAction + '">' + authLabel + '</button>' +
-    '</nav>' +
+    '</div>' +
+    '<nav id="prMobNav">' + mobileLinks + '</nav>' +
     '</header>';
 }
 
