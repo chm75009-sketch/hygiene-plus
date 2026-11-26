@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<script>/* 3.1 anti-clickjacking */if(self!==top){try{top.location=self.location;}catch(e){document.documentElement.style.display='none';}}</script>
+<script>if(self!==top){try{top.location=self.location;}catch(e){document.documentElement.style.display='none';}}</script>
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://kiknaxuzpovvivkjqzss.supabase.co wss://kiknaxuzpovvivkjqzss.supabase.co https://zdwdeavcwivvdtrjqwme.supabase.co wss://zdwdeavcwivvdtrjqwme.supabase.co https://api.ubibot.com https://api.emailjs.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; worker-src 'self' blob:; frame-src 'self' blob: data:; object-src 'none'; base-uri 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nomos HACCP — Hygiène alimentaire & contrôles DDPP</title>
-<meta name="description" content="Nomos HACCP : audit d'hygiène et application de traçabilité pour les restaurateurs et métiers de bouche. Préparez vos contrôles DDPP sereinement. Essai gratuit 10 jours, sans carte bancaire.">
+<meta name="description" content="Pilotez votre hygiène alimentaire. Audit guidé, relevés automatiques, Pack DDPP prêt en 60 s. Pour restaurateurs, boulangers, bouchers, traiteurs.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#ffffff">
 <meta name="mobile-web-app-capable" content="yes">
@@ -17,9 +16,7 @@
 <meta name="apple-mobile-web-app-title" content="Nomos HACCP">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-
 <script>
-// Service worker + mise à jour automatique (conservé à l'identique).
 if ('serviceWorker' in navigator) {
   (function () {
     var hadController = !!navigator.serviceWorker.controller;
@@ -29,677 +26,337 @@ if ('serviceWorker' in navigator) {
     });
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(function (reg) {
-        var verifier = function () {
-          try {
-            if (navigator.onLine === false) return;
-            var p = reg.update();
-            if (p && typeof p.catch === 'function') p.catch(function () {});
-          } catch (e) {}
-        };
-        verifier();
-        setInterval(verifier, 60 * 1000);
-        document.addEventListener('visibilitychange', function () {
-          if (document.visibilityState === 'visible') verifier();
-        });
-      }).catch(function () {});
+        var v = function () { try { if (navigator.onLine !== false) { var p = reg.update(); if (p && p.catch) p.catch(function(){}); } } catch(e){} };
+        v(); setInterval(v, 60000);
+        document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') v(); });
+      }).catch(function(){});
     });
   })();
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>try{ emailjs.init({ publicKey: 'EpsrNibYc0mrPUXnR' }); }catch(e){}</script>
-
+<script>try{emailjs.init({publicKey:'EpsrNibYc0mrPUXnR'});}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
 <style>
-/* ────────────────────────────────────────────────────────────────
-   NOMOS HACCP — Design system (inspiration ElevenLabs)
-   Palette sobre, typographie unique, composants minimalistes.
-   ──────────────────────────────────────────────────────────────── */
 :root{
-  --bg:#ffffff;
-  --bg-alt:#f7f6f3;        /* beige papier Nomos */
-  --bg-dark:#11352f;        /* vert sapin foncé Nomos */
-
-  --ink:#0b0f1a;
-  --ink-2:#40516b;
-  --ink-3:#52617a;
-  --ink-4:#8a93a3;
-
-  --line:#e7e9ef;
-  --line-soft:#eef1ee;
-
-  --accent:#0f766e;        /* vert teal Nomos (marque) */
-  --accent-2:#0d4a43;       /* vert teal plus foncé */
-  --accent-3:#11352f;       /* vert sapin très foncé */
-  --accent-soft:#ecfdf5;
-  --accent-ring:rgba(15,118,110,.18);
-  --gold:#d2ad46;
-  --gold-dk:#8a6f22;
-
-  --alert:#c2410c;
-  --alert-soft:#fff7ed;
-
-  --r-xs:8px;
-  --r-sm:12px;
-  --r:16px;
-  --r-lg:22px;
-  --r-xl:28px;
-
-  --shadow-xs:0 1px 2px rgba(10,10,10,.04);
-  --shadow-sm:0 2px 8px rgba(10,10,10,.05);
-  --shadow:0 6px 22px rgba(10,10,10,.06);
-
-  --max:1200px;
-  --gap:clamp(16px,2.5vw,24px);
+  --ink:#0a0a0a;--ink-2:#4a4a4a;--ink-3:#8a8a8a;--ink-4:#b4b4b4;
+  --bg:#ffffff;--cream:#faf8f3;--line:#ececec;--line-soft:#f5f5f3;
+  --accent:#0f766e;--accent-2:#0d4a43;--accent-soft:#eefaf6;
+  --gold:#d2ad46;--alert:#dc2626;--alert-soft:#fff1f1;
+  --r:14px;--r-lg:22px;--r-xl:28px;--max:1240px;
+  --ease:cubic-bezier(.22,.6,.36,1);
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{
-  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:var(--bg);
-  color:var(--ink);
-  font-size:16px;
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
-  overflow-x:hidden;
-}
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-style:italic}
+.container{max-width:var(--max);margin:0 auto;padding:0 clamp(16px,3vw,28px)}
 
-/* Conteneur de contenu */
-.container{max-width:var(--max);margin:0 auto;padding:0 clamp(18px,4vw,32px)}
-
-/* ── BUTTONS ─────────────────────────────────────────────────── */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  height:40px;padding:0 18px;border-radius:999px;
-  font-family:inherit;font-weight:500;font-size:14px;letter-spacing:-.01em;
-  text-decoration:none;cursor:pointer;border:1px solid transparent;
-  transition:background .15s ease,border-color .15s ease,transform .1s ease,color .15s ease;
-  white-space:nowrap;
-}
-.btn:active{transform:scale(.98)}
-.btn-primary{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(15,118,110,.2)}
-.btn-primary:hover{background:var(--accent-2)}
-.btn-outline{background:var(--bg);color:var(--accent-2);border-color:var(--line)}
-.btn-outline:hover{background:var(--bg-alt);border-color:var(--accent)}
-.btn-ghost{background:transparent;color:var(--ink)}
-.btn-ghost:hover{background:var(--bg-alt)}
-.btn-accent{background:var(--accent-3);color:#fff}
-.btn-accent:hover{background:var(--ink)}
-.btn-gold{background:var(--gold);color:#3b2c05;box-shadow:0 1px 2px rgba(210,173,70,.3)}
-.btn-gold:hover{background:#c8a23b}
-.btn-sm{height:34px;padding:0 14px;font-size:13px}
-.btn-lg{height:46px;padding:0 22px;font-size:15px}
-
-/* ── NAV ─────────────────────────────────────────────────────── */
-.nav{
-  position:sticky;top:0;z-index:50;
-  background:rgba(255,255,255,.85);
-  backdrop-filter:saturate(180%) blur(14px);
-  -webkit-backdrop-filter:saturate(180%) blur(14px);
-  border-bottom:1px solid var(--line);
-}
-.nav-row{
-  max-width:var(--max);margin:0 auto;
-  padding:10px clamp(16px,3vw,28px);
-  display:flex;align-items:center;gap:18px;
-}
-.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;letter-spacing:-.02em}
-.brand-mark{
-  width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;
-  display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;
-  letter-spacing:0;box-shadow:0 2px 6px rgba(15,118,110,.25);
-}
-.brand-name{font-size:16px;font-weight:700}
-.nav-links{display:none;align-items:center;gap:8px;flex:1;margin-left:16px}
-.nav-links a{
-  color:var(--ink-2);font-size:14px;font-weight:500;text-decoration:none;
-  padding:8px 12px;border-radius:8px;transition:color .12s,background .12s;
-}
-.nav-links a:hover{color:var(--ink);background:var(--bg-alt)}
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.72);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line-soft)}
+.nav-row{max-width:var(--max);margin:0 auto;padding:12px clamp(16px,3vw,28px);display:flex;align-items:center;gap:20px}
+.brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);font-weight:600}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;letter-spacing:-.02em;box-shadow:0 2px 6px rgba(15,118,110,.25)}
+.brand-name{font-size:15px;letter-spacing:-.02em}
+.nav-links{display:none;flex:1;justify-content:center;gap:4px}
+.nav-links a{color:var(--ink-2);font-size:13.5px;font-weight:500;text-decoration:none;padding:7px 12px;border-radius:999px;transition:background .15s,color .15s}
+.nav-links a:hover{color:var(--ink);background:var(--line-soft)}
 .nav-cta{margin-left:auto;display:flex;align-items:center;gap:8px}
-.nav-burger{
-  width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:var(--bg);
-  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);
-}
-.nav-burger:hover{background:var(--bg-alt)}
-@media(min-width:900px){
-  .nav-links{display:flex}
-  .nav-burger{display:none}
-}
-@media(max-width:600px){
-  .nav-cta .btn-primary{display:none}
-}
+.nav-burger{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:var(--bg);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink)}
+@media(min-width:900px){.nav-links{display:flex}.nav-burger{display:none}}
 
-/* ── HERO ────────────────────────────────────────────────────── */
-.hero{
-  position:relative;padding:clamp(32px,5vw,64px) 0 clamp(24px,4vw,40px);
-  text-align:center;overflow:hidden;
-}
-.hero{
-  background:
-    radial-gradient(900px 500px at 80% -10%, rgba(15,118,110,.09), transparent 60%),
-    radial-gradient(800px 500px at 10% 110%, rgba(210,173,70,.07), transparent 60%);
-}
-.hero::before{
-  content:"";position:absolute;inset:auto 0 -40% 0;height:70%;
-  background:radial-gradient(ellipse at 50% 100%, var(--accent-soft) 0%, transparent 60%);
-  z-index:0;pointer-events:none;opacity:.7;
-}
-.hero-inner{position:relative;z-index:1}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:5px 12px;border-radius:999px;
-  background:var(--bg);border:1px solid var(--line);
-  color:var(--ink-2);font-size:12px;font-weight:500;letter-spacing:-.01em;
-  margin-bottom:18px;
-}
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
-h1.hero-title{
-  font-size:clamp(26px,4.5vw,48px);
-  line-height:1.08;letter-spacing:-.025em;font-weight:700;
-  margin:0 auto;max-width:720px;color:var(--ink);
-}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 18px;border-radius:999px;font-family:inherit;font-weight:500;font-size:14px;letter-spacing:-.005em;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .18s var(--ease),border-color .18s,color .18s,transform .12s;white-space:nowrap;position:relative;overflow:hidden}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:#262626}
+.btn-outline{background:var(--bg);color:var(--ink);border-color:var(--line)}
+.btn-outline:hover{background:var(--line-soft);border-color:#dcdcdc}
+.btn-ghost{background:transparent;color:var(--ink-2)}
+.btn-ghost:hover{color:var(--ink);background:var(--line-soft)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-2)}
+.btn-sm{height:32px;padding:0 14px;font-size:13px}
+.btn-lg{height:46px;padding:0 22px;font-size:15px}
+.btn-primary::after,.btn-accent::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.18) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s var(--ease)}
+.btn-primary:hover::after,.btn-accent:hover::after{transform:translateX(120%)}
+.btn-arrow i{display:inline-block;transition:transform .2s var(--ease);font-style:normal}
+.btn-arrow:hover i{transform:translateX(3px)}
+
+.hero{position:relative;padding:clamp(28px,4vw,56px) 0 clamp(36px,5vw,64px);overflow:hidden;background:radial-gradient(900px 500px at 85% 0%,rgba(15,118,110,.07),transparent 55%),radial-gradient(700px 400px at 10% 100%,rgba(210,173,70,.05),transparent 55%),var(--bg)}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(10,10,10,.03) 1px,transparent 1px),linear-gradient(to bottom,rgba(10,10,10,.03) 1px,transparent 1px);background-size:52px 52px;mask:radial-gradient(900px 500px at 50% 30%,#000,transparent 75%);-webkit-mask:radial-gradient(900px 500px at 50% 30%,#000,transparent 75%);pointer-events:none}
+.hero-inner{position:relative;display:grid;grid-template-columns:1.1fr .95fr;gap:clamp(24px,3vw,48px);align-items:center;z-index:1}
+@media(max-width:920px){.hero-inner{grid-template-columns:1fr;gap:28px}}
+
+.hero-left{max-width:580px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 7px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--ink-2);font-size:12.5px;font-weight:500;margin-bottom:20px;box-shadow:0 1px 2px rgba(10,10,10,.04)}
+.badge .b-dot{width:16px;height:16px;border-radius:50%;background:var(--accent-soft);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.badge .b-dot::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);animation:dot-pulse 1.8s ease-in-out infinite}
+@keyframes dot-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
+
+h1.hero-title{font-size:clamp(32px,4.5vw,56px);line-height:1.02;letter-spacing:-.035em;font-weight:600;color:var(--ink)}
+h1.hero-title .serif{color:var(--ink);font-size:1.02em;line-height:1}
 h1.hero-title em{font-style:normal;color:var(--accent)}
-.hero-sub{
-  margin:16px auto 0;max-width:560px;
-  font-size:clamp(14.5px,1.4vw,16px);line-height:1.5;color:var(--ink-3);font-weight:400;
-}
-.hero-cta{
-  margin-top:24px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
-}
-.hero-trust{
-  margin-top:16px;font-size:12.5px;color:var(--ink-3);display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
-}
-.hero-trust .pill{display:inline-flex;align-items:center;gap:6px}
-.hero-trust .pill::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent)}
 
-/* ── TICKER discret ──────────────────────────────────────────── */
-.ticker{
-  background:var(--accent-3);color:#fafafa;overflow:hidden;white-space:nowrap;
-  border-top:1px solid #0a2520;border-bottom:1px solid #0a2520;
-}
-.ticker-track{
-  display:inline-flex;align-items:center;padding:12px 0;
-  animation:ticker 48s linear infinite;will-change:transform;
-}
-.ticker:hover .ticker-track{animation-play-state:paused}
-.ticker .it{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:13px;font-weight:400;color:#a3a3a3;letter-spacing:-.005em;padding:0 22px;
-}
-.ticker .it b{font-weight:600;color:#fafafa}
-.ticker .it .sep{width:3px;height:3px;border-radius:50%;background:#2d5c52}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+.hero-sub{margin:18px 0 0;max-width:460px;font-size:16px;line-height:1.5;color:var(--ink-2)}
 
-/* ── SECTIONS GENERIQUES ─────────────────────────────────────── */
-section{padding:clamp(36px,5vw,64px) 0}
-.sec-head{max-width:640px;margin:0 auto 28px;text-align:center}
-.sec-tag{
-  display:inline-block;font-size:11.5px;font-weight:700;color:var(--accent);
-  letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;
-}
-h2.sec-title{
-  font-size:clamp(22px,3vw,32px);line-height:1.1;letter-spacing:-.025em;
-  font-weight:700;color:var(--ink);margin-bottom:10px;
-}
-.sec-intro{font-size:14.5px;line-height:1.55;color:var(--ink-3);font-weight:400}
+.hero-cta{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
-/* ── GRID 2 SOLUTIONS ────────────────────────────────────────── */
-.solutions-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);
-}
-@media(max-width:820px){.solutions-grid{grid-template-columns:1fr}}
-.card-sol{
-  background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:clamp(20px,2.5vw,28px);display:flex;flex-direction:column;gap:12px;
-  transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease;
-  text-decoration:none;color:inherit;position:relative;overflow:hidden;
-}
-.card-sol:hover{border-color:#d4d4d4;transform:translateY(-2px);box-shadow:var(--shadow-sm)}
-.card-sol.dark{background:linear-gradient(155deg,var(--accent-3),#0a2520);color:#fff;border-color:transparent;position:relative}
-.card-sol.dark::before{content:"";position:absolute;inset:0;background:radial-gradient(500px 240px at 90% 0%,rgba(210,173,70,.12),transparent 55%);pointer-events:none;border-radius:inherit}
-.card-sol.dark:hover{background:linear-gradient(155deg,#0a2520,#061512)}
-.card-sol .mini{
-  display:inline-flex;align-items:center;gap:7px;
-  font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
-  color:var(--ink-3);
-}
-.card-sol.dark .mini{color:#a3a3a3}
-.card-sol .mini::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--accent)}
-.card-sol.dark .mini::before{background:var(--gold)}
-.card-sol h3{font-size:clamp(17px,2vw,22px);font-weight:700;letter-spacing:-.02em;line-height:1.15}
-.card-sol p{font-size:14px;line-height:1.5;color:var(--ink-3)}
-.card-sol.dark p{color:rgba(255,255,255,.72)}
-.card-sol ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin:2px 0}
-.card-sol li{font-size:13.5px;color:var(--ink-2);display:flex;gap:9px;align-items:flex-start;line-height:1.45}
-.card-sol.dark li{color:#e5e5e5}
-.card-sol li::before{
-  content:"";flex-shrink:0;width:16px;height:16px;border-radius:50%;margin-top:2px;
-  background:var(--accent-soft);
-  position:relative;
-}
-.card-sol.dark li::before{background:#1f1f1f}
-.card-sol li{position:relative}
-.card-sol li .check{
-  position:absolute;left:0;top:2px;width:16px;height:16px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;
-  color:var(--accent);font-size:10px;font-weight:700;
-}
-.card-sol.dark li .check{color:#86efac}
-.card-sol .cta-row{margin-top:auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.card-sol .link-arrow{
-  display:inline-flex;align-items:center;gap:6px;
-  font-weight:500;font-size:14.5px;color:var(--ink-3);text-decoration:none;
-}
-.card-sol.dark .link-arrow{color:#a3a3a3}
-.card-sol .link-arrow:hover{color:var(--ink)}
-.card-sol.dark .link-arrow:hover{color:#fff}
-.card-sol .badge-trial{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:12.5px;font-weight:500;color:var(--accent-2);
-  background:var(--accent-soft);padding:5px 10px;border-radius:999px;
-}
-.card-sol.dark .badge-trial{background:rgba(210,173,70,.16);color:var(--gold);border:1px solid rgba(210,173,70,.3)}
+.hero-trust{margin-top:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-3)}
+.hero-trust .avatars{display:flex}
+.hero-trust .avatar{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;border:2px solid var(--bg);margin-left:-7px}
+.hero-trust .avatar:first-child{margin-left:0}
+.hero-trust .avatar.a2{background:#d97706}.hero-trust .avatar.a3{background:#7c3aed}.hero-trust .avatar.a4{background:#0891b2;font-size:12px}
+.hero-trust .stars{color:var(--gold);letter-spacing:.5px}
+.hero-trust b{color:var(--ink);font-weight:600}
 
-/* ── RISQUES ─────────────────────────────────────────────────── */
-.risques-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
-@media(max-width:820px){.risques-grid{grid-template-columns:1fr}}
-.risk{
-  background:var(--bg);border:1px solid var(--line);border-radius:var(--r);
-  padding:20px;transition:border-color .15s,transform .15s;
-}
-.risk:hover{border-color:#d4d4d4;transform:translateY(-2px)}
-.risk{position:relative}
-.risk .risk-tag{
-  position:absolute;top:14px;right:14px;
-  font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-  background:rgba(194,65,12,.08);color:var(--alert);
-  padding:3px 9px;border-radius:999px;border:1px solid rgba(194,65,12,.18);
-}
-.risk .ico{
-  width:38px;height:38px;border-radius:10px;background:var(--accent-soft);
-  display:inline-flex;align-items:center;justify-content:center;font-size:20px;
-  margin-bottom:12px;border:1px solid rgba(15,118,110,.1);
-}
-.risk h3{font-size:16px;font-weight:700;letter-spacing:-.015em;margin-bottom:6px}
-.risk p{font-size:13.5px;line-height:1.5}
-.risk p strong{color:var(--ink);font-weight:600}
-.risk .ok{
-  margin-top:12px;display:inline-flex;align-items:center;gap:7px;
-  font-size:12.5px;font-weight:600;color:var(--accent-2);
-  background:var(--accent-soft);padding:5px 11px;border-radius:999px;
-  border:1px solid rgba(15,118,110,.15);
-}
-.risk h3{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
-.risk p{font-size:14.5px;line-height:1.55;color:var(--ink-3)}
-.risk .ok{
-  margin-top:16px;display:inline-flex;align-items:center;gap:8px;
-  font-size:13px;font-weight:500;color:var(--accent-2);
-  background:var(--accent-soft);padding:6px 11px;border-radius:999px;
-}
+.mockup-wrap{position:relative;perspective:1500px}
+.mockup{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:14px 14px 18px;box-shadow:0 50px 80px -30px rgba(10,10,10,.18),0 20px 40px -20px rgba(15,118,110,.12),0 0 0 1px rgba(10,10,10,.03);transform:rotateY(-6deg) rotateX(4deg);transform-origin:center}
+@media(max-width:920px){.mockup{transform:none}}
+.mockup::after{content:"";position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(135deg,rgba(15,118,110,.25),transparent 40%,rgba(210,173,70,.2));z-index:-1;filter:blur(20px);opacity:.5}
+.m-head{display:flex;align-items:center;gap:8px;padding:0 4px 10px;border-bottom:1px solid var(--line-soft)}
+.m-dots{display:flex;gap:4px}
+.m-dots span{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.m-dots span:first-child{background:#ff5f57}.m-dots span:nth-child(2){background:#ffbd2e}.m-dots span:nth-child(3){background:#28c941}
+.m-title{font-size:11.5px;color:var(--ink-3);margin-left:auto;font-weight:500;letter-spacing:-.01em}
+.m-title b{color:var(--ink)}
+.m-body{padding:14px 4px 4px;display:flex;flex-direction:column;gap:10px}
+.m-section-title{font-size:10px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;padding:0 2px}
+.m-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.m-kpi{background:var(--cream);border:1px solid var(--line-soft);border-radius:10px;padding:10px 12px}
+.m-kpi .n{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.m-kpi .l{font-size:10px;color:var(--ink-3);margin-top:4px;line-height:1.2}
+.m-kpi.ok .n{color:var(--accent)}
+.m-kpi.warn .n{color:var(--gold)}
+.m-list{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.m-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--cream);border:1px solid var(--line-soft);border-radius:10px;transition:background .3s var(--ease)}
+.m-row:hover{background:var(--accent-soft);border-color:rgba(15,118,110,.15)}
+.m-check{width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.m-row.pending .m-check{background:#fff;border:1.5px dashed var(--ink-4);color:transparent}
+.m-row-txt{font-size:11.5px;color:var(--ink);font-weight:500;flex:1;line-height:1.3}
+.m-row-time{font-size:10px;color:var(--ink-3);font-weight:500}
+.m-cta{margin-top:10px;background:var(--ink);color:#fff;border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:500}
+.m-cta .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(210,173,70,.6);animation:nomos-pulse 2s ease-in-out infinite}
+@keyframes nomos-pulse{0%,100%{box-shadow:0 0 0 0 rgba(210,173,70,.6)}50%{box-shadow:0 0 0 10px rgba(210,173,70,0)}}
 
-/* ── COMBO (section sombre) ──────────────────────────────────── */
-.combo{
-  background:
-    radial-gradient(900px 400px at 15% 0%, rgba(210,173,70,.12), transparent 60%),
-    radial-gradient(700px 500px at 85% 100%, rgba(15,118,110,.25), transparent 65%),
-    linear-gradient(160deg, var(--accent-3) 0%, #0a2520 100%);
-  color:#fff;position:relative;
-}
-.combo .sec-tag{color:var(--gold)}
-.combo h2.sec-title{color:#fff}
-.combo .sec-intro{color:rgba(255,255,255,.78)}
-.combo .cta-row{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-.combo .btn-primary{background:var(--gold);color:#3b2c05}
-.combo .btn-primary:hover{background:#c8a23b}
-.combo .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.22)}
-.combo .btn-outline:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.45)}
+.sticker{position:absolute;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;box-shadow:0 20px 40px -20px rgba(10,10,10,.15),0 2px 6px rgba(10,10,10,.05);font-size:12px;color:var(--ink);font-weight:500;display:flex;align-items:center;gap:8px;animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.sticker .ico{font-size:16px}
+.sticker-1{top:-14px;left:-18px;animation-delay:0s}
+.sticker-2{bottom:-10px;right:-14px;animation-delay:1.5s}
+.sticker b{color:var(--accent)}
 
-/* ── FOOTER ──────────────────────────────────────────────────── */
-footer.site{
-  background:var(--bg);border-top:1px solid var(--line);
-  padding:40px 0 24px;
-}
-.foot-grid{
-  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;
-}
-@media(max-width:820px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
-@media(max-width:480px){.foot-grid{grid-template-columns:1fr}}
-.foot-col h5{
-  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--ink);margin-bottom:10px;
-}
-.foot-col a{
-  display:block;color:var(--ink-3);text-decoration:none;font-size:13.5px;
-  padding:4px 0;transition:color .12s;
-}
+section{padding:clamp(48px,6vw,80px) 0;position:relative}
+.sec-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;background:var(--accent-soft);padding:4px 10px;border-radius:999px;margin-bottom:14px}
+.sec-title{font-size:clamp(24px,3.2vw,36px);line-height:1.1;letter-spacing:-.025em;font-weight:600;color:var(--ink);max-width:640px}
+.sec-title em{font-style:normal;color:var(--accent)}
+.sec-title .serif{letter-spacing:-.01em}
+.sec-sub{margin-top:12px;font-size:15px;color:var(--ink-2);line-height:1.55;max-width:560px}
+.sec-head-center{text-align:center;margin:0 auto 36px;max-width:640px}
+.sec-head-center .sec-title,.sec-head-center .sec-sub{margin-left:auto;margin-right:auto}
+
+.marquee{position:relative;padding:28px 0;background:var(--cream);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);overflow:hidden}
+.marquee-label{text-align:center;font-size:12px;color:var(--ink-3);font-weight:500;letter-spacing:.04em;margin-bottom:14px}
+.marquee-label b{color:var(--ink);font-weight:600}
+.marquee-track{display:flex;gap:40px;animation:marquee 32s linear infinite;width:max-content}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bg);border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:500;color:var(--ink-2);white-space:nowrap}
+.marquee-chip .ico{font-size:15px}
+.marquee-chip b{color:var(--ink);font-weight:600}
+@keyframes marquee{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.marquee-track{animation:none}}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.steps{grid-template-columns:1fr}}
+.step{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;transition:border-color .22s,transform .22s}
+.step:hover{border-color:#dcdcdc;transform:translateY(-3px)}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:600;font-family:'Instrument Serif',serif;font-style:italic}
+.step h3{font-size:17px;font-weight:600;letter-spacing:-.02em;margin:16px 0 6px;color:var(--ink)}
+.step p{font-size:13.5px;color:var(--ink-2);line-height:1.55}
+.step-visual{margin-top:16px;height:110px;border-radius:12px;background:var(--cream);border:1px solid var(--line-soft);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.sv-1{background:linear-gradient(135deg,var(--accent-soft),var(--bg))}
+.sv-2{background:linear-gradient(135deg,#fef9e7,var(--bg))}
+.sv-3{background:linear-gradient(135deg,var(--accent-soft),#fef9e7)}
+.sv-ico{font-size:40px;opacity:.9}
+
+.products-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.products-grid{grid-template-columns:1fr}}
+.product{display:flex;flex-direction:column;gap:14px;padding:28px;border-radius:var(--r-xl);position:relative;overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s var(--ease),box-shadow .25s}
+.product:hover{transform:translateY(-3px);box-shadow:0 30px 60px -30px rgba(10,10,10,.15)}
+.product-light{background:var(--cream);border:1px solid var(--line)}
+.product-dark{background:radial-gradient(500px 240px at 10% 0%,rgba(210,173,70,.14),transparent 60%),linear-gradient(160deg,#0e1f1b,#050c0a);color:#fff;border:1px solid rgba(255,255,255,.05)}
+.p-tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.product-dark .p-tag{color:var(--gold)}
+.p-tag::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--accent)}
+.product-dark .p-tag::before{background:var(--gold)}
+.product h3{font-size:22px;font-weight:600;letter-spacing:-.025em;line-height:1.15;color:var(--ink)}
+.product-dark h3{color:#fff}
+.product p{font-size:14px;color:var(--ink-2);line-height:1.5}
+.product-dark p{color:rgba(255,255,255,.72)}
+.product ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:2px}
+.product li{font-size:13px;color:var(--ink-2);display:flex;gap:8px;align-items:center}
+.product-dark li{color:rgba(255,255,255,.8)}
+.product li::before{content:"✓";color:var(--accent);font-weight:700;flex-shrink:0;font-size:12px}
+.product-dark li::before{color:var(--gold)}
+.p-cta{margin-top:auto;display:flex;align-items:center;gap:10px}
+.product-dark .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.2)}
+.product-dark .btn-outline:hover{background:rgba(255,255,255,.08)}
+
+.compare{background:var(--cream);border:1px solid var(--line);border-radius:var(--r-xl);padding:clamp(20px,3vw,32px);position:relative;overflow:hidden}
+.compare-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.compare-title{font-size:clamp(18px,2.2vw,24px);font-weight:600;letter-spacing:-.02em;color:var(--ink);max-width:420px;line-height:1.2}
+.compare-toggle{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px;cursor:pointer;font-size:13px;font-weight:500}
+.compare-toggle span{padding:7px 16px;border-radius:999px;color:var(--ink-3);transition:all .22s var(--ease);user-select:none}
+.compare .off-label{background:var(--alert-soft);color:var(--alert);box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.compare.on .off-label{background:transparent;color:var(--ink-4);box-shadow:none}
+.compare.on .on-label{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(15,118,110,.25)}
+.compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:820px){.compare-grid{grid-template-columns:1fr}}
+.compare-item{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;transition:background .32s var(--ease),border-color .32s}
+.compare-item .lbl{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.compare-item .val{font-size:13.5px;line-height:1.45}
+.compare-item .on{display:none}
+.compare:not(.on) .compare-item{background:var(--alert-soft);border-color:#fecaca}
+.compare:not(.on) .compare-item .val{color:#991b1b;font-weight:500}
+.compare:not(.on) .compare-item .val::before{content:"✕ ";color:var(--alert);font-weight:700}
+.compare.on .compare-item{background:var(--accent-soft);border-color:rgba(15,118,110,.2)}
+.compare.on .compare-item .val{color:var(--accent-2);font-weight:600}
+.compare.on .compare-item .off{display:none}
+.compare.on .compare-item .on{display:inline}
+.compare.on .compare-item .val::before{content:"✓ ";color:var(--accent);font-weight:700}
+
+.faq{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.faq-item{background:var(--bg);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.faq-item:hover{border-color:#dcdcdc}
+.faq-q{width:100%;background:transparent;border:0;cursor:pointer;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px;font-family:inherit;font-size:14.5px;font-weight:500;text-align:left;color:var(--ink)}
+.faq-plus{width:22px;height:22px;border-radius:50%;background:var(--line-soft);display:inline-flex;align-items:center;justify-content:center;font-size:15px;color:var(--ink-2);font-weight:400;transition:transform .25s var(--ease),background .2s;flex-shrink:0}
+.faq-item.open .faq-plus{transform:rotate(45deg);background:var(--ink);color:#fff}
+.faq-a{display:none;padding:0 18px 18px;color:var(--ink-2);font-size:13.5px;line-height:1.6}
+.faq-item.open .faq-a{display:block}
+
+.cta-final{padding:clamp(40px,6vw,72px) 0;background:radial-gradient(400px 260px at 50% 0%,rgba(210,173,70,.14),transparent 60%),radial-gradient(700px 420px at 50% 100%,rgba(15,118,110,.25),transparent 65%),linear-gradient(180deg,#0e1f1b,#050c0a);color:#fff;text-align:center;position:relative;overflow:hidden}
+.cta-final::before{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,.12),transparent),radial-gradient(1px 1px at 70% 80%,rgba(255,255,255,.1),transparent),radial-gradient(1px 1px at 40% 60%,rgba(255,255,255,.15),transparent);pointer-events:none}
+.cta-final h2{font-size:clamp(28px,4vw,42px);line-height:1.1;letter-spacing:-.03em;font-weight:600;color:#fff;max-width:640px;margin:0 auto 12px}
+.cta-final h2 em{font-style:normal;color:var(--gold)}
+.cta-final p{font-size:15px;color:rgba(255,255,255,.72);max-width:520px;margin:0 auto 24px}
+.cta-final .btn-primary{background:var(--gold);color:#3b2c05}
+.cta-final .btn-primary:hover{background:#c8a23b}
+.cta-final .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.22)}
+.cta-final .btn-outline:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.4)}
+
+footer.site{background:var(--bg);border-top:1px solid var(--line);padding:28px 0 20px}
+.foot-row{max-width:var(--max);margin:0 auto;padding:0 clamp(16px,3vw,28px);display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:28px}
+@media(max-width:820px){.foot-row{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.foot-row{grid-template-columns:1fr}}
+.foot-col h5{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
+.foot-col a{display:block;color:var(--ink-3);text-decoration:none;font-size:13px;padding:3px 0;transition:color .12s}
 .foot-col a:hover{color:var(--ink)}
-.foot-about p{font-size:13.5px;color:var(--ink-3);line-height:1.55;max-width:320px;margin-top:10px}
-.foot-bottom{
-  margin-top:48px;padding-top:24px;border-top:1px solid var(--line);
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
-  font-size:12.5px;color:var(--ink-4);
-}
-.foot-bottom .legal{display:flex;gap:16px;flex-wrap:wrap}
+.foot-about p{font-size:13px;color:var(--ink-3);line-height:1.55;max-width:300px;margin-top:8px}
+.foot-bottom{max-width:var(--max);margin:0 auto;padding:20px clamp(16px,3vw,28px) 0;border-top:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--ink-4);margin-top:28px}
+.foot-bottom .legal{display:flex;gap:14px;flex-wrap:wrap}
 .foot-bottom a{color:var(--ink-4);text-decoration:none}
 .foot-bottom a:hover{color:var(--ink-2)}
+.foot-note{margin-top:14px;font-size:11px;color:var(--ink-4);line-height:1.55;max-width:720px}
 
-/* ── MENU DRAWER ────────────────────────────────────────────── */
-.menu-overlay{
-  position:fixed;inset:0;background:rgba(10,10,10,.4);
-  opacity:0;visibility:hidden;transition:.2s;z-index:70;
-}
+.menu-overlay{position:fixed;inset:0;background:rgba(10,10,10,.4);opacity:0;visibility:hidden;transition:.2s;z-index:70}
 .menu-overlay.open{opacity:1;visibility:visible}
-.menu{
-  position:fixed;top:0;right:0;height:100%;width:min(360px,88vw);
-  background:var(--bg);border-left:1px solid var(--line);
-  transform:translateX(102%);transition:transform .24s cubic-bezier(.4,0,.2,1);
-  z-index:80;display:flex;flex-direction:column;overflow-y:auto;
-}
+.menu{position:fixed;top:0;right:0;height:100%;width:min(340px,86vw);background:var(--bg);border-left:1px solid var(--line);transform:translateX(102%);transition:transform .25s var(--ease);z-index:80;display:flex;flex-direction:column;overflow-y:auto}
 .menu.open{transform:none}
-.menu-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:18px 20px;border-bottom:1px solid var(--line);
-}
-.menu-close{
-  width:38px;height:38px;border-radius:10px;border:1px solid var(--line);
-  background:var(--bg);color:var(--ink);cursor:pointer;
-  display:inline-flex;align-items:center;justify-content:center;font-size:16px;
-}
-.menu-close:hover{background:var(--bg-alt)}
-.menu-body{padding:12px 16px 24px;display:flex;flex-direction:column;gap:2px}
-.menu-group{
-  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--ink-4);padding:16px 12px 6px;
-}
-.menu a.mlink{
-  display:flex;align-items:center;gap:12px;
-  color:var(--ink);text-decoration:none;font-weight:500;font-size:15px;
-  padding:12px;border-radius:12px;transition:background .12s;
-}
-.menu a.mlink:hover{background:var(--bg-alt)}
-.menu .mcta{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  background:var(--accent);color:#fff;font-weight:500;font-size:15px;
-  padding:14px;border-radius:999px;text-decoration:none;margin:4px 0 12px;
-  box-shadow:0 4px 14px rgba(15,118,110,.25);
-}
-.menu .mcta:hover{background:var(--accent-2)}
+.menu-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}
+.menu-close{width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--bg);cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;justify-content:center}
+.menu-body{padding:10px 14px 20px;display:flex;flex-direction:column;gap:2px}
+.menu-group{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);padding:14px 10px 4px}
+.menu a.mlink{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font-weight:500;font-size:14px;padding:10px;border-radius:10px;transition:background .12s}
+.menu a.mlink:hover{background:var(--line-soft)}
+.menu .mcta{display:flex;align-items:center;justify-content:center;gap:7px;background:var(--ink);color:#fff;font-weight:500;font-size:14px;padding:12px;border-radius:999px;text-decoration:none;margin:2px 0 10px}
+.menu .mcta:hover{background:#262626}
 
-/* ── FAB démo ───────────────────────────────────────────────── */
-.fab-demo{
-  position:fixed;right:18px;bottom:18px;z-index:40;
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--accent);color:#fff;border:none;border-radius:999px;
-  padding:14px 20px;font-family:inherit;font-weight:500;font-size:14.5px;cursor:pointer;
-  box-shadow:0 10px 30px rgba(15,118,110,.38);
-  transition:transform .12s,background .15s;
-}
-.fab-demo:hover{background:var(--accent-2)}
-.fab-demo:hover{transform:translateY(-2px)}
-.fab-demo:active{transform:scale(.97)}
-@media(max-width:600px){.fab-demo{padding:12px 16px;font-size:13.5px;right:14px;bottom:14px}}
-
-/* ── MODALE DÉMO ────────────────────────────────────────────── */
-.rdv-overlay{
-  position:fixed;inset:0;background:rgba(10,10,10,.6);
-  opacity:0;visibility:hidden;transition:.2s;z-index:90;
-  display:flex;align-items:center;justify-content:center;padding:16px;
-}
+.rdv-overlay{position:fixed;inset:0;background:rgba(10,10,10,.56);opacity:0;visibility:hidden;transition:.2s;z-index:90;display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .rdv-overlay.open{opacity:1;visibility:visible}
-.rdv{
-  width:min(480px,100%);max-height:92vh;overflow-y:auto;
-  background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);
-  padding:32px 28px 28px;position:relative;color:var(--ink);
-  transform:translateY(12px) scale(.98);transition:transform .22s ease;
-  box-shadow:0 30px 80px rgba(10,10,10,.24);
-}
+.rdv{width:min(440px,100%);max-height:92vh;overflow-y:auto;background:var(--bg);border:1px solid var(--line);border-radius:22px;padding:26px 24px 22px;position:relative;color:var(--ink);transform:translateY(12px) scale(.98);transition:transform .22s var(--ease);box-shadow:0 30px 80px rgba(10,10,10,.22)}
 .rdv-overlay.open .rdv{transform:none}
-.rdv .x{
-  position:absolute;top:14px;right:14px;background:var(--bg-alt);border:1px solid var(--line);
-  color:var(--ink);width:36px;height:36px;border-radius:10px;font-size:15px;cursor:pointer;
-}
-.rdv .x:hover{background:var(--line-soft)}
-.rdv .pre{
-  display:inline-block;font-size:12px;font-weight:600;color:var(--accent-2);
-  background:var(--accent-soft);padding:4px 10px;border-radius:999px;
-  letter-spacing:.03em;margin-bottom:14px;
-}
-.rdv h3{font-size:24px;font-weight:700;letter-spacing:-.025em;line-height:1.12;margin-bottom:8px}
-.rdv .lead{color:var(--ink-3);font-size:14.5px;line-height:1.55;margin-bottom:20px}
-.rdv .f{display:flex;flex-direction:column;gap:10px}
-.rdv input,.rdv textarea,.rdv select{
-  width:100%;background:var(--bg);border:1px solid var(--line);
-  color:var(--ink);font-family:inherit;font-size:15px;
-  padding:12px 14px;border-radius:12px;outline:none;transition:border-color .12s,box-shadow .12s;
-}
-.rdv input:focus,.rdv textarea:focus,.rdv select:focus{
-  border-color:var(--ink);box-shadow:0 0 0 3px var(--accent-ring);
-}
+.rdv .x{position:absolute;top:12px;right:12px;background:var(--line-soft);border:1px solid var(--line);color:var(--ink);width:32px;height:32px;border-radius:9px;font-size:14px;cursor:pointer}
+.rdv .pre{display:inline-block;font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:3px 10px;border-radius:999px;letter-spacing:.04em;margin-bottom:12px}
+.rdv h3{font-size:20px;font-weight:600;letter-spacing:-.025em;line-height:1.14;margin-bottom:6px}
+.rdv .lead{color:var(--ink-2);font-size:13.5px;line-height:1.55;margin-bottom:16px}
+.rdv .f{display:flex;flex-direction:column;gap:8px}
+.rdv input,.rdv textarea,.rdv select{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-size:14px;padding:11px 13px;border-radius:10px;outline:none;transition:border-color .12s,box-shadow .12s}
+.rdv input:focus,.rdv textarea:focus,.rdv select:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(15,118,110,.14)}
 .rdv input::placeholder,.rdv textarea::placeholder{color:var(--ink-4)}
-.rdv .send{
-  margin-top:6px;background:var(--accent);color:#fff;border:none;border-radius:999px;
-  padding:14px;font-family:inherit;font-weight:500;font-size:15px;cursor:pointer;
-  transition:background .12s;box-shadow:0 4px 14px rgba(15,118,110,.25);
-}
-.rdv .send:hover{background:var(--accent-2)}
+.rdv .send{margin-top:4px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:12px;font-family:inherit;font-weight:500;font-size:14px;cursor:pointer;transition:background .12s}
+.rdv .send:hover{background:#262626}
 .rdv .send:disabled{opacity:.6;cursor:default}
-.rdv .note{margin-top:10px;font-size:11.5px;color:var(--ink-4);line-height:1.55;text-align:center}
-.rdv .note a{color:var(--accent-2)}
-.rdv .ok{text-align:center;padding:12px 6px}
-.rdv .ok .big{font-size:42px;margin-bottom:8px}
-.rdv .ok h4{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
-.rdv .ok p{color:var(--ink-3);font-size:14.5px;line-height:1.55}
+.rdv .note{margin-top:8px;font-size:11px;color:var(--ink-4);line-height:1.55;text-align:center}
+.rdv .note a{color:var(--accent)}
+.rdv .ok{text-align:center;padding:8px 6px}
+.rdv .ok .big{font-size:36px;margin-bottom:6px;color:var(--accent)}
+.rdv .ok h4{font-size:18px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+.rdv .ok p{color:var(--ink-2);font-size:13.5px;line-height:1.55}
 
-/* ── UTILS ───────────────────────────────────────────────────── */
-.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-/* Apparition douce (reveal) */
-.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-.js .reveal.in{opacity:1;transform:none}
-
-/* ── Interactions (motion.js) ── */
-[data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .75s cubic-bezier(.2,.65,.3,1),transform .75s cubic-bezier(.2,.65,.3,1);will-change:opacity,transform}
-[data-reveal="scale"]{transform:scale(.96)}
-[data-reveal="left"]{transform:translateX(-32px)}
-[data-reveal="right"]{transform:translateX(32px)}
+[data-reveal]{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease);will-change:opacity,transform}
 [data-reveal="fade"]{transform:none}
+[data-reveal="scale"]{transform:scale(.97)}
+[data-reveal="left"]{transform:translateX(-24px)}
+[data-reveal="right"]{transform:translateX(24px)}
 [data-reveal].revealed{opacity:1;transform:none}
 [data-reveal-delay="1"]{transition-delay:.08s}
 [data-reveal-delay="2"]{transition-delay:.16s}
 [data-reveal-delay="3"]{transition-delay:.24s}
 [data-reveal-delay="4"]{transition-delay:.32s}
-[data-reveal-delay="5"]{transition-delay:.4s}
-[data-tilt]{transition:transform .25s cubic-bezier(.2,.9,.3,1.2);will-change:transform;transform-style:preserve-3d}
-
-/* Shine sur boutons primaires / or */
-.btn-primary,.btn-gold,.btn-ink,.btn-accent{position:relative;overflow:hidden;isolation:isolate}
-.btn-primary::before,.btn-gold::before,.btn-ink::before,.btn-accent::before{
-  content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.22) 50%,transparent 80%);
-  transform:translateX(-120%);transition:transform .7s ease;
-}
-.btn-primary:hover::before,.btn-gold:hover::before,.btn-ink:hover::before,.btn-accent:hover::before{transform:translateX(120%)}
-
-/* Flèche animée sur CTA hero */
-.btn-arrow::after{content:" →";display:inline-block;transition:transform .25s}
-.btn-arrow:hover::after{transform:translateX(4px)}
-
-/* Pulse doré sur un badge */
-@keyframes nomos-pulse-gold{0%,100%{box-shadow:0 0 0 0 rgba(210,173,70,.55)}50%{box-shadow:0 0 0 10px rgba(210,173,70,0)}}
-.pulse-gold{animation:nomos-pulse-gold 2.2s cubic-bezier(.4,0,.6,1) infinite}
-@keyframes nomos-pulse-teal{0%,100%{box-shadow:0 0 0 0 rgba(15,118,110,.45)}50%{box-shadow:0 0 0 12px rgba(15,118,110,0)}}
-.pulse-teal{animation:nomos-pulse-teal 2.4s cubic-bezier(.4,0,.6,1) infinite}
-
-/* Cards : lift au hover (reste subtil) */
-.risk,.card-sol{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}
-.risk:hover,.card-sol:hover{transform:translateY(-4px);box-shadow:0 18px 48px rgba(15,118,110,.09),0 2px 8px rgba(15,118,110,.04)}
-
-/* Switch comparatif Sans/Avec Nomos */
-section.compare-wrap{padding:clamp(36px,5vw,64px) 0;background:var(--bg-alt)}
-.compare{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:clamp(20px,3vw,32px);position:relative;overflow:hidden}
-.compare-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-.compare-title{font-size:clamp(18px,2.4vw,26px);font-weight:700;letter-spacing:-.02em;color:var(--ink);max-width:480px;line-height:1.15}
-.compare-toggle{display:inline-flex;align-items:center;gap:0;background:var(--bg-alt);border:1px solid var(--line);border-radius:999px;padding:3px;font-weight:500;font-size:13px;cursor:pointer}
-.compare-toggle span{padding:7px 16px;border-radius:999px;color:var(--ink-3);transition:color .18s,background .18s;user-select:none}
-.compare .off-label{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.compare.on .off-label{background:transparent;color:var(--ink-3);box-shadow:none}
-.compare.on .on-label{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(15,118,110,.25)}
-.compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:820px){.compare-grid{grid-template-columns:1fr}}
-.compare-item{background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;transition:background .35s ease,border-color .35s ease,transform .35s ease}
-.compare-item .lbl{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
-.compare-item .val{font-size:14px;font-weight:600;color:var(--ink);line-height:1.4}
-.compare-item .on{display:none}
-.compare.on .compare-item{background:var(--accent-soft);border-color:rgba(15,118,110,.22)}
-.compare.on .compare-item .off{display:none}
-.compare.on .compare-item .on{display:block}
-.compare.on .compare-item .val{color:var(--accent-2)}
-
-/* Stats counter row — compact */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 0}
-@media(max-width:820px){.stats-row{grid-template-columns:1fr}}
-.stat{text-align:center;padding:18px 14px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);position:relative;overflow:hidden}
-.stat.alert{border-color:rgba(194,65,12,.3);background:linear-gradient(180deg,#fff,rgba(255,247,237,.6))}
-.stat.alert .n{color:var(--alert)}
-.stat.gold{border-color:rgba(210,173,70,.3);background:linear-gradient(180deg,#fff,rgba(253,245,218,.5))}
-.stat.gold .n{color:var(--gold-dk)}
-.stat .n{font-size:clamp(26px,3.5vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--accent-2)}
-.stat .l{font-size:12.5px;color:var(--ink-2);margin-top:6px;line-height:1.4;font-weight:500}
-.stat .l b{color:var(--ink);font-weight:700}
-
-/* Highlight or Nomos (soulignure typée) */
-.hl-gold{position:relative;display:inline-block;color:var(--accent-2);font-weight:inherit;z-index:1}
-.hl-gold::before{content:"";position:absolute;left:-.15em;right:-.15em;bottom:.04em;height:.42em;background:rgba(210,173,70,.35);z-index:-1;border-radius:2px;transform:skewX(-2deg)}
-
-/* Alerte pill (au-dessus du hero) */
-.alert-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  background:#fff7ed;border:1px solid rgba(194,65,12,.25);color:#7c2d12;
-  font-size:12px;font-weight:500;padding:5px 12px;border-radius:999px;margin-bottom:16px;
-  text-decoration:none;transition:background .15s,border-color .15s,transform .15s;
-}
-.alert-pill:hover{background:#ffedd5;border-color:rgba(194,65,12,.45);transform:translateY(-1px)}
-.alert-pill strong{color:var(--alert);font-weight:700}
-.alert-pill .al-dot{width:8px;height:8px;border-radius:50%;background:var(--alert);flex-shrink:0}
-.alert-pill .al-arrow{color:var(--alert);font-weight:700;margin-left:2px;transition:transform .2s}
-.alert-pill:hover .al-arrow{transform:translateX(3px)}
-@keyframes nomos-pulse-alert{0%,100%{box-shadow:0 0 0 0 rgba(194,65,12,.4)}50%{box-shadow:0 0 0 10px rgba(194,65,12,0)}}
-.pulse-alert{animation:nomos-pulse-alert 2s cubic-bezier(.4,0,.6,1) infinite}
-
-/* Hero trust : accentuer mots importants */
-.hero-trust .pill b{color:var(--ink);font-weight:700}
-
-/* Hero sub : strong plus visible */
-.hero-sub strong{color:var(--ink);font-weight:700}
-
-/* Card sol : liste de bénéfices mis en avant */
-.card-sol ul{margin:8px 0 4px}
-.card-sol li{font-size:15px;font-weight:500}
-
-/* Section head : grossir la sec-tag */
-.sec-tag{
-  font-size:13px;font-weight:700;letter-spacing:.08em;
-  background:var(--accent-soft);color:var(--accent-2);
-  padding:6px 14px;border-radius:999px;display:inline-block;
-  border:1px solid rgba(15,118,110,.12);
-}
-
-/* Compare : contraste SANS/AVEC */
-.compare{min-height:auto}
-.compare-item .lbl{font-size:11px;color:var(--ink-4);margin-bottom:5px}
-.compare-item .off{position:relative;color:#7f1d1d}
-.compare-item .off::before{content:"✕ ";color:var(--alert);font-weight:700;margin-right:2px}
-.compare.on .compare-item .val{color:var(--ink);font-weight:600}
-.compare-item .on::before{content:"✓ ";color:var(--accent);font-weight:700;margin-right:2px}
-/* Vue "Sans Nomos" : fond légèrement rouge très soft */
-.compare:not(.on) .compare-item{background:#fff7f5;border-color:#fecaca}
-.compare:not(.on) .compare-item .val{color:#7f1d1d;font-weight:500}
-/* Vue "Avec Nomos" : vert soft */
-.compare.on .compare-item{background:var(--accent-soft);border-color:rgba(15,118,110,.22)}
-.compare-toggle span{font-weight:600}
-.compare .off-label{background:#fff;color:var(--alert);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.compare.on .off-label{background:transparent;color:var(--ink-4);box-shadow:none}
-.compare.on .on-label{background:var(--accent);color:#fff;box-shadow:0 2px 10px rgba(15,118,110,.3)}
-
-/* Sticker "temps gagné" sur carte Traça */
-.time-saver{
-  position:absolute;top:-10px;right:18px;
-  background:var(--gold);color:#3b2c05;font-weight:700;font-size:12.5px;
-  padding:6px 14px;border-radius:999px;letter-spacing:.01em;
-  box-shadow:0 6px 20px rgba(210,173,70,.35);z-index:2;
-}
 </style>
 </head>
 <body>
 
-<!-- Bandeau COPIE DE TRAVAIL — règle Hygiène+ (JS). -->
 <script>
-(function(){
-  try{
-    var h=location.hostname;
-    if(h==='nomos-haccp.fr'||h==='www.nomos-haccp.fr') return;
-    var b=document.createElement('div');
-    b.textContent='🧪 HYGIÈNE+ — COPIE DE TRAVAIL (site de test, pas le site client)';
-    b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#b91c1c;color:#fff;text-align:center;font:600 11px/1 Inter,system-ui,sans-serif;padding:4px 6px;letter-spacing:.3px;pointer-events:none';
-    document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(b);});
-  }catch(e){}
-})();
+(function(){try{var h=location.hostname;if(h==='nomos-haccp.fr'||h==='www.nomos-haccp.fr')return;
+var b=document.createElement('div');b.textContent='🧪 HYGIÈNE+ — COPIE DE TRAVAIL (site de test, pas le site client)';
+b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#dc2626;color:#fff;text-align:center;font:600 11px/1 Inter,system-ui,sans-serif;padding:4px 6px;letter-spacing:.3px;pointer-events:none';
+document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(b);});}catch(e){}})();
 </script>
 
-<!-- ══ NAV ══ -->
 <header class="nav">
   <div class="nav-row">
     <a class="brand" href="accueil.html">
       <span class="brand-mark">N</span>
-      <span class="brand-name">Nomos HACCP</span>
+      <span class="brand-name">Nomos</span>
     </a>
-    <nav class="nav-links" aria-label="Navigation principale">
-      <a href="#solutions">Produits</a>
-      <a href="#risques">Pourquoi Nomos</a>
+    <nav class="nav-links" aria-label="Navigation">
+      <a href="#steps">Fonctionnement</a>
+      <a href="#produits">Produits</a>
+      <a href="#compare">Avant / Après</a>
+      <a href="#faq">Questions</a>
       <a href="blog/index.html">Blog</a>
-      <a href="audit/tarifs.html">Tarifs</a>
     </nav>
     <div class="nav-cta">
       <a class="btn btn-ghost btn-sm" href="haccp.html">Se connecter</a>
-      <a class="btn btn-primary btn-sm" href="#" onclick="openRdv('Nav');return false;">Demander une démo</a>
-      <button class="nav-burger" aria-label="Ouvrir le menu" onclick="openMenu()">
+      <a class="btn btn-primary btn-sm btn-arrow" href="haccp.html?essai=1">Essai gratuit <i>→</i></a>
+      <button class="nav-burger" aria-label="Menu" onclick="openMenu()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
   </div>
 </header>
 
-<!-- ══ MENU DRAWER ══ -->
 <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
 <nav class="menu" id="menu" aria-hidden="true">
   <div class="menu-head">
-    <a class="brand" href="accueil.html" style="font-size:15px">
-      <span class="brand-mark">N</span>
-      <span class="brand-name">Nomos HACCP</span>
-    </a>
+    <a class="brand" href="accueil.html"><span class="brand-mark">N</span><span class="brand-name">Nomos</span></a>
     <button class="menu-close" onclick="closeMenu()" aria-label="Fermer">✕</button>
   </div>
   <div class="menu-body">
     <a class="mcta" href="#" onclick="closeMenu();openRdv('Menu');return false;">Demander une démo</a>
-
+    <div class="menu-group">Navigation</div>
+    <a class="mlink" href="#steps" onclick="closeMenu()">Fonctionnement</a>
+    <a class="mlink" href="#produits" onclick="closeMenu()">Produits</a>
+    <a class="mlink" href="#compare" onclick="closeMenu()">Avant / Après</a>
+    <a class="mlink" href="#faq" onclick="closeMenu()">Questions</a>
     <div class="menu-group">Produits</div>
-    <a class="mlink" href="audit/index.html">Nomos Audit — préparer un contrôle</a>
-    <a class="mlink" href="haccp.html">Nomos Traça — gestion quotidienne</a>
+    <a class="mlink" href="audit/index.html">Nomos Audit</a>
+    <a class="mlink" href="haccp.html">Nomos Traça</a>
     <a class="mlink" href="audit/tarifs.html">Tarifs</a>
-
     <div class="menu-group">Ressources</div>
-    <a class="mlink" href="#risques" onclick="closeMenu()">Pourquoi Nomos</a>
-    <a class="mlink" href="blog/index.html">Blog · Guides HACCP</a>
-
-    <div class="menu-group">Compte</div>
-    <a class="mlink" href="haccp.html">Se connecter</a>
+    <a class="mlink" href="blog/index.html">Blog</a>
     <a class="mlink" href="#" onclick="closeMenu();installNomos();return false;">Installer l'app</a>
     <a class="mlink" href="#" onclick="closeMenu();partagerNomos();return false;">Partager Nomos</a>
   </div>
@@ -707,266 +364,263 @@ section.compare-wrap{padding:clamp(36px,5vw,64px) 0;background:var(--bg-alt)}
 
 <main>
 
-  <!-- ══ HERO ══ -->
-  <section class="hero" id="top">
-    <div class="container hero-inner">
-      <a href="#risques" class="alert-pill pulse-alert" data-reveal="fade">
-        <span class="al-dot"></span>
-        <strong>~300 fermetures administratives en 2024</strong> en Seine-Saint-Denis
-        <span class="al-arrow">→</span>
-      </a>
+<section class="hero">
+  <div class="container hero-inner">
+
+    <div class="hero-left">
+      <span class="badge" data-reveal="fade">
+        <span class="b-dot"></span>
+        <span>Nouveau — Pack DDPP en <b style="color:var(--ink);font-weight:600">60 s</b></span>
+      </span>
       <h1 class="hero-title" data-reveal data-reveal-delay="1">
-        Votre hygiène, enfin <em data-rotate="simple|claire|tenue|prête">simple</em>.<br>
-        Et prête pour chaque <span class="hl-gold">contrôle</span>.
+        L'hygiène <span class="serif">alimentaire</span>,<br><em>sans la paperasse</em>.
       </h1>
       <p class="hero-sub" data-reveal data-reveal-delay="2">
-        <strong>Pack DDPP prêt en 60 secondes.</strong> Audit guidé, relevés automatiques, traçabilité photo. Pour restaurateurs, boulangers, bouchers, traiteurs.
+        Audit guidé, relevés automatiques et traçabilité photo. Votre Pack DDPP se construit tout seul, au fil de la semaine. Pour restaurateurs, boulangers, bouchers, traiteurs.
       </p>
       <div class="hero-cta" data-reveal data-reveal-delay="3">
-        <a class="btn btn-gold btn-lg btn-arrow" href="haccp.html?essai=1">Essai gratuit 10 jours</a>
-        <a class="btn btn-outline btn-lg" href="#" onclick="openRdv('Hero');return false;">Voir la démo (10 min)</a>
+        <a class="btn btn-primary btn-lg btn-arrow" href="haccp.html?essai=1">Essai gratuit 10 jours <i>→</i></a>
+        <a class="btn btn-ghost btn-lg" href="#" onclick="openRdv('Hero');return false;">Voir la démo</a>
       </div>
       <div class="hero-trust" data-reveal data-reveal-delay="4">
-        <span class="pill"><b>Sans</b> carte bancaire</span>
-        <span class="pill"><b>Sans</b> engagement</span>
-        <span class="pill">Hébergement <b>UE / RGPD</b></span>
+        <div class="avatars">
+          <span class="avatar">LC</span>
+          <span class="avatar a2">MB</span>
+          <span class="avatar a3">AS</span>
+          <span class="avatar a4">+</span>
+        </div>
+        <div>
+          <div style="color:var(--ink);font-weight:500">Plébiscité par les métiers de bouche</div>
+          <div><span class="stars">★★★★★</span> &nbsp;<b>Zéro stress</b> face aux inspecteurs DDPP</div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- ══ TICKER DISCRET ══ -->
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker-track">
-      <span class="it"><b>Seine-Saint-Denis</b> · ~300 fermetures administratives en 2024</span><span class="it"><span class="sep"></span></span>
-      <span class="it">Contrôles DDPP renforcés en <b>Île-de-France</b></span><span class="it"><span class="sep"></span></span>
-      <span class="it"><b>1</b> contrôle inopiné suffit</span><span class="it"><span class="sep"></span></span>
-      <span class="it">Fermeture possible <b>le jour même</b></span><span class="it"><span class="sep"></span></span>
-      <span class="it">Résultats publiés sur <b>Alim'confiance</b></span><span class="it"><span class="sep"></span></span>
-      <span class="it">Chaîne du froid — <b>cause n°1</b> des PV</span><span class="it"><span class="sep"></span></span>
-      <span class="it">Traçabilité absente — <b>PV quasi systématique</b></span><span class="it"><span class="sep"></span></span>
-      <!-- duplicata pour défilement continu -->
-      <span class="it"><b>Seine-Saint-Denis</b> · ~300 fermetures administratives en 2024</span><span class="it"><span class="sep"></span></span>
-      <span class="it">Contrôles DDPP renforcés en <b>Île-de-France</b></span><span class="it"><span class="sep"></span></span>
-      <span class="it"><b>1</b> contrôle inopiné suffit</span><span class="it"><span class="sep"></span></span>
-      <span class="it">Fermeture possible <b>le jour même</b></span><span class="it"><span class="sep"></span></span>
-      <span class="it">Résultats publiés sur <b>Alim'confiance</b></span><span class="it"><span class="sep"></span></span>
-      <span class="it">Chaîne du froid — <b>cause n°1</b> des PV</span><span class="it"><span class="sep"></span></span>
-      <span class="it">Traçabilité absente — <b>PV quasi systématique</b></span><span class="it"><span class="sep"></span></span>
+    <div class="mockup-wrap" data-reveal="right" data-reveal-delay="2">
+      <div class="mockup">
+        <div class="m-head">
+          <div class="m-dots"><span></span><span></span><span></span></div>
+          <div class="m-title"><b>Nomos Traça</b> · Journée du 26/11</div>
+        </div>
+        <div class="m-body">
+          <div class="m-section-title">Indicateurs du jour</div>
+          <div class="m-kpis">
+            <div class="m-kpi ok"><div class="n">100%</div><div class="l">Relevés OK</div></div>
+            <div class="m-kpi"><div class="n">12/12</div><div class="l">Enceintes</div></div>
+            <div class="m-kpi warn"><div class="n">1</div><div class="l">NC à lever</div></div>
+          </div>
+          <div class="m-section-title" style="margin-top:4px">Contrôles d'aujourd'hui</div>
+          <div class="m-list">
+            <div class="m-row"><span class="m-check">✓</span><span class="m-row-txt">Température chambre froide (+2°C)</span><span class="m-row-time">08:12</span></div>
+            <div class="m-row"><span class="m-check">✓</span><span class="m-row-txt">Réception fournisseur + photo BL</span><span class="m-row-time">09:34</span></div>
+            <div class="m-row"><span class="m-check">✓</span><span class="m-row-txt">Plan de nettoyage — soir</span><span class="m-row-time">17:45</span></div>
+            <div class="m-row pending"><span class="m-check">✓</span><span class="m-row-txt">Prélèvement huile de friture</span><span class="m-row-time">en cours</span></div>
+          </div>
+          <div class="m-cta">
+            <span><span class="pulse-dot" style="display:inline-block;vertical-align:middle;margin-right:7px"></span>Pack DDPP prêt à présenter</span>
+            <span style="color:var(--gold);font-weight:600">Exporter →</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticker sticker-1"><span class="ico">⚡</span><span><b>60 s</b> pour générer le Pack DDPP</span></div>
+      <div class="sticker sticker-2"><span class="ico">🛡️</span><span>Conforme <b>DDPP</b></span></div>
+    </div>
+
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-label">Ils utilisent Nomos au quotidien — <b>restaurants, boulangeries, boucheries, traiteurs</b></div>
+  <div class="marquee-track">
+    <span class="marquee-chip"><span class="ico">🍽️</span> Restauration <b>traditionnelle</b></span>
+    <span class="marquee-chip"><span class="ico">🥖</span> Boulangerie · <b>Pâtisserie</b></span>
+    <span class="marquee-chip"><span class="ico">🥩</span> Boucherie · <b>Charcuterie</b></span>
+    <span class="marquee-chip"><span class="ico">🍔</span> Restauration <b>rapide</b></span>
+    <span class="marquee-chip"><span class="ico">🍰</span> Traiteur · <b>Évènementiel</b></span>
+    <span class="marquee-chip"><span class="ico">🏫</span> Restauration <b>collective</b></span>
+    <span class="marquee-chip"><span class="ico">☕</span> Bar · <b>Café</b></span>
+    <span class="marquee-chip"><span class="ico">🍽️</span> Restauration <b>traditionnelle</b></span>
+    <span class="marquee-chip"><span class="ico">🥖</span> Boulangerie · <b>Pâtisserie</b></span>
+    <span class="marquee-chip"><span class="ico">🥩</span> Boucherie · <b>Charcuterie</b></span>
+    <span class="marquee-chip"><span class="ico">🍔</span> Restauration <b>rapide</b></span>
+    <span class="marquee-chip"><span class="ico">🍰</span> Traiteur · <b>Évènementiel</b></span>
+    <span class="marquee-chip"><span class="ico">🏫</span> Restauration <b>collective</b></span>
+    <span class="marquee-chip"><span class="ico">☕</span> Bar · <b>Café</b></span>
+  </div>
+</div>
+
+<section id="steps">
+  <div class="container">
+    <div class="sec-head-center" data-reveal>
+      <span class="sec-eyebrow">Comment ça marche</span>
+      <h2 class="sec-title"><span class="serif">Trois</span> étapes. C'est tout.</h2>
+      <p class="sec-sub">Pas besoin d'être expert HACCP. Nomos vous guide à chaque relevé et construit vos preuves pour vous.</p>
+    </div>
+    <div class="steps">
+      <article class="step" data-reveal data-reveal-delay="1">
+        <span class="step-num">1</span>
+        <h3>Vous auditez votre établissement.</h3>
+        <p>Un parcours guidé qui balaie les points critiques : chaîne du froid, traçabilité, nettoyage, nuisibles, PMS.</p>
+        <div class="step-visual sv-1"><span class="sv-ico">🔍</span></div>
+      </article>
+      <article class="step" data-reveal data-reveal-delay="2">
+        <span class="step-num">2</span>
+        <h3>Vous saisissez vos relevés quotidiens.</h3>
+        <p>Températures, bons de livraison en photo, plan de nettoyage. Dix secondes par poste, signatures horodatées.</p>
+        <div class="step-visual sv-2"><span class="sv-ico">📱</span></div>
+      </article>
+      <article class="step" data-reveal data-reveal-delay="3">
+        <span class="step-num">3</span>
+        <h3>Vous imprimez votre Pack DDPP.</h3>
+        <p>Un PDF complet, prêt à présenter à l'inspecteur. Disponible 24 / 7, prêt en soixante secondes.</p>
+        <div class="step-visual sv-3"><span class="sv-ico">📄</span></div>
+      </article>
     </div>
   </div>
+</section>
 
-  <!-- ══ SOLUTIONS ══ -->
-  <section id="solutions">
-    <div class="container">
-      <div class="sec-head" data-reveal>
-        <span class="sec-tag">Deux outils, un objectif</span>
-        <h2 class="sec-title">L'audit pour savoir. L'app pour prouver.</h2>
-        <p class="sec-intro">Utilisez-les séparément ou combinés — le fil conducteur reste le même : zéro stress face aux inspecteurs.</p>
+<section id="produits" style="background:var(--cream)">
+  <div class="container">
+    <div class="sec-head-center" data-reveal>
+      <span class="sec-eyebrow">Deux outils, un objectif</span>
+      <h2 class="sec-title">L'audit pour <em>savoir</em>. L'app pour <em>prouver</em>.</h2>
+      <p class="sec-sub">Utilisez l'un, l'autre, ou les deux. Le fil conducteur reste le même : zéro stress face aux inspecteurs.</p>
+    </div>
+    <div class="products-grid">
+
+      <a class="product product-light" href="audit/index.html" data-reveal="left">
+        <span class="p-tag">Nomos Audit</span>
+        <h3>Préparez le contrôle comme un inspecteur l'aurait fait.</h3>
+        <p>Audit guidé, rapport clair, plan d'action priorisé. On liste les écarts et on vous dit par quoi commencer.</p>
+        <ul>
+          <li>Audit guidé pas à pas</li>
+          <li>Rapport DDPP imprimable</li>
+          <li>Plan d'action priorisé</li>
+        </ul>
+        <div class="p-cta">
+          <span class="btn btn-primary btn-sm btn-arrow">Préparer mon contrôle <i>→</i></span>
+        </div>
+      </a>
+
+      <a class="product product-dark" href="haccp.html" data-reveal="right">
+        <span class="p-tag">Nomos Traça</span>
+        <h3>Pilotez l'hygiène au quotidien, sans y penser.</h3>
+        <p>Relevés, traçabilité, nettoyage, DLC, plats témoins. L'app construit vos preuves toute seule.</p>
+        <ul>
+          <li>Relevés de température automatisés</li>
+          <li>Traçabilité & étiquettes DLC</li>
+          <li>Pack DDPP prêt à présenter</li>
+        </ul>
+        <div class="p-cta">
+          <span class="btn btn-sm" style="background:var(--gold);color:#3b2c05">Démarrer l'essai →</span>
+          <span style="font-size:12px;color:var(--gold)">10 j · sans CB</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="container">
+    <div class="sec-head-center" data-reveal>
+      <span class="sec-eyebrow">Avant · Après</span>
+      <h2 class="sec-title">Un seul clic. Tout <em>change</em>.</h2>
+    </div>
+    <div class="compare" id="cmp">
+      <div class="compare-head">
+        <div class="compare-title">Votre quotidien, sans puis avec Nomos.</div>
+        <div class="compare-toggle" role="button" tabindex="0" data-toggle-target="#cmp" aria-pressed="false">
+          <span class="off-label">Sans Nomos</span>
+          <span class="on-label">Avec Nomos</span>
+        </div>
       </div>
-
-      <div class="solutions-grid">
-
-        <a class="card-sol reveal" href="audit/index.html" data-reveal="left" data-tilt>
-          <span class="mini">Nomos Audit</span>
-          <h3>Auditez votre établissement <span class="hl-gold">comme un inspecteur</span>.</h3>
-          <p>On passe en revue les points critiques et on vous remet un <strong>rapport clair</strong>, avec un <strong>plan d'action priorisé</strong> à présenter en cas de contrôle.</p>
-          <ul>
-            <li><span class="check">✓</span>Contrôle de conformité <strong>guidé</strong></li>
-            <li><span class="check">✓</span>Rapport DDPP <strong>imprimable</strong></li>
-            <li><span class="check">✓</span>Plan d'action <strong>priorisé</strong></li>
-          </ul>
-          <div class="cta-row">
-            <span class="btn btn-primary btn-sm">Préparer mon contrôle →</span>
-          </div>
-        </a>
-
-        <a class="card-sol dark reveal" href="haccp.html" data-reveal="right" data-reveal-delay="1" data-tilt>
-          <span class="time-saver">⚡ 60 s pour le Pack DDPP</span>
-          <span class="mini">Nomos Traça</span>
-          <h3>Pilotez l'hygiène au quotidien, sans y penser.</h3>
-          <p>Relevés, traçabilité, nettoyage, DLC, plats témoins — l'app construit vos <strong style="color:#fff">preuves toute seule</strong> et génère le Pack DDPP en un clic.</p>
-          <ul>
-            <li><span class="check">✓</span>Relevés de température <strong style="color:#fff">automatisés</strong></li>
-            <li><span class="check">✓</span>Traçabilité & étiquettes <strong style="color:#fff">DLC</strong></li>
-            <li><span class="check">✓</span>Pack DDPP <strong style="color:#fff">prêt à présenter</strong></li>
-          </ul>
-          <div class="cta-row">
-            <span class="btn btn-gold btn-sm">Démarrer l'essai →</span>
-            <span class="badge-trial">10 j · sans CB</span>
-          </div>
-        </a>
-
+      <div class="compare-grid">
+        <div class="compare-item"><div class="lbl">Relevés T°</div><div class="val"><span class="off">Classeur papier, oublis fréquents</span><span class="on">Saisie 10 s, horodatée, signée</span></div></div>
+        <div class="compare-item"><div class="lbl">Traçabilité</div><div class="val"><span class="off">Bons de livraison perdus</span><span class="on">Photos + lots retrouvables en un clic</span></div></div>
+        <div class="compare-item"><div class="lbl">Pack DDPP</div><div class="val"><span class="off">À reconstituer la veille du contrôle</span><span class="on">Prêt à présenter, 60 s d'export</span></div></div>
+        <div class="compare-item"><div class="lbl">Non-conformités</div><div class="val"><span class="off">Oubliées, sans action corrective</span><span class="on">Tracées jusqu'à la levée</span></div></div>
+        <div class="compare-item"><div class="lbl">Équipe</div><div class="val"><span class="off">Chacun note sur son bout de papier</span><span class="on">Même app, signatures par personne</span></div></div>
+        <div class="compare-item"><div class="lbl">Contrôle DDPP</div><div class="val"><span class="off">Nuit blanche à ressortir les preuves</span><span class="on">On ouvre l'app, on présente</span></div></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ══ RISQUES ══ -->
-  <section id="risques" style="background:var(--bg-alt)">
-    <div class="container">
-      <div class="sec-head" data-reveal>
-        <span class="sec-tag">Les priorités de l'inspecteur</span>
-        <h2 class="sec-title">Trois points, rien de plus. On les garde sous contrôle pour vous.</h2>
-        <p class="sec-intro">Ce sont les trois chapitres qui concentrent la majorité des PV DDPP. Les ignorer coûte cher, les tenir est plus simple qu'il n'y paraît.</p>
-      </div>
-
-      <div class="risques-grid">
-        <div class="risk reveal" data-reveal data-reveal-delay="1" data-tilt>
-          <span class="risk-tag">Cause n°1</span>
-          <div class="ico">🌡️</div>
-          <h3>Chaîne du froid</h3>
-          <p><strong>Enceinte hors température, relevé manquant, aucune preuve de surveillance</strong> : première cause de non-conformité DDPP.</p>
-          <span class="ok">✓ Surveillée et prouvée par Nomos</span>
-        </div>
-        <div class="risk reveal" data-reveal data-reveal-delay="2" data-tilt>
-          <span class="risk-tag">PV systématique</span>
-          <div class="ico">📦</div>
-          <h3>Traçabilité</h3>
-          <p><strong>Origine produit impossible à remonter, bons introuvables, DLC non maîtrisées.</strong> L'inspecteur veut une piste écrite.</p>
-          <span class="ok">✓ Tracée automatiquement</span>
-        </div>
-        <div class="risk reveal" data-reveal data-reveal-delay="3" data-tilt>
-          <span class="risk-tag">PMS obligatoire</span>
-          <div class="ico">🧼</div>
-          <h3>Locaux & nuisibles</h3>
-          <p><strong>Plan de nettoyage non tenu, présence de nuisibles, PMS écrit absent</strong> : la cuisine doit raconter son hygiène.</p>
-          <span class="ok">✓ Guidé pas à pas</span>
-        </div>
-      </div>
-
-      <div class="stats-row" data-reveal="fade" data-reveal-delay="3">
-        <div class="stat alert" data-tilt>
-          <div class="n"><span data-counter="300" data-suffix="+">0</span></div>
-          <div class="l"><b>fermetures administratives</b> en 2024 — Seine-Saint-Denis seul</div>
-        </div>
-        <div class="stat gold" data-tilt>
-          <div class="n"><span data-counter="60" data-suffix=" s">0</span></div>
-          <div class="l">pour générer votre <b>Pack DDPP</b> complet, prêt à présenter</div>
-        </div>
-        <div class="stat" data-tilt>
-          <div class="n"><span data-counter="10" data-suffix=" j">0</span></div>
-          <div class="l"><b>d'essai gratuit</b> sur Nomos Traça — sans carte bancaire</div>
-        </div>
-      </div>
+<section id="faq" style="background:var(--cream)">
+  <div class="container">
+    <div class="sec-head-center" data-reveal>
+      <span class="sec-eyebrow">Questions</span>
+      <h2 class="sec-title">Vous vous demandiez…</h2>
     </div>
-  </section>
-
-  <!-- ══ COMPARATIF INTERACTIF ══ -->
-  <section class="compare-wrap">
-    <div class="container">
-      <div class="compare" id="cmp" data-reveal>
-        <div class="compare-head">
-          <h2 class="compare-title">Votre quotidien, avant et avec Nomos.</h2>
-          <div class="compare-toggle" role="button" tabindex="0" data-toggle-target="#cmp" aria-pressed="false">
-            <span class="off-label">Sans Nomos</span>
-            <span class="on-label">Avec Nomos</span>
-          </div>
-        </div>
-        <div class="compare-grid">
-          <div class="compare-item">
-            <div class="lbl">Relevés de température</div>
-            <div class="val"><span class="off">Classeur papier, pas tous les jours</span><span class="on">Saisis en 10 s, horodatés et signés</span></div>
-          </div>
-          <div class="compare-item">
-            <div class="lbl">Traçabilité</div>
-            <div class="val"><span class="off">Bons de livraison perdus</span><span class="on">Photos + lots retrouvables en un clic</span></div>
-          </div>
-          <div class="compare-item">
-            <div class="lbl">Pack DDPP</div>
-            <div class="val"><span class="off">À reconstituer la veille du contrôle</span><span class="on">Prêt à présenter, 60 s d'export</span></div>
-          </div>
-          <div class="compare-item">
-            <div class="lbl">Non-conformités</div>
-            <div class="val"><span class="off">Oubliées, sans action corrective</span><span class="on">Suivies et tracées jusqu'à la levée</span></div>
-          </div>
-          <div class="compare-item">
-            <div class="lbl">Équipe</div>
-            <div class="val"><span class="off">Chacun note sur son bout de papier</span><span class="on">Même app, signatures par personne</span></div>
-          </div>
-          <div class="compare-item">
-            <div class="lbl">Avant un contrôle DDPP</div>
-            <div class="val"><span class="off">Nuit blanche à ressortir les preuves</span><span class="on">Tout est déjà là. On ouvre, on montre.</span></div>
-          </div>
-        </div>
-      </div>
+    <div class="faq">
+      <div class="faq-item"><button class="faq-q" type="button" onclick="this.parentNode.classList.toggle('open')">Nomos remplace-t-il mon PMS ?<span class="faq-plus">+</span></button><div class="faq-a">Non. Nomos est un outil d'aide à la gestion et à l'autocontrôle. Il vous aide à prouver votre maîtrise des risques, mais la mise en place d'un Plan de Maîtrise Sanitaire et la formation hygiène (décret n° 2011-731) restent obligatoires.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button" onclick="this.parentNode.classList.toggle('open')">Est-ce compatible avec un contrôle DDPP ?<span class="faq-plus">+</span></button><div class="faq-a">Oui. Nomos s'appuie sur le règlement (CE) 852/2004 et l'arrêté du 21/12/2009. Vous générez un Pack DDPP qui regroupe vos relevés, vos bons et vos preuves de traçabilité, prêt à présenter.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button" onclick="this.parentNode.classList.toggle('open')">Combien de temps pour démarrer ?<span class="faq-plus">+</span></button><div class="faq-a">Dix minutes. Création du compte, ajout de votre établissement, premier relevé. Vous gardez 10 jours d'essai, sans carte bancaire, pour prendre vos marques.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button" onclick="this.parentNode.classList.toggle('open')">Ça marche hors-ligne ?<span class="faq-plus">+</span></button><div class="faq-a">Oui. L'app fonctionne même sans réseau. Vos saisies se synchronisent dès que la connexion revient.</div></div>
+      <div class="faq-item"><button class="faq-q" type="button" onclick="this.parentNode.classList.toggle('open')">Mes données sont-elles en sécurité ?<span class="faq-plus">+</span></button><div class="faq-a">Hébergement Supabase (AWS Irlande, UE), chiffrement HTTPS, cloisonnement strict par établissement (Row Level Security), RGPD. Vos preuves restent votre propriété.</div></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ══ COMBO (CTA final) ══ -->
-  <section class="combo">
-    <div class="container">
-      <div class="sec-head" data-reveal>
-        <span class="sec-tag">Le combo qui met à l'abri</span>
-        <h2 class="sec-title">Faites l'audit. Laissez Nomos Traça entretenir la conformité.</h2>
-        <p class="sec-intro">D'abord savoir où vous en êtes, puis prouver chaque jour que ça tient la route. Vous êtes prêt en permanence — sans y penser.</p>
-      </div>
-      <div class="cta-row" data-reveal data-reveal-delay="1">
-        <a class="btn btn-primary btn-lg btn-arrow" href="#" onclick="openRdv('Combo');return false;">Demander une démo gratuite</a>
-        <a class="btn btn-outline btn-lg" href="haccp.html?essai=1">Démarrer les 10 jours d'essai</a>
-      </div>
+<section class="cta-final">
+  <div class="container">
+    <h2>Cessez de <em>subir</em> la DDPP.<br>Commencez à la <em>préparer</em>.</h2>
+    <p>Dix minutes pour tout mettre en place. Dix jours gratuits pour en prendre l'habitude.</p>
+    <div style="display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <a class="btn btn-primary btn-lg btn-arrow" href="haccp.html?essai=1">Démarrer l'essai gratuit <i>→</i></a>
+      <a class="btn btn-outline btn-lg" href="#" onclick="openRdv('CTA');return false;">Demander une démo</a>
     </div>
-  </section>
+  </div>
+</section>
 
 </main>
 
-<!-- ══ FOOTER ══ -->
 <footer class="site">
-  <div class="container">
-    <div class="foot-grid">
-      <div class="foot-col foot-about">
-        <a class="brand" href="accueil.html">
-          <span class="brand-mark">N</span>
-          <span class="brand-name">Nomos HACCP</span>
-        </a>
-        <p>Outils d'aide à la gestion et à la mise en conformité HACCP, pensés pour les restaurateurs et les métiers de bouche.</p>
-      </div>
-      <div class="foot-col">
-        <h5>Produits</h5>
-        <a href="audit/index.html">Nomos Audit</a>
-        <a href="haccp.html">Nomos Traça</a>
-        <a href="audit/tarifs.html">Tarifs</a>
-      </div>
-      <div class="foot-col">
-        <h5>Ressources</h5>
-        <a href="blog/index.html">Blog</a>
-        <a href="#risques">Pourquoi Nomos</a>
-        <a href="#" onclick="installNomos();return false;">Installer l'app</a>
-      </div>
-      <div class="foot-col">
-        <h5>Contact</h5>
-        <a href="#" onclick="openRdv('Footer');return false;">Demander une démo</a>
-        <a href="mailto:lea@nomos-haccp.fr">lea@nomos-haccp.fr</a>
-      </div>
+  <div class="foot-row">
+    <div class="foot-col foot-about">
+      <a class="brand" href="accueil.html"><span class="brand-mark">N</span><span class="brand-name">Nomos HACCP</span></a>
+      <p>Outils d'aide à la gestion et à la mise en conformité HACCP, pensés pour les métiers de bouche.</p>
     </div>
-    <div class="foot-bottom">
-      <div>© Nomos HACCP · <span id="nomosVer">Version V298</span></div>
-      <div class="legal">
-        <a href="mentions.html">Mentions légales</a>
-        <a href="politique-confidentialite.html">Confidentialité</a>
-        <a href="cgv.html">CGV</a>
-        <a href="cgu.html">CGU</a>
-        <a href="registre-traitements.html">Registre RGPD</a>
-      </div>
+    <div class="foot-col">
+      <h5>Produits</h5>
+      <a href="audit/index.html">Nomos Audit</a>
+      <a href="haccp.html">Nomos Traça</a>
+      <a href="audit/tarifs.html">Tarifs</a>
     </div>
-    <p style="margin-top:20px;font-size:11.5px;color:var(--ink-4);line-height:1.5;max-width:720px">
-      Nomos HACCP est un outil d'aide à la gestion et à la mise en conformité. Il ne remplace pas l'obligation légale de formation ni la mise en place d'un Plan de Maîtrise Sanitaire.
-    </p>
+    <div class="foot-col">
+      <h5>Ressources</h5>
+      <a href="blog/index.html">Blog</a>
+      <a href="#faq">Questions</a>
+      <a href="#" onclick="installNomos();return false;">Installer l'app</a>
+    </div>
+    <div class="foot-col">
+      <h5>Contact</h5>
+      <a href="#" onclick="openRdv('Footer');return false;">Demander une démo</a>
+      <a href="mailto:lea@nomos-haccp.fr">lea@nomos-haccp.fr</a>
+    </div>
   </div>
+  <div class="foot-bottom">
+    <div>© Nomos HACCP · <span id="nomosVer">Version V298</span></div>
+    <div class="legal">
+      <a href="mentions.html">Mentions légales</a>
+      <a href="politique-confidentialite.html">Confidentialité</a>
+      <a href="cgv.html">CGV</a>
+      <a href="cgu.html">CGU</a>
+      <a href="registre-traitements.html">Registre RGPD</a>
+    </div>
+  </div>
+  <div class="container"><p class="foot-note">Nomos HACCP est un outil d'aide à la gestion et à la mise en conformité. Il ne remplace pas l'obligation légale de formation ni la mise en place d'un Plan de Maîtrise Sanitaire.</p></div>
 </footer>
 
-<!-- ══ FAB DÉMO ══ -->
-<button class="fab-demo" onclick="openRdv('FAB')" aria-label="Demander une démo">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-  Demander une démo
-</button>
-
-<!-- ══ MODALE DÉMO ══ -->
 <div class="rdv-overlay" id="rdvOverlay" onclick="if(event.target===this)closeRdv()">
   <div class="rdv" role="dialog" aria-modal="true" aria-labelledby="rdvTitle">
     <button class="x" onclick="closeRdv()" aria-label="Fermer">✕</button>
     <div id="rdvForm">
-      <span class="pre">Démo gratuite · 10 min</span>
-      <h3 id="rdvTitle">Et si on en parlait ?</h3>
-      <p class="lead">On vous montre Nomos en direct — relevés, audit, Pack DDPP — et on répond à toutes vos questions. On s'organise selon vous.</p>
+      <span class="pre">Démo · 10 min</span>
+      <h3 id="rdvTitle">On vous montre Nomos en direct.</h3>
+      <p class="lead">Un échange rapide pour vous présenter l'app, répondre à vos questions et vous aider à démarrer.</p>
       <div class="f">
         <input type="text" id="rdvWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
         <input type="text" id="rdvNom" placeholder="Votre nom / établissement" autocomplete="name">
@@ -982,149 +636,57 @@ section.compare-wrap{padding:clamp(36px,5vw,64px) 0;background:var(--bg-alt)}
       <div class="big">✓</div>
       <h4>C'est noté, merci.</h4>
       <p>On vous recontacte très vite pour convenir d'un créneau.</p>
-      <button class="send" style="margin-top:16px" onclick="closeRdv()">Fermer</button>
+      <button class="send" style="margin-top:14px" onclick="closeRdv()">Fermer</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ── Reveal animations (apparition douce une fois) ── */
-document.documentElement.classList.add('js');
-requestAnimationFrame(function(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});});
-
-/* ── Menu drawer ── */
-function openMenu(){
-  document.getElementById('menu').classList.add('open');
-  document.getElementById('menuOverlay').classList.add('open');
-  document.getElementById('menu').setAttribute('aria-hidden','false');
-}
-function closeMenu(){
-  document.getElementById('menu').classList.remove('open');
-  document.getElementById('menuOverlay').classList.remove('open');
-  document.getElementById('menu').setAttribute('aria-hidden','true');
-}
+function openMenu(){var m=document.getElementById('menu'),o=document.getElementById('menuOverlay');m.classList.add('open');o.classList.add('open');m.setAttribute('aria-hidden','false');}
+function closeMenu(){var m=document.getElementById('menu'),o=document.getElementById('menuOverlay');m.classList.remove('open');o.classList.remove('open');m.setAttribute('aria-hidden','true');}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeMenu();closeRdv();}});
 
-/* ── Partage natif ── */
-function partagerNomos(){
-  var url='https://nomos-haccp.fr';
-  var data={title:'Nomos HACCP',text:'Nomos — audit & hygiène alimentaire, prêt pour vos contrôles DDPP.',url:url};
-  try{ if(navigator.share){ navigator.share(data).catch(function(){}); return; } }catch(e){}
-  try{
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(url).then(function(){ alert('Lien copié : '+url); }).catch(function(){ window.prompt('Copiez le lien :',url); });
-      return;
-    }
-  }catch(e){}
-  window.prompt('Copiez le lien :',url);
-}
+function partagerNomos(){var url='https://nomos-haccp.fr';var data={title:'Nomos HACCP',text:'Nomos — audit & hygiène alimentaire, prêt pour vos contrôles DDPP.',url:url};try{if(navigator.share){navigator.share(data).catch(function(){});return;}}catch(e){}try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(function(){alert('Lien copié : '+url);}).catch(function(){window.prompt('Copiez le lien :',url);});return;}}catch(e){}window.prompt('Copiez le lien :',url);}
 
-/* ── Modale Démo / RDV ── */
 var _rdvSource='';
-function openRdv(src){
-  _rdvSource=src||'';
-  document.getElementById('rdvForm').style.display='block';
-  document.getElementById('rdvOk').style.display='none';
-  document.getElementById('rdvOverlay').classList.add('open');
-  closeMenu();
-}
-function closeRdv(){ document.getElementById('rdvOverlay').classList.remove('open'); }
+function openRdv(src){_rdvSource=src||'';document.getElementById('rdvForm').style.display='block';document.getElementById('rdvOk').style.display='none';document.getElementById('rdvOverlay').classList.add('open');closeMenu();}
+function closeRdv(){document.getElementById('rdvOverlay').classList.remove('open');}
 
-/* ── Installation PWA ── */
 var _deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); _deferredPrompt=e; });
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_deferredPrompt=e;});
 function installNomos(){
-  if(_deferredPrompt){
-    _deferredPrompt.prompt();
-    if(_deferredPrompt.userChoice){ _deferredPrompt.userChoice.then(function(){ _deferredPrompt=null; }); }
-    return;
-  }
+  if(_deferredPrompt){_deferredPrompt.prompt();if(_deferredPrompt.userChoice){_deferredPrompt.userChoice.then(function(){_deferredPrompt=null;});}return;}
   var ua=navigator.userAgent||'';
-  if(/iPhone|iPad|iPod/i.test(ua)){
-    alert("Installer Nomos sur iPhone / iPad :\n\n1. Toucher le bouton Partager (↑) en bas de Safari.\n2. Choisir « Sur l'écran d'accueil ».\n3. Valider — l'icône Nomos apparaît sur votre écran d'accueil.");
-  } else {
-    alert("Installer Nomos sur votre PC :\n\n• Microsoft Edge : menu ··· (en haut à droite) → Applications → « Installer ce site en tant qu'application ».\n• Google Chrome : menu ⋮ → « Installer l'application… », ou l'icône d'installation (⊞) dans la barre d'adresse.");
-  }
+  if(/iPhone|iPad|iPod/i.test(ua)){alert("Installer Nomos sur iPhone / iPad :\n\n1. Toucher le bouton Partager (↑) en bas de Safari.\n2. Choisir « Sur l'écran d'accueil ».\n3. Valider.");}
+  else{alert("Installer Nomos sur votre PC :\n\n• Edge : menu ··· → Applications → « Installer ce site en tant qu'application ».\n• Chrome : menu ⋮ → « Installer l'application… ».");}
 }
 
-/* ── Badge version (ver.txt déployé) ── */
-(function(){
-  try{
-    fetch('ver.txt?t='+Date.now(),{cache:'no-store'})
-      .then(function(r){return r.ok?r.text():null;})
-      .then(function(t){
-        if(t&&/\d/.test(t)){
-          var el=document.getElementById('nomosVer');
-          if(el) el.textContent='Version V'+t.trim();
-        }
-      }).catch(function(){});
-  }catch(e){}
-})();
+(function(){try{fetch('ver.txt?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():null;}).then(function(t){if(t&&/\d/.test(t)){var el=document.getElementById('nomosVer');if(el)el.textContent='Version V'+t.trim();}}).catch(function(){});}catch(e){}})();
 
-/* ── Envoi formulaire démo (Supabase principal + EmailJS de secours) ── */
 function sendRdv(){
-  var _hp=document.getElementById('rdvWebsite');
-  if(_hp&&_hp.value.trim()!==''){
-    document.getElementById('rdvForm').style.display='none';
-    document.getElementById('rdvOk').style.display='block';
-    return;
-  }
+  var _hp=document.getElementById('rdvWebsite');if(_hp&&_hp.value.trim()!==''){document.getElementById('rdvForm').style.display='none';document.getElementById('rdvOk').style.display='block';return;}
   var nom=(document.getElementById('rdvNom').value||'').trim();
   var email=(document.getElementById('rdvEmail').value||'').trim();
   var tel=(document.getElementById('rdvTel').value||'').trim();
   var cp=(document.getElementById('rdvCp').value||'').trim();
   var msg=(document.getElementById('rdvMsg').value||'').trim();
-  if(!nom||(!tel&&!email)){
-    alert("Merci d'indiquer au moins votre nom et un téléphone ou un email pour qu'on puisse vous recontacter.");
-    return;
-  }
-  if(email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
-    alert("L'email saisi ne semble pas valide. Corrigez-le ou laissez-le vide si vous préférez être rappelé.");
-    return;
-  }
-  var btn=document.getElementById('rdvSend');
-  btn.disabled=true; btn.textContent='Envoi…';
+  if(!nom||(!tel&&!email)){alert("Merci d'indiquer au moins votre nom et un téléphone ou un email.");return;}
+  if(email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){alert("L'email saisi ne semble pas valide.");return;}
+  var btn=document.getElementById('rdvSend');btn.disabled=true;btn.textContent='Envoi…';
   var corps='Code postal : '+(cp||'—')+(msg?('\nMessage : '+msg):'')+'\nDepuis : accueil Nomos ('+_rdvSource+')';
   var blocInfos='📅 DÉMO/RDV  |  Nom : '+nom+'  |  Tél : '+(tel||'—')+'  |  Email : '+(email||'—')+'  |  CP : '+(cp||'—')+(msg?('  |  Message : '+msg):'');
-
   function done(ok){
-    if(ok){
-      document.getElementById('rdvForm').style.display='none';
-      document.getElementById('rdvOk').style.display='block';
-    } else {
-      var sujet=encodeURIComponent('Demande de démo Nomos — '+nom);
-      var body=encodeURIComponent('Nom : '+nom+'\nEmail : '+email+'\nTéléphone : '+tel+'\n'+corps);
-      window.location.href='mailto:lea@nomos-haccp.fr?subject='+sujet+'&body='+body;
-    }
-    btn.disabled=false; btn.textContent='Réserver ma démo →';
+    if(ok){document.getElementById('rdvForm').style.display='none';document.getElementById('rdvOk').style.display='block';}
+    else{var sujet=encodeURIComponent('Demande de démo Nomos — '+nom);var body=encodeURIComponent('Nom : '+nom+'\nEmail : '+email+'\nTéléphone : '+tel+'\n'+corps);window.location.href='mailto:lea@nomos-haccp.fr?subject='+sujet+'&body='+body;}
+    btn.disabled=false;btn.textContent='Réserver ma démo →';
   }
-  var _fini=false;
-  var _terminer=function(ok){ if(_fini) return; _fini=true; done(ok); };
-  var _to=setTimeout(function(){ _terminer(false); },12000);
-  var _repliEmailJS=function(){
-    try{
-      if(typeof emailjs==='undefined'||!emailjs.send){ clearTimeout(_to); _terminer(false); return; }
-      emailjs.send('service_84lz31w','template_ti43bkh',{
-        to_name:'Administrateur Nomos', to_email:'lea@nomos-haccp.fr', email:'lea@nomos-haccp.fr',
-        code:blocInfos, service:corps, business:nom, resp:nom, tel:tel,
-        client_email:email, lien_site:location.href, date:new Date().toLocaleDateString('fr-FR')
-      }).then(function(){ clearTimeout(_to); _terminer(true); },function(err){ console.warn('RDV email KO',err); clearTimeout(_to); _terminer(false); });
-    }catch(e){ clearTimeout(_to); _terminer(false); }
-  };
+  var _fini=false,_terminer=function(ok){if(_fini)return;_fini=true;done(ok);};
+  var _to=setTimeout(function(){_terminer(false);},12000);
+  var _repliEmailJS=function(){try{if(typeof emailjs==='undefined'||!emailjs.send){clearTimeout(_to);_terminer(false);return;}emailjs.send('service_84lz31w','template_ti43bkh',{to_name:'Administrateur Nomos',to_email:'lea@nomos-haccp.fr',email:'lea@nomos-haccp.fr',code:blocInfos,service:corps,business:nom,resp:nom,tel:tel,client_email:email,lien_site:location.href,date:new Date().toLocaleDateString('fr-FR')}).then(function(){clearTimeout(_to);_terminer(true);},function(err){console.warn('RDV email KO',err);clearTimeout(_to);_terminer(false);});}catch(e){clearTimeout(_to);_terminer(false);}};
   try{
     var NOMOS_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtpa25heHV6cG92dml2a2pxenNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NjQ3OTcsImV4cCI6MjA5MjQ0MDc5N30._LY5my720EJOo-9byuA65zVbUv7PsGeXUK_R2kzkxHA';
-    fetch('https://kiknaxuzpovvivkjqzss.supabase.co/functions/v1/envoyer-email',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+NOMOS_ANON,'apikey':NOMOS_ANON},
-      body:JSON.stringify({ type:'admin', params:{
-        etablissement:nom, responsable:nom, email_client:email, telephone:tel,
-        formule:'Demande de démo (site)',
-        message:'Nouvelle demande de démo depuis le site.\n\n'+corps+'\n\n'+blocInfos
-      }})
-    }).then(function(r){return r.ok?r.json():null;}).then(function(j){
-      if(j&&j.ok){ clearTimeout(_to); _terminer(true); } else { _repliEmailJS(); }
-    }).catch(function(){ _repliEmailJS(); });
-  }catch(e){ _repliEmailJS(); }
+    fetch('https://kiknaxuzpovvivkjqzss.supabase.co/functions/v1/envoyer-email',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+NOMOS_ANON,'apikey':NOMOS_ANON},body:JSON.stringify({type:'admin',params:{etablissement:nom,responsable:nom,email_client:email,telephone:tel,formule:'Demande de démo (site)',message:'Nouvelle demande de démo depuis le site.\n\n'+corps+'\n\n'+blocInfos}})}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.ok){clearTimeout(_to);_terminer(true);}else{_repliEmailJS();}}).catch(function(){_repliEmailJS();});
+  }catch(e){_repliEmailJS();}
 }
 </script>
 <script src="motion.js" defer></script>
