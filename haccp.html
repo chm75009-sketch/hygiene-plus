@@ -273,6 +273,9 @@ html, body { max-width: 100%; overflow-x: hidden; }
       }
       /* Neutralise le .app wrapper (ombre, bg) quand on est sur la présentation */
       .app:has(#page-presentation.active){background:transparent;box-shadow:none;max-width:none}
+      /* Masque la nav d'appli interne et le bouton scroll-top sur la présentation */
+      .app:has(#page-presentation.active) .bnav,
+      .app:has(#page-presentation.active) #btnScrollTop{display:none!important}
       #page-presentation .pr-serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-style:italic}
       #page-presentation .pr-container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,3vw,28px)}
 
