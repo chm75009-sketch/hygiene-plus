@@ -1301,7 +1301,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <div class="hero-title">Tableau de bord <em>HACCP</em></div>
             <div class="hero-sub" id="heroDate"></div>
           </div>
-          <button onclick="ouvrirReglages()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 12px;color:white;font-size:12px;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;flex-shrink:0;margin-top:4px">⚙️ Réglages</button>
+          <button onclick="ouvrirReglages()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 12px;color:white;font-size:12px;cursor:pointer;font-family:Inter,system-ui,sans-serif;flex-shrink:0;margin-top:4px;display:inline-flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Réglages</button>
         </div>
         <div class="kpi-row">
           <div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Contrôles aujourd'hui</div></div>
@@ -1309,21 +1309,21 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Score conformité</div></div>
         </div>
         <div role="button" tabindex="0" aria-label="Un contrôle ? Présenter ma conformité" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="ouvrirModeInspecteur('page-home')" style="background:linear-gradient(135deg,#dc2626,#ef4444);border-radius:14px;padding:14px;margin-top:12px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 6px 22px rgba(220,38,38,.4)">
-          <div style="font-size:26px;flex-shrink:0">🚨</div>
-          <div style="flex:1"><div style="color:white;font-weight:900;font-size:15px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.2">Un contrôle ? Appuyer ici</div><div style="color:rgba(255,255,255,.85);font-size:11px;margin-top:2px">Présenter votre conformité en 10 secondes</div></div>
-          <div style="color:rgba(255,255,255,.7);font-size:20px">›</div>
+          <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.18);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div style="flex:1"><div style="color:white;font-weight:800;font-size:15px;font-family:Inter,system-ui,sans-serif;line-height:1.2">Un contrôle ? Appuyez ici</div><div style="color:rgba(255,255,255,.85);font-size:11px;margin-top:2px">Présenter votre conformité en 10 secondes</div></div>
+          <div style="color:rgba(255,255,255,.7);font-size:18px">›</div>
         </div>
       </div>
       <!-- Recherche « je veux… » (voix ou texte) — remplie par script.js -->
       <div id="irZone-home" style="padding:1px 0"></div>
       <div class="alert-wrap">
         <div class="alert" style="opacity:.75">
-          <div class="alert-ico">✅</div>
+          <div class="alert-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
           <div><div class="alert-title">Aucune alerte pour le moment</div><div class="alert-desc">Vos non-conformités et dépassements de seuil s'afficheront ici automatiquement.</div></div>
         </div>
       </div>
       <div class="legal-banner">
-        <div class="legal-ico">⚖️</div>
+        <div class="legal-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><path d="M5 7h14"/><path d="M5 7l-3 7h6l-3-7z"/><path d="M19 7l-3 7h6l-3-7z"/></svg></div>
         <div class="legal-text"><strong>Avertissement :</strong> Ce logiciel est un outil d'aide à la gestion HACCP. Il ne remplace pas l'obligation légale de formation ni la mise en place d'un Plan de Maîtrise Sanitaire. L'établissement reste seul responsable de sa conformité réglementaire.</div>
       </div>
       <div class="sec-head"><h2>Modules de contrôle</h2><a onclick="showPage('page-history')">Historique →</a></div>
