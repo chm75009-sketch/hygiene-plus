@@ -49,7 +49,7 @@ if ('serviceWorker' in navigator) {
     b.type = 'button';
     b.setAttribute('aria-label', "Installer l'application");
     b.textContent = "📥 Installer l'application";
-    b.style.cssText = 'position:fixed;right:16px;top:14px;z-index:99999;background:#153e35;color:#fff;border:none;border-radius:999px;padding:11px 18px;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.32)';
+    b.style.cssText = 'position:fixed;right:16px;top:14px;z-index:99999;background:#153e35;color:#fff;border:none;border-radius:999px;padding:11px 18px;font-family:Inter,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.32)';
     b.onclick = function () {
       if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -231,78 +231,171 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
 <div id="landingPage">
   <div id="landingPage" style="font-family:'Inter',system-ui,sans-serif;min-height:100vh;background:radial-gradient(circle at top left,rgba(210,173,70,.07),transparent 24%),radial-gradient(circle at bottom right,rgba(59,138,119,.07),transparent 20%),linear-gradient(180deg,#fbfaf7 0%,#f5f2ea 100%)">
 
-  <!-- ── NAVBAR ── -->
+  <!-- ── NAVBAR + CHARTE pr-* ── -->
   <style>
-  .cf-nav-header{position:sticky;top:0;z-index:1000;background:rgba(248,246,239,.97);backdrop-filter:blur(14px);border-bottom:1px solid rgba(21,62,53,.08);box-shadow:0 2px 16px rgba(21,62,53,.06)}
-  .cf-nav-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;min-height:64px;gap:12px}
-  .cf-nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
-  .cf-nav-logo-icon{width:42px;height:42px;border-radius:12px;background:#1f5649;color:#fff;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center;letter-spacing:.06em;border:1px solid rgba(31,86,73,.25);flex-shrink:0}
-  .cf-nav-logo-text{display:flex;flex-direction:column}
-  .cf-nav-logo-name{font-weight:900;font-size:.95rem;letter-spacing:.08em;color:#153e35;line-height:1}
-  .cf-nav-logo-sub{font-size:.62rem;color:#65716b;font-weight:700;letter-spacing:.08em;text-transform:uppercase;line-height:1;margin-top:2px}
-  /* Desktop nav links */
-  .cf-nav-links{display:flex;justify-content:center;gap:18px;align-items:center;flex-wrap:wrap;flex:1}
-  .cf-nav-links a{color:#65716b;font-weight:700;font-size:.88rem;text-decoration:none;white-space:nowrap}
-  .cf-nav-links a:hover{color:#153e35}
-  .cf-nav-links a.active{color:#153e35;background:rgba(21,62,53,.07);padding:4px 11px;border-radius:999px}
-  /* Bouton accès */
-  .cf-nav-btn{padding:8px 18px;background:#fff;color:#153e35;border:2.5px solid #153e35;border-radius:999px;cursor:pointer;font-weight:900;font-size:.88rem;box-shadow:0 2px 8px rgba(21,62,53,.12);white-space:nowrap;flex-shrink:0;font-family:'Inter',system-ui,sans-serif}
-  /* Hamburger */
-  .cf-nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;flex-shrink:0}
-  .cf-nav-burger span{display:block;height:2px;background:#153e35;border-radius:2px;transition:all .25s}
-  .cf-nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-  .cf-nav-burger.open span:nth-child(2){opacity:0}
-  .cf-nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-  /* Menu mobile déroulant */
-  .cf-nav-mobile{display:none;flex-direction:column;gap:0;background:rgba(248,246,239,.99);border-top:1px solid rgba(21,62,53,.08);padding:6px 0 14px;width:100%;overflow:hidden;box-sizing:border-box}
-  .cf-nav-mobile a{display:block;padding:12px 20px;color:#153e35;font-weight:700;font-size:.93rem;text-decoration:none;border-bottom:1px solid rgba(21,62,53,.05);text-align:left;box-sizing:border-box;width:100%}
-  .cf-nav-mobile a:last-of-type{border-bottom:none}
-  .cf-nav-mobile a:active{background:rgba(21,62,53,.06)}
-  .cf-nav-mobile .cf-nav-mobile-btn{display:block;margin:10px 16px 0;padding:12px 20px;background:#153e35;color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:900;font-size:.93rem;font-family:'Inter',system-ui,sans-serif;width:calc(100% - 32px);text-align:center;box-sizing:border-box}
-  @media(max-width:768px){
-    .cf-nav-links{display:none}
-    .cf-nav-btn{display:none}
-    .cf-nav-burger{display:flex}
-    .cf-nav-logo-sub{display:none}
-    .cf-nav-mobile.open{display:flex}
+  /* === Palette Nomos === */
+  #landingPage{
+    --pr-bg:#faf8f3;--pr-cream:#f5f2ea;--pr-line:#e7e3d9;--pr-line-soft:#efece4;
+    --pr-ink:#0a0a0a;--pr-ink-2:#4a4a4a;--pr-ink-3:#8a8a8a;--pr-ink-4:#b4b4b4;
+    --pr-accent:#0f766e;--pr-accent-2:#0d4a43;--pr-accent-soft:#eefaf6;
+    --pr-gold:#d2ad46;--pr-gold-dk:#8a6f22;--pr-danger:#d84f43;
+    --pr-ease:cubic-bezier(.22,.61,.36,1);
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;color:var(--pr-ink);background:var(--pr-bg)
   }
+  #landingPage .pr-serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-style:italic}
+  #landingPage .pr-container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,3vw,28px)}
+
+  /* NAV sticky */
+  #landingPage .pr-nav{position:sticky;top:0;z-index:50;background:rgba(250,248,243,.82);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--pr-line-soft)}
+  #landingPage .pr-nav-row{max-width:1200px;margin:0 auto;padding:12px clamp(16px,3vw,28px);display:flex;align-items:center;gap:18px}
+  #landingPage .pr-brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:var(--pr-ink);font-weight:600;font-size:15px;letter-spacing:-.02em}
+  #landingPage .pr-brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--pr-accent),var(--pr-accent-2));color:#fff;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(15,118,110,.25)}
+  #landingPage .pr-brand-mark svg{width:14px;height:14px}
+  #landingPage .pr-brand em{font-style:normal;color:var(--pr-gold-dk);font-weight:600}
+  #landingPage .pr-nav-links{display:none;flex:1;justify-content:center;gap:4px}
+  #landingPage .pr-nav-links a{color:var(--pr-ink-2);font-size:13.5px;font-weight:500;text-decoration:none;padding:7px 12px;border-radius:999px;transition:background .15s,color .15s}
+  #landingPage .pr-nav-links a:hover{color:var(--pr-ink);background:var(--pr-line-soft)}
+  #landingPage .pr-nav-links a.on{color:var(--pr-ink);background:var(--pr-cream)}
+  #landingPage .pr-nav-cta{margin-left:auto;display:flex;align-items:center;gap:8px}
+  @media(min-width:960px){#landingPage .pr-nav-links{display:flex} #landingPage .pr-nav-burger{display:none!important}}
+  #landingPage .pr-nav-burger{width:38px;height:38px;border:1px solid var(--pr-line);border-radius:10px;background:var(--pr-bg);cursor:pointer;color:var(--pr-ink);display:inline-flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:10px}
+  #landingPage .pr-nav-burger span{display:block;width:16px;height:2px;background:var(--pr-ink);border-radius:2px;transition:all .25s}
+  #landingPage .pr-nav-burger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  #landingPage .pr-nav-burger.open span:nth-child(2){opacity:0}
+  #landingPage .pr-nav-burger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  #landingPage #cfMobileNav{display:none;flex-direction:column;background:rgba(250,248,243,.98);border-top:1px solid var(--pr-line-soft);padding:8px 16px 16px}
+  #landingPage #cfMobileNav a{display:block;padding:11px 10px;color:var(--pr-ink-2);font-size:14px;font-weight:500;text-decoration:none;border-radius:10px}
+  #landingPage #cfMobileNav a:active,#landingPage #cfMobileNav a:hover{background:var(--pr-line-soft);color:var(--pr-ink)}
+  #landingPage #cfMobileNav.open{display:flex}
+
+  /* Boutons */
+  #landingPage .pr-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 18px;border-radius:999px;font-family:inherit;font-weight:500;font-size:14px;letter-spacing:-.005em;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .18s var(--pr-ease),border-color .18s,color .18s,transform .12s;white-space:nowrap;position:relative;overflow:hidden}
+  #landingPage .pr-btn:active{transform:scale(.98)}
+  #landingPage .pr-btn-primary{background:var(--pr-ink);color:#fff}
+  #landingPage .pr-btn-primary:hover{background:#262626}
+  #landingPage .pr-btn-outline{background:var(--pr-bg);color:var(--pr-ink);border-color:var(--pr-line)}
+  #landingPage .pr-btn-outline:hover{background:var(--pr-line-soft)}
+  #landingPage .pr-btn-ghost{background:transparent;color:var(--pr-ink-2)}
+  #landingPage .pr-btn-ghost:hover{color:var(--pr-ink);background:var(--pr-line-soft)}
+  #landingPage .pr-btn-gold{background:var(--pr-gold);color:#3b2c05}
+  #landingPage .pr-btn-gold:hover{background:#c8a23b}
+  #landingPage .pr-btn-sm{height:34px;padding:0 14px;font-size:13px}
+  #landingPage .pr-btn-lg{height:46px;padding:0 22px;font-size:15px}
+  #landingPage .pr-btn-arrow i{display:inline-block;transition:transform .2s;font-style:normal}
+  #landingPage .pr-btn-arrow:hover i{transform:translateX(3px)}
+
+  /* Hero */
+  #landingPage .pr-hero{position:relative;padding:clamp(32px,5vw,72px) 0 clamp(40px,5vw,64px);overflow:hidden;background:var(--pr-bg)}
+  #landingPage .pr-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(10,10,10,.035) 1px,transparent 1px),linear-gradient(to bottom,rgba(10,10,10,.035) 1px,transparent 1px);background-size:52px 52px;-webkit-mask:radial-gradient(1100px 600px at 50% 30%,#000,transparent 75%);mask:radial-gradient(1100px 600px at 50% 30%,#000,transparent 75%);pointer-events:none}
+  #landingPage .pr-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(900px 500px at 85% 0%,rgba(15,118,110,.14),transparent 55%),radial-gradient(700px 400px at 10% 100%,rgba(210,173,70,.1),transparent 55%);pointer-events:none;z-index:0}
+  #landingPage .pr-hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,3vw,48px);align-items:center;max-width:1200px;margin:0 auto;padding:0 clamp(16px,3vw,28px)}
+  @media(max-width:920px){#landingPage .pr-hero-inner{grid-template-columns:1fr;gap:24px}}
+  #landingPage .pr-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 7px;border-radius:999px;background:#fff;border:1px solid var(--pr-line);color:var(--pr-ink-2);font-size:12.5px;font-weight:500;margin-bottom:18px;box-shadow:0 1px 2px rgba(10,10,10,.04)}
+  #landingPage .pr-b-dot{width:16px;height:16px;border-radius:50%;background:var(--pr-accent-soft);display:inline-flex;align-items:center;justify-content:center}
+  #landingPage .pr-b-dot::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--pr-accent)}
+  #landingPage .pr-h1{font-size:clamp(28px,4.5vw,52px);line-height:1.04;letter-spacing:-.03em;font-weight:600;color:var(--pr-ink);margin:0}
+  #landingPage .pr-h1 em{font-style:normal;color:var(--pr-accent)}
+  #landingPage .pr-hero-sub{margin:18px 0 0;max-width:520px;font-size:15.5px;line-height:1.55;color:var(--pr-ink-2)}
+  #landingPage .pr-hero-cta{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+  #landingPage .pr-hero-trust{margin-top:24px;display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--pr-ink-3)}
+  #landingPage .pr-hero-trust b{color:var(--pr-ink);font-weight:600}
+
+  /* Mockup dashboard */
+  #landingPage .pr-mock-wrap{position:relative;z-index:1}
+  #landingPage .pr-mock{background:#fff;border:1px solid var(--pr-line);border-radius:18px;padding:18px;box-shadow:0 30px 60px -22px rgba(10,10,10,.18),0 2px 8px rgba(10,10,10,.05);transform:rotateY(-4deg) rotateX(3deg);transform-origin:center;transform-style:preserve-3d}
+  #landingPage .pr-mock-head{display:flex;align-items:center;gap:6px;margin-bottom:12px}
+  #landingPage .pr-mock-head .d{width:8px;height:8px;border-radius:50%}
+  #landingPage .pr-mock-head .d.r{background:#ff6f61}
+  #landingPage .pr-mock-head .d.y{background:#ffcf40}
+  #landingPage .pr-mock-head .d.g{background:#34c759}
+  #landingPage .pr-mock-head small{font-size:11px;color:var(--pr-ink-3);margin-left:auto}
+  #landingPage .pr-mock-head b{color:var(--pr-ink);font-weight:600}
+  #landingPage .pr-mock-sec{font-size:10px;font-weight:600;color:var(--pr-ink-3);text-transform:uppercase;letter-spacing:.08em;margin:6px 2px 8px}
+  #landingPage .pr-mock-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+  #landingPage .pr-mock-kpi{background:var(--pr-cream);border-radius:12px;padding:10px 12px}
+  #landingPage .pr-mock-kpi .n{font-size:18px;font-weight:700;color:var(--pr-ink);letter-spacing:-.02em;line-height:1}
+  #landingPage .pr-mock-kpi.ok .n{color:var(--pr-accent)}
+  #landingPage .pr-mock-kpi.warn .n{color:var(--pr-gold-dk)}
+  #landingPage .pr-mock-kpi.bad .n{color:var(--pr-danger)}
+  #landingPage .pr-mock-kpi .l{font-size:10px;color:var(--pr-ink-3);margin-top:4px;line-height:1.2}
+  #landingPage .pr-mock-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:var(--pr-cream);border:1px solid transparent;margin-bottom:6px}
+  #landingPage .pr-mock-row-i{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;flex-shrink:0}
+  #landingPage .pr-mock-row-i.ok{background:var(--pr-accent)}
+  #landingPage .pr-mock-row-i.warn{background:var(--pr-gold)}
+  #landingPage .pr-mock-row-i.bad{background:var(--pr-danger)}
+  #landingPage .pr-mock-row-txt{font-size:11.5px;color:var(--pr-ink);font-weight:500;flex:1;line-height:1.3}
+  #landingPage .pr-mock-row-pct{font-size:11px;color:var(--pr-ink-3);font-weight:600}
+  #landingPage .pr-mock-cta{margin-top:10px;background:var(--pr-ink);color:#fff;border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+  #landingPage .pr-mock-cta .dot{width:8px;height:8px;border-radius:50%;background:var(--pr-gold)}
+  #landingPage .pr-sticker{position:absolute;background:#fff;border:1px solid var(--pr-line);border-radius:12px;padding:10px 14px;box-shadow:0 20px 40px -20px rgba(10,10,10,.18),0 2px 6px rgba(10,10,10,.05);font-size:12px;color:var(--pr-ink);font-weight:500;display:flex;align-items:center;gap:8px;z-index:2}
+  #landingPage .pr-sticker svg{width:14px;height:14px;color:var(--pr-accent)}
+  #landingPage .pr-sticker-1{top:-14px;left:-12px;background:var(--pr-gold);color:#3b2c05}
+  #landingPage .pr-sticker-1 svg{color:#3b2c05}
+  #landingPage .pr-sticker-2{bottom:-12px;right:-10px}
+
+  /* Section générique */
+  #landingPage .pr-sec{padding:clamp(48px,6vw,88px) 0;position:relative}
+  #landingPage .pr-sec.pr-alt{background:var(--pr-cream)}
+  #landingPage .pr-sec-head{text-align:center;max-width:720px;margin:0 auto 36px;position:relative;z-index:1}
+  #landingPage .pr-sec-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--pr-accent);letter-spacing:.06em;text-transform:uppercase;background:var(--pr-accent-soft);padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  #landingPage .pr-sec-title{font-size:clamp(24px,3.2vw,36px);line-height:1.1;letter-spacing:-.025em;font-weight:600;color:var(--pr-ink);margin:0}
+  #landingPage .pr-sec-title em{font-style:normal;color:var(--pr-accent)}
+  #landingPage .pr-sec-sub{margin-top:10px;font-size:15px;color:var(--pr-ink-2);line-height:1.55}
+
+  /* Feature cards (4 pôles) */
+  #landingPage .pr-features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative;z-index:1}
+  @media(max-width:1000px){#landingPage .pr-features{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){#landingPage .pr-features{grid-template-columns:1fr}}
+  #landingPage .pr-feat{background:#fff;border:1px solid var(--pr-line);border-radius:16px;padding:20px;display:flex;flex-direction:column;transition:transform .25s var(--pr-ease),box-shadow .25s,border-color .25s;text-decoration:none;color:inherit}
+  #landingPage .pr-feat:hover{transform:translateY(-3px);box-shadow:0 14px 30px -14px rgba(10,10,10,.1);border-color:rgba(15,118,110,.2)}
+  #landingPage .pr-feat-tag{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;color:var(--pr-accent);background:var(--pr-accent-soft);padding:4px 9px;border-radius:999px;align-self:flex-start;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+  #landingPage .pr-feat.pr-feat-gold .pr-feat-tag{color:var(--pr-gold-dk);background:rgba(210,173,70,.12)}
+  #landingPage .pr-feat.pr-feat-gold{background:linear-gradient(180deg,#fff,#fdf8e9);border-color:rgba(210,173,70,.22)}
+  #landingPage .pr-feat-h{font-size:15px;font-weight:600;color:var(--pr-ink);letter-spacing:-.015em;margin:0 0 6px;line-height:1.25}
+  #landingPage .pr-feat-p{font-size:13px;color:var(--pr-ink-3);line-height:1.5;flex:1;margin:0 0 14px}
+  #landingPage .pr-feat-cta{color:var(--pr-ink);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:4px;align-self:flex-start;text-decoration:none}
+  #landingPage .pr-feat-cta i{font-style:normal;transition:transform .2s}
+  #landingPage .pr-feat:hover .pr-feat-cta i{transform:translateX(3px)}
+
+  /* Pills hero */
+  #landingPage .pr-hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  #landingPage .pr-hero-pill{padding:6px 12px;border-radius:999px;background:#fff;border:1px solid var(--pr-line);color:var(--pr-ink-2);font-weight:500;font-size:12.5px}
+
+  /* Masquer l'ancienne nav cf-* si encore présente */
+  #landingPage .cf-nav-header{display:none!important}
   </style>
-  <header class="cf-nav-header">
-    <div class="cf-nav-inner">
-      <a href="#top" class="cf-nav-logo">
-        <div class="cf-nav-logo-icon">N</div>
-        <div class="cf-nav-logo-text">
-          <span class="cf-nav-logo-name">NOMOS</span>
-          <span class="cf-nav-logo-sub">Audit Hygiène &amp; Sécurité Alimentaire</span>
-        </div>
+  <header class="pr-nav">
+    <div class="pr-nav-row">
+      <a href="#top" class="pr-brand" aria-label="Nomos Audit">
+        <span class="pr-brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        Nomos <em>Audit</em>
       </a>
-      <nav class="cf-nav-links">
-        <a href="../accueil.html" style="font-weight:800;color:#1e1b4b">🏠 Accueil</a>
-        <a href="index.html">Accueil audit</a>
-        <a href="documents.html">📋 Vos Documents</a>
-        <a href="controles.html">📊 Contrôles dans votre département</a>
-        <a href="sanctions.html">⚖️ Cas Réels &amp; Sanctions</a>
-        <a href="tarifs.html">💶 Tarifs</a>
-        <a href="audit.html">🔍 Mon Audit</a>
-        <a href="tarifs.html#contact-tarifs">📩 Contact</a>
-        <a href="tarifs.html#faq">❓ FAQ</a>
+      <nav class="pr-nav-links" aria-label="Navigation">
+        <a href="../accueil.html">Accueil</a>
+        <a href="index.html" class="on">Audit</a>
+        <a href="documents.html">Documents</a>
+        <a href="controles.html">Contrôles DDPP</a>
+        <a href="sanctions.html">Sanctions</a>
+        <a href="tarifs.html">Tarifs</a>
       </nav>
-      <button class="cf-nav-btn" onclick="window.location.href='audit.html'">🔑 Accès / Inscription</button>
-      <button class="cf-nav-burger" id="cfBurger" onclick="toggleMobileNav()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="pr-nav-cta">
+        <a href="tarifs.html#contact-tarifs" class="pr-btn pr-btn-ghost pr-btn-sm">Contact</a>
+        <a href="audit.html" class="pr-btn pr-btn-primary pr-btn-sm pr-btn-arrow">Accès <i>→</i></a>
+        <button class="pr-nav-burger" id="cfBurger" onclick="toggleMobileNav()" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
-    <nav class="cf-nav-mobile" id="cfMobileNav">
-      <a href="../accueil.html" onclick="closeMobileNav()" style="font-weight:800;color:#1e1b4b">🏠 Accueil</a>
-      <a href="index.html" onclick="closeMobileNav()">Accueil audit</a>
-      <a href="documents.html" onclick="closeMobileNav()">📋 Vos Documents</a>
-      <a href="controles.html" onclick="closeMobileNav()">📊 Contrôles dans votre département</a>
-      <a href="sanctions.html" onclick="closeMobileNav()">⚖️ Cas Réels &amp; Sanctions</a>
-      <a href="tarifs.html" onclick="closeMobileNav()">💶 Tarifs</a>
-      <a href="audit.html" onclick="closeMobileNav()">🔍 Mon Audit</a>
-      <a href="tarifs.html#contact-tarifs" onclick="closeMobileNav()">📩 Contact</a>
-      <a href="tarifs.html#faq" onclick="closeMobileNav()">❓ FAQ</a>
-      <button class="cf-nav-mobile-btn" onclick="window.location.href='audit.html'">🔑 Accès / Inscription</button>
+    <nav id="cfMobileNav" aria-label="Menu mobile">
+      <a href="../accueil.html" onclick="closeMobileNav()">Accueil</a>
+      <a href="index.html" onclick="closeMobileNav()">Audit</a>
+      <a href="documents.html" onclick="closeMobileNav()">Documents</a>
+      <a href="controles.html" onclick="closeMobileNav()">Contrôles dans votre département</a>
+      <a href="sanctions.html" onclick="closeMobileNav()">Cas réels &amp; sanctions</a>
+      <a href="tarifs.html" onclick="closeMobileNav()">Tarifs</a>
+      <a href="audit.html" onclick="closeMobileNav()">Mon audit</a>
+      <a href="tarifs.html#contact-tarifs" onclick="closeMobileNav()">Contact</a>
+      <a href="tarifs.html#faq" onclick="closeMobileNav()">FAQ</a>
     </nav>
   </header>
   <script>
@@ -320,100 +413,78 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
 
   <main id="top">
 
-  <!-- ── ADN SITE ── -->
-  <section style="padding:16px 0 8px">
-    <div style="max-width:1180px;margin:0 auto;padding:0 24px;text-align:center">
-      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:2.1rem;line-height:1.12;color:#153e35;margin:0 0 4px">Audit et prévention des risques sanitaires pour les établissements alimentaires</h2>
-    </div>
-  </section>
-
-  <!-- ── 4 PÔLES ── -->
-  <section style="padding:8px 0 14px" id="trois-poles">
-    <div style="max-width:1180px;margin:0 auto;padding:0 24px">
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
-
-        <!-- Pôle 1 : Évaluation du risque (mis en premier) -->
-        <div style="background:rgba(255,255,255,.94);border:2px solid rgba(21,62,53,.14);border-radius:22px;box-shadow:0 14px 40px rgba(21,62,53,.08);padding:20px;display:flex;flex-direction:column">
-          <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,86,73,.12);color:#1f5649;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">ÉVALUATION DU RISQUE</span>
-          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.15rem;line-height:1.12;color:#153e35;margin:0 0 10px">Votre établissement risque-t-il une fermeture administrative ?</h2>
-          <p style="font-size:.86rem;color:#65716b;line-height:1.4;margin-bottom:14px;flex:1">Répondre à notre test rapide et obtenez une évaluation de votre niveau de risque.</p>
-          <a href="#audit-interactif" style="display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:.93rem;text-decoration:none">Tester mon établissement</a>
-        </div>
-
-        <!-- Pôle 2 : Prévention sanitaire (mis en second) -->
-        <div style="background:#ffffff;border:2px solid rgba(21,62,53,.15);border-radius:22px;box-shadow:0 8px 32px rgba(21,62,53,.12);padding:22px;display:flex;flex-direction:column">
-          <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,86,73,.12);color:#1f5649;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Prévention sanitaire</span>
-          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.15rem;line-height:1.12;color:#153e35;margin:0 0 10px">Éviter les risques de fermeture administrative avant de mettre en danger votre activité.</h2>
-          <p style="font-size:.86rem;color:#65716b;line-height:1.4;margin-bottom:14px;flex:1">Prévention sanitaire pour les établissements des métiers de bouche : restaurants, snacks, boulangeries, boucheries, traiteurs.</p>
-          <a href="#apropos" style="display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:.93rem;text-decoration:none">Qui sommes-nous ?</a>
-        </div>
-
-        <!-- Pôle 3 : Impact financier -->
-        <div style="background:#ffffff;border:2px solid rgba(21,62,53,.15);border-radius:22px;box-shadow:0 8px 32px rgba(21,62,53,.12);padding:22px;display:flex;flex-direction:column">
-          <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,86,73,.12);color:#1f5649;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Impact financier</span>
-          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.15rem;line-height:1.12;color:#153e35;margin:0 0 10px">Estimer le risque financier</h2>
-          <p style="font-size:.86rem;color:#65716b;line-height:1.4;margin-bottom:14px;flex:1">Mesurer l'impact potentiel d'une fermeture sur votre activité, votre chiffre d'affaires et votre image.</p>
-          <a href="tarifs.html#calculateur" style="display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:.93rem;text-decoration:none">Estimer le risque financier</a>
-        </div>
-
-        <!-- Pôle 4 : Sauvegarder mon activité → ExpertAudit -->
-        <div style="background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,250,236,.96));border:2px solid rgba(183,144,41,.24);border-radius:22px;box-shadow:0 14px 40px rgba(21,62,53,.08);padding:20px;display:flex;flex-direction:column;position:relative">
-          <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(183,144,41,.2);color:#b79029;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">ExpertAudit</span>
-          <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.15rem;line-height:1.12;color:#153e35;margin:0 0 10px">Sauvegarder mon activité</h2>
-          <p style="font-size:.86rem;color:#65716b;line-height:1.4;margin-bottom:14px;flex:1">Accéder à votre audit réalisé par nos experts sur site, et générez vos documents réglementaires, via notre outil ExpertAudit.</p>
-          <button onclick="window.location.href='audit.html'" style="display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;background:linear-gradient(135deg,#d2ad46,#b79029);color:#201806;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:.93rem">📩 S'inscrire pour accéder</button>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ── HERO ── -->
-  <section class="hero" style="padding:18px 0 30px">
-    <div style="max-width:1180px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center">
+  <!-- ══════════════════ HERO split ══════════════════ -->
+  <section class="pr-hero">
+    <div class="pr-hero-inner">
       <div>
-        <span style="display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,86,73,.12);color:#1f5649;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px">Prévention sanitaire pour restaurateurs</span>
-        <h1 style="font-family:'Instrument Serif',Georgia,serif;font-size:clamp(24px,3vw,32px);line-height:1.12;color:#153e35;max-width:580px;margin:0 0 14px">Éviter les risques de fermeture administrative avant de mettre en danger votre activité.</h1>
-        <p style="font-size:1rem;color:#65716b;margin:0 0 16px;line-height:1.6">Nomos accompagne les restaurants, fast-foods, snacks, traiteurs et métiers de bouche avec des audits préventifs, des rapports de conformité hiérarchisés et un accompagnement concret pour traiter les points sensibles avant un contrôle.</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px">
-          <span style="padding:9px 12px;border-radius:999px;background:#fff;border:1px solid rgba(31,86,73,.1);color:#1f5649;font-weight:700;font-size:.92rem">Audit réglementaire</span>
-          <span style="padding:9px 12px;border-radius:999px;background:#fff;border:1px solid rgba(31,86,73,.1);color:#1f5649;font-weight:700;font-size:.92rem">Méthode HACCP</span>
-          <span style="padding:9px 12px;border-radius:999px;background:#fff;border:1px solid rgba(31,86,73,.1);color:#1f5649;font-weight:700;font-size:.92rem">Rapport priorisé</span>
+        <span class="pr-badge"><span class="pr-b-dot"></span>Prévention sanitaire pour les métiers de bouche</span>
+        <h1 class="pr-h1">Évitez la <span class="pr-serif">fermeture</span><br>administrative, <em>avant</em> le contrôle.</h1>
+        <p class="pr-hero-sub">Audit préventif sur site, rapport hiérarchisé en 3 niveaux et accompagnement concret pour traiter les points sensibles avant que la DDPP n'arrive.</p>
+        <div class="pr-hero-cta">
+          <a href="#audit-interactif" class="pr-btn pr-btn-primary pr-btn-lg pr-btn-arrow">Tester mon établissement <i>→</i></a>
+          <a href="tarifs.html#calculateur" class="pr-btn pr-btn-outline pr-btn-lg">Risque financier</a>
         </div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
-          <a href="#audit-interactif" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:999px;padding:14px 20px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;text-decoration:none">Tester mon établissement</a>
-          <a href="tarifs.html#calculateur" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(31,86,73,.12);border-radius:999px;padding:14px 20px;font-weight:800;cursor:pointer;background:#fff;color:#1f5649;text-decoration:none">Risque financier</a>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
-          <div style="background:rgba(255,255,255,.88);border:1px solid rgba(31,86,73,.08);border-radius:18px;padding:14px"><strong style="display:block;font-size:.98rem;color:#153e35">Audit clair</strong><span style="color:#65716b;font-size:.8rem">Points conformes à améliorer et points critiques à hiérarchiser.</span></div>
-          <div style="background:rgba(255,255,255,.88);border:1px solid rgba(31,86,73,.08);border-radius:18px;padding:14px"><strong style="display:block;font-size:.98rem;color:#153e35">Avant contrôle</strong><span style="color:#65716b;font-size:.8rem">Intervention en amont pour réduire le risque d'écarts majeurs.</span></div>
-          <div style="background:rgba(255,255,255,.88);border:1px solid rgba(31,86,73,.08);border-radius:18px;padding:14px"><strong style="display:block;font-size:.98rem;color:#153e35">Action concrète</strong><span style="color:#65716b;font-size:.8rem">Accompagnement jusqu'à la mise en conformité.</span></div>
-        </div>
-        <div style="padding:16px 18px;border-radius:18px;background:linear-gradient(135deg,rgba(216,79,67,.07),rgba(183,144,41,.07));border:1px solid rgba(216,79,67,.12)">
-          <strong style="color:#153e35;font-size:.9rem">Un contrôle sanitaire mal anticipé peut coûter bien plus qu'une simple correction interne.</strong>
+        <div class="pr-hero-pills">
+          <span class="pr-hero-pill">Audit réglementaire</span>
+          <span class="pr-hero-pill">Méthode HACCP</span>
+          <span class="pr-hero-pill">Rapport priorisé</span>
         </div>
       </div>
 
-      <!-- Panel droite -->
-      <div style="background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.88)),linear-gradient(135deg,rgba(210,173,70,.12),rgba(59,138,119,.12));border:1px solid rgba(31,86,73,.08);border-radius:32px;padding:24px;box-shadow:0 24px 70px rgba(21,62,53,.12)">
-        <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:rgba(216,79,67,.09);border:1px solid rgba(216,79,67,.14);color:#d84f43;font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em">Exemple de lecture d'audit</span>
-        <h3 style="font-family:'Instrument Serif',Georgia,serif;font-size:1.9rem;margin:12px 0 6px;color:#153e35">Tableau de bord Nomos</h3>
-        <p style="color:#65716b;margin:0 0 14px;font-size:.88rem">Une vue synthétique pour comprendre immédiatement où agir et à quelle priorité.</p>
-        <div style="background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border-radius:22px;padding:18px">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap">
-            <div><h3 style="margin:0 0 6px;color:#fff;font-size:1rem">Score global d'hygiène</h3><p style="margin:0;color:rgba(255,255,255,.76);font-size:.88rem">Résultat simulé d'un audit préventif.</p></div>
-            <div style="width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#fff 0 47%,transparent 48%),conic-gradient(#d2ad46 0 284deg,rgba(255,255,255,.2) 284deg 360deg);color:#153e35;font-weight:900;font-size:1.35rem;flex:0 0 auto">79</div>
+      <div class="pr-mock-wrap">
+        <div class="pr-mock">
+          <div class="pr-mock-head"><span class="d r"></span><span class="d y"></span><span class="d g"></span><small>Rapport d'audit <b>Nomos</b></small></div>
+          <div class="pr-mock-sec">Score global d'hygiène</div>
+          <div class="pr-mock-kpis">
+            <div class="pr-mock-kpi ok"><div class="n">79<span style="font-size:11px;color:var(--pr-ink-3)">/100</span></div><div class="l">Score</div></div>
+            <div class="pr-mock-kpi"><div class="n">15</div><div class="l">Conformes</div></div>
+            <div class="pr-mock-kpi bad"><div class="n">3</div><div class="l">Critiques</div></div>
           </div>
-          <div style="display:grid;gap:10px">
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.08)"><div style="width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.16);flex:0 0 auto;font-size:.8rem">✓</div><div style="font-size:.88rem"><strong>Conformes</strong><br><span style="opacity:.8">Locaux, affichages, stockage et procédures déjà en place.</span></div></div>
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.08)"><div style="width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.16);flex:0 0 auto;font-size:.8rem">⚠</div><div style="font-size:.88rem"><strong>À améliorer</strong><br><span style="opacity:.8">Traçabilité, organisation documentaire.</span></div></div>
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.08)"><div style="width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.16);flex:0 0 auto;font-size:.8rem">✕</div><div style="font-size:.88rem"><strong>Critiques</strong><br><span style="opacity:.8">Températures, enregistrements CCP.</span></div></div>
-          </div>
+          <div class="pr-mock-sec">Points relevés</div>
+          <div class="pr-mock-row"><span class="pr-mock-row-i ok">✓</span><span class="pr-mock-row-txt">Locaux, affichages, stockage</span><span class="pr-mock-row-pct">OK</span></div>
+          <div class="pr-mock-row"><span class="pr-mock-row-i warn">!</span><span class="pr-mock-row-txt">Traçabilité &amp; documentaire</span><span class="pr-mock-row-pct">À améliorer</span></div>
+          <div class="pr-mock-row"><span class="pr-mock-row-i bad">✕</span><span class="pr-mock-row-txt">Températures &amp; CCP</span><span class="pr-mock-row-pct">Critique</span></div>
+          <div class="pr-mock-cta"><span class="dot"></span>Plan d'action prêt — 48 h</div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
-          <div style="background:#fff;border-radius:16px;padding:14px;border:1px solid rgba(31,86,73,.08)"><div style="font-size:.75rem;font-weight:800;color:#65716b;letter-spacing:.08em;text-transform:uppercase">Priorité 1</div><div style="font-size:1.35rem;font-weight:900;color:#153e35;margin:6px 0 2px">48 h</div><div style="font-size:.82rem;color:#65716b">Délai pour les écarts critiques immédiats.</div></div>
-          <div style="background:#fff;border-radius:16px;padding:14px;border:1px solid rgba(31,86,73,.08)"><div style="font-size:.75rem;font-weight:800;color:#65716b;letter-spacing:.08em;text-transform:uppercase">Rapport</div><div style="font-size:1.35rem;font-weight:900;color:#153e35;margin:6px 0 2px">3 niveaux</div><div style="font-size:.82rem;color:#65716b">Conforme · amélioration · critique.</div></div>
-        </div>
+        <div class="pr-sticker pr-sticker-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Rapport en 3 niveaux</div>
+        <div class="pr-sticker pr-sticker-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Avant contrôle DDPP</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ 4 PÔLES ══════════════════ -->
+  <section class="pr-sec" id="trois-poles" style="padding-top:clamp(20px,3vw,40px)">
+    <div class="pr-container">
+      <div class="pr-sec-head">
+        <span class="pr-sec-eyebrow">4 pôles</span>
+        <h2 class="pr-sec-title">Prévenir, mesurer, agir, <em>sécuriser.</em></h2>
+        <p class="pr-sec-sub">Quatre façons d'anticiper un contrôle et de protéger durablement votre activité.</p>
+      </div>
+      <div class="pr-features">
+        <a href="#audit-interactif" class="pr-feat">
+          <span class="pr-feat-tag">Évaluation</span>
+          <h3 class="pr-feat-h">Votre établissement risque-t-il une fermeture ?</h3>
+          <p class="pr-feat-p">Diagnostic hygiène gratuit en 2 minutes, avec votre niveau de risque et les points à traiter en priorité.</p>
+          <span class="pr-feat-cta">Tester <i>→</i></span>
+        </a>
+        <a href="#apropos" class="pr-feat">
+          <span class="pr-feat-tag">Prévention</span>
+          <h3 class="pr-feat-h">Avant que les difficultés ne deviennent un risque réel.</h3>
+          <p class="pr-feat-p">Restaurants, snacks, boulangeries, boucheries, traiteurs : une lecture claire adaptée à votre activité.</p>
+          <span class="pr-feat-cta">Qui sommes-nous <i>→</i></span>
+        </a>
+        <a href="tarifs.html#calculateur" class="pr-feat">
+          <span class="pr-feat-tag">Impact financier</span>
+          <h3 class="pr-feat-h">Combien peut coûter une fermeture ?</h3>
+          <p class="pr-feat-p">Estimer l'impact d'une fermeture sur votre activité, votre chiffre d'affaires et votre image.</p>
+          <span class="pr-feat-cta">Estimer <i>→</i></span>
+        </a>
+        <a href="audit.html" class="pr-feat pr-feat-gold">
+          <span class="pr-feat-tag">ExpertAudit</span>
+          <h3 class="pr-feat-h">Sauvegardez votre activité.</h3>
+          <p class="pr-feat-p">Audit sur site par nos experts, génération de vos documents réglementaires, via l'outil ExpertAudit.</p>
+          <span class="pr-feat-cta">S'inscrire <i>→</i></span>
+        </a>
       </div>
     </div>
   </section>
@@ -945,7 +1016,7 @@ var quizQuestions = [
     if(step>=quizQuestions.length){ showSignup(); return; }
     var item=quizQuestions[step];
     c.style.display="block";
-    c.innerHTML='<div style="padding:16px 0">'+interimAlert()+'<p style="font-size:.76rem;text-transform:uppercase;color:#b79029;font-weight:800">Question '+(step+1)+' / '+quizQuestions.length+'</p><p style="font-size:1rem;font-weight:700;margin-bottom:16px;color:#153e35">'+item.q+'</p><div style="display:grid;gap:10px">'+item.options.map(function(opt,i){return '<button type="button" data-index="'+i+'" style="display:inline-flex;align-items:center;justify-content:flex-start;border:1px solid rgba(31,86,73,.12);border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;background:#fff;color:#153e35;text-align:left;font-family:'Inter',sans-serif;font-size:.92rem">'+String.fromCharCode(65+i)+'. '+opt+'</button>';}).join('')+'</div></div>';
+    c.innerHTML='<div style="padding:16px 0">'+interimAlert()+'<p style="font-size:.76rem;text-transform:uppercase;color:#b79029;font-weight:800">Question '+(step+1)+' / '+quizQuestions.length+'</p><p style="font-size:1rem;font-weight:700;margin-bottom:16px;color:#153e35">'+item.q+'</p><div style="display:grid;gap:10px">'+item.options.map(function(opt,i){return '<button type="button" data-index="'+i+'" style="display:inline-flex;align-items:center;justify-content:flex-start;border:1px solid rgba(31,86,73,.12);border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;background:#fff;color:#153e35;text-align:left;font-family:Inter,sans-serif;font-size:.92rem">'+String.fromCharCode(65+i)+'. '+opt+'</button>';}).join('')+'</div></div>';
     c.querySelectorAll('button[data-index]').forEach(function(btn){
       btn.addEventListener('click',function(){
         var idx=Number(this.dataset.index);
