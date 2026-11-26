@@ -391,6 +391,25 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
   #landingPage #guide-form input,#landingPage #guide-form select{border:1px solid var(--pr-line)!important;border-radius:10px!important;background:var(--pr-bg)!important;font-family:inherit!important}
   #landingPage #guide-form input:focus,#landingPage #guide-form select:focus{outline:none!important;border-color:var(--pr-accent)!important;background:#fff!important}
   #landingPage #guide-form label{color:var(--pr-ink-2)!important;font-weight:500!important}
+
+  /* Override Démarrer audit (contact) */
+  #landingPage #contact input,#landingPage #contact select,#landingPage #contact textarea{border:1px solid var(--pr-line)!important;border-radius:10px!important;background:var(--pr-bg)!important;font-family:inherit!important}
+  #landingPage #contact input:focus,#landingPage #contact select:focus,#landingPage #contact textarea:focus{outline:none!important;border-color:var(--pr-accent)!important;background:#fff!important}
+  #landingPage #contact label{color:var(--pr-ink-2)!important;font-weight:500!important}
+  #landingPage #contact label *{font-weight:400!important}
+  #landingPage #contact button[onclick="soumettreInscription()"]{background:var(--pr-ink)!important;color:#fff!important;border-radius:999px!important}
+  #landingPage #contact button[onclick="soumettreInscription()"]:hover{background:#262626!important}
+  #landingPage #serviceChoixGrid>div{border:1px solid var(--pr-line)!important;border-radius:14px!important;transition:border-color .15s,background .15s}
+  #landingPage #serviceChoixGrid>div:hover{border-color:var(--pr-accent)!important;background:var(--pr-accent-soft)!important}
+  #landingPage #serviceChoixGrid>div.sel,#landingPage #serviceChoixGrid>div[data-selected="1"]{border-color:var(--pr-ink)!important;background:var(--pr-cream)!important}
+
+  /* Footer */
+  #landingPage footer{background:var(--pr-bg)!important;border-top:1px solid var(--pr-line-soft)!important}
+  #landingPage footer h4{color:var(--pr-ink-2)!important;font-weight:600!important;letter-spacing:.06em!important;text-transform:uppercase!important;font-size:11px!important}
+  #landingPage footer p,#landingPage footer span,#landingPage footer button{color:var(--pr-ink-3)!important;font-size:13px!important}
+  #landingPage footer button{font-family:inherit!important}
+  #landingPage footer button:hover{color:var(--pr-ink)!important}
+  #landingPage footer>div>div:first-of-type div[style*="width:40px;height:40px"]{background:linear-gradient(135deg,var(--pr-accent),var(--pr-accent-2))!important;border-radius:10px!important}
   </style>
   <header class="pr-nav">
     <div class="pr-nav-row">
@@ -728,7 +747,7 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
                 <strong>Exemples :</strong> Poulet → Salmonelle · Sauce tiède → prolifération bactérienne · Crudités → pesticides · Steak haché → E.coli
               </div>
               <div style="background:#e8f5e9;border-radius:10px;padding:12px;border-left:3px solid #2a9a57">
-                <strong style="color:#153e35;font-size:.84rem">« Pourquoi s'embêter avec les crudités, c'est juste de la salade ?�</strong>
+                <strong style="color:#153e35;font-size:.84rem">« Pourquoi s'embêter avec les crudités, c'est juste de la salade ?»</strong>
                 <p style="margin:6px 0 0;font-size:.83rem;color:#17211d">Parce qu'une salade mal lavée peut contenir des parasites ou des produits chimiques de culture. Le danger n'est pas toujours visible à l'œil nu !</p>
               </div>
             </div>
@@ -746,7 +765,7 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
                 <strong>Exemple :</strong> Si le danger est la bactérie dans le steak, le CCP est la cuisson à cœur.
               </div>
               <div style="background:#e8f5e9;border-radius:10px;padding:12px;border-left:3px solid #2a9a57">
-                <strong style="color:#153e35;font-size:.84rem">« Est-ce que chaque geste en cuisine est un CCP ?�</strong>
+                <strong style="color:#153e35;font-size:.84rem">« Est-ce que chaque geste en cuisine est un CCP ?»</strong>
                 <p style="margin:6px 0 0;font-size:.83rem;color:#17211d">Non ! Éplucher une pomme de terre n'est pas un CCP. Un CCP est une étape vitale : si vous la ratez, le client risque l'hôpital.</p>
               </div>
             </div>
@@ -764,7 +783,7 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
                 <strong>Règles :</strong> Viandes (Poulet/Steak) → 75°C à cœur minimum · Froid → ne jamais dépasser -18°C pour le congelé
               </div>
               <div style="background:#e8f5e9;border-radius:10px;padding:12px;border-left:3px solid #2a9a57">
-                <strong style="color:#153e35;font-size:.84rem">« Pourquoi 75°C et pas 60°C ?�</strong>
+                <strong style="color:#153e35;font-size:.84rem">« Pourquoi 75°C et pas 60°C ?»</strong>
                 <p style="margin:6px 0 0;font-size:.83rem;color:#17211d">Parce qu'à 75°C, on est certain d'avoir éliminé la quasi-totalité des bactéries pathogènes. C'est votre "marge de sécurité".</p>
               </div>
             </div>
@@ -782,7 +801,7 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
                 <strong>Exemple :</strong> Sortir son thermomètre à sonde pour piquer le poulet. Regarder le cadran du congélateur chaque matin.
               </div>
               <div style="background:#e8f5e9;border-radius:10px;padding:12px;border-left:3px solid #2a9a57">
-                <strong style="color:#153e35;font-size:.84rem">« Je dois vraiment piquer chaque morceau de viande ?�</strong>
+                <strong style="color:#153e35;font-size:.84rem">« Je dois vraiment piquer chaque morceau de viande ?»</strong>
                 <p style="margin:6px 0 0;font-size:.83rem;color:#17211d">Idéalement oui, ou au moins tester le morceau le plus gros de la fournée pour garantir que tout le lot est conforme.</p>
               </div>
             </div>
@@ -800,7 +819,7 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
                 <strong>Exemples :</strong> Steak à 60°C → prolonger la cuisson · Sauce restée 4h sur le plan de travail → jeter immédiatement
               </div>
               <div style="background:#e8f5e9;border-radius:10px;padding:12px;border-left:3px solid #2a9a57">
-                <strong style="color:#153e35;font-size:.84rem">« Jeter une sauce entière, c'est une perte d'argent, non ?�</strong>
+                <strong style="color:#153e35;font-size:.84rem">« Jeter une sauce entière, c'est une perte d'argent, non ?»</strong>
                 <p style="margin:6px 0 0;font-size:.83rem;color:#17211d">Certes, mais une intoxication alimentaire coûte bien plus cher (procès, fermeture, réputation détruite). L'action corrective protège votre entreprise.</p>
               </div>
             </div>
@@ -818,7 +837,7 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
                 <strong>Exemple :</strong> Faire tester vos plats par un laboratoire ou recalibrer vos thermomètres régulièrement.
               </div>
               <div style="background:#e8f5e9;border-radius:10px;padding:12px;border-left:3px solid #2a9a57">
-                <strong style="color:#153e35;font-size:.84rem">« Si je surveille déjà (étape 4), pourquoi vérifier encore ?�</strong>
+                <strong style="color:#153e35;font-size:.84rem">« Si je surveille déjà (étape 4), pourquoi vérifier encore ?»</strong>
                 <p style="margin:6px 0 0;font-size:.83rem;color:#17211d">Parce que votre thermomètre est peut-être déréglé ! La vérification, c'est le "contrôle du contrôleur".</p>
               </div>
             </div>
@@ -836,7 +855,7 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
                 <strong>RÃ¨gle d’or DDPP :</strong> "Ce qui n'est pas Ã©crit n'a pas Ã©tÃ© fait." Vos fiches de tempÃ©rature sont vos preuves d'innocence en cas de contrÃ´le.
               </div>
               <div style="background:#e8f5e9;border-radius:10px;padding:12px;border-left:3px solid #2a9a57">
-                <strong style="color:#153e35;font-size:.84rem">« Si je fais tout bien mais que je n'écris rien, c'est grave ?�</strong>
+                <strong style="color:#153e35;font-size:.84rem">« Si je fais tout bien mais que je n'écris rien, c'est grave ?»</strong>
                 <p style="margin:6px 0 0;font-size:.83rem;color:#17211d">Pour un inspecteur de la DDPP, ce qui n'est pas écrit n'existe pas. Vos fiches de température sont vos preuves d'innocence en cas de contrôle.</p>
               </div>
               <!-- CTA après étape 7 -->
@@ -892,11 +911,11 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
       </div>
       <div style="overflow-y:auto;padding:20px 24px">
         <div style="display:grid;gap:12px">
-          <div style="background:#f5f2ea;border-radius:12px;padding:14px;border-left:3px solid #2d6f60"><div style="font-weight:700;color:#153e35">🔍 Audit Essentiel — 690 € HT</div><div style="font-size:.83rem;color:#65716b;margin-top:4px">Audit réalisé par nos experts sur site · Rapport détaillé (anomalies + préconisations) · Affiches obligatoires fournies</div></div>
-          <div style="background:#f5f2ea;border-radius:12px;padding:14px;border-left:3px solid #5c3d8f"><div style="font-weight:700;color:#153e35">⭐ Audit Complet — 1 490 € HT</div><div style="font-size:.83rem;color:#65716b;margin-top:4px">Tout l'Audit Essentiel + vos documents obligatoires personnalisés (établis par nos soins)</div></div>
+          <div style="background:#f5f2ea;border-radius:12px;padding:14px;border-left:3px solid #2d6f60"><div style="font-weight:700;color:#153e35">Audit Essentiel — 690 € HT</div><div style="font-size:.83rem;color:#65716b;margin-top:4px">Audit réalisé par nos experts sur site · Rapport détaillé (anomalies + préconisations) · Affiches obligatoires fournies</div></div>
+          <div style="background:#f5f2ea;border-radius:12px;padding:14px;border-left:3px solid #5c3d8f"><div style="font-weight:700;color:#153e35">Audit Complet — 1 490 € HT</div><div style="font-size:.83rem;color:#65716b;margin-top:4px">Tout l'Audit Essentiel + vos documents obligatoires personnalisés (établis par nos soins)</div></div>
         </div>
         <div style="margin-top:16px;padding:14px;background:#f0faf8;border-radius:10px;font-size:.82rem;color:#153e35;border:1px solid rgba(21,62,53,.1)">
-          <strong>📞 Nous contacter</strong> pour toute question : RTH NETGOCE — 06 61 47 61 65
+          <strong>Nous contacter</strong> pour toute question : RTH NETGOCE — 06 61 47 61 65
         </div>
       </div>
       <div style="padding:14px 24px;border-top:1px solid #dfe6e0;background:#fbfaf7">
@@ -905,21 +924,21 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
     </div>
   </div>
 
-  <!-- ── PRESTATIONS & TARIFS ExpertAudit ── -->
-  <section style="padding:48px 0;background:#f5f2ea" id="contact">
-    <div style="max-width:1180px;margin:0 auto;padding:0 24px">
-      <div style="text-align:center;margin-bottom:28px">
-        <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.9);border:1px solid rgba(31,86,73,.12);color:#1f5649;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">Démarrer</span>
-        <h2 id="auditFormStart" style="font-family:'Instrument Serif',Georgia,serif;font-size:1.9rem;color:#153e35;margin:0 0 6px">Démarrer votre audit</h2>
-        <p style="color:#65716b;font-size:.95rem">Remplir le formulaire — notre équipe vous contactera sous 24h.</p>
+  <!-- ══════════════════ DÉMARRER L'AUDIT ══════════════════ -->
+  <section class="pr-sec pr-alt" id="contact">
+    <div class="pr-container">
+      <div class="pr-sec-head">
+        <span class="pr-sec-eyebrow">Démarrer</span>
+        <h2 id="auditFormStart" class="pr-sec-title">Démarrer votre <em>audit</em>.</h2>
+        <p class="pr-sec-sub">Remplir le formulaire : notre équipe vous recontacte sous 24 h.</p>
       </div>
-      <div style="max-width:680px;margin:0 auto">
-        <div style="background:#fff;border-radius:20px;padding:30px;box-shadow:0 14px 40px rgba(21,62,53,.08)">
+      <div style="max-width:720px;margin:0 auto">
+        <div style="background:#fff;border:1px solid var(--pr-line);border-radius:20px;padding:clamp(22px,2.5vw,32px);box-shadow:0 20px 50px -20px rgba(10,10,10,.08)">
           <div id="inscriptionMsg" style="display:none;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px;margin-bottom:16px;font-size:.88rem;color:#2e7d32;text-align:center"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
             <div><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Nom du responsable *</label><input type="text" id="ins_resp" placeholder="Jean Dupont" autocomplete="off" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box"></div>
             <div><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Nom de l'établissement *</label><input type="text" id="ins_etab" name="etab_nom_societe" placeholder="Restaurant La Belle Vue" autocomplete="organization" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box"></div>
-            <div><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Secteur d'activité *</label><select id="ins_secteur" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box;background:#fff"><option value="">-- Sélectionner --</option><option value="RESTAURATION">🍽️ Restauration Traditionnelle</option><option value="RESTAURATION_RAPIDE">🍔 Restauration Rapide</option><option value="BOULANGERIE">🥖 Boulangerie / Pâtisserie</option><option value="BOUCHERIE">🥩 Boucherie / Charcuterie</option></select></div>
+            <div><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Secteur d'activité *</label><select id="ins_secteur" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box;background:#fff"><option value="">-- Sélectionner --</option><option value="RESTAURATION">Restauration Traditionnelle</option><option value="RESTAURATION_RAPIDE">Restauration Rapide</option><option value="BOULANGERIE">Boulangerie / Pâtisserie</option><option value="BOUCHERIE">Boucherie / Charcuterie</option></select></div>
             <div><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Téléphone *</label><input type="tel" id="ins_tel" placeholder="06 12 34 56 78" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box"></div>
             <div style="grid-column:1/-1"><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Email *</label><input type="email" id="ins_email" placeholder="contact@etablissement.fr" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box"></div>
             <div style="grid-column:1/-1"><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Adresse</label><input type="text" id="ins_adresse" placeholder="12 rue du Marché, 75001 Paris" autocomplete="off" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box"></div>
@@ -929,16 +948,16 @@ html,body{background:#f5f2ea;font-family:'Inter',system-ui,sans-serif;color:#172
               <input type="hidden" id="ins_service" value="">
               <label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:8px">Service souhaité * <span style="font-weight:400;color:#65716b">(cliquez pour sélectionner)</span></label>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="serviceChoixGrid">
-                <div onclick="openAuditDetail('audit_diagnostic')" data-val="audit_diagnostic" style="border:2px solid #dfe6e0;border-radius:10px;padding:12px 14px;cursor:pointer;background:#fff;"><div style="font-weight:700;color:#b7791f;font-size:.88rem">📝 Audit Diagnostic</div><div style="font-size:1.1rem;font-weight:900;color:#b7791f;margin:2px 0">390 € HT</div><div style="font-size:.75rem;color:#65716b">Audit sur site + rapport détaillé (anomalies) et préconisations.</div><div onclick="event.stopPropagation();openAuditDetail('audit_diagnostic')" style="margin-top:7px;color:#b7791f;font-weight:800;font-size:.74rem;cursor:pointer;text-decoration:underline">📋 Voir le détail</div></div>
-                <div onclick="openAuditDetail('audit_essentiel')" data-val="audit_essentiel" style="border:2px solid #dfe6e0;border-radius:10px;padding:12px 14px;cursor:pointer;background:#fff;"><div style="font-weight:700;color:#2d6f60;font-size:.88rem">🔍 Audit Essentiel</div><div style="font-size:1.1rem;font-weight:900;color:#2d6f60;margin:2px 0">690 € HT</div><div style="font-size:.75rem;color:#65716b">Tout le Diagnostic + affiches obligatoires fournies.</div><div onclick="event.stopPropagation();openAuditDetail('audit_essentiel')" style="margin-top:7px;color:#2d6f60;font-weight:800;font-size:.74rem;cursor:pointer;text-decoration:underline">📋 Voir le détail</div></div>
-                <div onclick="openAuditDetail('audit_complet')" data-val="audit_complet" style="border:2px solid #dfe6e0;border-radius:10px;padding:12px 14px;cursor:pointer;background:#fff; grid-column:1/-1;"><div style="font-weight:700;color:#5c3d8f;font-size:.88rem">⭐ Audit Complet</div><div style="font-size:1.1rem;font-weight:900;color:#5c3d8f;margin:2px 0">1 490 € HT</div><div style="font-size:.75rem;color:#65716b">Tout l'Essentiel + vos documents obligatoires personnalisés, établis par nos soins.</div><div onclick="event.stopPropagation();openAuditDetail('audit_complet')" style="margin-top:7px;color:#5c3d8f;font-weight:800;font-size:.74rem;cursor:pointer;text-decoration:underline">📋 Voir le détail</div></div>
+                <div onclick="openAuditDetail('audit_diagnostic')" data-val="audit_diagnostic" style="border:2px solid #dfe6e0;border-radius:10px;padding:12px 14px;cursor:pointer;background:#fff;"><div style="font-weight:700;color:#b7791f;font-size:.88rem">Audit Diagnostic</div><div style="font-size:1.1rem;font-weight:900;color:#b7791f;margin:2px 0">390 € HT</div><div style="font-size:.75rem;color:#65716b">Audit sur site + rapport détaillé (anomalies) et préconisations.</div><div onclick="event.stopPropagation();openAuditDetail('audit_diagnostic')" style="margin-top:7px;color:#b7791f;font-weight:800;font-size:.74rem;cursor:pointer;text-decoration:underline">Voir le détail</div></div>
+                <div onclick="openAuditDetail('audit_essentiel')" data-val="audit_essentiel" style="border:2px solid #dfe6e0;border-radius:10px;padding:12px 14px;cursor:pointer;background:#fff;"><div style="font-weight:700;color:#2d6f60;font-size:.88rem">Audit Essentiel</div><div style="font-size:1.1rem;font-weight:900;color:#2d6f60;margin:2px 0">690 € HT</div><div style="font-size:.75rem;color:#65716b">Tout le Diagnostic + affiches obligatoires fournies.</div><div onclick="event.stopPropagation();openAuditDetail('audit_essentiel')" style="margin-top:7px;color:#2d6f60;font-weight:800;font-size:.74rem;cursor:pointer;text-decoration:underline">Voir le détail</div></div>
+                <div onclick="openAuditDetail('audit_complet')" data-val="audit_complet" style="border:2px solid #dfe6e0;border-radius:10px;padding:12px 14px;cursor:pointer;background:#fff; grid-column:1/-1;"><div style="font-weight:700;color:#5c3d8f;font-size:.88rem">Audit Complet</div><div style="font-size:1.1rem;font-weight:900;color:#5c3d8f;margin:2px 0">1 490 € HT</div><div style="font-size:.75rem;color:#65716b">Tout l'Essentiel + vos documents obligatoires personnalisés, établis par nos soins.</div><div onclick="event.stopPropagation();openAuditDetail('audit_complet')" style="margin-top:7px;color:#5c3d8f;font-weight:800;font-size:.74rem;cursor:pointer;text-decoration:underline">Voir le détail</div></div>
               </div>
             </div>
             <div><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Repas / jour <span style="font-weight:400;color:#65716b">(moyenne)</span></label><input type="number" id="ins_repas" placeholder="Ex: 80" min="1" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box"></div>
             <div style="grid-column:1/-1"><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Représentant légal <span style="font-weight:400;color:#65716b">(signataire)</span></label><input type="text" id="ins_legal" placeholder="Ex: Jean Dupont (Gérant)" autocomplete="off" style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box"></div>
             <div style="grid-column:1/-1"><label style="font-size:.82rem;font-weight:700;color:#153e35;display:block;margin-bottom:5px">Message (optionnel)</label><textarea id="ins_message" rows="3" placeholder="Précisions..." style="width:100%;padding:11px 14px;border:1.5px solid #dfe6e0;border-radius:10px;font-size:.88rem;box-sizing:border-box;resize:vertical"></textarea></div>
           </div>
-          <button onclick="soumettreInscription()" style="width:100%;padding:14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:1rem">📩 Envoyer ma demande</button>
+          <button onclick="soumettreInscription()" style="width:100%;padding:14px;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;border:none;border-radius:999px;cursor:pointer;font-weight:800;font-size:1rem">Envoyer ma demande</button>
           <div style="margin-top:12px;padding:12px;background:#f5f2ea;border-radius:10px;border:1px solid rgba(31,86,73,.1)">
             <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">
               <input type="checkbox" id="rgpd_consent" style="margin-top:3px;accent-color:#153e35;flex:0 0 auto">
