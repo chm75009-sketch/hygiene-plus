@@ -242,7 +242,7 @@ section{padding:clamp(48px,6vw,80px) 0;position:relative}
 .product-dark .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.2)}
 .product-dark .btn-outline:hover{background:rgba(255,255,255,.08)}
 
-.compare{background:var(--cream);border:1px solid var(--line);border-radius:var(--r-xl);padding:clamp(20px,3vw,32px);position:relative;overflow:hidden}
+.compare{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);padding:clamp(20px,3vw,32px);position:relative;overflow:hidden;box-shadow:0 2px 20px rgba(10,10,10,.03)}
 .compare-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
 .compare-title{font-size:clamp(18px,2.2vw,24px);font-weight:600;letter-spacing:-.02em;color:var(--ink);max-width:420px;line-height:1.2}
 .compare-toggle{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px;cursor:pointer;font-size:13px;font-weight:500}
@@ -453,6 +453,48 @@ document.addEventListener('DOMContentLoaded',function(){document.body.appendChil
   </div>
 </section>
 
+<section id="produits" style="background:var(--cream)">
+  <div class="container">
+    <div class="sec-head-center" data-reveal>
+      <span class="sec-eyebrow">Deux outils, un objectif</span>
+      <h2 class="sec-title">L'audit pour <em>savoir</em>. L'app pour <em>prouver</em>.</h2>
+      <p class="sec-sub">Utilisez l'un, l'autre, ou les deux. Le fil conducteur reste le même : zéro stress face aux inspecteurs.</p>
+    </div>
+    <div class="products-grid">
+
+      <a class="product product-light" href="audit/index.html" data-reveal="left">
+        <span class="p-tag">Nomos Audit</span>
+        <h3>Préparez le contrôle comme un inspecteur l'aurait fait.</h3>
+        <p>Audit guidé, rapport clair, plan d'action priorisé. On liste les écarts et on vous dit par quoi commencer.</p>
+        <ul>
+          <li>Audit guidé pas à pas</li>
+          <li>Rapport DDPP imprimable</li>
+          <li>Plan d'action priorisé</li>
+        </ul>
+        <div class="p-cta">
+          <span class="btn btn-primary btn-sm btn-arrow">Préparer mon contrôle <i>→</i></span>
+        </div>
+      </a>
+
+      <a class="product product-dark" href="haccp.html" data-reveal="right">
+        <span class="p-tag">Nomos Traça</span>
+        <h3>Pilotez l'hygiène au quotidien, sans y penser.</h3>
+        <p>Relevés, traçabilité, nettoyage, DLC, plats témoins. L'app construit vos preuves toute seule.</p>
+        <ul>
+          <li>Relevés de température automatisés</li>
+          <li>Traçabilité & étiquettes DLC</li>
+          <li>Pack DDPP prêt à présenter</li>
+        </ul>
+        <div class="p-cta">
+          <span class="btn btn-sm" style="background:var(--gold);color:#3b2c05">Démarrer l'essai →</span>
+          <span style="font-size:12px;color:var(--gold)">10 j · sans CB</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
 <section id="steps" style="padding:clamp(36px,4vw,56px) 0">
   <div class="container">
     <div class="sec-head-center" data-reveal style="margin-bottom:24px">
@@ -517,49 +559,7 @@ document.addEventListener('DOMContentLoaded',function(){document.body.appendChil
   </div>
 </section>
 
-<section id="produits" style="background:var(--cream)">
-  <div class="container">
-    <div class="sec-head-center" data-reveal>
-      <span class="sec-eyebrow">Deux outils, un objectif</span>
-      <h2 class="sec-title">L'audit pour <em>savoir</em>. L'app pour <em>prouver</em>.</h2>
-      <p class="sec-sub">Utilisez l'un, l'autre, ou les deux. Le fil conducteur reste le même : zéro stress face aux inspecteurs.</p>
-    </div>
-    <div class="products-grid">
-
-      <a class="product product-light" href="audit/index.html" data-reveal="left">
-        <span class="p-tag">Nomos Audit</span>
-        <h3>Préparez le contrôle comme un inspecteur l'aurait fait.</h3>
-        <p>Audit guidé, rapport clair, plan d'action priorisé. On liste les écarts et on vous dit par quoi commencer.</p>
-        <ul>
-          <li>Audit guidé pas à pas</li>
-          <li>Rapport DDPP imprimable</li>
-          <li>Plan d'action priorisé</li>
-        </ul>
-        <div class="p-cta">
-          <span class="btn btn-primary btn-sm btn-arrow">Préparer mon contrôle <i>→</i></span>
-        </div>
-      </a>
-
-      <a class="product product-dark" href="haccp.html" data-reveal="right">
-        <span class="p-tag">Nomos Traça</span>
-        <h3>Pilotez l'hygiène au quotidien, sans y penser.</h3>
-        <p>Relevés, traçabilité, nettoyage, DLC, plats témoins. L'app construit vos preuves toute seule.</p>
-        <ul>
-          <li>Relevés de température automatisés</li>
-          <li>Traçabilité & étiquettes DLC</li>
-          <li>Pack DDPP prêt à présenter</li>
-        </ul>
-        <div class="p-cta">
-          <span class="btn btn-sm" style="background:var(--gold);color:#3b2c05">Démarrer l'essai →</span>
-          <span style="font-size:12px;color:var(--gold)">10 j · sans CB</span>
-        </div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<section id="compare">
+<section id="compare" style="background:var(--cream)">
   <div class="container">
     <div class="sec-head-center" data-reveal>
       <span class="sec-eyebrow">Avant · Après</span>
@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded',function(){document.body.appendChil
   </div>
 </section>
 
-<section id="faq" style="background:var(--cream)">
+<section id="faq">
   <div class="container">
     <div class="sec-head-center" data-reveal>
       <span class="sec-eyebrow">Questions</span>
