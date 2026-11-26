@@ -268,7 +268,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
         min-height:100vh;background:var(--pr-bg);color:var(--pr-ink);
         font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
         font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+        /* Full bleed : sort du max-width 480 px de .app */
+        margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);width:100vw;
       }
+      /* Neutralise le .app wrapper (ombre, bg) quand on est sur la présentation */
+      .app:has(#page-presentation.active){background:transparent;box-shadow:none;max-width:none}
       #page-presentation .pr-serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-style:italic}
       #page-presentation .pr-container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,3vw,28px)}
 
@@ -309,29 +313,78 @@ html, body { max-width: 100%; overflow-x: hidden; }
       #page-presentation .pr-btn-arrow i{display:inline-block;transition:transform .2s;font-style:normal}
       #page-presentation .pr-btn-arrow:hover i{transform:translateX(3px)}
 
-      /* HERO */
-      #page-presentation .pr-hero{position:relative;padding:clamp(28px,4vw,56px) 0 clamp(36px,5vw,64px);overflow:hidden;background:var(--pr-bg)}
-      #page-presentation .pr-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(10,10,10,.03) 1px,transparent 1px),linear-gradient(to bottom,rgba(10,10,10,.03) 1px,transparent 1px);background-size:52px 52px;-webkit-mask:radial-gradient(900px 500px at 50% 30%,#000,transparent 75%);mask:radial-gradient(900px 500px at 50% 30%,#000,transparent 75%);pointer-events:none}
-      #page-presentation .pr-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(900px 500px at 85% 0%,rgba(15,118,110,.07),transparent 55%),radial-gradient(700px 400px at 10% 100%,rgba(210,173,70,.05),transparent 55%);animation:pr-mesh 24s ease-in-out infinite alternate;pointer-events:none;z-index:0}
-      @keyframes pr-mesh{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-30px,20px) scale(1.06)}}
-      #page-presentation .pr-hero-inner{position:relative;z-index:1;text-align:center;max-width:720px;margin:0 auto}
+      /* HERO SPLIT */
+      #page-presentation .pr-hero{position:relative;padding:clamp(32px,5vw,72px) 0 clamp(40px,5vw,80px);overflow:hidden;background:var(--pr-bg)}
+      #page-presentation .pr-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(10,10,10,.035) 1px,transparent 1px),linear-gradient(to bottom,rgba(10,10,10,.035) 1px,transparent 1px);background-size:52px 52px;-webkit-mask:radial-gradient(1100px 600px at 50% 30%,#000,transparent 75%);mask:radial-gradient(1100px 600px at 50% 30%,#000,transparent 75%);pointer-events:none}
+      #page-presentation .pr-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(900px 500px at 85% 0%,rgba(15,118,110,.14),transparent 55%),radial-gradient(700px 400px at 10% 100%,rgba(210,173,70,.1),transparent 55%);animation:pr-mesh 18s ease-in-out infinite alternate;pointer-events:none;z-index:0}
+      @keyframes pr-mesh{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(-50px,30px) scale(1.12);opacity:.9}}
+      #page-presentation .pr-hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,3vw,48px);align-items:center;max-width:1200px;margin:0 auto;padding:0 clamp(16px,3vw,28px)}
+      @media(max-width:920px){#page-presentation .pr-hero-inner{grid-template-columns:1fr;gap:28px;text-align:center;max-width:640px}#page-presentation .pr-hero-trust{justify-content:center}}
+      #page-presentation .pr-hero-left{max-width:560px}
+      @media(max-width:920px){#page-presentation .pr-hero-left{max-width:none;margin:0 auto}}
       #page-presentation .pr-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 7px;border-radius:999px;background:#fff;border:1px solid var(--pr-line);color:var(--pr-ink-2);font-size:12.5px;font-weight:500;margin-bottom:18px;box-shadow:0 1px 2px rgba(10,10,10,.04)}
       #page-presentation .pr-b-dot{width:16px;height:16px;border-radius:50%;background:var(--pr-accent-soft);display:inline-flex;align-items:center;justify-content:center}
       #page-presentation .pr-b-dot::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--pr-accent);animation:pr-dot 1.8s ease-in-out infinite}
       @keyframes pr-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
-      #page-presentation .pr-h1{font-size:clamp(28px,4.2vw,48px);line-height:1.08;letter-spacing:-.025em;font-weight:600;color:var(--pr-ink);margin:0 auto}
+      #page-presentation .pr-h1{font-size:clamp(32px,5vw,58px);line-height:1.02;letter-spacing:-.035em;font-weight:600;color:var(--pr-ink)}
       #page-presentation .pr-h1 em{font-style:normal;color:var(--pr-accent)}
-      #page-presentation .pr-hero-sub{margin:16px auto 0;max-width:520px;font-size:15.5px;line-height:1.5;color:var(--pr-ink-2)}
-      #page-presentation .pr-hero-cta{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
-      #page-presentation .pr-hero-trust{margin-top:22px;display:inline-flex;align-items:center;gap:10px;font-size:12.5px;color:var(--pr-ink-3)}
+      #page-presentation .pr-hero-sub{margin:18px 0 0;max-width:480px;font-size:16px;line-height:1.5;color:var(--pr-ink-2)}
+      #page-presentation .pr-hero-cta{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+      @media(max-width:920px){#page-presentation .pr-hero-cta{justify-content:center}}
+      #page-presentation .pr-hero-trust{margin-top:24px;display:inline-flex;align-items:center;gap:10px;font-size:12.5px;color:var(--pr-ink-3)}
       #page-presentation .pr-hero-trust .pr-stars{color:var(--pr-gold);letter-spacing:1px;font-size:14px}
       #page-presentation .pr-hero-trust b{color:var(--pr-ink);font-weight:600}
-      #page-presentation .pr-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:28px;max-width:720px;margin-left:auto;margin-right:auto}
-      @media(max-width:640px){#page-presentation .pr-stats{grid-template-columns:repeat(2,1fr)}}
-      #page-presentation .pr-stat{background:var(--pr-bg);border:1px solid var(--pr-line);border-radius:14px;padding:16px 10px;text-align:center}
-      #page-presentation .pr-stat-n{font-size:22px;font-weight:700;color:var(--pr-ink);letter-spacing:-.025em;line-height:1}
-      #page-presentation .pr-stat-n.pr-gold{color:var(--pr-gold-dk)}
-      #page-presentation .pr-stat-l{font-size:10.5px;font-weight:600;color:var(--pr-ink-3);text-transform:uppercase;letter-spacing:.05em;margin-top:5px}
+
+      /* MOCKUP dashboard Nomos Traça */
+      #page-presentation .pr-mock-wrap{position:relative;perspective:1500px}
+      #page-presentation .pr-mock{position:relative;background:var(--pr-bg);border:1px solid var(--pr-line);border-radius:18px;padding:12px;box-shadow:0 50px 80px -30px rgba(10,10,10,.22),0 20px 40px -20px rgba(15,118,110,.14),0 0 0 1px rgba(10,10,10,.03);transform:rotateY(-6deg) rotateX(4deg);transform-origin:center;transition:transform .6s var(--pr-ease)}
+      #page-presentation .pr-mock-wrap:hover .pr-mock{transform:rotateY(-2deg) rotateX(1deg)}
+      @media(max-width:920px){#page-presentation .pr-mock{transform:none}}
+      #page-presentation .pr-mock::after{content:"";position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(135deg,rgba(15,118,110,.3),transparent 40%,rgba(210,173,70,.25));z-index:-1;filter:blur(24px);opacity:.6}
+      #page-presentation .pr-mock-head{display:flex;align-items:center;gap:8px;padding:0 4px 10px;border-bottom:1px solid var(--pr-line-soft)}
+      #page-presentation .pr-mock-dots{display:flex;gap:4px}
+      #page-presentation .pr-mock-dots span{width:9px;height:9px;border-radius:50%;background:var(--pr-line)}
+      #page-presentation .pr-mock-dots span:first-child{background:#ff5f57}
+      #page-presentation .pr-mock-dots span:nth-child(2){background:#ffbd2e}
+      #page-presentation .pr-mock-dots span:nth-child(3){background:#28c941}
+      #page-presentation .pr-mock-title{font-size:11px;color:var(--pr-ink-3);margin-left:auto;font-weight:500}
+      #page-presentation .pr-mock-title b{color:var(--pr-ink);font-weight:600}
+      #page-presentation .pr-mock-body{padding:14px 4px 4px;display:flex;flex-direction:column;gap:10px}
+      #page-presentation .pr-mock-sec{font-size:10px;font-weight:600;color:var(--pr-ink-3);text-transform:uppercase;letter-spacing:.08em;padding:0 2px}
+      #page-presentation .pr-mock-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+      #page-presentation .pr-mock-kpi{background:var(--pr-cream);border:1px solid var(--pr-line-soft);border-radius:10px;padding:10px 12px}
+      #page-presentation .pr-mock-kpi .n{font-size:18px;font-weight:700;color:var(--pr-ink);letter-spacing:-.02em;line-height:1}
+      #page-presentation .pr-mock-kpi.ok .n{color:var(--pr-accent)}
+      #page-presentation .pr-mock-kpi.gold .n{color:var(--pr-gold-dk)}
+      #page-presentation .pr-mock-kpi .l{font-size:10px;color:var(--pr-ink-3);margin-top:4px;line-height:1.2}
+      #page-presentation .pr-mock-list{display:flex;flex-direction:column;gap:6px;margin-top:2px}
+      #page-presentation .pr-mock-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--pr-cream);border:1px solid var(--pr-line-soft);border-radius:10px;transition:background .3s var(--pr-ease)}
+      #page-presentation .pr-mock-row:hover{background:var(--pr-accent-soft);border-color:rgba(15,118,110,.18)}
+      #page-presentation .pr-mock-check{width:16px;height:16px;border-radius:50%;background:var(--pr-accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+      #page-presentation .pr-mock-row-txt{font-size:11.5px;color:var(--pr-ink);font-weight:500;flex:1;line-height:1.3}
+      #page-presentation .pr-mock-row-time{font-size:10px;color:var(--pr-ink-3);font-weight:500}
+      #page-presentation .pr-mock-cta{margin-top:10px;background:var(--pr-ink);color:#fff;border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:500}
+      #page-presentation .pr-mock-cta .pulse{width:8px;height:8px;border-radius:50%;background:var(--pr-gold);box-shadow:0 0 0 0 rgba(210,173,70,.6);animation:pr-pulse 2s ease-in-out infinite;display:inline-block;vertical-align:middle;margin-right:7px}
+      @keyframes pr-pulse{0%,100%{box-shadow:0 0 0 0 rgba(210,173,70,.6)}50%{box-shadow:0 0 0 10px rgba(210,173,70,0)}}
+
+      /* Stickers flottants sur mockup */
+      #page-presentation .pr-sticker{position:absolute;background:var(--pr-bg);border:1px solid var(--pr-line);border-radius:12px;padding:10px 14px;box-shadow:0 20px 40px -20px rgba(10,10,10,.18),0 2px 6px rgba(10,10,10,.05);font-size:12px;color:var(--pr-ink);font-weight:500;display:flex;align-items:center;gap:8px;animation:pr-float 6s ease-in-out infinite;z-index:2}
+      @keyframes pr-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+      #page-presentation .pr-sticker-1{top:-14px;left:-18px;animation-delay:0s}
+      #page-presentation .pr-sticker-2{bottom:-10px;right:-14px;animation-delay:1.5s}
+      #page-presentation .pr-sticker b{color:var(--pr-accent)}
+      #page-presentation .pr-sticker svg{width:16px;height:16px;flex-shrink:0}
+
+      /* MARQUEE preuves */
+      #page-presentation .pr-marquee{position:relative;padding:20px 0;background:var(--pr-cream);border-top:1px solid var(--pr-line-soft);border-bottom:1px solid var(--pr-line-soft);overflow:hidden}
+      #page-presentation .pr-marquee-label{text-align:center;font-size:11.5px;color:var(--pr-ink-3);font-weight:500;letter-spacing:.04em;margin-bottom:12px}
+      #page-presentation .pr-marquee-label b{color:var(--pr-ink);font-weight:600}
+      #page-presentation .pr-marquee-track{display:flex;gap:32px;animation:pr-marquee 30s linear infinite;width:max-content}
+      #page-presentation .pr-marquee:hover .pr-marquee-track{animation-play-state:paused}
+      #page-presentation .pr-marquee-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;background:var(--pr-bg);border:1px solid var(--pr-line);border-radius:999px;font-size:12.5px;font-weight:500;color:var(--pr-ink-2);white-space:nowrap}
+      #page-presentation .pr-marquee-chip b{color:var(--pr-ink);font-weight:600}
+      @keyframes pr-marquee{to{transform:translateX(-50%)}}
+      @media(prefers-reduced-motion:reduce){#page-presentation .pr-marquee-track{animation:none}}
 
       /* Sections */
       #page-presentation .pr-sec{padding:clamp(40px,5.5vw,72px) 0;position:relative}
@@ -509,28 +562,80 @@ html, body { max-width: 100%; overflow-x: hidden; }
       <div style="display:none;background:#fff7ed;border:1px solid #fde68a;padding:11px 14px;text-align:center;font-size:12.5px;font-weight:600;color:#7c2d12;margin:14px auto;max-width:1120px;border-radius:12px">
         <strong>Offre lancement</strong> jusqu'au <strong>30 septembre 2026</strong> — DUERP personnalisé à <strong>400 € au lieu de 800 € (-50%)</strong> ou <strong>OFFERT</strong> pour <strong><u>tout abonnement annuel Solo</u></strong>
       </div>
-      <!-- ══════════════════ HERO ══════════════════ -->
+      <!-- ══════════════════ HERO SPLIT ══════════════════ -->
       <section class="pr-hero">
-        <div class="pr-container pr-hero-inner">
-          <span class="pr-badge"><span class="pr-b-dot"></span>Nouveau — Pack DDPP en <b style="color:var(--pr-ink);font-weight:600;margin-left:4px">1 clic</b></span>
-          <h1 class="pr-h1">Votre HACCP <span class="pr-serif">en règle</span>,<br><em>sans paperasse ni stress.</em></h1>
-          <p class="pr-hero-sub">L'application HACCP intuitive pour restaurateurs, boulangers, traiteurs et bouchers. Tous vos contrôles, votre traçabilité et votre Pack DDPP réunis dans une seule app.</p>
-          <div class="pr-hero-cta">
-            <button class="pr-btn pr-btn-primary pr-btn-lg pr-btn-arrow" onclick="showPage('page-inscription')">Essai gratuit 10 jours <i>→</i></button>
-            <button class="pr-btn pr-btn-ghost pr-btn-lg" onclick="document.getElementById('section-demo').scrollIntoView({behavior:'smooth'})">Voir la démo</button>
+        <div class="pr-hero-inner">
+          <div class="pr-hero-left">
+            <span class="pr-badge"><span class="pr-b-dot"></span>Nouveau — Pack DDPP en <b style="color:var(--pr-ink);font-weight:600;margin-left:4px">1 clic</b></span>
+            <h1 class="pr-h1">Votre HACCP <span class="pr-serif">en règle</span>,<br><em>sans paperasse</em>.</h1>
+            <p class="pr-hero-sub">Relevés, traçabilité, nettoyage. Tous vos contrôles réunis dans une app conçue pour les métiers de bouche. Pack DDPP prêt en 60 s.</p>
+            <div class="pr-hero-cta">
+              <button class="pr-btn pr-btn-primary pr-btn-lg pr-btn-arrow" onclick="showPage('page-inscription')">Essai gratuit 10 jours <i>→</i></button>
+              <button class="pr-btn pr-btn-ghost pr-btn-lg" onclick="document.getElementById('section-demo').scrollIntoView({behavior:'smooth'})">Voir la démo</button>
+            </div>
+            <div class="pr-hero-trust">
+              <span class="pr-stars">★★★★★</span>
+              <span><b>Plébiscité</b> par les métiers de bouche</span>
+            </div>
           </div>
-          <div class="pr-hero-trust">
-            <span class="pr-stars">★★★★★</span>
-            <span><b>Plébiscité</b> par les métiers de bouche</span>
-          </div>
-          <div class="pr-stats">
-            <div class="pr-stat"><div class="pr-stat-n">19</div><div class="pr-stat-l">Modules HACCP</div></div>
-            <div class="pr-stat"><div class="pr-stat-n">5</div><div class="pr-stat-l">Secteurs</div></div>
-            <div class="pr-stat"><div class="pr-stat-n pr-gold">1 clic</div><div class="pr-stat-l">Pack DDPP</div></div>
-            <div class="pr-stat"><div class="pr-stat-n">100%</div><div class="pr-stat-l">Mobile</div></div>
+
+          <div class="pr-mock-wrap">
+            <div class="pr-mock">
+              <div class="pr-mock-head">
+                <div class="pr-mock-dots"><span></span><span></span><span></span></div>
+                <div class="pr-mock-title"><b>Nomos Traça</b> · Journée du 26/11</div>
+              </div>
+              <div class="pr-mock-body">
+                <div class="pr-mock-sec">Indicateurs du jour</div>
+                <div class="pr-mock-kpis">
+                  <div class="pr-mock-kpi ok"><div class="n">100%</div><div class="l">Relevés OK</div></div>
+                  <div class="pr-mock-kpi"><div class="n">12/12</div><div class="l">Enceintes</div></div>
+                  <div class="pr-mock-kpi gold"><div class="n">1</div><div class="l">NC à lever</div></div>
+                </div>
+                <div class="pr-mock-sec" style="margin-top:4px">Contrôles d'aujourd'hui</div>
+                <div class="pr-mock-list">
+                  <div class="pr-mock-row"><span class="pr-mock-check">✓</span><span class="pr-mock-row-txt">Température chambre froide (+2°C)</span><span class="pr-mock-row-time">08:12</span></div>
+                  <div class="pr-mock-row"><span class="pr-mock-check">✓</span><span class="pr-mock-row-txt">Réception fournisseur + photo BL</span><span class="pr-mock-row-time">09:34</span></div>
+                  <div class="pr-mock-row"><span class="pr-mock-check">✓</span><span class="pr-mock-row-txt">Plan de nettoyage — soir</span><span class="pr-mock-row-time">17:45</span></div>
+                </div>
+                <div class="pr-mock-cta"><span><span class="pulse"></span>Pack DDPP prêt à présenter</span><span style="color:var(--pr-gold);font-weight:600">Exporter →</span></div>
+              </div>
+            </div>
+            <div class="pr-sticker pr-sticker-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--pr-gold)"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor"/></svg>
+              <span><b>60 s</b> pour le Pack DDPP</span>
+            </div>
+            <div class="pr-sticker pr-sticker-2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--pr-accent)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Conforme <b>DDPP</b></span>
+            </div>
           </div>
         </div>
       </section>
+
+      <!-- MARQUEE preuves -->
+      <div class="pr-marquee" aria-hidden="true">
+        <div class="pr-marquee-label">Ils utilisent Nomos au quotidien — <b>restaurants, boulangeries, boucheries, traiteurs</b></div>
+        <div class="pr-marquee-track">
+          <span class="pr-marquee-chip">Restauration <b>traditionnelle</b></span>
+          <span class="pr-marquee-chip">Boulangerie · <b>Pâtisserie</b></span>
+          <span class="pr-marquee-chip">Boucherie · <b>Charcuterie</b></span>
+          <span class="pr-marquee-chip">Restauration <b>rapide</b></span>
+          <span class="pr-marquee-chip">Traiteur · <b>Évènementiel</b></span>
+          <span class="pr-marquee-chip">Restauration <b>collective</b></span>
+          <span class="pr-marquee-chip">Food truck · <b>Ambulant</b></span>
+          <span class="pr-marquee-chip">Dark kitchen</span>
+          <!-- duplicate for infinite scroll -->
+          <span class="pr-marquee-chip">Restauration <b>traditionnelle</b></span>
+          <span class="pr-marquee-chip">Boulangerie · <b>Pâtisserie</b></span>
+          <span class="pr-marquee-chip">Boucherie · <b>Charcuterie</b></span>
+          <span class="pr-marquee-chip">Restauration <b>rapide</b></span>
+          <span class="pr-marquee-chip">Traiteur · <b>Évènementiel</b></span>
+          <span class="pr-marquee-chip">Restauration <b>collective</b></span>
+          <span class="pr-marquee-chip">Food truck · <b>Ambulant</b></span>
+          <span class="pr-marquee-chip">Dark kitchen</span>
+        </div>
+      </div>
 
       <!-- FONCTIONNALITÉS (compactée) -->
       <!-- ══════════════════ FONCTIONNALITÉS ══════════════════ -->
@@ -570,40 +675,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
       </section>
 
-      <!-- ══════════════════ COFFRE-FORT ══════════════════ -->
-      <section class="pr-sec pr-alt">
-        <div class="pr-container">
-          <div class="pr-sec-head">
-            <span class="pr-sec-eyebrow">Coffre-fort</span>
-            <h2 class="pr-sec-title">Tous vos documents au <em>même endroit</em>.</h2>
-          </div>
-          <div class="pr-safe-grid">
-            <div class="pr-safe"><div class="pr-safe-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2Z"/><path d="M14 2v6h6"/></svg></div><div class="pr-safe-h">Plan de Maîtrise Sanitaire</div><div class="pr-safe-p">Stockage central</div></div>
-            <div class="pr-safe"><div class="pr-safe-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div><div class="pr-safe-h">Attestation HACCP</div><div class="pr-safe-p">Validité auto-vérifiée</div></div>
-            <div class="pr-safe"><div class="pr-safe-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="pr-safe-h">Contrat dératisation</div><div class="pr-safe-p">Alerte renouvellement 30 j</div></div>
-            <div class="pr-safe"><div class="pr-safe-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 9 9"/><path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-9-9"/><polyline points="3 12 8 7 8 12"/><polyline points="21 12 16 17 16 12"/></svg></div><div class="pr-safe-h">Contrats déchets / huiles</div><div class="pr-safe-p">Loi AGEC 2024</div></div>
-            <div class="pr-safe"><div class="pr-safe-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><div class="pr-safe-h">Photos lots, DLC</div><div class="pr-safe-p">Preuves horodatées</div></div>
-            <div class="pr-safe"><div class="pr-safe-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="pr-safe-h">Bordereaux collecte</div><div class="pr-safe-p">Biodéchets, huiles</div></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══════════════════ MULTI-SECTORIEL ══════════════════ -->
-      <section class="pr-sec">
-        <div class="pr-container">
-          <div class="pr-sec-head">
-            <span class="pr-sec-eyebrow">5 secteurs adaptés</span>
-            <h2 class="pr-sec-title">Une app pensée pour <em>votre métier</em>.</h2>
-          </div>
-          <div class="pr-sect-grid">
-            <div class="pr-sect"><div class="pr-sect-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7a2 2 0 0 0 2 2h2V2"/><path d="M4 11v11"/><path d="M14 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3l1 9"/></svg></div><div class="pr-sect-h">Restauration trad.</div><div class="pr-sect-p">Bistrots, brasseries</div></div>
-            <div class="pr-sect"><div class="pr-sect-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="10" ry="5"/><path d="M4 14c2 2 5 2 8 2s6 0 8-2"/></svg></div><div class="pr-sect-h">Boulangerie · pâtisserie</div><div class="pr-sect-p">Cellules de pousse</div></div>
-            <div class="pr-sect"><div class="pr-sect-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/><path d="M4 10V8a8 8 0 0 1 16 0v2"/><path d="M2 16h20"/><path d="M4 18h16"/></svg></div><div class="pr-sect-h">Fast food</div><div class="pr-sect-p">Friteuses, remise T°</div></div>
-            <div class="pr-sect"><div class="pr-sect-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7l8 5 8-5-8-5z"/><path d="M4 17l8 5 8-5"/><path d="M4 12l8 5 8-5"/></svg></div><div class="pr-sect-h">Boucherie</div><div class="pr-sect-p">Traçabilité, CF</div></div>
-            <div class="pr-sect"><div class="pr-sect-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2V9z"/></svg></div><div class="pr-sect-h">Restauration collective</div><div class="pr-sect-p">Plat témoin, liaison</div></div>
-          </div>
-        </div>
-      </section>
       <!-- ══════════════════ DÉMO (carrousel) ══════════════════ -->
       <section id="section-demo" class="pr-sec pr-alt">
         <div class="pr-container">
