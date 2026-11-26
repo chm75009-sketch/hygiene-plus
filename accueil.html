@@ -238,114 +238,91 @@ section[style*="background: var(--cream)"]::after{
   .flow-arrow .arrow-dot{animation-duration:2s}
 }
 
-/* ── PRODUITS : chaque app en split texte/mockup ── */
-.product-row{
-  display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(24px,4vw,56px);
-  align-items:center;padding:clamp(22px,3vw,36px);border-radius:var(--r-xl);
-  position:relative;overflow:hidden;margin-bottom:18px;
-  transition:transform .4s var(--ease),box-shadow .4s var(--ease);
+/* ── PRODUITS côte à côte, chacun reproduit la vraie interface ── */
+.products-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.products-grid{grid-template-columns:1fr}}
+.product-card{
+  display:flex;flex-direction:column;gap:14px;
+  padding:22px 22px 20px;border-radius:var(--r-xl);position:relative;overflow:hidden;
+  text-decoration:none;color:inherit;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s;
 }
-.product-row:last-child{margin-bottom:0}
-.product-row.reverse{grid-template-columns:1.05fr 1fr}
-.product-row.reverse .product-info{order:2}
-.product-row.reverse .product-mock{order:1}
-@media(max-width:860px){
-  .product-row,.product-row.reverse{grid-template-columns:1fr;gap:20px}
-  .product-row.reverse .product-info,.product-row.reverse .product-mock{order:0}
-}
-.product-row.light{background:var(--bg);border:1px solid var(--line)}
-.product-row.dark{background:radial-gradient(600px 300px at 90% 0%,rgba(210,173,70,.12),transparent 60%),linear-gradient(160deg,#0e1f1b,#050c0a);color:#fff;border:1px solid rgba(255,255,255,.05)}
-.product-row.light:hover{border-color:rgba(15,118,110,.3);box-shadow:0 30px 60px -30px rgba(10,10,10,.12)}
-.product-row.dark:hover{box-shadow:0 30px 60px -30px rgba(15,118,110,.35),0 0 40px -10px rgba(210,173,70,.15)}
-
-.product-info{display:flex;flex-direction:column;gap:12px;max-width:440px}
-.p-tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
-.product-row.dark .p-tag{color:var(--gold)}
+.product-card.light{background:var(--bg);border:1px solid var(--line)}
+.product-card.dark{background:radial-gradient(500px 240px at 90% 0%,rgba(210,173,70,.12),transparent 60%),linear-gradient(160deg,#0e1f1b,#050c0a);color:#fff;border:1px solid rgba(255,255,255,.05)}
+.product-card:hover{transform:translateY(-4px)}
+.product-card.light:hover{border-color:rgba(15,118,110,.3);box-shadow:0 30px 60px -30px rgba(10,10,10,.14)}
+.product-card.dark:hover{box-shadow:0 30px 60px -30px rgba(15,118,110,.35),0 0 40px -10px rgba(210,173,70,.15)}
+.product-card .p-tag{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.product-card.dark .p-tag{color:var(--gold)}
 .p-tag::before{content:"";width:7px;height:7px;border-radius:2px;background:var(--accent)}
-.product-row.dark .p-tag::before{background:var(--gold)}
-.product-info h3{font-size:clamp(20px,2.4vw,26px);font-weight:600;letter-spacing:-.025em;line-height:1.15;color:var(--ink)}
-.product-row.dark .product-info h3{color:#fff}
-.product-info p{font-size:14.5px;color:var(--ink-2);line-height:1.55}
-.product-row.dark .product-info p{color:rgba(255,255,255,.72)}
-.product-info ul{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:4px}
-.product-info li{font-size:13.5px;color:var(--ink-2);display:flex;gap:8px;align-items:center}
-.product-row.dark .product-info li{color:rgba(255,255,255,.82)}
-.product-info li::before{content:"✓";color:var(--accent);font-weight:700;flex-shrink:0;font-size:12px}
-.product-row.dark .product-info li::before{color:var(--gold)}
-.p-cta{margin-top:6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.product-card.dark .p-tag::before{background:var(--gold)}
+.product-card h3{font-size:18px;font-weight:600;letter-spacing:-.02em;line-height:1.2;color:var(--ink)}
+.product-card.dark h3{color:#fff}
+.product-card p{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.product-card.dark p{color:rgba(255,255,255,.72)}
+.product-card .p-cta{margin-top:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:4px}
 
-/* ── MOCKUP APP (section produits) ── */
-.product-mock{position:relative;perspective:1500px}
-.mock-card{
-  background:var(--bg);border:1px solid var(--line);border-radius:14px;
-  padding:14px;box-shadow:0 30px 60px -30px rgba(10,10,10,.18),0 10px 24px -14px rgba(10,10,10,.08);
-  position:relative;z-index:1;transition:transform .5s var(--ease);
+/* Browser-frame compact qui contient la mini-interface */
+.app-frame{
+  border-radius:12px;overflow:hidden;position:relative;
+  box-shadow:0 20px 40px -20px rgba(10,10,10,.22),0 0 0 1px rgba(10,10,10,.06);
+  margin:4px 0 2px;
+  transition:transform .4s var(--ease);
 }
-.product-row.dark .mock-card{background:#0a1917;border-color:rgba(255,255,255,.08);box-shadow:0 30px 60px -30px rgba(0,0,0,.6),0 0 30px -14px rgba(210,173,70,.15)}
-.product-row:hover .mock-card{transform:translateY(-4px)}
+.product-card:hover .app-frame{transform:translateY(-2px) scale(1.01)}
+.product-card.dark .app-frame{box-shadow:0 20px 40px -20px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08)}
+.af-bar{display:flex;align-items:center;gap:6px;padding:7px 10px;background:#f3f1ec;border-bottom:1px solid rgba(10,10,10,.08)}
+.product-card.dark .af-bar{background:#0c1612;border-bottom-color:rgba(255,255,255,.06)}
+.af-dots{display:flex;gap:4px}
+.af-dots span{width:7px;height:7px;border-radius:50%;background:#c0bcae}
+.af-dots span:first-child{background:#ff5f57}.af-dots span:nth-child(2){background:#ffbd2e}.af-dots span:nth-child(3){background:#28c941}
+.af-url{flex:1;background:rgba(10,10,10,.05);border-radius:999px;padding:2px 10px;font-size:9.5px;color:var(--ink-3);letter-spacing:.01em;text-align:center}
+.product-card.dark .af-url{background:rgba(255,255,255,.05);color:rgba(255,255,255,.4)}
 
-.mc-head{display:flex;align-items:center;gap:8px;padding:0 4px 10px;border-bottom:1px solid var(--line-soft)}
-.product-row.dark .mc-head{border-bottom-color:rgba(255,255,255,.08)}
-.mc-dots{display:flex;gap:4px}
-.mc-dots span{width:9px;height:9px;border-radius:50%;background:var(--line)}
-.mc-dots span:first-child{background:#ff5f57}.mc-dots span:nth-child(2){background:#ffbd2e}.mc-dots span:nth-child(3){background:#28c941}
-.mc-title{font-size:11px;color:var(--ink-3);margin-left:auto;font-weight:500}
-.product-row.dark .mc-title{color:rgba(255,255,255,.55)}
-.mc-title b{color:var(--ink);font-weight:600}
-.product-row.dark .mc-title b{color:#fff}
+/* ─ Mini Nomos Audit (reprend audit/index.html) ─ */
+.mini-audit{background:#f5f2ea;padding:14px 14px 16px;font-family:'Inter',sans-serif}
+.mini-audit .ma-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.mini-audit .ma-brand{display:flex;align-items:center;gap:7px}
+.mini-audit .ma-logo{width:22px;height:22px;background:#1f5649;color:#fff;border-radius:6px;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:.05em}
+.mini-audit .ma-brand-name{font-size:10.5px;font-weight:800;color:#153e35;letter-spacing:.08em}
+.mini-audit .ma-cta{background:#fff;border:1.5px solid #153e35;color:#153e35;font-size:9px;font-weight:800;padding:4px 10px;border-radius:999px}
+.mini-audit .ma-title{font-size:13px;font-weight:700;color:#153e35;line-height:1.2;margin-bottom:10px;max-width:92%}
+.mini-audit .ma-poles{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.mini-audit .ma-pole{background:#fff;border:1px solid rgba(21,62,53,.14);border-radius:10px;padding:8px}
+.mini-audit .ma-pole.gold{background:linear-gradient(180deg,#fff,#fdf5e6);border-color:rgba(183,144,41,.3)}
+.mini-audit .ma-eyebrow{font-size:7px;font-weight:800;color:#1f5649;text-transform:uppercase;letter-spacing:.08em;background:#fff;border:1px solid rgba(31,86,73,.15);padding:2px 6px;border-radius:999px;display:inline-block;margin-bottom:4px}
+.mini-audit .ma-pole.gold .ma-eyebrow{color:#b79029;border-color:rgba(183,144,41,.3)}
+.mini-audit .ma-pole-h{font-size:9px;font-weight:700;color:#153e35;line-height:1.2;margin-bottom:4px}
+.mini-audit .ma-pole-btn{display:inline-block;background:linear-gradient(135deg,#2d6f60,#153e35);color:#fff;font-size:8px;font-weight:800;padding:4px 8px;border-radius:999px}
+.mini-audit .ma-pole.gold .ma-pole-btn{background:linear-gradient(135deg,#d2ad46,#b79029);color:#201806}
+.mini-audit .ma-board{background:linear-gradient(135deg,#2d6f60,#153e35);border-radius:10px;padding:10px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mini-audit .ma-board-txt .lbl{font-size:8.5px;opacity:.75}
+.mini-audit .ma-board-txt .big{font-size:11px;font-weight:700;margin-top:2px}
+.mini-audit .ma-score{width:42px;height:42px;border-radius:50%;background:conic-gradient(#d2ad46 0 280deg,rgba(255,255,255,.2) 280deg 360deg);display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.mini-audit .ma-score::before{content:"";position:absolute;inset:4px;background:#fff;border-radius:50%}
+.mini-audit .ma-score span{position:relative;z-index:1;font-size:13px;font-weight:800;color:#153e35}
 
-/* Audit mockup */
-.audit-cats{display:flex;flex-direction:column;gap:8px;padding:12px 4px 2px}
-.ac{display:grid;grid-template-columns:120px 1fr 32px;gap:10px;align-items:center;font-size:11.5px}
-.ac-name{color:var(--ink);font-weight:500;letter-spacing:-.01em}
-.ac-bar{height:6px;background:var(--line-soft);border-radius:999px;overflow:hidden}
-.ac-bar span{display:block;height:100%;border-radius:inherit;background:var(--accent);transform-origin:left;animation:ac-fill 1.4s var(--ease) both;transition:width .8s var(--ease)}
-.ac-bar span.warn{background:var(--gold)}
-.ac-bar span.empty{background:var(--line)}
-.ac-val{font-size:11px;color:var(--ink-3);text-align:right;font-weight:500}
-@keyframes ac-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.ac:nth-child(1) .ac-bar span{animation-delay:.1s}
-.ac:nth-child(2) .ac-bar span{animation-delay:.3s}
-.ac:nth-child(3) .ac-bar span{animation-delay:.5s}
-.ac:nth-child(4) .ac-bar span{animation-delay:.7s}
-
-.audit-question{margin-top:14px;padding:12px;background:var(--cream);border:1px solid var(--line-soft);border-radius:10px}
-.aq-lbl{font-size:10px;color:var(--ink-3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
-.aq-text{font-size:13px;color:var(--ink);font-weight:600;line-height:1.3;margin-bottom:10px}
-.aq-opts{display:flex;flex-direction:column;gap:5px}
-.aq-opt{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:11.5px;color:var(--ink-2);cursor:pointer;transition:border-color .2s,background .2s}
-.aq-opt:hover{border-color:var(--accent);background:var(--accent-soft)}
-.aq-opt.selected{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-2);font-weight:600}
-.aq-opt .mark{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--line);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:transparent}
-.aq-opt.selected .mark{border-color:var(--accent);background:var(--accent);color:#fff}
-.aq-progress{display:flex;align-items:center;gap:10px;margin-top:12px;padding:0 2px}
-.ap-bar{flex:1;height:5px;background:var(--line-soft);border-radius:999px;overflow:hidden}
-.ap-bar span{display:block;height:100%;width:67%;background:linear-gradient(90deg,var(--accent),#14b8a6);border-radius:inherit;animation:ap-fill 1.6s var(--ease) both}
-@keyframes ap-fill{from{width:0}to{width:67%}}
-.ap-lbl{font-size:10.5px;color:var(--ink-3);font-weight:500;white-space:nowrap}
-
-/* Traça (Pack DDPP) mockup */
-.pd-head{display:flex;align-items:center;justify-content:space-between;padding:10px 4px 12px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:10px}
-.pd-h-title{font-size:13px;font-weight:600;color:#fff;letter-spacing:-.01em}
-.pd-h-sub{font-size:10.5px;color:rgba(255,255,255,.55);margin-top:2px}
-.pd-h-badge{background:var(--gold);color:#3b2c05;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.03em}
-.pd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
-.pd-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:9px 10px}
-.pd-stat .n{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.025em;line-height:1}
-.pd-stat .l{font-size:9.5px;color:rgba(255,255,255,.55);margin-top:3px}
-.pd-stat.ok .n{color:#5eead4}
-.pd-stat.gold .n{color:var(--gold)}
-.pd-list{display:flex;flex-direction:column;gap:5px}
-.pd-row{display:flex;align-items:center;gap:9px;padding:7px 9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:8px}
-.pd-icon{width:18px;height:22px;background:linear-gradient(135deg,#fff,#e2e8f0);border-radius:2px 4px 4px 2px;position:relative;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.pd-icon::before{content:"";position:absolute;top:3px;right:3px;width:4px;height:4px;background:var(--gold);border-radius:1px}
-.pd-icon.pdf::after{content:"PDF";position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:5px;font-weight:700;color:#dc2626}
-.pd-row-txt{flex:1;font-size:11.5px;color:#fff;font-weight:500;letter-spacing:-.005em}
-.pd-row-meta{font-size:10px;color:rgba(255,255,255,.5)}
-.pd-cta{margin-top:12px;background:var(--gold);color:#3b2c05;border:none;border-radius:10px;padding:11px;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;width:100%;transition:background .2s}
-.pd-cta:hover{background:#c8a23b}
-.pd-cta .spark{width:6px;height:6px;border-radius:50%;background:#3b2c05;animation:pd-sparkle 1.6s ease-in-out infinite}
-@keyframes pd-sparkle{0%,100%{box-shadow:0 0 0 0 rgba(59,44,5,.5)}50%{box-shadow:0 0 0 6px rgba(59,44,5,0)}}
+/* ─ Mini Nomos Traça (reprend haccp.html) ─ */
+.mini-traca{background:linear-gradient(150deg,#0a0e1a 0%,#1a2535 100%);padding:14px 14px 16px;color:#fff;font-family:'Inter',sans-serif;position:relative;overflow:hidden}
+.mini-traca::before{content:"";position:absolute;top:-30px;right:-20px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.18) 0%,transparent 70%);pointer-events:none}
+.mini-traca .mt-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;position:relative;z-index:1}
+.mini-traca .mt-brand{display:flex;align-items:center;gap:7px}
+.mini-traca .mt-shield{width:22px;height:22px;background:linear-gradient(135deg,#10b981,#34d399);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(16,185,129,.4)}
+.mini-traca .mt-shield svg{width:12px;height:12px}
+.mini-traca .mt-brand-name{font-size:11px;font-weight:800;color:#fff}
+.mini-traca .mt-brand-name em{color:#d2ad46;font-style:normal}
+.mini-traca .mt-install{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:8.5px;font-weight:700;padding:3px 9px;border-radius:999px}
+.mini-traca .mt-title{font-size:13px;font-weight:800;line-height:1.15;margin-bottom:10px;position:relative;z-index:1}
+.mini-traca .mt-title em{color:#d2ad46;font-style:normal}
+.mini-traca .mt-cta-row{display:flex;gap:5px;margin-bottom:10px;position:relative;z-index:1}
+.mini-traca .mt-cta{flex:1;background:#fff;color:#153e35;border-radius:8px;padding:6px 8px;font-size:8.5px;font-weight:700;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px}
+.mini-traca .mt-cta.ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff}
+.mini-traca .mt-cta .ic{width:9px;height:9px;flex-shrink:0}
+.mini-traca .mt-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding-top:10px;border-top:1px solid rgba(255,255,255,.1);position:relative;z-index:1}
+.mini-traca .mt-kpi{text-align:center}
+.mini-traca .mt-kpi .n{font-size:13px;font-weight:800;color:#fff;letter-spacing:-.025em;line-height:1}
+.mini-traca .mt-kpi .n.gold{color:#d2ad46}
+.mini-traca .mt-kpi .l{font-size:6.5px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
 
 .compare{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-xl);padding:clamp(20px,3vw,32px);position:relative;overflow:hidden;box-shadow:0 2px 20px rgba(10,10,10,.03)}
 .compare-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
@@ -572,94 +549,84 @@ document.addEventListener('DOMContentLoaded',function(){document.body.appendChil
       <h2 class="sec-title">L'audit pour <em>savoir</em>. L'app pour <em>prouver</em>.</h2>
       <p class="sec-sub">Utilisez l'un, l'autre, ou les deux. Le fil conducteur reste le même : zéro stress face aux inspecteurs.</p>
     </div>
-    <!-- Nomos Audit : texte à gauche, mockup à droite -->
-    <div class="product-row light" data-reveal>
-      <div class="product-info">
+    <div class="products-grid">
+
+      <!-- Nomos Audit : mini reproduction de audit/index.html -->
+      <a class="product-card light" href="audit/index.html" data-reveal="left">
         <span class="p-tag">Nomos Audit</span>
         <h3>Préparez le contrôle comme un inspecteur l'aurait fait.</h3>
-        <p>Audit guidé, rapport clair, plan d'action priorisé. On liste les écarts et on vous dit par quoi commencer.</p>
-        <ul>
-          <li>Audit guidé pas à pas</li>
-          <li>Rapport DDPP imprimable</li>
-          <li>Plan d'action priorisé</li>
-        </ul>
-        <div class="p-cta">
-          <a class="btn btn-primary btn-sm btn-arrow" href="audit/index.html">Préparer mon contrôle <i>→</i></a>
-          <a class="btn btn-ghost btn-sm" href="audit/tarifs.html">Voir les tarifs</a>
-        </div>
-      </div>
-      <div class="product-mock">
-        <div class="mock-card">
-          <div class="mc-head">
-            <div class="mc-dots"><span></span><span></span><span></span></div>
-            <div class="mc-title"><b>Audit en cours</b> · Restaurant la Belle Vue</div>
+        <div class="app-frame">
+          <div class="af-bar">
+            <div class="af-dots"><span></span><span></span><span></span></div>
+            <div class="af-url">nomos-haccp.fr/audit</div>
           </div>
-          <div class="audit-cats">
-            <div class="ac"><div class="ac-name">Chaîne du froid</div><div class="ac-bar"><span style="width:100%"></span></div><div class="ac-val">100%</div></div>
-            <div class="ac"><div class="ac-name">Traçabilité</div><div class="ac-bar"><span style="width:85%"></span></div><div class="ac-val">85%</div></div>
-            <div class="ac"><div class="ac-name">Nettoyage</div><div class="ac-bar"><span class="warn" style="width:55%"></span></div><div class="ac-val">55%</div></div>
-            <div class="ac"><div class="ac-name">Locaux · nuisibles</div><div class="ac-bar"><span class="empty" style="width:20%"></span></div><div class="ac-val">20%</div></div>
-          </div>
-          <div class="audit-question">
-            <div class="aq-lbl">Question 13 / 18</div>
-            <div class="aq-text">Avez-vous un plan de nettoyage écrit et émargé ?</div>
-            <div class="aq-opts">
-              <div class="aq-opt"><span class="mark"></span>Oui, tenu à jour</div>
-              <div class="aq-opt selected"><span class="mark">✓</span>Partiellement</div>
-              <div class="aq-opt"><span class="mark"></span>Non</div>
+          <div class="mini-audit">
+            <div class="ma-nav">
+              <div class="ma-brand"><span class="ma-logo">N</span><span class="ma-brand-name">NOMOS</span></div>
+              <span class="ma-cta">Accès client</span>
+            </div>
+            <div class="ma-title">Audit et prévention des risques sanitaires pour les établissements alimentaires</div>
+            <div class="ma-poles">
+              <div class="ma-pole">
+                <div class="ma-eyebrow">Évaluation</div>
+                <div class="ma-pole-h">Votre établissement risque-t-il une fermeture ?</div>
+                <span class="ma-pole-btn">Tester</span>
+              </div>
+              <div class="ma-pole gold">
+                <div class="ma-eyebrow">ExpertAudit</div>
+                <div class="ma-pole-h">Sauvegarder mon activité</div>
+                <span class="ma-pole-btn">S'inscrire</span>
+              </div>
+            </div>
+            <div class="ma-board">
+              <div class="ma-board-txt"><div class="lbl">Tableau de bord Nomos</div><div class="big">Score global d'hygiène</div></div>
+              <div class="ma-score"><span>79</span></div>
             </div>
           </div>
-          <div class="aq-progress">
-            <div class="ap-bar"><span></span></div>
-            <div class="ap-lbl">12 / 18 questions</div>
-          </div>
         </div>
-      </div>
-    </div>
+        <p>Audit guidé, rapport clair, plan d'action priorisé.</p>
+        <div class="p-cta">
+          <span class="btn btn-primary btn-sm btn-arrow">Préparer mon contrôle <i>→</i></span>
+        </div>
+      </a>
 
-    <!-- Nomos Traça : mockup à gauche, texte à droite -->
-    <div class="product-row dark reverse" data-reveal>
-      <div class="product-info">
+      <!-- Nomos Traça : mini reproduction de haccp.html -->
+      <a class="product-card dark" href="haccp.html" data-reveal="right">
         <span class="p-tag">Nomos Traça</span>
         <h3>Pilotez l'hygiène au quotidien, sans y penser.</h3>
-        <p>Relevés, traçabilité, nettoyage, DLC, plats témoins. L'app construit vos preuves toute seule, le Pack DDPP est prêt en 60 secondes.</p>
-        <ul>
-          <li>Relevés de température automatisés</li>
-          <li>Traçabilité & étiquettes DLC</li>
-          <li>Pack DDPP prêt à présenter</li>
-        </ul>
-        <div class="p-cta">
-          <a class="btn btn-sm btn-arrow" style="background:var(--gold);color:#3b2c05" href="haccp.html?essai=1">Démarrer l'essai <i>→</i></a>
-          <span style="font-size:12.5px;color:var(--gold);font-weight:500">10 j · sans CB</span>
-        </div>
-      </div>
-      <div class="product-mock">
-        <div class="mock-card">
-          <div class="mc-head" style="padding-bottom:0;border-bottom:none">
-            <div class="mc-dots"><span></span><span></span><span></span></div>
-            <div class="mc-title" style="color:rgba(255,255,255,.55)"><b style="color:#fff">Nomos Traça</b></div>
+        <div class="app-frame">
+          <div class="af-bar">
+            <div class="af-dots"><span></span><span></span><span></span></div>
+            <div class="af-url">nomos-haccp.fr/haccp</div>
           </div>
-          <div class="pd-head">
-            <div>
-              <div class="pd-h-title">Pack DDPP · Semaine 48</div>
-              <div class="pd-h-sub">Restaurant la Belle Vue · 20 → 26 nov 2026</div>
+          <div class="mini-traca">
+            <div class="mt-nav">
+              <div class="mt-brand">
+                <span class="mt-shield"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                <span class="mt-brand-name">Nomos <em>Traça</em></span>
+              </div>
+              <span class="mt-install">Installer</span>
             </div>
-            <div class="pd-h-badge">Prêt</div>
+            <div class="mt-title">Votre HACCP en règle,<br><em>sans paperasse, sans stress.</em></div>
+            <div class="mt-cta-row">
+              <span class="mt-cta">Se connecter</span>
+              <span class="mt-cta ghost">S'inscrire</span>
+            </div>
+            <div class="mt-kpis">
+              <div class="mt-kpi"><div class="n">19</div><div class="l">Modules</div></div>
+              <div class="mt-kpi"><div class="n">5</div><div class="l">Secteurs</div></div>
+              <div class="mt-kpi"><div class="n gold">1 clic</div><div class="l">Pack DDPP</div></div>
+              <div class="mt-kpi"><div class="n">100%</div><div class="l">Mobile</div></div>
+            </div>
           </div>
-          <div class="pd-stats">
-            <div class="pd-stat ok"><div class="n">42</div><div class="l">Relevés T°</div></div>
-            <div class="pd-stat"><div class="n">18</div><div class="l">Bons livrés</div></div>
-            <div class="pd-stat gold"><div class="n">2</div><div class="l">NC levées</div></div>
-          </div>
-          <div class="pd-list">
-            <div class="pd-row"><div class="pd-icon pdf"></div><div class="pd-row-txt">Rapport d'autocontrôle</div><div class="pd-row-meta">PDF · 12 p.</div></div>
-            <div class="pd-row"><div class="pd-icon pdf"></div><div class="pd-row-txt">Relevés températures</div><div class="pd-row-meta">PDF · 8 p.</div></div>
-            <div class="pd-row"><div class="pd-icon pdf"></div><div class="pd-row-txt">Traçabilité photo</div><div class="pd-row-meta">ZIP · 18</div></div>
-            <div class="pd-row"><div class="pd-icon pdf"></div><div class="pd-row-txt">Plan de nettoyage</div><div class="pd-row-meta">PDF · 4 p.</div></div>
-          </div>
-          <button class="pd-cta"><span class="spark"></span>Exporter le Pack DDPP <span style="opacity:.6;font-weight:500">(60 s)</span></button>
         </div>
-      </div>
+        <p>Relevés, traçabilité, Pack DDPP prêt en 60 s.</p>
+        <div class="p-cta">
+          <span class="btn btn-sm btn-arrow" style="background:var(--gold);color:#3b2c05">Démarrer l'essai <i>→</i></span>
+          <span style="font-size:12px;color:var(--gold);font-weight:500">10 j · sans CB</span>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>
