@@ -167,18 +167,51 @@ section{padding:clamp(48px,6vw,80px) 0;position:relative}
 @keyframes marquee{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.marquee-track{animation:none}}
 
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media(max-width:820px){.steps{grid-template-columns:1fr}}
-.step{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;transition:border-color .22s,transform .22s}
-.step:hover{border-color:#dcdcdc;transform:translateY(-3px)}
-.step-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:600;font-family:'Instrument Serif',serif;font-style:italic}
-.step h3{font-size:17px;font-weight:600;letter-spacing:-.02em;margin:16px 0 6px;color:var(--ink)}
-.step p{font-size:13.5px;color:var(--ink-2);line-height:1.55}
-.step-visual{margin-top:16px;height:110px;border-radius:12px;background:var(--cream);border:1px solid var(--line-soft);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.sv-1{background:linear-gradient(135deg,var(--accent-soft),var(--bg))}
-.sv-2{background:linear-gradient(135deg,#fef9e7,var(--bg))}
-.sv-3{background:linear-gradient(135deg,var(--accent-soft),#fef9e7)}
-.sv-ico{font-size:40px;opacity:.9}
+/* Cloud flow — 3 nuages dessinés à la main reliés par des flèches courbes */
+.cloud-flow{
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  flex-wrap:nowrap;max-width:900px;margin:0 auto;padding:4px 0;
+}
+.cloud-cell{
+  position:relative;flex:0 0 auto;width:clamp(130px,16vw,180px);
+  animation:cloud-bob 6s ease-in-out infinite;
+}
+.cloud-cell:nth-child(3){animation-delay:.8s;width:clamp(150px,18vw,200px)}
+.cloud-cell:nth-child(5){animation-delay:1.6s}
+@keyframes cloud-bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(-.6deg)}}
+.cloud-cell:hover{animation-play-state:paused}
+.cloud-cell:hover .cloud{filter:brightness(1.03) drop-shadow(0 6px 12px rgba(15,118,110,.18))}
+.cloud{display:block;width:100%;height:auto;transition:filter .25s}
+.cloud-content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14% 10% 18%}
+.cloud-num{
+  width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;
+  margin-bottom:6px;box-shadow:0 2px 6px rgba(10,10,10,.15);
+}
+.cloud-num-gold{background:var(--gold);color:#3b2c05}
+.cloud-num .serif{font-style:italic;font-size:16px}
+.cloud-text{text-align:center;line-height:1.15}
+.cloud-text b{font-size:clamp(13px,1.2vw,15px);color:var(--ink);font-weight:600;letter-spacing:-.01em}
+.cloud-text span{font-size:clamp(10.5px,.9vw,11.5px);color:var(--ink-3);font-weight:500}
+
+.cloud-arrow{flex:0 0 auto;width:clamp(50px,6vw,90px);height:auto;color:var(--ink);align-self:flex-start;margin-top:20px}
+.cloud-arrow-down{align-self:center;margin-top:0}
+.cloud-arrow .arrow-path{
+  stroke-dasharray:4 5;animation:dash-flow 4s linear infinite;
+}
+@keyframes dash-flow{to{stroke-dashoffset:-18}}
+@media(prefers-reduced-motion:reduce){.cloud-cell,.cloud-arrow .arrow-path{animation:none}}
+
+/* Mobile : 3 nuages empilés avec flèches qui zigzaguent */
+@media(max-width:720px){
+  .cloud-flow{flex-direction:column;gap:0;max-width:280px}
+  .cloud-cell{width:70%}
+  .cloud-cell:nth-child(1){align-self:flex-start}
+  .cloud-cell:nth-child(3){align-self:flex-end;width:80%}
+  .cloud-cell:nth-child(5){align-self:flex-start}
+  .cloud-arrow{width:60px;height:60px;align-self:center;transform:rotate(90deg);margin:-6px 0}
+  .cloud-arrow-down{transform:rotate(90deg) scaleY(-1)}
+}
 
 .products-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:820px){.products-grid{grid-template-columns:1fr}}
@@ -310,7 +343,7 @@ footer.site{background:var(--bg);border-top:1px solid var(--line);padding:28px 0
 
 <script>
 (function(){try{var h=location.hostname;if(h==='nomos-haccp.fr'||h==='www.nomos-haccp.fr')return;
-var b=document.createElement('div');b.textContent='🧪 HYGIÈNE+ — COPIE DE TRAVAIL (site de test, pas le site client)';
+var b=document.createElement('div');b.textContent='HYGIÈNE+ — COPIE DE TRAVAIL (site de test, pas le site client)';
 b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#dc2626;color:#fff;text-align:center;font:600 11px/1 Inter,system-ui,sans-serif;padding:4px 6px;letter-spacing:.3px;pointer-events:none';
 document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(b);});}catch(e){}})();
 </script>
@@ -423,8 +456,14 @@ document.addEventListener('DOMContentLoaded',function(){document.body.appendChil
         </div>
       </div>
 
-      <div class="sticker sticker-1"><span class="ico">⚡</span><span><b>60 s</b> pour générer le Pack DDPP</span></div>
-      <div class="sticker sticker-2"><span class="ico">🛡️</span><span>Conforme <b>DDPP</b></span></div>
+      <div class="sticker sticker-1">
+        <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold)"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor"/></svg>
+        <span><b>60 s</b> pour générer le Pack DDPP</span>
+      </div>
+      <div class="sticker sticker-2">
+        <svg class="ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Conforme <b>DDPP</b></span>
+      </div>
     </div>
 
   </div>
@@ -433,50 +472,81 @@ document.addEventListener('DOMContentLoaded',function(){document.body.appendChil
 <div class="marquee" aria-hidden="true">
   <div class="marquee-label">Ils utilisent Nomos au quotidien — <b>restaurants, boulangeries, boucheries, traiteurs</b></div>
   <div class="marquee-track">
-    <span class="marquee-chip"><span class="ico">🍽️</span> Restauration <b>traditionnelle</b></span>
-    <span class="marquee-chip"><span class="ico">🥖</span> Boulangerie · <b>Pâtisserie</b></span>
-    <span class="marquee-chip"><span class="ico">🥩</span> Boucherie · <b>Charcuterie</b></span>
-    <span class="marquee-chip"><span class="ico">🍔</span> Restauration <b>rapide</b></span>
-    <span class="marquee-chip"><span class="ico">🍰</span> Traiteur · <b>Évènementiel</b></span>
-    <span class="marquee-chip"><span class="ico">🏫</span> Restauration <b>collective</b></span>
-    <span class="marquee-chip"><span class="ico">☕</span> Bar · <b>Café</b></span>
-    <span class="marquee-chip"><span class="ico">🍽️</span> Restauration <b>traditionnelle</b></span>
-    <span class="marquee-chip"><span class="ico">🥖</span> Boulangerie · <b>Pâtisserie</b></span>
-    <span class="marquee-chip"><span class="ico">🥩</span> Boucherie · <b>Charcuterie</b></span>
-    <span class="marquee-chip"><span class="ico">🍔</span> Restauration <b>rapide</b></span>
-    <span class="marquee-chip"><span class="ico">🍰</span> Traiteur · <b>Évènementiel</b></span>
-    <span class="marquee-chip"><span class="ico">🏫</span> Restauration <b>collective</b></span>
-    <span class="marquee-chip"><span class="ico">☕</span> Bar · <b>Café</b></span>
+    <span class="marquee-chip">Restauration <b>traditionnelle</b></span>
+    <span class="marquee-chip">Boulangerie · <b>Pâtisserie</b></span>
+    <span class="marquee-chip">Boucherie · <b>Charcuterie</b></span>
+    <span class="marquee-chip">Restauration <b>rapide</b></span>
+    <span class="marquee-chip">Traiteur · <b>Évènementiel</b></span>
+    <span class="marquee-chip">Restauration <b>collective</b></span>
+    <span class="marquee-chip">Bar · <b>Café</b></span>
+    <span class="marquee-chip">Food truck · <b>Ambulant</b></span>
+    <span class="marquee-chip">Dark kitchen · <b>Virtuelle</b></span>
+    <span class="marquee-chip">Restauration <b>traditionnelle</b></span>
+    <span class="marquee-chip">Boulangerie · <b>Pâtisserie</b></span>
+    <span class="marquee-chip">Boucherie · <b>Charcuterie</b></span>
+    <span class="marquee-chip">Restauration <b>rapide</b></span>
+    <span class="marquee-chip">Traiteur · <b>Évènementiel</b></span>
+    <span class="marquee-chip">Restauration <b>collective</b></span>
+    <span class="marquee-chip">Bar · <b>Café</b></span>
+    <span class="marquee-chip">Food truck · <b>Ambulant</b></span>
+    <span class="marquee-chip">Dark kitchen · <b>Virtuelle</b></span>
   </div>
 </div>
 
-<section id="steps">
+<section id="steps" style="padding:clamp(36px,4vw,56px) 0">
   <div class="container">
-    <div class="sec-head-center" data-reveal>
+    <div class="sec-head-center" data-reveal style="margin-bottom:24px">
       <span class="sec-eyebrow">Comment ça marche</span>
       <h2 class="sec-title"><span class="serif">Trois</span> étapes. C'est tout.</h2>
-      <p class="sec-sub">Pas besoin d'être expert HACCP. Nomos vous guide à chaque relevé et construit vos preuves pour vous.</p>
     </div>
-    <div class="steps">
-      <article class="step" data-reveal data-reveal-delay="1">
-        <span class="step-num">1</span>
-        <h3>Vous auditez votre établissement.</h3>
-        <p>Un parcours guidé qui balaie les points critiques : chaîne du froid, traçabilité, nettoyage, nuisibles, PMS.</p>
-        <div class="step-visual sv-1"><span class="sv-ico">🔍</span></div>
-      </article>
-      <article class="step" data-reveal data-reveal-delay="2">
-        <span class="step-num">2</span>
-        <h3>Vous saisissez vos relevés quotidiens.</h3>
-        <p>Températures, bons de livraison en photo, plan de nettoyage. Dix secondes par poste, signatures horodatées.</p>
-        <div class="step-visual sv-2"><span class="sv-ico">📱</span></div>
-      </article>
-      <article class="step" data-reveal data-reveal-delay="3">
-        <span class="step-num">3</span>
-        <h3>Vous imprimez votre Pack DDPP.</h3>
-        <p>Un PDF complet, prêt à présenter à l'inspecteur. Disponible 24 / 7, prêt en soixante secondes.</p>
-        <div class="step-visual sv-3"><span class="sv-ico">📄</span></div>
-      </article>
+    <div class="cloud-flow" data-reveal="fade">
+      <div class="cloud-cell">
+        <svg class="cloud" viewBox="0 0 180 120" aria-hidden="true">
+          <path d="M34,98 C10,100 4,74 28,70 C20,42 60,30 72,52 C82,30 118,36 118,60 C148,56 158,92 134,100 C128,110 44,112 34,98 Z"
+            fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="2.2"
+            stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        <div class="cloud-content">
+          <span class="cloud-num"><span class="serif">1</span></span>
+          <div class="cloud-text"><b>Auditez</b><br><span>votre établissement</span></div>
+        </div>
+      </div>
+
+      <svg class="cloud-arrow" viewBox="0 0 120 70" aria-hidden="true">
+        <path class="arrow-path" d="M6,52 Q40,-2 96,32" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="4 5"/>
+        <path class="arrow-head" d="M96,32 L84,24 M96,32 L88,42" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+
+      <div class="cloud-cell cloud-cell-main">
+        <svg class="cloud" viewBox="0 0 200 130" aria-hidden="true">
+          <path d="M40,108 C14,110 6,80 32,76 C22,44 70,30 84,56 C96,30 136,38 136,64 C170,60 180,100 154,110 C148,122 54,124 40,108 Z"
+            fill="#fff8e1" stroke="var(--ink)" stroke-width="2.2"
+            stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        <div class="cloud-content">
+          <span class="cloud-num cloud-num-gold"><span class="serif">2</span></span>
+          <div class="cloud-text"><b>Pilotez</b><br><span>relevés & traçabilité</span></div>
+        </div>
+      </div>
+
+      <svg class="cloud-arrow cloud-arrow-down" viewBox="0 0 120 70" aria-hidden="true">
+        <path class="arrow-path" d="M6,24 Q58,70 96,38" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="4 5"/>
+        <path class="arrow-head" d="M96,38 L84,46 M96,38 L88,28" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+
+      <div class="cloud-cell">
+        <svg class="cloud" viewBox="0 0 180 120" aria-hidden="true">
+          <path d="M34,98 C10,100 4,74 28,70 C20,42 60,30 72,52 C82,30 118,36 118,60 C148,56 158,92 134,100 C128,110 44,112 34,98 Z"
+            fill="var(--accent-soft)" stroke="var(--ink)" stroke-width="2.2"
+            stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+        <div class="cloud-content">
+          <span class="cloud-num"><span class="serif">3</span></span>
+          <div class="cloud-text"><b>Imprimez</b><br><span>le Pack DDPP</span></div>
+        </div>
+      </div>
     </div>
+    <p class="sec-sub" style="text-align:center;margin:22px auto 0;max-width:520px">Pas besoin d'être expert HACCP. Nomos vous guide à chaque relevé et construit vos preuves pour vous.</p>
   </div>
 </section>
 
