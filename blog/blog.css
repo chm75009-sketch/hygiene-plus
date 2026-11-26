@@ -49,7 +49,7 @@ body{
 
 /* HERO */
 .hero{
-  position:relative;padding:clamp(56px,8vw,96px) 0 clamp(36px,5vw,56px);overflow:hidden;
+  position:relative;padding:clamp(28px,4vw,48px) 0 clamp(20px,3vw,32px);overflow:hidden;
   border-bottom:1px solid var(--line);background:var(--bg);
 }
 .hero::before{
@@ -59,26 +59,26 @@ body{
 }
 .hero .wrap{position:relative;z-index:1}
 .eyebrow{
-  display:inline-block;font-size:13px;font-weight:600;color:var(--accent);
-  letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px;
-  background:var(--accent-soft);padding:5px 12px;border-radius:999px;
+  display:inline-block;font-size:11.5px;font-weight:600;color:var(--accent);
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px;
+  background:var(--accent-soft);padding:3px 10px;border-radius:999px;
 }
 h1.title{
-  font-size:clamp(28px,5vw,48px);line-height:1.08;letter-spacing:-.03em;
-  font-weight:700;color:var(--ink);max-width:680px;
+  font-size:clamp(22px,3vw,32px);line-height:1.12;letter-spacing:-.025em;
+  font-weight:700;color:var(--ink);max-width:620px;
 }
 .lead{
-  color:var(--ink-3);font-size:clamp(16px,2vw,19px);margin-top:16px;max-width:620px;line-height:1.55;
+  color:var(--ink-3);font-size:clamp(14px,1.5vw,16px);margin-top:12px;max-width:560px;line-height:1.55;
 }
 
 /* ARTICLE */
-article{padding:40px 0 20px}
+article{padding:28px 0 16px}
 article h2{
-  font-size:26px;font-weight:700;letter-spacing:-.025em;
-  margin:36px 0 12px;line-height:1.15;color:var(--ink);
+  font-size:18px;font-weight:700;letter-spacing:-.02em;
+  margin:26px 0 8px;line-height:1.15;color:var(--ink);
 }
-article h3{font-size:19px;font-weight:600;color:var(--ink);margin:24px 0 8px;letter-spacing:-.015em}
-article p{margin:12px 0;font-size:16px;color:var(--ink-2);line-height:1.7}
+article h3{font-size:15px;font-weight:600;color:var(--ink);margin:18px 0 6px;letter-spacing:-.01em}
+article p{margin:10px 0;font-size:14.5px;color:var(--ink-2);line-height:1.65}
 article a{color:var(--accent-2);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 article a:hover{color:var(--ink)}
 article ul,article ol{margin:12px 0 12px 22px}
@@ -119,17 +119,17 @@ article strong{font-weight:600;color:var(--ink)}
 /* CARDS (listing blog) */
 .card{
   display:block;background:var(--bg);border:1px solid var(--line);
-  border-radius:18px;padding:24px;margin-bottom:14px;text-decoration:none;color:inherit;
+  border-radius:14px;padding:18px;margin-bottom:10px;text-decoration:none;color:inherit;
   transition:border-color .15s,transform .15s,box-shadow .15s;
 }
 .card:hover{border-color:#d4d4d4;transform:translateY(-2px);box-shadow:0 2px 8px rgba(10,10,10,.04)}
 .card .tag{
   display:inline-block;color:var(--accent-2);background:var(--accent-soft);
-  font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;
-  padding:4px 10px;border-radius:999px;margin-bottom:8px;
+  font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;
+  padding:3px 9px;border-radius:999px;margin-bottom:6px;
 }
-.card h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:4px 0 6px;color:var(--ink)}
-.card p{color:var(--ink-3);font-size:14.5px;line-height:1.55;margin:0}
+.card h2{font-size:16px;font-weight:700;letter-spacing:-.015em;margin:4px 0 4px;color:var(--ink)}
+.card p{color:var(--ink-3);font-size:13.5px;line-height:1.5;margin:0}
 
 /* FOOTER */
 footer{
