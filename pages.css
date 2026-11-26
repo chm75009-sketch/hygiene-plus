@@ -1,0 +1,168 @@
+/* ──────────────────────────────────────────────────────────────
+   NOMOS HACCP — pages.css
+   Charte graphique commune aux pages statiques (légales, blog,
+   pages de présentation audit). Inspirée du système d'accueil.html,
+   version partagée pour éviter la duplication.
+   ────────────────────────────────────────────────────────────── */
+:root{
+  --bg:#ffffff;
+  --bg-alt:#fafaf9;
+  --bg-dark:#0a0a0a;
+  --ink:#0a0a0a;
+  --ink-2:#404040;
+  --ink-3:#737373;
+  --ink-4:#a3a3a3;
+  --line:#e5e5e5;
+  --line-soft:#f1f1ef;
+  --accent:#064e3b;
+  --accent-2:#065f46;
+  --accent-soft:#ecfdf5;
+  --accent-ring:rgba(6,78,59,.14);
+  --alert:#b91c1c;
+  --alert-soft:#fef2f2;
+  --warn:#92400e;
+  --warn-soft:#fffbeb;
+  --warn-border:#fde68a;
+  --r-xs:8px;--r-sm:12px;--r:16px;--r-lg:22px;--r-xl:28px;
+  --max:1200px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden;
+}
+
+/* ── NAV ────────────────────────────────────────────────────── */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-row{
+  max-width:var(--max);margin:0 auto;
+  padding:14px clamp(18px,4vw,32px);
+  display:flex;align-items:center;gap:14px;
+}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;letter-spacing:-.02em}
+.brand-mark{
+  width:28px;height:28px;border-radius:8px;background:var(--ink);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;
+}
+.brand-name{font-size:16px}
+.back{
+  margin-left:auto;display:inline-flex;align-items:center;gap:6px;
+  text-decoration:none;color:var(--ink-2);font-size:14px;font-weight:500;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);
+  transition:background .12s,border-color .12s;
+}
+.back:hover{background:var(--bg-alt);border-color:#d4d4d4}
+.nav-cta{margin-left:auto;display:flex;align-items:center;gap:8px}
+
+/* ── BTN (générique) ───────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  height:46px;padding:0 22px;border-radius:999px;
+  font-family:inherit;font-weight:500;font-size:15px;letter-spacing:-.01em;
+  text-decoration:none;cursor:pointer;border:1px solid transparent;
+  transition:background .15s ease,border-color .15s ease,transform .1s ease,color .15s ease;
+  white-space:nowrap;
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:#262626}
+.btn-outline{background:var(--bg);color:var(--ink);border-color:var(--line)}
+.btn-outline:hover{background:var(--bg-alt);border-color:#d4d4d4}
+.btn-sm{height:38px;padding:0 16px;font-size:14px}
+
+/* ── DOCUMENT (pages légales, articles longs) ─────────────── */
+main.doc{
+  max-width:760px;margin:0 auto;
+  padding:clamp(48px,7vw,80px) clamp(18px,4vw,32px) 80px;
+}
+.doc-sub{
+  font-size:13px;font-weight:500;color:var(--accent-2);
+  background:var(--accent-soft);display:inline-block;padding:4px 12px;border-radius:999px;
+  letter-spacing:.02em;margin-bottom:18px;
+}
+.doc h1{font-size:clamp(30px,4vw,44px);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:18px}
+.doc .lede{font-size:17px;color:var(--ink-3);line-height:1.55;margin-bottom:36px}
+.doc h2{font-size:22px;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin:40px 0 12px}
+.doc h3{font-size:16px;font-weight:600;color:var(--ink);margin:24px 0 8px}
+.doc p,.doc li{font-size:15px;color:var(--ink-2);line-height:1.65;margin-bottom:10px}
+.doc ul,.doc ol{padding-left:22px;margin-bottom:12px}
+.doc a{color:var(--accent-2);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.doc a:hover{color:var(--ink)}
+.doc strong{color:var(--ink);font-weight:600}
+.doc-sep{height:1px;background:var(--line);margin:40px 0 20px;border:0}
+.doc .meta{font-size:12.5px;color:var(--ink-4);margin-top:28px}
+
+/* Mini-nav entre docs légaux (chips) */
+.nav-legal{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.nav-legal a{
+  text-decoration:none;color:var(--ink-2);font-size:13px;font-weight:500;
+  padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--bg);
+  transition:background .12s;
+}
+.nav-legal a.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.nav-legal a:hover:not(.on){background:var(--bg-alt)}
+
+/* Encadré important (dans un doc) */
+.doc .callout{
+  background:var(--warn-soft);border:1px solid var(--warn-border);border-radius:var(--r);
+  padding:18px 20px;margin:20px 0;
+}
+.doc .callout h3{margin-top:0;color:var(--warn)}
+.doc .callout p,.doc .callout li{color:#78350f}
+
+/* Encadré info neutre */
+.doc .infobox{
+  background:var(--bg-alt);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px;margin:18px 0;
+}
+.doc .infobox p{color:var(--ink-2);margin-bottom:8px}
+.doc .infobox p:last-child{margin-bottom:0}
+
+/* Tables document (registre, DPA) */
+.doc .doc-table{
+  width:100%;margin:12px 0 22px;border-collapse:separate;border-spacing:0;
+  border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;background:var(--bg);
+}
+.doc .doc-table th,.doc .doc-table td{
+  text-align:left;vertical-align:top;padding:12px 14px;font-size:14px;
+  border-top:1px solid var(--line);
+}
+.doc .doc-table tr:first-child th,.doc .doc-table tr:first-child td{border-top:0}
+.doc .doc-table th{
+  background:var(--bg-alt);color:var(--ink);font-weight:600;width:34%;
+}
+.doc .doc-table td{color:var(--ink-2);line-height:1.55}
+.doc .doc-table td strong{color:var(--ink)}
+.doc .doc-table.narrow{max-width:760px}
+/* Table à 3 colonnes (ex. sous-traitants) */
+.doc .doc-table.cols3 th{width:auto}
+.doc .doc-table.cols3 td{color:var(--ink-2)}
+@media(max-width:620px){
+  .doc .doc-table th,.doc .doc-table td{display:block;width:auto;padding:10px 12px}
+  .doc .doc-table th{border-top:0;background:var(--bg-alt);font-size:13px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  .doc .doc-table td{border-top:0;padding-top:4px}
+  .doc .doc-table tr+tr th{border-top:1px solid var(--line)}
+}
+
+/* ── FOOTER minimal ────────────────────────────────────────── */
+footer.mini{border-top:1px solid var(--line);padding:24px 0;background:var(--bg)}
+.mini-row{
+  max-width:var(--max);margin:0 auto;padding:0 clamp(18px,4vw,32px);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  font-size:12.5px;color:var(--ink-4);
+}
+.mini-row a{color:var(--ink-4);text-decoration:none}
+.mini-row a:hover{color:var(--ink-2)}
+
+/* ── UTILS ─────────────────────────────────────────────────── */
+.container{max-width:var(--max);margin:0 auto;padding:0 clamp(18px,4vw,32px)}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
