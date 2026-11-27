@@ -4802,14 +4802,20 @@ html, body { max-width: 100%; overflow-x: hidden; }
          ou directement à l'accueil des applications Nomos. z-index 8000 : les modales plein écran
          (9000+) passent par-dessus, donc aucun bouton de modale n'est recouvert. -->
     <style>
-      #nomosBarHaccp{position:fixed;left:0;right:0;bottom:0;z-index:8000;display:flex;align-items:center;gap:8px;
+      /* Barre Nomos retirée : le bandeau Retour/Accueil n'a plus
+         d'utilité une fois dans l'app Traça. Seule la présentation
+         publique (page-presentation.active) la réaffiche. */
+      #nomosBarHaccp{display:none!important}
+      .app:has(#page-presentation.active) #nomosBarHaccp{
+        display:flex!important;position:fixed;left:0;right:0;bottom:0;z-index:8000;
+        align-items:center;gap:8px;
         padding:8px 12px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));
-        background:rgba(10,14,26,.97);box-shadow:0 -4px 18px rgba(0,0,0,.45);font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif}
-      #nomosBarHaccp button{flex-shrink:0;border:none;border-radius:10px;font-family:inherit;font-weight:800;font-size:.82rem;padding:10px 14px;cursor:pointer}
-      #nomosBarHaccp .nb-back{background:rgba(255,255,255,.12);color:#fff}
-      #nomosBarHaccp .nb-home{background:linear-gradient(135deg,#4ade80,#22c55e);color:#0a0e1a}
-      #nomosBarHaccp .nb-brand{flex:1;text-align:center;color:rgba(255,255,255,.55);font-size:.7rem;font-weight:700;letter-spacing:.04em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      body{padding-bottom:64px !important}
+        background:rgba(10,14,26,.97);box-shadow:0 -4px 18px rgba(0,0,0,.45);font-family:'Inter',system-ui,sans-serif
+      }
+      .app:has(#page-presentation.active) #nomosBarHaccp button{flex-shrink:0;border:none;border-radius:10px;font-family:inherit;font-weight:800;font-size:.82rem;padding:10px 14px;cursor:pointer}
+      .app:has(#page-presentation.active) #nomosBarHaccp .nb-back{background:rgba(255,255,255,.12);color:#fff}
+      .app:has(#page-presentation.active) #nomosBarHaccp .nb-home{background:linear-gradient(135deg,#4ade80,#22c55e);color:#0a0e1a}
+      .app:has(#page-presentation.active) #nomosBarHaccp .nb-brand{flex:1;text-align:center;color:rgba(255,255,255,.55);font-size:.7rem;font-weight:700;letter-spacing:.04em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       @media print{#nomosBarHaccp{display:none !important}}
     </style>
     <div id="nomosBarHaccp">
