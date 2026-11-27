@@ -230,15 +230,15 @@ html, body { max-width: 100%; overflow-x: hidden; }
       </div>
       <span class="logo-name">Nomos<span>Traça</span></span>
     </div>
-    <div class="topbar-mid" id="topbarEtabBox" style="flex-direction:column;align-items:flex-start;gap:0;padding:5px 12px">
-      <div style="display:flex;align-items:center;gap:5px;line-height:1.2"><span>📍</span><strong id="topbarEtabNom" style="font-size:12px">RESTAURANT TEST</strong><span style="color:rgba(255,255,255,.3);font-size:10px">▾</span></div>
-      <div id="topbarEtabSub" style="font-size:9px;color:rgba(255,255,255,.55);line-height:1.2;margin-top:2px;display:none"></div>
-      <div id="topbarEssaiBadge" style="display:none;font-size:10px;font-weight:800;margin-top:3px;padding:2px 8px;border-radius:8px"></div>
+    <div class="topbar-mid" id="topbarEtabBox" style="flex-direction:column;align-items:flex-start;gap:0;padding:4px 10px">
+      <div style="display:flex;align-items:center;gap:4px;line-height:1.2"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-3);flex-shrink:0"><path d="M12 2L4 6V12C4 16.9 7.8 21.5 12 22C16.2 21.5 20 16.9 20 12V6L12 2Z"/></svg><strong id="topbarEtabNom" style="font-size:12px">RESTAURANT TEST</strong><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-4);flex-shrink:0;margin-left:2px"><polyline points="6 9 12 15 18 9"/></svg></div>
+      <div id="topbarEtabSub" style="font-size:9.5px;color:var(--ink-3);line-height:1.2;margin-top:2px;display:none"></div>
+      <div id="topbarEssaiBadge" style="display:none;font-size:10px;font-weight:600;margin-top:3px;padding:2px 8px;border-radius:8px"></div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center;gap:7px">
       <div class="date-pill" id="datePill"></div>
       <button id="topbarLogoutBtn" onclick="seDeconnecter()" title="Se déconnecter" aria-label="Se déconnecter"
-        style="display:inline-flex;align-items:center;gap:5px;background:rgba(220,38,38,.18);border:1px solid rgba(248,113,113,.5);color:#fca5a5;border-radius:9px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;white-space:nowrap">🔓<span style="font-size:11px">Quitter</span></button>
+        style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);color:var(--ink-2);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:border-color .15s,color .15s" onmouseover="this.style.borderColor='#d84f43';this.style.color='#d84f43'" onmouseout="this.style.borderColor='';this.style.color=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Quitter</button>
     </div>
   </div>
   <!-- NAV-1 — Boutons flottants d'aide à la navigation (additifs, n'altèrent aucune
