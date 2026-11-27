@@ -228,11 +228,18 @@
       var inner = '<span><b>' + esc(r[0]) + '</b>' + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</span>';
       // Rubriques de documents : tous les pôles sauf Échéances, hors « Procédures » (à venir)
       var action = r[2] || ((p.id !== 'echeances' && r[0] !== 'Procédures') ? 'doc:' + p.id + ':' + i : '');
-      h += action ? '<button class="da-rub" type="button" data-da="' + action + '">' + inner + '<span class="da-go">Ouvrir ›</span></button>'
+      h += action ? '<button class="da-rub" type="button" data-da="' + action + '">' + inner + '<span class="da-go"' + (action.indexOf('doc:') === 0 ? ' data-compte="' + esc(r[0]) + '"' : '') + '>Ouvrir ›</span></button>'
                   : '<div class="da-rub">' + inner + '<span class="da-soon">bientôt</span></div>';
     });
     h += '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    // Nombre de documents déjà rangés dans chaque rubrique (✓ n)
+    chargerDocs().then(function (docs) {
+      o.querySelectorAll('[data-compte]').forEach(function (sp) {
+        var n = docs.filter(function (d) { return !d.archive && docDansRubrique(d, id, sp.getAttribute('data-compte')); }).length;
+        if (n) { sp.textContent = '✓ ' + n + ' ›'; sp.style.background = '#e8f6ed'; sp.style.color = '#15803d'; }
+      });
+    }).catch(function () {});
   }
 
   // ── Salariés ──
