@@ -1451,126 +1451,232 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- ═══ FIN MODE INSPECTEUR ═══ -->
     <div class="page" id="page-home">
       <style>
-        #page-home .ph-wrap{padding:14px 16px 30px;background:var(--cream);min-height:100%}
-        #page-home .ph-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-        #page-home .ph-greet{flex:1;min-width:0}
-        #page-home .ph-greet b{display:block;font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1.2}
-        #page-home .ph-greet small{display:block;font-size:12px;color:var(--ink-3);margin-top:2px;font-weight:500}
-        #page-home .ph-ico-btn{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s,border-color .15s}
-        #page-home .ph-ico-btn:hover{background:var(--cream);border-color:#dcdcdc}
-        #page-home .ph-ico-btn svg{width:16px;height:16px;stroke-width:1.9}
+        /* === DASHBOARD INTUITIF v3 === */
+        #page-home{background:var(--cream)}
+        #page-home .ph-wrap{padding:14px 14px 30px}
 
-        /* Stat compact en pill (remplace les 3 KPIs vides) */
-        #page-home .ph-status{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;margin-bottom:12px;font-size:12.5px;font-weight:500;color:var(--ink)}
-        #page-home .ph-status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:phPulse 2s ease-in-out infinite}
-        @keyframes phPulse{0%,100%{opacity:1}50%{opacity:.4}}
-        #page-home .ph-status-sep{color:var(--ink-4);margin:0 4px}
-        #page-home .ph-status small{color:var(--ink-3);font-weight:500}
+        /* Ligne 1 : bonjour + 2 icônes */
+        #page-home .ph-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+        #page-home .ph-hello{flex:1;min-width:0}
+        #page-home .ph-hello b{display:block;font-size:18px;font-weight:600;color:var(--ink);letter-spacing:-.025em;line-height:1.15}
+        #page-home .ph-hello small{display:block;font-size:12px;color:var(--ink-3);margin-top:2px;font-weight:500}
+        #page-home .ph-ico-btn{width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--ink-2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+        #page-home .ph-ico-btn:active{transform:scale(.94)}
+        #page-home .ph-ico-btn svg{width:15px;height:15px;stroke-width:1.9}
 
-        /* CTA Inspecteur compact */
-        #page-home .ph-cta-insp{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;margin-bottom:14px;cursor:pointer;border:none;width:100%;font-family:inherit;text-align:left;transition:background .15s,transform .1s}
-        #page-home .ph-cta-insp:hover{background:#262626}
-        #page-home .ph-cta-insp:active{transform:scale(.98)}
-        #page-home .ph-cta-insp-ico{width:36px;height:36px;border-radius:10px;background:var(--alert);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-        #page-home .ph-cta-insp-ico svg{width:17px;height:17px;color:#fff;stroke-width:2.2}
-        #page-home .ph-cta-insp-txt{flex:1}
-        #page-home .ph-cta-insp-txt b{display:block;font-size:14px;font-weight:600;letter-spacing:-.01em}
-        #page-home .ph-cta-insp-txt small{display:block;font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
+        /* Carte Progression du jour (hero card) */
+        #page-home .ph-day-card{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-radius:18px;padding:16px 18px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 10px 24px -8px rgba(15,118,110,.35)}
+        #page-home .ph-day-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none}
+        #page-home .ph-day-card::after{content:'';position:absolute;bottom:-50px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(210,173,70,.2) 0%,transparent 60%);pointer-events:none}
+        #page-home .ph-day-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;position:relative;z-index:1}
+        #page-home .ph-day-prog{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+        #page-home .ph-day-prog svg{position:absolute;inset:0;transform:rotate(-90deg)}
+        #page-home .ph-day-prog circle{fill:none;stroke-width:4}
+        #page-home .ph-day-prog .track{stroke:rgba(255,255,255,.16)}
+        #page-home .ph-day-prog .fill{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+        #page-home .ph-day-prog b{position:relative;z-index:1;font-size:14px;font-weight:600;letter-spacing:-.02em;font-family:'JetBrains Mono',monospace}
+        #page-home .ph-day-txt{flex:1;min-width:0;line-height:1.3}
+        #page-home .ph-day-txt b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em}
+        #page-home .ph-day-txt small{display:block;font-size:12px;color:rgba(255,255,255,.75);margin-top:2px}
+        #page-home .ph-day-stats{display:flex;gap:10px;position:relative;z-index:1}
+        #page-home .ph-day-stat{flex:1;background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;backdrop-filter:blur(4px)}
+        #page-home .ph-day-stat b{display:block;font-size:17px;font-weight:600;letter-spacing:-.02em;font-family:'JetBrains Mono',monospace;line-height:1}
+        #page-home .ph-day-stat small{display:block;font-size:10px;color:rgba(255,255,255,.72);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 
-        /* Catégories en tabs compacts */
-        #page-home .ph-cats{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-        #page-home .ph-cats::-webkit-scrollbar{display:none}
-        #page-home .ph-cat{flex-shrink:0;padding:8px 14px;background:#fff;border:1px solid var(--line);border-radius:999px;font-family:inherit;font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s,color .15s}
-        #page-home .ph-cat:hover{border-color:#dcdcdc}
-        #page-home .ph-cat.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-        #page-home .ph-cat-count{background:var(--cream);color:var(--ink-3);padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:600}
-        #page-home .ph-cat.on .ph-cat-count{background:rgba(255,255,255,.18);color:#fff}
+        /* Action prioritaire (card blanche cliquable) */
+        #page-home .ph-next{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px;cursor:pointer;text-align:left;width:100%;font-family:inherit;transition:border-color .15s,transform .12s}
+        #page-home .ph-next:hover{border-color:var(--accent)}
+        #page-home .ph-next:active{transform:scale(.98)}
+        #page-home .ph-next-ico{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+        #page-home .ph-next-ico svg{width:20px;height:20px;stroke-width:1.9}
+        #page-home .ph-next-txt{flex:1;min-width:0;line-height:1.3}
+        #page-home .ph-next-tag{display:inline-block;font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:2px 7px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px}
+        #page-home .ph-next-txt b{display:block;font-size:14px;font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1.25}
+        #page-home .ph-next-txt small{display:block;font-size:11.5px;color:var(--ink-3);margin-top:2px;font-weight:500}
+        #page-home .ph-next-arr{color:var(--ink-4);flex-shrink:0;line-height:0}
+        #page-home .ph-next-arr svg{width:18px;height:18px}
 
-        /* Section header */
-        #page-home .ph-sec{display:flex;align-items:center;gap:8px;margin:6px 2px 10px}
-        #page-home .ph-sec-title{font-size:11.5px;font-weight:600;color:var(--ink);text-transform:uppercase;letter-spacing:.06em}
-        #page-home .ph-sec-count{background:var(--accent-soft);color:var(--accent);font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px}
-        #page-home .ph-sec-link{margin-left:auto;font-size:12px;color:var(--ink-3);font-weight:500;cursor:pointer;text-decoration:none}
-        #page-home .ph-sec-link:hover{color:var(--accent)}
+        /* Rangée actions rapides (Inspecteur + Chatbot) */
+        #page-home .ph-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+        #page-home .ph-quick-btn{display:flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:11px 12px;cursor:pointer;font-family:inherit;text-align:left;transition:background .15s}
+        #page-home .ph-quick-btn.alert{background:var(--alert)}
+        #page-home .ph-quick-btn:active{transform:scale(.96)}
+        #page-home .ph-quick-btn-ico{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.16);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+        #page-home .ph-quick-btn-ico svg{width:14px;height:14px;stroke-width:2.2}
+        #page-home .ph-quick-btn-txt{font-size:12px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+        #page-home .ph-quick-btn-txt small{display:block;font-size:10px;color:rgba(255,255,255,.65);margin-top:1px;font-weight:500}
 
-        /* Alerte compacte (une seule ligne) */
-        #page-home .ph-alert{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;margin-bottom:10px;font-size:12px;color:var(--ink-2)}
-        #page-home .ph-alert svg{width:14px;height:14px;color:var(--accent);flex-shrink:0}
+        /* Section + liste */
+        #page-home .ph-sec-head{display:flex;align-items:center;gap:8px;margin:4px 2px 8px}
+        #page-home .ph-sec-title{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+        #page-home .ph-sec-pill{font-size:10.5px;font-weight:600;color:var(--ink-3);background:#fff;border:1px solid var(--line);padding:2px 8px;border-radius:999px}
+        #page-home .ph-sec-link{margin-left:auto;font-size:12.5px;color:var(--accent);font-weight:500;cursor:pointer;text-decoration:none}
+
+        /* Pills catégories (filtre discret au-dessus de la liste) */
+        #page-home .ph-filters{display:flex;gap:6px;margin:0 0 10px;overflow-x:auto;scrollbar-width:none}
+        #page-home .ph-filters::-webkit-scrollbar{display:none}
+        #page-home .ph-f{flex-shrink:0;padding:6px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;font-family:inherit;font-size:12px;font-weight:500;color:var(--ink-3);cursor:pointer}
+        #page-home .ph-f.on{background:var(--ink);color:#fff;border-color:var(--ink)}
       </style>
+
+      <!-- Hero legacy caché : garde IDs pour compat JS -->
       <div class="hero" style="display:none">
-        <!-- Vieux hero conservé caché pour compat JS héritée (id heroEtab, heroDate, kpi-*) -->
         <div class="hero-greeting" id="heroEtab">Mon établissement</div>
         <div class="hero-title">Tableau de bord <em>HACCP</em></div>
         <div class="hero-sub" id="heroDate"></div>
         <div class="kpi-row"><div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Contrôles aujourd'hui</div></div><div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">NC en cours</div></div><div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Score conformité</div></div></div>
       </div>
-      <!-- Recherche « je veux… » — moteur utilisé par le chatbot, masqué visuellement -->
       <div id="irZone-home" style="display:none"></div>
 
       <div class="ph-wrap">
-        <!-- 1. Top compact : salutation + accès rapides -->
-        <div class="ph-top">
-          <div class="ph-greet">
-            <b id="phEtab">Mon établissement</b>
+        <!-- 1. Hello + accès rapides -->
+        <div class="ph-row">
+          <div class="ph-hello">
+            <b id="phEtab">Bonjour</b>
             <small id="phDate"></small>
           </div>
           <button class="ph-ico-btn" aria-label="Historique" onclick="showPage('page-history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
-          <button class="ph-ico-btn" aria-label="Réglages" onclick="ouvrirReglages()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+          <button class="ph-ico-btn" aria-label="Réglages" onclick="ouvrirReglages()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         </div>
 
-        <!-- 2. Statut jour en pill -->
-        <div class="ph-status">
-          <span class="ph-status-dot"></span>
-          <span>Aujourd'hui</span>
-          <span class="ph-status-sep">·</span>
-          <span><b id="phStatCount">0</b>/10 contrôles</span>
-          <span class="ph-status-sep">·</span>
-          <small><b id="phStatNC">0</b> NC</small>
+        <!-- 2. Carte "Progression du jour" -->
+        <div class="ph-day-card">
+          <div class="ph-day-top">
+            <div class="ph-day-prog">
+              <svg viewBox="0 0 56 56"><circle class="track" cx="28" cy="28" r="24"/><circle class="fill" id="phProgRing" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="150.8"/></svg>
+              <b><span id="phProgPct">0</span>%</b>
+            </div>
+            <div class="ph-day-txt">
+              <b id="phDayTitle">Votre journée HACCP</b>
+              <small id="phDaySub">Prêt à démarrer vos contrôles</small>
+            </div>
+          </div>
+          <div class="ph-day-stats">
+            <div class="ph-day-stat"><b id="phStatFait">0</b><small>Contrôles faits</small></div>
+            <div class="ph-day-stat"><b id="phStatToDo">—</b><small>À faire</small></div>
+            <div class="ph-day-stat"><b id="phStatNC">0</b><small>NC ouvertes</small></div>
+          </div>
         </div>
 
-        <!-- 3. CTA Inspecteur compact -->
-        <button type="button" class="ph-cta-insp" onclick="ouvrirModeInspecteur('page-home')">
-          <span class="ph-cta-insp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
-          <span class="ph-cta-insp-txt"><b>L'inspecteur est là</b><small>Présenter votre conformité en 10 secondes</small></span>
-          <span style="color:rgba(255,255,255,.5);font-size:16px">›</span>
+        <!-- 3. Action prioritaire -->
+        <button type="button" class="ph-next" id="phNextBtn" onclick="window._phNextOpen && window._phNextOpen()">
+          <span class="ph-next-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <span class="ph-next-txt">
+            <span class="ph-next-tag">Prochaine action</span>
+            <b id="phNextName">Choisir un contrôle</b>
+            <small id="phNextDesc">Toutes vos tâches du jour en un coup d'œil</small>
+          </span>
+          <span class="ph-next-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
         </button>
 
-        <!-- 4. Catégories pills -->
-        <div class="ph-cats">
-          <button class="ph-cat ctab ctab-q on" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien<span class="ph-cat-count ctab-count">10</span></button>
-          <button class="ph-cat ctab ctab-p" onclick="switchCat('periodique',this)" data-cat="periodique">Périodique<span class="ph-cat-count ctab-count">2</span></button>
-          <button class="ph-cat ctab ctab-u" onclick="switchCat('ponctuel',this)" data-cat="ponctuel">Ponctuel<span class="ph-cat-count ctab-count">2</span></button>
-          <button class="ph-cat ctab ctab-s" onclick="switchCat('pilotage',this)" data-cat="pilotage">Pilotage<span class="ph-cat-count ctab-count">5</span></button>
+        <!-- 4. Actions rapides (Inspecteur + Assistant) -->
+        <div class="ph-quick">
+          <button class="ph-quick-btn alert" onclick="ouvrirModeInspecteur('page-home')">
+            <span class="ph-quick-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="ph-quick-btn-txt">Contrôle DDPP<small>Mode inspecteur</small></span>
+          </button>
+          <button class="ph-quick-btn" onclick="window.prChatbotOpen && window.prChatbotOpen()">
+            <span class="ph-quick-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M12 4v3"/></svg></span>
+            <span class="ph-quick-btn-txt">Assistant<small>Vocal ou texte</small></span>
+          </button>
         </div>
 
-        <!-- 5. Section header + grille des modules -->
-        <div class="ph-sec">
-          <span class="ph-sec-title" id="phSecTitle">Contrôles du jour</span>
-          <span class="ph-sec-count" id="phSecCount"></span>
+        <!-- 5. Section Tous les contrôles -->
+        <div class="ph-sec-head">
+          <span class="ph-sec-title">Tous mes contrôles</span>
+          <span class="ph-sec-pill" id="phSecPill">10</span>
           <a class="ph-sec-link" onclick="showPage('page-history')">Historique →</a>
         </div>
-        <!-- id catBand + cat-tabs conservés masqués pour compat JS switchCat -->
+
+        <!-- Filtres catégories -->
+        <div class="ph-filters">
+          <button class="ph-f ctab ctab-q on" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien</button>
+          <button class="ph-f ctab ctab-p" onclick="switchCat('periodique',this)" data-cat="periodique">Périodique</button>
+          <button class="ph-f ctab ctab-u" onclick="switchCat('ponctuel',this)" data-cat="ponctuel">Ponctuel</button>
+          <button class="ph-f ctab ctab-s" onclick="switchCat('pilotage',this)" data-cat="pilotage">Pilotage</button>
+        </div>
+
+        <!-- Legacy (caché pour compat JS) -->
         <div class="cat-band cb-q" id="catBand" style="display:none"></div>
         <div class="cat-tabs" style="display:none"></div>
+
+        <!-- Grille des modules -->
         <div class="mods-wrap" style="padding:0"><div class="mods-grid" id="modsGrid"></div></div>
       </div>
 
       <script>
-        // Miroir des données hero → nouvelle UI
         (function(){
+          // Mémoire du 1er module "À faire" du jour pour ph-next
+          var _firstTodo = null;
+          window._phNextOpen = function(){
+            try{
+              if(_firstTodo && typeof openModule === 'function'){ openModule(_firstTodo); return; }
+              // sinon scroll vers la grille
+              var el = document.getElementById('modsGrid');
+              if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+            }catch(e){}
+          };
+
+          function esc(s){ return String(s||'').replace(/[&<>]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]||c; }); }
+
           function sync(){
             try{
+              // Miroir hero legacy → nouvelle UI
               var etab = document.getElementById('heroEtab');
               var date = document.getElementById('heroDate');
               var phEtab = document.getElementById('phEtab');
               var phDate = document.getElementById('phDate');
-              if(etab && phEtab && etab.textContent.trim()) phEtab.textContent = etab.textContent.trim();
-              if(date && phDate && date.textContent.trim()) phDate.textContent = date.textContent.trim();
-              // Compteur à faire
-              var mods = document.querySelectorAll('#modsGrid .mod .mod-badge.alert');
-              var fait = document.querySelectorAll('#modsGrid .mod .mod-badge:not(.alert)');
-              var count = document.getElementById('phStatCount');
-              if(count) count.textContent = fait.length;
+              var hr = new Date().getHours();
+              var salut = hr < 6 ? 'Bonne nuit' : (hr < 12 ? 'Bonjour' : (hr < 18 ? 'Bon après-midi' : 'Bonsoir'));
+              if(etab && phEtab){
+                var txt = etab.textContent.trim();
+                phEtab.textContent = txt && txt !== 'Mon établissement' ? (salut + ', ' + txt) : salut;
+              }
+              if(date && phDate){
+                var d = date.textContent.trim();
+                if(d) phDate.textContent = d;
+              }
+
+              // Compteurs depuis la grille modules
+              var grid = document.getElementById('modsGrid');
+              if(!grid) return;
+              var mods = grid.querySelectorAll('.mod');
+              var total = mods.length;
+              var fait = 0, afaire = 0;
+              var firstTodoBtn = null, firstTodoName = '';
+              mods.forEach(function(m){
+                var b = m.querySelector('.mod-badge');
+                if(!b){ afaire++; if(!firstTodoBtn){ firstTodoBtn=m; firstTodoName = (m.querySelector('.mod-name')||{textContent:''}).textContent; } return; }
+                if(b.classList.contains('alert')){ afaire++; if(!firstTodoBtn){ firstTodoBtn=m; firstTodoName = (m.querySelector('.mod-name')||{textContent:''}).textContent; } }
+                else fait++;
+              });
+              var pct = total ? Math.round(fait*100/Math.max(1,fait+afaire)) : 0;
+              var setTxt = function(id,v){ var e=document.getElementById(id); if(e && e.textContent !== String(v)) e.textContent=v; };
+              setTxt('phProgPct', pct);
+              setTxt('phStatFait', fait);
+              setTxt('phStatToDo', afaire || '—');
+              setTxt('phSecPill', total);
+
+              // Progress ring (dasharray = 2πr = 150.8 pour r=24)
+              var ring = document.getElementById('phProgRing');
+              if(ring){ ring.setAttribute('stroke-dashoffset', 150.8 - (150.8 * pct / 100)); }
+
+              // Prochaine action
+              if(firstTodoBtn){
+                var onclickAttr = firstTodoBtn.getAttribute('onclick') || '';
+                var m = onclickAttr.match(/openModule\(['"]([^'"]+)['"]\)/);
+                if(m) _firstTodo = m[1];
+                setTxt('phNextName', firstTodoName || 'Démarrer un contrôle');
+                setTxt('phNextDesc', afaire + ' contrôle' + (afaire>1?'s':'') + ' restant' + (afaire>1?'s':'') + ' aujourd\'hui');
+                setTxt('phDayTitle', 'Il reste ' + afaire + ' contrôle' + (afaire>1?'s':''));
+                setTxt('phDaySub', 'Démarrez quand vous êtes prêt');
+              } else if(total > 0){
+                _firstTodo = null;
+                setTxt('phNextName', 'Tout est fait, bravo !');
+                setTxt('phNextDesc', 'Vos contrôles du jour sont terminés');
+                setTxt('phDayTitle', 'Journée terminée');
+                setTxt('phDaySub', 'Tous les contrôles sont faits');
+              }
             }catch(e){}
           }
           var mo = new MutationObserver(sync);
@@ -1579,9 +1685,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
             if(hero) mo.observe(hero.parentNode, {childList:true,subtree:true,characterData:true});
             var g = document.getElementById('modsGrid');
             if(g) mo.observe(g, {childList:true,subtree:true,characterData:true});
-            setInterval(sync, 2000);
+            setInterval(sync, 1500);
             sync();
           });
+          setTimeout(sync, 300);
         })();
       </script>
     </div>
@@ -4268,12 +4375,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
       </div>
     </div>
-  <div class="bnav">
-    <button class="nitem active" id="nav-home" onclick="navTo('home')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><div>Modules</div><div class="ndot"></div></button>
-    <button class="nitem" id="nav-history" onclick="navTo('history')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></div><div>Historique</div><div class="ndot"></div></button>
-    <button class="nitem" id="nav-reports" onclick="navTo('reports')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg></div><div>Rapports</div><div class="ndot"></div></button>
-    <button class="nitem" id="nav-settings" onclick="navTo('settings')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div>Réglages</div><div class="ndot"></div></button>
-  </div>
 
   <!-- ══════════════════ CHATBOT FLOTTANT NOMOS TRAÇA ══════════════════ -->
   <button type="button" class="pr-chatbot-fab" id="prChatbotFab" aria-label="Assistant Nomos Traça" onclick="prChatbotOpen()">
@@ -4993,5 +5094,15 @@ function envoyerDevisCapteurs(){
 }
 window.ouvrirDevisCapteurs=ouvrirDevisCapteurs;window.fermerDevisCapteurs=fermerDevisCapteurs;window.envoyerDevisCapteurs=envoyerDevisCapteurs;
 </script>
+<!-- Bottom nav : SORTIE de .app et placée directement dans body, en
+     position:fixed, pour garantir qu'elle reste collée au viewport
+     sur tous les navigateurs (iOS Safari, Chrome Android, etc.)
+     Aucun parent ne peut créer de containing block ni l'intercepter. -->
+<div class="bnav" id="appBnav">
+  <button class="nitem active" id="nav-home" onclick="navTo('home')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><div>Modules</div><div class="ndot"></div></button>
+  <button class="nitem" id="nav-history" onclick="navTo('history')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></div><div>Historique</div><div class="ndot"></div></button>
+  <button class="nitem" id="nav-reports" onclick="navTo('reports')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg></div><div>Rapports</div><div class="ndot"></div></button>
+  <button class="nitem" id="nav-settings" onclick="navTo('settings')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div>Réglages</div><div class="ndot"></div></button>
+</div>
 </body>
 </html>
