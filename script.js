@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v510';
+var APP_BUILD = 'v511';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -7985,14 +7985,16 @@ function switchCat(cat, tab) {
   band.className = 'cat-band ' + cfg.cls;
   band.innerHTML = '<div class="cat-band-ico">' + _echap(cfg.ico) + '</div><div><div class="cat-band-title">' + _echap(cfg.title) + '</div><div class="cat-band-sub">' + _echap(cfg.sub) + '</div></div>';
   renderMods(cat);
-  // Afficher la checklist des rappels périodiques uniquement sur l'onglet Périodique.
+  // Afficher la checklist des rappels périodiques uniquement sur l'onglet Périodique,
+  // avec un rendu dédié (toujours déplié, style distinct des tuiles de modules).
   var perioHome = document.getElementById('tdbPerioHome');
   if (perioHome) {
     if (cat === 'periodique') {
       perioHome.style.display = '';
-      try { if (typeof renderTdbPerio === 'function') renderTdbPerio(); } catch (e) {}
+      try { if (typeof renderTdbPerioHome === 'function') renderTdbPerioHome(); } catch (e) {}
     } else {
       perioHome.style.display = 'none';
+      perioHome.innerHTML = '';
     }
   }
 }
@@ -17399,7 +17401,6 @@ function _tdbPerioFreqChange(id, val) {
 function renderTdbPerio() {
   var hosts = [];
   var h1 = document.getElementById('tdbPerio'); if (h1) hosts.push(h1);
-  var h2 = document.getElementById('tdbPerioHome'); if (h2) hosts.push(h2);
   if (!hosts.length) return;
   var host = hosts[0];
   try {
@@ -17463,6 +17464,69 @@ function renderTdbPerio() {
     html += '</div>';
     hosts.forEach(function (h) { h.innerHTML = html; });
   } catch (e) { hosts.forEach(function (h) { h.innerHTML = ''; }); }
+}
+
+// Checklist dédiée à l'onglet Périodique du mode expert : rendu v7
+// (card teal, titre distinctif, toujours dépliée) nettement différent
+// des tuiles carrées de modules.
+function renderTdbPerioHome() {
+  var host = document.getElementById('tdbPerioHome');
+  if (!host) return;
+  try {
+    var conf = _tdbPerioConf();
+    var today = _dateLoc();
+    var taches = _tdbPerioDefaut().map(function (t) {
+      var cf = conf[t.id] || {};
+      var freq = cf.freq || t.freq;
+      var last = t.moduleId ? _tdbPerioLastModule(t.moduleId) : (cf.lastDone || '');
+      if (cf.lastDone && cf.lastDone > last) last = cf.lastDone;
+      var st = _tdbPerioStatut(last, freq, today);
+      return { t: t, freq: freq, last: last, st: st };
+    });
+    var rang = { jamais: 0, retard: 1, bientot: 2, ajour: 3 };
+    taches.sort(function (a, b) { return rang[a.st.etat] - rang[b.st.etat]; });
+    var enRetard = taches.filter(function (x) { return x.st.etat === 'jamais' || x.st.etat === 'retard'; }).length;
+    var html = '<div class="tdb-ph-wrap">'
+      + '<div class="tdb-ph-head">'
+      + '<div class="tdb-ph-head-l">'
+      + '<div class="tdb-ph-head-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>'
+      + '<div><div class="tdb-ph-head-title">Checklist périodique</div><div class="tdb-ph-head-sub">Rappels récurrents à cocher ou ouvrir</div></div>'
+      + '</div>'
+      + '<div class="tdb-ph-head-badge ' + (enRetard === 0 ? 'ok' : 'alert') + '">' + (enRetard === 0 ? 'À jour' : (enRetard + ' en retard')) + '</div>'
+      + '</div>'
+      + '<ul class="tdb-ph-list">';
+    var STY = {
+      jamais:  { c: 'alert',  txt: 'Jamais fait' },
+      retard:  { c: 'alert',  txt: 'En retard' },
+      bientot: { c: 'warn',   txt: 'Bientôt' },
+      ajour:   { c: 'ok',     txt: 'À jour' }
+    };
+    taches.forEach(function (x) {
+      var s = STY[x.st.etat];
+      var detail = x.st.etat === 'jamais' ? 'À planifier' :
+        (x.st.etat === 'retard' ? ('Échéance dépassée le ' + _tdbDateFr(x.st.next)) :
+        ('Prochaine échéance : ' + _tdbDateFr(x.st.next)));
+      var sel = '<select class="tdb-ph-sel" onchange="_tdbPerioFreqChange(\'' + x.t.id + '\',this.value);renderTdbPerioHome();" onclick="event.stopPropagation()">';
+      ['hebdo', 'mensuel', 'trimestriel', 'semestriel', 'annuel'].forEach(function (f) {
+        sel += '<option value="' + f + '"' + (f === x.freq ? ' selected' : '') + '>' + _TDB_PERIO_FREQ_LBL[f] + '</option>';
+      });
+      sel += '</select>';
+      var action = x.t.moduleId
+        ? '<button class="tdb-ph-btn open" onclick="event.stopPropagation();openModule(\'' + x.t.moduleId + '\')">Ouvrir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>'
+        : '<button class="tdb-ph-btn done" onclick="event.stopPropagation();_tdbPerioFait(\'' + x.t.id + '\');renderTdbPerioHome();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Fait</button>';
+      html += '<li class="tdb-ph-item ' + s.c + '">'
+        + '<div class="tdb-ph-check"></div>'
+        + '<div class="tdb-ph-txt">'
+        + '<div class="tdb-ph-label">' + _baroEsc(x.t.label) + '</div>'
+        + '<div class="tdb-ph-meta"><span class="tdb-ph-state">' + s.txt + '</span><span class="tdb-ph-dot">·</span><span>' + _baroEsc(detail) + '</span></div>'
+        + '<div class="tdb-ph-freq">' + sel + '</div>'
+        + '</div>'
+        + action
+        + '</li>';
+    });
+    html += '</ul></div>';
+    host.innerHTML = html;
+  } catch (e) { host.innerHTML = ''; }
 }
 
 // ══════════════════════════════════════════════════════════════════
