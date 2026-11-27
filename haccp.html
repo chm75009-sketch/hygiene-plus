@@ -943,129 +943,132 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <!-- V92 — Bouton flottant "← Retour" — TOUJOURS visible (icône seule, compact), sauf sur la page-presentation (point d'entrée) -->
     <button id="btnAppBack" onclick="appGoBack()" aria-label="Retour à la page précédente" title="Retour" style="position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px;z-index:9000;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);color:#0b0f1a;border:1px solid #e7ece9;width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:900;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.4);padding:0;line-height:1">←</button>
     <!-- PAGE LOGIN -->
-    <div class="page" id="page-login" style="min-height:100vh;background:linear-gradient(160deg,#0a0e1a,#131929);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;position:relative">
-      <!-- V92 — Bouton retour vers la présentation -->
-      <button onclick="showPage('page-presentation')" aria-label="Retour à la page de présentation" style="position:absolute;top:calc(16px + env(safe-area-inset-top,0px));left:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.85);padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;display:inline-flex;align-items:center;gap:6px">← Retour à la présentation</button>
-      <div style="width:100%;max-width:420px">
-        <div style="text-align:center;margin-bottom:36px">
-          <div style="font-size:48px;margin-bottom:12px">🛡️</div>
-          <div style="font-size:26px;font-weight:900;color:white;margin-bottom:6px">Nomos Traça</div>
-          <div style="font-size:13px;color:rgba(255,255,255,.5)">Se connecter avec votre code d'accès</div>
+    <div class="page" id="page-login" style="min-height:100vh;background:radial-gradient(900px 500px at 50% 0%,rgba(15,118,110,.14),transparent 55%),radial-gradient(700px 400px at 50% 100%,rgba(210,173,70,.1),transparent 55%),#faf8f3;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;position:relative;font-family:Inter,system-ui,sans-serif">
+      <!-- Bouton retour vers la présentation -->
+      <button onclick="showPage('page-presentation')" aria-label="Retour à la page de présentation" style="position:absolute;top:calc(16px + env(safe-area-inset-top,0px));left:16px;background:#fff;border:1px solid #e7e3d9;color:#0a0a0a;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px">← Retour à la présentation</button>
+      <div style="width:100%;max-width:420px;position:relative;z-index:1">
+        <div style="text-align:center;margin-bottom:24px">
+          <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#0f766e,#0d4a43);color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 6px 18px rgba(15,118,110,.25)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div style="font-size:24px;font-weight:600;letter-spacing:-.025em;color:#0a0a0a;margin-bottom:4px">Nomos Traça</div>
+          <div style="font-size:13.5px;color:#8a8a8a">Se connecter avec votre code d'accès</div>
         </div>
-        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:28px">
-          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px">Code d'accès établissement</div>
-          <input id="login_code" type="text" maxlength="20" placeholder="Ex : HACCP-XXXXX-2026"
+        <div style="background:#fff;border:1px solid #e7e3d9;border-radius:20px;padding:28px;box-shadow:0 30px 60px -20px rgba(10,10,10,.08)">
+          <div style="font-size:11px;font-weight:600;color:#8a8a8a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Code d'accès établissement</div>
+          <input id="login_code" type="text" maxlength="20" placeholder="HACCP-XXXXX-2026"
             aria-label="Code d'accès de votre établissement"
-            style="width:100%;padding:16px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;color:white;font-size:16px;font-weight:800;text-align:center;text-transform:uppercase;letter-spacing:1.5px;font-family:JetBrains Mono,monospace;box-sizing:border-box;outline:none;margin-bottom:12px"
+            style="width:100%;padding:13px 14px;background:#faf8f3;border:1px solid #e7e3d9;border-radius:10px;color:#0a0a0a;font-size:14px;font-weight:500;text-align:center;text-transform:uppercase;letter-spacing:.08em;font-family:'JetBrains Mono',ui-monospace,monospace;box-sizing:border-box;outline:none;margin-bottom:14px;transition:border-color .15s,background .15s"
+            onfocus="this.style.borderColor='#0f766e';this.style.background='#fff'"
+            onblur="this.style.borderColor='#e7e3d9';this.style.background='#faf8f3'"
             oninput="this.value=this.value.toUpperCase()"
             onkeydown="if(event.key==='Enter')document.getElementById('login_pwd').focus()"/>
-          <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Mot de passe</div>
-          <!-- V106 — Champ password avec œil afficher/masquer -->
-          <div style="position:relative;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:600;color:#8a8a8a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Mot de passe</div>
+          <div style="position:relative;margin-bottom:14px">
             <input id="login_pwd" type="password" maxlength="20" placeholder="••••••"
               aria-label="Mot de passe de votre établissement"
-              style="width:100%;padding:16px 50px 16px 16px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;color:white;font-size:22px;font-weight:800;text-align:center;letter-spacing:4px;font-family:JetBrains Mono,monospace;box-sizing:border-box;outline:none"
+              style="width:100%;padding:13px 46px 13px 14px;background:#faf8f3;border:1px solid #e7e3d9;border-radius:10px;color:#0a0a0a;font-size:18px;font-weight:500;text-align:center;letter-spacing:.2em;font-family:'JetBrains Mono',ui-monospace,monospace;box-sizing:border-box;outline:none;transition:border-color .15s,background .15s"
+              onfocus="this.style.borderColor='#0f766e';this.style.background='#fff'"
+              onblur="this.style.borderColor='#e7e3d9';this.style.background='#faf8f3'"
               onkeydown="if(event.key==='Enter')connexion()"/>
             <button type="button" id="login_pwd_toggle" onclick="togglePwdVisibility()"
               aria-label="Afficher ou masquer le mot de passe"
-              style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:rgba(255,255,255,.6);cursor:pointer;padding:8px;font-size:18px;line-height:1">👁️</button>
+              style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#8a8a8a;cursor:pointer;padding:8px;line-height:0;display:inline-flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
           </div>
-          <div id="login_error" role="alert" aria-live="assertive" style="display:none;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#fca5a5;font-weight:600;margin-bottom:14px;text-align:center"></div>
+          <div id="login_error" role="alert" aria-live="assertive" style="display:none;background:rgba(216,79,67,.08);border:1px solid rgba(216,79,67,.22);border-radius:10px;padding:10px 14px;font-size:12.5px;color:#d84f43;font-weight:500;margin-bottom:14px;text-align:center"></div>
           <button onclick="connexion()" id="login_btn"
             aria-label="Se connecter à votre établissement"
-            style="width:100%;padding:16px;background:linear-gradient(135deg,#0f766e,#14b8a6);border:none;border-radius:12px;color:white;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;transition:opacity .2s">
-            🔑 Se connecter
+            style="width:100%;padding:13px;background:#0a0a0a;border:none;border-radius:999px;color:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .18s;display:inline-flex;align-items:center;justify-content:center;gap:7px">
+            Se connecter <span style="font-style:normal;transition:transform .2s">→</span>
           </button>
           <div style="text-align:center;margin-top:14px">
-            <span onclick="motDePasseOublie()" style="display:inline-block;font-size:14px;color:#5eead4;font-weight:700;cursor:pointer;text-decoration:underline;padding:6px 4px">🔑 Mot de passe oublié ?</span>
-            <span id="login_changer_compte_sep" style="display:none;color:rgba(255,255,255,.3);margin:0 8px">·</span>
-            <span id="login_changer_compte" onclick="changerDeCompte()" style="display:none;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;text-decoration:underline">Changer de compte</span>
+            <span onclick="motDePasseOublie()" style="display:inline-block;font-size:13px;color:#0f766e;font-weight:500;cursor:pointer;text-decoration:underline;padding:6px 4px">Mot de passe oublié ?</span>
+            <span id="login_changer_compte_sep" style="display:none;color:#b4b4b4;margin:0 8px">·</span>
+            <span id="login_changer_compte" onclick="changerDeCompte()" style="display:none;font-size:12px;color:#8a8a8a;cursor:pointer;text-decoration:underline">Changer de compte</span>
           </div>
           <!-- PIN VOCAL (optionnel — n'apparaît que si activé sur l'appareil) -->
-          <div id="pinLoginWrap" style="display:none;margin-top:16px;border-top:1px solid rgba(255,255,255,.08);padding-top:16px">
-            <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;text-align:center">Connexion rapide par PIN</div>
+          <div id="pinLoginWrap" style="display:none;margin-top:18px;border-top:1px solid #efece4;padding-top:16px">
+            <div style="font-size:11px;font-weight:600;color:#8a8a8a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;text-align:center">Connexion rapide par PIN</div>
             <div style="display:flex;gap:8px;align-items:center">
               <input id="pinv_input" type="tel" inputmode="numeric" maxlength="4" placeholder="••••"
                 aria-label="Code PIN à 4 chiffres"
-                style="flex:1;padding:14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;color:white;font-size:24px;font-weight:800;text-align:center;letter-spacing:10px;font-family:JetBrains Mono,monospace;box-sizing:border-box;outline:none"/>
+                style="flex:1;padding:12px;background:#faf8f3;border:1px solid #e7e3d9;border-radius:10px;color:#0a0a0a;font-size:22px;font-weight:600;text-align:center;letter-spacing:.5em;font-family:'JetBrains Mono',ui-monospace,monospace;box-sizing:border-box;outline:none"
+                onfocus="this.style.borderColor='#0f766e';this.style.background='#fff'"
+                onblur="this.style.borderColor='#e7e3d9';this.style.background='#faf8f3'"/>
               <button type="button" id="pinv_mic" aria-label="Dicter le PIN"
                 onclick="var i=document.getElementById('pinv_input');if(typeof hvStartVoice==='function'){hvStartVoice(i,this)}else{i.focus()}"
-                style="background:#eef2ff;border:none;border-radius:12px;width:54px;height:54px;font-size:20px;cursor:pointer;flex-shrink:0">🎤</button>
+                style="background:#f5f2ea;border:1px solid #e7e3d9;border-radius:10px;width:50px;height:50px;cursor:pointer;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;color:#0a0a0a"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
             </div>
             <button type="button" onclick="connexionParPin(document.getElementById('pinv_input').value)"
-              style="width:100%;margin-top:10px;padding:14px;background:linear-gradient(135deg,#0f766e,#14b8a6);border:none;border-radius:12px;color:white;font-size:14px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🔓 Se connecter par PIN</button>
-            <div style="text-align:center;margin-top:8px"><span onclick="desactiverPinVocal()" style="font-size:11px;color:rgba(255,255,255,.4);cursor:pointer;text-decoration:underline">Supprimer le PIN de cet appareil</span></div>
+              style="width:100%;margin-top:10px;padding:12px;background:#0a0a0a;border:none;border-radius:999px;color:#fff;font-size:13.5px;font-weight:500;cursor:pointer;font-family:inherit">Se connecter par PIN</button>
+            <div style="text-align:center;margin-top:8px"><span onclick="desactiverPinVocal()" style="font-size:11px;color:#8a8a8a;cursor:pointer;text-decoration:underline">Supprimer le PIN de cet appareil</span></div>
           </div>
           <div id="pinActiverWrap" style="display:none;text-align:center;margin-top:14px">
-            <span onclick="activerPinVocal()" style="font-size:12px;color:#5eead4;cursor:pointer;text-decoration:underline">🎤 Activer un PIN vocal sur cet appareil</span>
+            <span onclick="activerPinVocal()" style="font-size:12px;color:#0f766e;cursor:pointer;text-decoration:underline">Activer un PIN vocal sur cet appareil</span>
           </div>
-          <div style="text-align:center;margin-top:20px">
-            <!-- V106 — Bouton Mode Test retiré (réservé à l'admin via 5 clics sur le logo) -->
-          </div>
-          <!-- V87 — Bouton "Mode Test Léa" retiré de la page publique pour ne pas exposer aux clients
-               Activation reste possible via :
-               1. 5 clics rapides sur le logo Nomos Traça (une fois connecté)
-               2. Console navigateur : taper `modeTestLea()` puis Entrée -->
         </div>
-        <div style="text-align:center;margin-top:20px;font-size:11px;color:rgba(255,255,255,.3)">
-          Vous n'avez pas encore de code ? Contacter votre administrateur Nomos Traça.
+        <div style="text-align:center;margin-top:18px;font-size:12px;color:#8a8a8a">
+          Vous n'avez pas encore de code ? Contactez votre administrateur Nomos Traça.
         </div>
-        <div style="text-align:center;margin-top:24px">
-          <span onclick="showPage('page-admin')" style="font-size:11px;color:rgba(255,255,255,.22);cursor:pointer;font-weight:600;letter-spacing:.3px">🔐 Administration</span>
+        <div style="text-align:center;margin-top:20px">
+          <span onclick="showPage('page-admin')" style="font-size:11px;color:#b4b4b4;cursor:pointer;font-weight:500;letter-spacing:.03em">Administration</span>
         </div>
       </div>
     </div>
     <!-- PAGE ONBOARDING -->
-    <div class="page" id="page-onboarding" style="min-height:100vh;background:linear-gradient(160deg,#0a0e1a,#131929)">
-      <div style="padding:32px 20px 20px">
+    <div class="page" id="page-onboarding" style="min-height:100vh;background:radial-gradient(900px 500px at 50% 0%,rgba(15,118,110,.14),transparent 55%),radial-gradient(700px 400px at 50% 100%,rgba(210,173,70,.1),transparent 55%),#faf8f3;font-family:Inter,system-ui,sans-serif">
+      <style>
+        #page-onboarding .onb-secteur-btn{width:100%;background:#fff;border:1px solid #e7e3d9;border-radius:14px;padding:14px 16px;cursor:pointer;color:#0a0a0a;font-family:inherit;text-align:left;display:flex;align-items:center;gap:12px;transition:border-color .15s,background .15s,transform .12s}
+        #page-onboarding .onb-secteur-btn:hover{border-color:#0f766e;background:#eefaf6}
+        #page-onboarding .onb-secteur-btn:active{transform:scale(.98)}
+        #page-onboarding .onb-secteur-ico{width:40px;height:40px;border-radius:10px;background:#f5f2ea;color:#0f766e;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+        #page-onboarding .onb-input{width:100%;padding:11px 14px;background:#faf8f3;border:1px solid #e7e3d9;border-radius:10px;color:#0a0a0a;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;margin-bottom:8px;transition:border-color .15s,background .15s}
+        #page-onboarding .onb-input:focus{border-color:#0f766e;background:#fff}
+      </style>
+      <div style="padding:32px 20px 20px;max-width:460px;margin:0 auto">
         <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-          <button onclick="seDeconnecter()" aria-label="Se déconnecter" style="display:inline-flex;align-items:center;gap:6px;background:rgba(220,38,38,.15);border:1px solid rgba(248,113,113,.45);color:#fca5a5;font-size:13px;font-weight:700;cursor:pointer;padding:9px 16px;border-radius:10px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">🔓 Déconnexion</button>
+          <button onclick="seDeconnecter()" aria-label="Se déconnecter" style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #e7e3d9;color:#d84f43;font-size:13px;font-weight:500;cursor:pointer;padding:7px 14px;border-radius:999px;font-family:inherit">Déconnexion</button>
         </div>
-        <div style="text-align:center;margin-bottom:28px">
-          <div style="font-size:40px;margin-bottom:10px">🛡️</div>
-          <div style="font-size:22px;font-weight:900;color:white;margin-bottom:6px">Nomos Traça</div>
-          <div style="font-size:13px;color:rgba(255,255,255,.5)">Configuration de votre établissement</div>
+        <div style="text-align:center;margin-bottom:24px">
+          <div style="width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#0f766e,#0d4a43);color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 6px 16px rgba(15,118,110,.22)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div style="font-size:22px;font-weight:600;letter-spacing:-.025em;color:#0a0a0a;margin-bottom:4px">Nomos Traça</div>
+          <div style="font-size:13px;color:#8a8a8a">Configuration de votre établissement</div>
         </div>
         <!-- ETAPE 1 : SECTEUR -->
         <div id="onb_step1">
-          <div id="onb_back_btn" style="display:none;margin-bottom:16px">
-            <button onclick="goHome()" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;font-size:13px;font-weight:600;cursor:pointer;padding:10px 16px;border-radius:10px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Retour à l'accueil</button>
+          <div id="onb_back_btn" style="display:none;margin-bottom:14px">
+            <button onclick="goHome()" style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #e7e3d9;color:#0a0a0a;font-size:13px;font-weight:500;cursor:pointer;padding:8px 14px;border-radius:999px;font-family:inherit">← Retour à l'accueil</button>
           </div>
-          <div style="font-size:15px;font-weight:800;color:white;margin-bottom:16px;text-align:center">Quel est votre secteur d'activité ?</div>
+          <div style="font-size:15px;font-weight:500;color:#0a0a0a;margin-bottom:16px;text-align:center">Quel est votre secteur d'activité ?</div>
           <div id="modeTestBadge" style="display:none"></div>
           <div style="display:flex;flex-direction:column;gap:10px">
             <button class="onb-secteur-btn" onclick="choisirSecteur('resto')">
-              <span style="font-size:24px">🍽️</span>
-              <div><div style="font-weight:800">Restauration traditionnelle</div><div style="font-size:11px;opacity:.7">Restaurant, brasserie, bistrot, gastronomique...</div></div>
+              <span class="onb-secteur-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></span>
+              <div><div style="font-weight:600;font-size:14px;letter-spacing:-.01em">Restauration traditionnelle</div><div style="font-size:12px;color:#8a8a8a;margin-top:2px">Restaurant, brasserie, bistrot, gastronomique</div></div>
             </button>
             <button class="onb-secteur-btn" onclick="choisirSecteur('bp')">
-              <span style="font-size:24px">🥐</span>
-              <div><div style="font-weight:800">Boulangerie & Pâtisserie</div><div style="font-size:11px;opacity:.7">Boulangerie, pâtisserie, chocolaterie, viennoiserie...</div></div>
+              <span class="onb-secteur-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.5V6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v7.5M12 13.5V6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v7.5M4 13.5h16v4a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-4z"/></svg></span>
+              <div><div style="font-weight:600;font-size:14px;letter-spacing:-.01em">Boulangerie &amp; Pâtisserie</div><div style="font-size:12px;color:#8a8a8a;margin-top:2px">Boulangerie, pâtisserie, chocolaterie, viennoiserie</div></div>
             </button>
             <button class="onb-secteur-btn" onclick="choisirSecteur('rapide')">
-              <span style="font-size:24px">🍔</span>
-              <div><div style="font-weight:800">Restauration rapide</div><div style="font-size:11px;opacity:.7">Fast-food, kebab, pizza, sushi, sandwicherie...</div></div>
+              <span class="onb-secteur-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18M4 11v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+              <div><div style="font-weight:600;font-size:14px;letter-spacing:-.01em">Restauration rapide</div><div style="font-size:12px;color:#8a8a8a;margin-top:2px">Fast-food, kebab, pizza, sushi, sandwicherie</div></div>
             </button>
             <button class="onb-secteur-btn" onclick="choisirSecteur('boucherie')">
-              <span style="font-size:24px">🥩</span>
-              <div><div style="font-weight:800">Boucherie & Charcuterie</div><div style="font-size:11px;opacity:.7">Boucherie, charcuterie, traiteur, boucher-charcutier...</div></div>
+              <span class="onb-secteur-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg></span>
+              <div><div style="font-weight:600;font-size:14px;letter-spacing:-.01em">Boucherie &amp; Charcuterie</div><div style="font-size:12px;color:#8a8a8a;margin-top:2px">Boucherie, charcuterie, traiteur, boucher-charcutier</div></div>
             </button>
             <button class="onb-secteur-btn" onclick="choisirSecteur('collective')">
-              <span style="font-size:24px">🏫</span>
-              <div><div style="font-weight:800">Restauration collective</div><div style="font-size:11px;opacity:.7">Cantine, EHPAD, hôpital, entreprise, livraison de repas...</div></div>
+              <span class="onb-secteur-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h6"/></svg></span>
+              <div><div style="font-weight:600;font-size:14px;letter-spacing:-.01em">Restauration collective</div><div style="font-size:12px;color:#8a8a8a;margin-top:2px">Cantine, EHPAD, hôpital, entreprise, livraison</div></div>
             </button>
-          </div>
-          <div style="text-align:center;margin-top:16px">
-            <!-- V106 — Bouton Mode Test retiré (réservé à l'admin via 5 clics sur le logo) -->
           </div>
         </div>
         <!-- ETAPE 2 : FICHE ÉTABLISSEMENT -->
         <div id="onb_step2" style="display:none">
-          <button onclick="document.getElementById('onb_step1').style.display='block';document.getElementById('onb_step2').style.display='none'" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:white;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px;padding:10px 16px;border-radius:10px;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Changer de secteur</button>
-          <div id="onb_secteur_label" style="font-size:15px;font-weight:800;color:white;margin-bottom:16px;text-align:center"></div>
+          <button onclick="document.getElementById('onb_step1').style.display='block';document.getElementById('onb_step2').style.display='none'" style="display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #e7e3d9;color:#0a0a0a;font-size:13px;font-weight:500;cursor:pointer;margin-bottom:18px;padding:8px 14px;border-radius:999px;font-family:inherit">← Changer de secteur</button>
+          <div id="onb_secteur_label" style="font-size:15px;font-weight:500;color:#0a0a0a;margin-bottom:16px;text-align:center"></div>
           <!-- CHAMPS COMMUNS -->
-          <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px">
-            <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Informations générales</div>
+          <div style="background:#fff;border:1px solid #e7e3d9;border-radius:16px;padding:16px;margin-bottom:12px">
+            <div style="font-size:11px;font-weight:600;color:#8a8a8a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Informations générales</div>
             <input class="onb-input" id="onb_nom" placeholder="Nom de l'établissement *" oninput="ETAB.nom=this.value"/>
             <input class="onb-input" id="onb_adresse" placeholder="Adresse *" oninput="ETAB.adresse=this.value"/>
             <div style="display:grid;grid-template-columns:120px 1fr;gap:8px">
@@ -1076,7 +1079,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <input class="onb-input" id="onb_tel" placeholder="Téléphone" oninput="ETAB.tel=this.value"/>
             <input class="onb-input" id="onb_email" placeholder="Email" oninput="ETAB.email=this.value"/>
             <input class="onb-input" id="onb_siret" placeholder="N° SIRET" oninput="ETAB.siret=this.value"/>
-            <input class="onb-input" id="onb_responsable" placeholder="Responsable HACCP — Nom & Prénom *" oninput="ETAB.responsable=this.value"/>
+            <input class="onb-input" id="onb_responsable" placeholder="Responsable HACCP — Nom &amp; Prénom *" oninput="ETAB.responsable=this.value"/>
             <select class="onb-input" id="onb_fonction" onchange="ETAB.fonction=this.value">
               <option value="">Fonction du responsable HACCP</option>
               <option>Gérant / Dirigeant</option>
@@ -1090,12 +1093,12 @@ html, body { max-width: 100%; overflow-x: hidden; }
             </select>
           </div>
           <!-- CHAMPS SPÉCIFIQUES PAR SECTEUR -->
-          <div id="onb_specifique" style="background:rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px"></div>
-          <div id="onb_error" style="display:none;background:rgba(220,38,38,.2);border:1px solid rgba(220,38,38,.4);border-radius:10px;padding:10px 14px;font-size:12px;color:#fca5a5;margin-bottom:12px">
-            ⚠️ Remplir les champs obligatoires (*)
+          <div id="onb_specifique" style="background:#fff;border:1px solid #e7e3d9;border-radius:16px;padding:16px;margin-bottom:12px"></div>
+          <div id="onb_error" style="display:none;background:rgba(216,79,67,.08);border:1px solid rgba(216,79,67,.22);border-radius:10px;padding:10px 14px;font-size:12.5px;color:#d84f43;margin-bottom:12px;font-weight:500">
+            Remplir les champs obligatoires (*)
           </div>
-          <button onclick="validerOnboarding()" style="width:100%;padding:16px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">
-            ✓ Accéder à Nomos Traça
+          <button onclick="validerOnboarding()" style="width:100%;padding:13px;background:#0a0a0a;color:#fff;border:none;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:7px">
+            Accéder à Nomos Traça <span style="transition:transform .2s">→</span>
           </button>
         </div>
       </div>
