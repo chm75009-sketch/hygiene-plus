@@ -4057,90 +4057,207 @@ html, body { max-width: 100%; overflow-x: hidden; }
       </div>
       <div class="pr-chatbot-head-title">
         <b>Assistant Nomos</b>
-        <span>Vocal, texte, raccourci modules</span>
+        <span>En ligne</span>
       </div>
       <button class="pr-chatbot-close" onclick="prChatbotClose()" aria-label="Fermer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
       </button>
     </div>
-    <div class="pr-chatbot-body">
-      <div id="irZone-chatbot" style="padding:0"></div>
-    </div>
+    <div class="pr-chat-stream" id="prChatStream"></div>
+    <div class="pr-chat-chips" id="prChatChips"></div>
+    <form class="pr-chat-inputbar" id="prChatForm" onsubmit="return prChatSend(event)" autocomplete="off">
+      <button type="button" class="pr-chat-mic" id="prChatMic" aria-label="Dicter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </button>
+      <input type="text" class="pr-chat-input" id="prChatInput" placeholder="Écrivez à l'assistant…" enterkeyhint="send" autocomplete="off"/>
+      <button type="submit" class="pr-chat-send" id="prChatSend" aria-label="Envoyer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/></svg>
+      </button>
+    </form>
   </div>
   <script>
     (function(){
-      var openEls = function(){
-        var p=document.getElementById('prChatbotPanel'), o=document.getElementById('prChatbotOverlay');
-        if(p) p.classList.add('open');
-        if(o) o.classList.add('open');
-        document.body.style.overflow='hidden';
-        try{ var inp=document.querySelector('#irZone-chatbot .ir-input'); if(inp) setTimeout(function(){ inp.focus(); },320); }catch(e){}
-      };
-      var closeEls = function(){
-        var p=document.getElementById('prChatbotPanel'), o=document.getElementById('prChatbotOverlay');
-        if(p) p.classList.remove('open');
-        if(o) o.classList.remove('open');
-        document.body.style.overflow='';
-      };
-      window.prChatbotOpen = openEls;
-      window.prChatbotClose = closeEls;
-      document.addEventListener('keydown', function(e){
-        if(e.key==='Escape'){ var p=document.getElementById('prChatbotPanel'); if(p && p.classList.contains('open')) closeEls(); }
-      });
-      // Render IR dans le chatbot une fois le script.js chargé
-      function tryRenderChatbotIR(){
-        try{
-          var host = document.getElementById('irZone-chatbot');
-          if(!host || host.querySelector('.ir-bloc')) return;
-          // Trigger : ir(_rendre) est privé, mais on réutilise le clonage du bloc home
-          var home = document.getElementById('irZone-home');
-          if(home && home.querySelector('.ir-bloc')){
-            // Force re-init en appelant irMicro sur un nouveau suf — mais l'API pub est irOuvrir/irExemple/irMicro.
-            // Fallback : cloner le bloc visuel home et laisser le user interagir avec le vrai IR via events
-            // (approche la plus simple : juste cloner le DOM du bloc home dans le chatbot).
-            var clone = home.querySelector('.ir-bloc').cloneNode(true);
-            host.appendChild(clone);
-            // Relier les handlers : mic, tabs, submit — on redirige vers home
-            try{
-              var btnOk = clone.querySelector('.ir-ok');
-              var inp = clone.querySelector('.ir-input');
-              var mic = clone.querySelector('.ir-mic');
-              var tabs = clone.querySelectorAll('.ir-tab');
-              inp.addEventListener('input', function(){ var h = home.querySelector('.ir-input'); if(h){ h.value = inp.value; h.dispatchEvent(new Event('input')); } });
-              var form = clone.querySelector('form');
-              if(form) form.addEventListener('submit', function(ev){ ev.preventDefault(); var h = home.querySelector('form'); if(h) h.dispatchEvent(new Event('submit')); });
-              if(mic) mic.onclick = function(){ try{ window.irMicro && window.irMicro('home'); }catch(e){} };
-              tabs.forEach(function(t){
-                t.onclick = function(){ try{ var mode = t.getAttribute('data-mode'); window.irMode && window.irMode('home', mode); }catch(e){} };
-              });
-              // Mirror résultats et chips depuis home → chatbot (observer)
-              var mirrorTargets = [['.ir-res','.ir-res'],['.ir-chips','.ir-chips'],['.ir-titre','.ir-titre'],['.ir-aide','.ir-aide']];
-              var sync = function(){
-                mirrorTargets.forEach(function(pair){
-                  var src = home.querySelector(pair[0]), dst = clone.querySelector(pair[1]);
-                  if(src && dst && dst.innerHTML !== src.innerHTML) dst.innerHTML = src.innerHTML;
-                });
-                // tabs actives
-                var srcTabs = home.querySelectorAll('.ir-tab');
-                srcTabs.forEach(function(st, i){ var dt = tabs[i]; if(dt){ dt.classList.toggle('ir-active', st.classList.contains('ir-active')); } });
-              };
-              var mo = new MutationObserver(sync);
-              mo.observe(home, {subtree:true, childList:true, attributes:true, characterData:true});
-              sync();
-            }catch(e){ console.warn('chatbot IR link', e); }
-          }
-        }catch(e){ console.warn('chatbot init', e); }
+      var stream, chips, input, mic, panel, overlay;
+      var _welcomed = false;
+      var _lastResHtml = '';
+      var SUGGESTIONS_INIT = ['J\'ai une livraison', 'Relever les frigos', 'Ouverture', 'Nettoyage', 'L\'inspecteur est là', 'Mode Expert'];
+      var SUGGESTIONS_AFTER = ['Autre contrôle', 'Poser une question', 'Historique', 'Générer Pack DDPP'];
+
+      function _el(sel){ return document.querySelector(sel); }
+      function _byId(id){ return document.getElementById(id); }
+
+      function scrollBottom(){ try{ stream.scrollTop = stream.scrollHeight + 100; }catch(e){} }
+
+      function pushUser(text){
+        var d = document.createElement('div');
+        d.className = 'pr-chat-msg user';
+        d.innerHTML = '<div class="pr-chat-bubble"></div>';
+        d.querySelector('.pr-chat-bubble').textContent = text;
+        stream.appendChild(d); scrollBottom();
       }
-      // Essayer plusieurs fois (script.js remplit irZone-home après DOMContentLoaded)
-      var retries = 0;
-      var tick = function(){
-        tryRenderChatbotIR();
-        var host = document.getElementById('irZone-chatbot');
-        if(host && host.querySelector('.ir-bloc')) return;
-        if(++retries < 30) setTimeout(tick, 400);
+
+      function pushTyping(){
+        var d = document.createElement('div');
+        d.className = 'pr-chat-typing';
+        d.id = 'prChatTyping';
+        d.innerHTML = '<span></span><span></span><span></span>';
+        stream.appendChild(d); scrollBottom();
+      }
+      function removeTyping(){ var t = _byId('prChatTyping'); if(t) t.remove(); }
+
+      function pushBot(htmlOrText, isHtml){
+        var d = document.createElement('div');
+        d.className = 'pr-chat-msg bot';
+        var avatar = '<div class="pr-chat-bot-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M12 4v3"/></svg></div>';
+        d.innerHTML = avatar + '<div class="pr-chat-bubble"></div>';
+        var bub = d.querySelector('.pr-chat-bubble');
+        if(isHtml) bub.innerHTML = htmlOrText; else bub.textContent = htmlOrText;
+        stream.appendChild(d); scrollBottom();
+      }
+
+      function renderChips(list){
+        chips.innerHTML = '';
+        (list || []).forEach(function(txt){
+          var b = document.createElement('button');
+          b.type = 'button'; b.className = 'pr-chip'; b.textContent = txt;
+          b.onclick = function(){ input.value = txt; sendText(txt); };
+          chips.appendChild(b);
+        });
+      }
+
+      // Convertit le .ir-res (généré par script.js) en bulle chatbot propre avec actions cliquables
+      function botFromIR(){
+        var home = _byId('irZone-home'); if(!home) return false;
+        var res = home.querySelector('.ir-res');
+        if(!res || !res.innerHTML.trim()) return false;
+        if(res.innerHTML === _lastResHtml) return false;
+        _lastResHtml = res.innerHTML;
+        // Extraire tous les boutons/liens → convertir en pr-chat-action
+        var buttons = res.querySelectorAll('button, [onclick]');
+        var actionsHtml = '';
+        var seen = {};
+        buttons.forEach(function(b){
+          var oc = b.getAttribute('onclick') || '';
+          if(!oc || seen[oc]) return; seen[oc] = 1;
+          var label = (b.textContent || '').trim().replace(/\s+/g,' ');
+          if(!label || label.length > 90) return;
+          // Enlever emojis courants en début
+          label = label.replace(/^[\p{Extended_Pictographic}\s]+/u, '').trim();
+          // Nettoyer suffixes "Ouvrir ›", "→", chevrons de type bouton nested
+          label = label.replace(/\s*(Ouvrir\s*›?|›|→|>)\s*$/i, '').trim();
+          if(!label) return;
+          actionsHtml += '<button class="pr-chat-action" onclick="prChatbotClose();' + oc.replace(/"/g,'&quot;') + '">' +
+            '<span class="pr-chat-action-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>' +
+            '<span class="pr-chat-action-txt">' + label + '</span>' +
+            '<span class="pr-chat-action-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>' +
+            '</button>';
+        });
+        if(actionsHtml){
+          pushBot('<div class="pr-chat-title">Voici ce qui correspond :</div><div class="pr-chat-actions">' + actionsHtml + '</div><div class="pr-chat-hint">Tapez sur une proposition pour ouvrir le contrôle.</div>', true);
+        } else {
+          // Pas de bouton → bulle texte brut
+          var txt = (res.textContent || '').trim();
+          if(txt) pushBot(txt);
+        }
+        return true;
+      }
+
+      function welcomeIfNeeded(){
+        if(_welcomed) return; _welcomed = true;
+        pushBot('Bonjour. Je suis votre assistant Nomos. Dites ou tapez ce que vous voulez faire, je vous emmène au bon contrôle.');
+        renderChips(SUGGESTIONS_INIT);
+      }
+
+      function sendText(txt){
+        txt = String(txt || '').trim();
+        if(!txt) return;
+        pushUser(txt);
+        input.value = '';
+        chips.innerHTML = '';
+        pushTyping();
+        // Déclenche le moteur IR en arrière-plan sur #irZone-home
+        var home = _byId('irZone-home');
+        var h = home && home.querySelector('.ir-input');
+        if(h){
+          h.value = txt;
+          h.dispatchEvent(new Event('input'));
+          var form = home.querySelector('form');
+          if(form){ try{ if(typeof form.requestSubmit === 'function') form.requestSubmit(); else form.dispatchEvent(new Event('submit')); }catch(e){} }
+        }
+        // Attendre que .ir-res soit rempli
+        var tries = 0;
+        var poll = setInterval(function(){
+          tries++;
+          var ok = botFromIR();
+          if(ok || tries > 12){
+            clearInterval(poll); removeTyping();
+            if(!ok) pushBot('Je n\'ai pas trouvé de contrôle correspondant. Reformulez ou choisissez l\'un des modules ci-dessous.');
+            renderChips(SUGGESTIONS_AFTER);
+          }
+        }, 180);
+      }
+
+      window.prChatSend = function(ev){
+        if(ev) ev.preventDefault();
+        ensureRefs();
+        sendText(input ? input.value : '');
+        return false;
       };
-      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(tick, 200); });
-      else setTimeout(tick, 200);
+
+      // Mic : utilise la reconnaissance vocale native + bascule sur irMicro si dispo
+      var _rec = null;
+      function startVoice(){
+        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(!SR){ input.focus(); return; }
+        if(_rec){ try{ _rec.stop(); }catch(e){} return; }
+        try{ _rec = new SR(); }catch(e){ input.focus(); return; }
+        _rec.lang = 'fr-FR'; _rec.interimResults = true; _rec.maxAlternatives = 1;
+        mic.classList.add('rec');
+        var dit = '';
+        _rec.onresult = function(e){
+          dit = ''; try{ for(var i=0;i<e.results.length;i++) dit += e.results[i][0].transcript; }catch(er){}
+          input.value = dit;
+        };
+        _rec.onend = _rec.onerror = function(){
+          mic.classList.remove('rec'); _rec = null;
+          if(dit) sendText(dit);
+        };
+        try{ _rec.start(); }catch(e){ mic.classList.remove('rec'); _rec=null; }
+      }
+
+      function ensureRefs(){
+        panel = panel || _byId('prChatbotPanel');
+        overlay = overlay || _byId('prChatbotOverlay');
+        stream = stream || _byId('prChatStream');
+        chips = chips || _byId('prChatChips');
+        input = input || _byId('prChatInput');
+        mic = mic || _byId('prChatMic');
+      }
+      window.prChatbotOpen = function(){
+        ensureRefs();
+        if(panel) panel.classList.add('open');
+        if(overlay) overlay.classList.add('open');
+        document.body.style.overflow='hidden';
+        welcomeIfNeeded();
+        setTimeout(function(){ try{ input.focus(); }catch(e){} }, 320);
+      };
+      window.prChatbotClose = function(){
+        if(panel) panel.classList.remove('open');
+        if(overlay) overlay.classList.remove('open');
+        document.body.style.overflow='';
+        if(_rec){ try{ _rec.stop(); }catch(e){} _rec=null; mic && mic.classList.remove('rec'); }
+      };
+      document.addEventListener('keydown', function(e){
+        if(e.key==='Escape'){ var p=_byId('prChatbotPanel'); if(p && p.classList.contains('open')) window.prChatbotClose(); }
+      });
+
+      // Init refs + mic listener
+      function _bind(){
+        stream = _byId('prChatStream'); chips = _byId('prChatChips');
+        input = _byId('prChatInput'); mic = _byId('prChatMic');
+        if(mic) mic.addEventListener('click', startVoice);
+      }
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _bind); else _bind();
     })();
   </script>
 </div>
