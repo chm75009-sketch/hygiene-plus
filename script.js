@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v508';
+var APP_BUILD = 'v514';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -7850,6 +7850,7 @@ var MODULES = [
   {id:'dashboard',    cat:'pilotage',  num:17, ico:'📊', name:'Consulter — Votre tableau de bord',                 color:'c18', badge:'Live',      ddpp:false, freq:'Permanent',   alert:false, fn:''},
   {id:'exports',      cat:'pilotage',  num:18, ico:'📄', name:'Générer — Votre Pack contrôle DDPP',                color:'c19', badge:'Pack DDPP', ddpp:false, freq:'Sur demande',  alert:false, fn:''},
   {id:'allergenes',   cat:'pilotage',  num:19, ico:'🥜', name:'Affichage — Allergènes de votre carte',             color:'c20', badge:'Option',    ddpp:false, freq:'Ponctuel',    alert:false, option:true, fn:'Générer la matrice des 14 allergènes de votre carte'},
+  {id:'equipe',       cat:'pilotage',  num:24, ico:'👥', name:'Mon équipe — Personnes utilisatrices',              color:'c11', badge:'',          ddpp:false, freq:'Permanent',   alert:false, fn:''},
   {id:'plat-temoin',  cat:'quotidien', num:20, ico:'🍽️', name:'Plat Témoin — Conservation 5 jours',               color:'c6',  badge:'DDPP',      ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
   {id:'liaison-thermique', cat:'quotidien', num:21, ico:'🌡️', name:'Liaison Chaude/Froide — Distribution',           color:'c7',  badge:'DDPP',      ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
   {id:'registre-convives', cat:'quotidien', num:22, ico:'👥', name:'Registre des Convives & Grammages',              color:'c8',  badge:'',          ddpp:false, freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
@@ -7883,7 +7884,8 @@ var MOD_ICO_SVG = {
   'plat-temoin':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-9 9 9 9 0 0 1-9-9z"/><line x1="12" y1="3" x2="12" y2="11"/></svg>',
   'liaison-thermique':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M8 4l4 2 4-2M7 10c2 4 8 4 10 0M4 14c3 5 13 5 16 0M3 18c3 4 15 4 18 0"/></svg>',
   'registre-convives':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  'analyses-micro':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>'
+  'analyses-micro':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>',
+  equipe:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
 };
 
 function renderMods(cat) {
@@ -7985,6 +7987,18 @@ function switchCat(cat, tab) {
   band.className = 'cat-band ' + cfg.cls;
   band.innerHTML = '<div class="cat-band-ico">' + _echap(cfg.ico) + '</div><div><div class="cat-band-title">' + _echap(cfg.title) + '</div><div class="cat-band-sub">' + _echap(cfg.sub) + '</div></div>';
   renderMods(cat);
+  // Afficher la checklist des rappels périodiques uniquement sur l'onglet Périodique,
+  // avec un rendu dédié (toujours déplié, style distinct des tuiles de modules).
+  var perioHome = document.getElementById('tdbPerioHome');
+  if (perioHome) {
+    if (cat === 'periodique') {
+      perioHome.style.display = '';
+      try { if (typeof renderTdbPerioHome === 'function') renderTdbPerioHome(); } catch (e) {}
+    } else {
+      perioHome.style.display = 'none';
+      perioHome.innerHTML = '';
+    }
+  }
 }
 
 // ── HEADERS BP PAR MODULE ──
@@ -17387,8 +17401,10 @@ function _tdbPerioFreqChange(id, val) {
   renderTdbPerio();
 }
 function renderTdbPerio() {
-  var host = document.getElementById('tdbPerio');
-  if (!host) return;
+  var hosts = [];
+  var h1 = document.getElementById('tdbPerio'); if (h1) hosts.push(h1);
+  if (!hosts.length) return;
+  var host = hosts[0];
   try {
     var conf = _tdbPerioConf();
     var today = _dateLoc();
@@ -17448,6 +17464,69 @@ function renderTdbPerio() {
         + '</div>';
     });
     html += '</div>';
+    hosts.forEach(function (h) { h.innerHTML = html; });
+  } catch (e) { hosts.forEach(function (h) { h.innerHTML = ''; }); }
+}
+
+// Checklist dédiée à l'onglet Périodique du mode expert : rendu v7
+// (card teal, titre distinctif, toujours dépliée) nettement différent
+// des tuiles carrées de modules.
+function renderTdbPerioHome() {
+  var host = document.getElementById('tdbPerioHome');
+  if (!host) return;
+  try {
+    var conf = _tdbPerioConf();
+    var today = _dateLoc();
+    var taches = _tdbPerioDefaut().map(function (t) {
+      var cf = conf[t.id] || {};
+      var freq = cf.freq || t.freq;
+      var last = t.moduleId ? _tdbPerioLastModule(t.moduleId) : (cf.lastDone || '');
+      if (cf.lastDone && cf.lastDone > last) last = cf.lastDone;
+      var st = _tdbPerioStatut(last, freq, today);
+      return { t: t, freq: freq, last: last, st: st };
+    });
+    var rang = { jamais: 0, retard: 1, bientot: 2, ajour: 3 };
+    taches.sort(function (a, b) { return rang[a.st.etat] - rang[b.st.etat]; });
+    var enRetard = taches.filter(function (x) { return x.st.etat === 'jamais' || x.st.etat === 'retard'; }).length;
+    var html = '<div class="tdb-ph-wrap">'
+      + '<div class="tdb-ph-head">'
+      + '<div class="tdb-ph-head-l">'
+      + '<div class="tdb-ph-head-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>'
+      + '<div><div class="tdb-ph-head-title">Checklist périodique</div><div class="tdb-ph-head-sub">Rappels récurrents à cocher ou ouvrir</div></div>'
+      + '</div>'
+      + '<div class="tdb-ph-head-badge ' + (enRetard === 0 ? 'ok' : 'alert') + '">' + (enRetard === 0 ? 'À jour' : (enRetard + ' en retard')) + '</div>'
+      + '</div>'
+      + '<ul class="tdb-ph-list">';
+    var STY = {
+      jamais:  { c: 'alert',  txt: 'Jamais fait' },
+      retard:  { c: 'alert',  txt: 'En retard' },
+      bientot: { c: 'warn',   txt: 'Bientôt' },
+      ajour:   { c: 'ok',     txt: 'À jour' }
+    };
+    taches.forEach(function (x) {
+      var s = STY[x.st.etat];
+      var detail = x.st.etat === 'jamais' ? 'À planifier' :
+        (x.st.etat === 'retard' ? ('Échéance dépassée le ' + _tdbDateFr(x.st.next)) :
+        ('Prochaine échéance : ' + _tdbDateFr(x.st.next)));
+      var sel = '<select class="tdb-ph-sel" onchange="_tdbPerioFreqChange(\'' + x.t.id + '\',this.value);renderTdbPerioHome();" onclick="event.stopPropagation()">';
+      ['hebdo', 'mensuel', 'trimestriel', 'semestriel', 'annuel'].forEach(function (f) {
+        sel += '<option value="' + f + '"' + (f === x.freq ? ' selected' : '') + '>' + _TDB_PERIO_FREQ_LBL[f] + '</option>';
+      });
+      sel += '</select>';
+      var action = x.t.moduleId
+        ? '<button class="tdb-ph-btn open" onclick="event.stopPropagation();openModule(\'' + x.t.moduleId + '\')">Ouvrir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>'
+        : '<button class="tdb-ph-btn done" onclick="event.stopPropagation();_tdbPerioFait(\'' + x.t.id + '\');renderTdbPerioHome();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Fait</button>';
+      html += '<li class="tdb-ph-item ' + s.c + '">'
+        + '<div class="tdb-ph-check"></div>'
+        + '<div class="tdb-ph-txt">'
+        + '<div class="tdb-ph-label">' + _baroEsc(x.t.label) + '</div>'
+        + '<div class="tdb-ph-meta"><span class="tdb-ph-state">' + s.txt + '</span><span class="tdb-ph-dot">·</span><span>' + _baroEsc(detail) + '</span></div>'
+        + '<div class="tdb-ph-freq">' + sel + '</div>'
+        + '</div>'
+        + action
+        + '</li>';
+    });
+    html += '</ul></div>';
     host.innerHTML = html;
   } catch (e) { host.innerHTML = ''; }
 }
