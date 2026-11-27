@@ -8,6 +8,9 @@
 - Langue de travail : **français**.
 - **Réponses COURTES, très courtes.** Jamais de longs textes : l'essentiel en quelques lignes,
   lisible sur un téléphone.
+- **Ne pas suggérer de réponses à l'utilisateur** (pas de « répondez A ou B », pas de
+  réponses toutes faites à choisir) : cela le déstabilise. Dire simplement ce qui est fait
+  et ce qui reste à faire.
 
 # Hygiène+ = COPIE DE TRAVAIL de Nomos (règle absolue)
 
