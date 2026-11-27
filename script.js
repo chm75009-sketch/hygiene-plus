@@ -21987,6 +21987,23 @@ function testEffacerDonnees() {
           return 'Module ' + id;
         }).replace(/activité : (\w+)/, function(m, k) { return 'activité : ' + (_JRN_SECT[k] || k); });
       }
+      // Dossier administratif : l'admin définit le code secret à 6 chiffres du Président
+      // (vérifié côté serveur, enregistré chiffré : admin_da_definir_code).
+      window.adminDaCode = function(code, nom) {
+        if (!window._supabase) return;
+        var pin = prompt('Code secret du Dossier administratif pour « ' + (nom || code) + ' »\n\n6 chiffres, à donner uniquement au Président.');
+        if (pin === null) return;
+        pin = String(pin).trim();
+        if (!/^[0-9]{6}$/.test(pin)) { alert('Le code doit contenir exactement 6 chiffres.'); return; }
+        var pin2 = prompt('Retapez le code pour confirmer :');
+        if (pin2 === null) return;
+        if (String(pin2).trim() !== pin) { alert('Les deux codes sont différents. Rien n\'a été enregistré.'); return; }
+        window._supabase.rpc('admin_da_definir_code', { p_pwd: _adminPwd, p_code: code, p_pin: pin }).then(function(res) {
+          if (res.error) { alert('Erreur : ' + res.error.message); return; }
+          if (!res.data || res.data.ok !== true) { alert('Code non enregistré (' + ((res.data && res.data.raison) || 'erreur') + ').'); return; }
+          alert('✅ Code du Dossier administratif enregistré pour ' + (nom || code) + '.\n\nDonnez-le au Président, et à lui seul.');
+        }, function() { alert('Erreur réseau.'); });
+      };
       window.adminJournal = function(code, nom) {
         if (!window._supabase) return;
         var ex = document.getElementById('journalOverlay'); if (ex) ex.remove();
@@ -22427,6 +22444,7 @@ function testEffacerDonnees() {
             html += '<div class="jrnResume" data-code="' + escapeHtml(String(r.code_acces || '').toUpperCase()) + '" style="font-size:11px;color:rgba(255,255,255,0.45);margin:2px 0 6px">🕒 Dernière connexion : …</div>';
             html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;border-top:1px solid rgba(255,255,255,0.06);padding-top:8px">';
             html += '<button onclick="adminJournal(\'' + attrJs(r.code_acces) + '\',\'' + attrJs(r.etablissement || r.code_acces) + '\')" style="background:rgba(148,163,184,0.15);color:#e2e8f0;border:1px solid rgba(148,163,184,0.3);padding:7px 14px;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif">📜 Journal</button>';
+            html += '<button onclick="adminDaCode(\'' + attrJs(r.code_acces) + '\',\'' + attrJs(r.etablissement || r.code_acces) + '\')" style="background:rgba(30,58,95,0.35);color:#bfdbfe;border:1px solid rgba(96,165,250,0.35);padding:7px 14px;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif">🗂️ Code dossier</button>';
             html += '<button onclick="modifierClient(\'' + escapeHtml(r.code_acces) + '\')" style="background:rgba(59,130,246,0.12);color:#93c5fd;border:1px solid rgba(59,130,246,0.3);padding:7px 14px;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif">✏️ Modifier</button>';
             html += '<button onclick="previenirClient(\'' + attrJs(r.code_acces) + '\')" style="background:rgba(20,184,166,0.14);color:#5eead4;border:1px solid rgba(20,184,166,0.35);padding:7px 14px;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif">✉️ Prévenir</button>';
             html += '<button onclick="adminPackDDPP(\'' + attrJs(r.id) + '\',\'' + attrJs(r.code_acces) + '\',\'' + attrJs(r.etablissement) + '\')" style="background:rgba(16,185,129,0.12);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3);padding:7px 14px;border-radius:7px;font-weight:700;font-size:12px;cursor:pointer;font-family:Outfit,sans-serif">📄 Pack DDPP</button>';
@@ -22791,6 +22809,7 @@ function testEffacerDonnees() {
             html += '<button onclick="modifierEtab(\'' + r.id + '\',\'' + escapeHtml(r.code_acces) + '\')" style="background:rgba(168,85,247,0.18);color:#d8b4fe;' + bs + '">✏️ Modifier</button>';
             html += '<button onclick="adminPackDDPP(\'' + attrJs(r.id) + '\',\'' + attrJs(r.code_acces) + '\',\'' + attrJs(r.nom || r.code_acces) + '\')" style="background:rgba(16,185,129,0.15);color:#6ee7b7;' + bs + '">📄 Pack DDPP</button>';
             html += '<button onclick="adminJournal(\'' + attrJs(r.code_acces) + '\',\'' + attrJs(r.nom || r.code_acces) + '\')" style="background:rgba(148,163,184,0.15);color:#e2e8f0;' + bs + '">📜 Journal</button>';
+            html += '<button onclick="adminDaCode(\'' + attrJs(r.code_acces) + '\',\'' + attrJs(r.nom || r.code_acces) + '\')" style="background:rgba(30,58,95,0.35);color:#bfdbfe;' + bs + '">🗂️ Code dossier</button>';
             html += '<button onclick="supprimerEtab(\'' + r.id + '\',\'' + escapeHtml(r.code_acces) + '\')" style="background:rgba(127,29,29,0.3);color:#fca5a5;' + bs + '">🗑️ Supprimer</button>';
             html += '</div>';
             html += '</div>';
