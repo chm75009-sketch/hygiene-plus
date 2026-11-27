@@ -1524,7 +1524,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
         #page-home .ph4-fils::-webkit-scrollbar{display:none}
         #page-home .ph4-fil{flex:1 1 auto;min-width:fit-content;padding:7px 12px;background:transparent;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:600;color:#787774;cursor:pointer;transition:all .15s ease;white-space:nowrap}
         #page-home .ph4-fil:hover{color:#37352f}
-        #page-home .ph4-fil.on{background:#fff;color:var(--accent,#0f766e);box-shadow:0 2px 6px -1px rgba(10,10,10,.1),0 1px 2px rgba(10,10,10,.06)}
+        #page-home .ph4-fil.active,#page-home .ph4-fil.on{background:#fff;color:var(--accent,#0f766e);box-shadow:0 2px 6px -1px rgba(10,10,10,.1),0 1px 2px rgba(10,10,10,.06)}
 
         /* Modules — tuiles 3D colorées cliquables */
         #page-home .mods-grid{grid-template-columns:1fr 1fr !important;gap:10px !important}
@@ -1608,7 +1608,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <a class="ph4-list-link" onclick="showPage('page-history')">Historique</a>
         </div>
         <div class="ph4-fils">
-          <button class="ph4-fil ctab ctab-q on" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien</button>
+          <button class="ph4-fil ctab ctab-q active" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien</button>
           <button class="ph4-fil ctab ctab-p" onclick="switchCat('periodique',this)" data-cat="periodique">Périodique</button>
           <button class="ph4-fil ctab ctab-u" onclick="switchCat('ponctuel',this)" data-cat="ponctuel">Ponctuel</button>
           <button class="ph4-fil ctab ctab-s" onclick="switchCat('pilotage',this)" data-cat="pilotage">Pilotage</button>
