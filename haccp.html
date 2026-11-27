@@ -1453,90 +1453,100 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <div class="page" id="page-home">
 
       <style>
-        /* === DASHBOARD v6 — style Notion, ergonomique et sobre === */
-        #page-home{background:#fff;color:#37352f;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-        #page-home .ph4-wrap{padding:18px 16px 24px}
+        /* === DASHBOARD v7 — Notion-like + relief Nomos (teal / or) === */
+        #page-home{background:#faf8f3;color:#37352f;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+        #page-home .ph4-wrap{padding:18px 16px 28px}
 
-        /* Header type Notion (titre page + icônes discrètes) */
+        /* Header */
         #page-home .ph4-row1{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:18px;padding:0 2px}
         #page-home .ph4-eyebrow{flex:1;line-height:1.15;min-width:0}
-        #page-home .ph4-eyebrow .pr-greet{display:block;font-size:12px;color:#9b9a97;font-weight:400;margin-bottom:3px;letter-spacing:0}
-        #page-home .ph4-eyebrow b{display:block;font-size:22px;color:#37352f;font-weight:700;letter-spacing:-.02em;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        #page-home .ph4-icon{width:28px;height:28px;border-radius:4px;background:transparent;border:none;color:#9b9a97;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .1s ease}
-        #page-home .ph4-icon:hover{background:#f1f1ef;color:#37352f}
-        #page-home .ph4-icon:active{background:#e9e9e7}
-        #page-home .ph4-icon svg{width:16px;height:16px;stroke-width:1.5}
+        #page-home .ph4-eyebrow .pr-greet{display:block;font-size:12px;color:var(--accent,#0f766e);font-weight:600;margin-bottom:3px;letter-spacing:.02em;text-transform:uppercase}
+        #page-home .ph4-eyebrow b{display:block;font-size:22px;color:#1f1e1b;font-weight:700;letter-spacing:-.02em;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        #page-home .ph4-icon{width:32px;height:32px;border-radius:8px;background:#fff;border:1px solid #e9e9e7;color:#37352f;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s ease;box-shadow:0 1px 2px rgba(10,10,10,.04)}
+        #page-home .ph4-icon:hover{background:var(--accent,#0f766e);color:#fff;border-color:var(--accent,#0f766e);transform:translateY(-1px);box-shadow:0 4px 10px rgba(15,118,110,.25)}
+        #page-home .ph4-icon:active{transform:translateY(0)}
+        #page-home .ph4-icon svg{width:16px;height:16px;stroke-width:1.75}
 
-        /* Bloc score — card Notion avec chiffre très visible */
-        #page-home .ph4-score{margin:0 0 10px;background:#fbfbfa;border:1px solid #e9e9e7;border-radius:6px;padding:16px 18px 14px}
-        #page-home .ph4-score-cap{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-        #page-home .ph4-score-cap-l{font-size:11px;color:#9b9a97;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
-        #page-home .ph4-score-cap-r{font-size:11px;color:#787774;font-weight:600;background:#eceae6;padding:2px 7px;border-radius:3px;font-variant-numeric:tabular-nums}
-        #page-home .ph4-score-line{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-        #page-home .ph4-score-big{font-size:clamp(48px,14vw,60px);font-weight:700;letter-spacing:-.035em;color:#37352f;display:inline-flex;align-items:baseline;gap:0;font-family:inherit;line-height:1;font-variant-numeric:tabular-nums}
-        #page-home .ph4-score-slash{color:#d3d1cb;font-weight:500;font-size:.6em;margin:0 4px}
-        #page-home .ph4-score-total{color:#9b9a97;font-weight:600;font-size:.42em;font-variant-numeric:tabular-nums}
-        #page-home .ph4-score-label{font-size:13px;color:#787774;font-weight:400;padding-bottom:4px}
-        #page-home .ph4-score-label em{font-style:normal;color:#37352f;font-weight:500}
+        /* Bloc score — card teal avec relief et chiffre très visible */
+        #page-home .ph4-score{margin:0 0 12px;background:linear-gradient(135deg,#fff 0%,#f0faf7 100%);border:1px solid #d6ede5;border-radius:12px;padding:16px 18px 14px;box-shadow:0 2px 8px -2px rgba(15,118,110,.08),0 1px 3px rgba(10,10,10,.04);position:relative;overflow:hidden}
+        #page-home .ph4-score::before{content:'';position:absolute;top:-40px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(210,173,70,.14) 0%,transparent 65%);pointer-events:none}
+        #page-home .ph4-score-cap{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;position:relative}
+        #page-home .ph4-score-cap-l{font-size:11px;color:var(--accent,#0f766e);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+        #page-home .ph4-score-cap-r{font-size:11.5px;color:#fff;font-weight:700;background:var(--accent,#0f766e);padding:3px 9px;border-radius:999px;font-variant-numeric:tabular-nums;box-shadow:0 2px 6px rgba(15,118,110,.3)}
+        #page-home .ph4-score-line{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;position:relative}
+        #page-home .ph4-score-big{font-size:clamp(52px,16vw,68px);font-weight:800;letter-spacing:-.04em;color:var(--accent,#0f766e);display:inline-flex;align-items:baseline;gap:0;font-family:inherit;line-height:1;font-variant-numeric:tabular-nums}
+        #page-home .ph4-score-slash{color:#d2ad46;font-weight:500;font-size:.55em;margin:0 4px}
+        #page-home .ph4-score-total{color:#9b9a97;font-weight:600;font-size:.4em;font-variant-numeric:tabular-nums}
+        #page-home .ph4-score-label{font-size:13px;color:#37352f;font-weight:500;padding-bottom:6px}
+        #page-home .ph4-score-label em{font-style:normal;color:var(--accent,#0f766e);font-weight:600}
 
-        /* Progress bar — minimale Notion */
-        #page-home .ph4-progress{height:4px;background:#efefed;border-radius:2px;margin:10px 0 0;overflow:hidden}
-        #page-home .ph4-progress-fill{height:100%;background:var(--accent,#0f766e);border-radius:2px;transition:width .4s ease;width:0%}
+        /* Progress bar avec gradient */
+        #page-home .ph4-progress{height:6px;background:#e9e9e7;border-radius:999px;margin:12px 0 0;overflow:hidden;position:relative}
+        #page-home .ph4-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent,#0f766e) 0%,#14b8a6 60%,#d2ad46 100%);border-radius:999px;transition:width .5s cubic-bezier(.22,.6,.36,1);width:0%;position:relative}
+        #page-home .ph4-progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:phShine 2.4s ease-in-out infinite}
+        @keyframes phShine{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
 
-        /* CTA principal — bouton Notion dark */
-        #page-home .ph4-next{display:flex;align-items:center;gap:10px;background:#37352f;color:#fff;border-radius:5px;padding:9px 12px 9px 10px;margin:14px 0 20px;cursor:pointer;border:none;width:100%;font-family:inherit;text-align:left;transition:background .1s ease}
-        #page-home .ph4-next:hover{background:#2a2924}
-        #page-home .ph4-next:active{background:#1f1e1b}
-        #page-home .ph4-next-ico{width:26px;height:26px;border-radius:4px;background:rgba(255,255,255,.08);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
-        #page-home .ph4-next-ico svg{width:12px;height:12px;stroke-width:2;margin-left:1px}
-        #page-home .ph4-next-txt{flex:1;line-height:1.2;min-width:0}
-        #page-home .ph4-next-tag{display:block;font-size:10px;color:rgba(255,255,255,.5);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1px;font-family:inherit}
-        #page-home .ph4-next-name{display:block;font-size:13.5px;font-weight:600;letter-spacing:-.005em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        #page-home .ph4-next-arr{color:rgba(255,255,255,.35);flex-shrink:0;line-height:0}
-        #page-home .ph4-next-arr svg{width:14px;height:14px}
+        /* CTA principal — teal foncé avec vraie profondeur */
+        #page-home .ph4-next{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--accent,#0f766e) 0%,#115e59 100%);color:#fff;border-radius:10px;padding:12px 14px 12px 12px;margin:14px 0 20px;cursor:pointer;border:none;width:100%;font-family:inherit;text-align:left;transition:all .18s cubic-bezier(.22,.6,.36,1);box-shadow:0 6px 16px -4px rgba(15,118,110,.4),0 2px 4px rgba(15,118,110,.2);position:relative;overflow:hidden}
+        #page-home .ph4-next::before{content:'';position:absolute;top:-30%;right:-15%;width:160px;height:160px;background:radial-gradient(circle,rgba(210,173,70,.2) 0%,transparent 65%);pointer-events:none}
+        #page-home .ph4-next:hover{transform:translateY(-2px);box-shadow:0 10px 24px -6px rgba(15,118,110,.5),0 4px 8px rgba(15,118,110,.25)}
+        #page-home .ph4-next:active{transform:translateY(0);box-shadow:0 4px 10px -2px rgba(15,118,110,.35)}
+        #page-home .ph4-next-ico{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.18);backdrop-filter:blur(4px);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;position:relative;z-index:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+        #page-home .ph4-next-ico svg{width:14px;height:14px;stroke-width:2;margin-left:2px}
+        #page-home .ph4-next-txt{flex:1;line-height:1.2;min-width:0;position:relative;z-index:1}
+        #page-home .ph4-next-tag{display:block;font-size:10px;color:#fde68a;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;font-family:inherit}
+        #page-home .ph4-next-name{display:block;font-size:14px;font-weight:700;letter-spacing:-.005em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        #page-home .ph4-next-arr{color:rgba(255,255,255,.65);flex-shrink:0;line-height:0;position:relative;z-index:1;transition:transform .2s}
+        #page-home .ph4-next:hover .ph4-next-arr{transform:translateX(3px)}
+        #page-home .ph4-next-arr svg{width:16px;height:16px}
 
-        /* 3 raccourcis — blocs Notion horizontaux */
-        #page-home .ph4-shortcuts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:0 0 24px}
-        #page-home .ph4-short{background:#fff;border:1px solid #e9e9e7;border-radius:5px;padding:9px 8px;cursor:pointer;font-family:inherit;text-align:left;transition:background .1s ease;display:flex;align-items:center;gap:6px;min-width:0}
-        #page-home .ph4-short:hover{background:#f7f6f3}
-        #page-home .ph4-short:active{background:#efefed}
-        #page-home .ph4-short-ico{width:22px;height:22px;border-radius:4px;background:transparent;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#787774}
-        #page-home .ph4-short.danger .ph4-short-ico{color:#b91c1c}
-        #page-home .ph4-short.gold .ph4-short-ico{color:#b58014}
-        #page-home .ph4-short.accent .ph4-short-ico{color:var(--accent,#0f766e)}
-        #page-home .ph4-short-ico svg{width:14px;height:14px;stroke-width:1.75}
-        #page-home .ph4-short-lbl{font-size:11.5px;font-weight:500;color:#37352f;letter-spacing:-.005em;line-height:1.2;min-width:0;overflow:hidden}
+        /* 3 raccourcis — vraies cards colorées avec relief */
+        #page-home .ph4-shortcuts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:0 0 26px}
+        #page-home .ph4-short{background:#fff;border:1px solid #e9e9e7;border-radius:10px;padding:12px 8px 11px;cursor:pointer;font-family:inherit;text-align:center;transition:all .18s cubic-bezier(.22,.6,.36,1);display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;box-shadow:0 1px 2px rgba(10,10,10,.04)}
+        #page-home .ph4-short:hover{transform:translateY(-2px);box-shadow:0 8px 16px -4px rgba(10,10,10,.1),0 2px 4px rgba(10,10,10,.05)}
+        #page-home .ph4-short:active{transform:translateY(0)}
+        #page-home .ph4-short-ico{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;box-shadow:0 3px 8px -2px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-home .ph4-short.danger .ph4-short-ico{background:linear-gradient(135deg,#dc2626 0%,#991b1b 100%);box-shadow:0 3px 10px -2px rgba(220,38,38,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-home .ph4-short.gold .ph4-short-ico{background:linear-gradient(135deg,#d2ad46 0%,#8b6f1d 100%);box-shadow:0 3px 10px -2px rgba(210,173,70,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-home .ph4-short.accent .ph4-short-ico{background:linear-gradient(135deg,var(--accent,#0f766e) 0%,#115e59 100%);box-shadow:0 3px 10px -2px rgba(15,118,110,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-home .ph4-short-ico svg{width:16px;height:16px;stroke-width:2}
+        #page-home .ph4-short-lbl{font-size:11.5px;font-weight:600;color:#37352f;letter-spacing:-.005em;line-height:1.2}
 
-        /* Section header — type Notion group title */
-        #page-home .ph4-list-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 8px}
-        #page-home .ph4-list-title{font-size:11px;font-weight:600;color:#9b9a97;letter-spacing:.06em;text-transform:uppercase;font-family:inherit}
-        #page-home .ph4-list-title em{font-style:normal;color:#9b9a97;font-family:inherit;font-weight:600;font-size:inherit}
-        #page-home .ph4-list-link{font-size:12px;color:#787774;font-weight:400;cursor:pointer;text-decoration:none;padding:3px 7px;border-radius:4px;transition:background .1s}
-        #page-home .ph4-list-link:hover{background:#f1f1ef;color:#37352f}
+        /* Section header */
+        #page-home .ph4-list-head{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px}
+        #page-home .ph4-list-title{font-size:12px;font-weight:700;color:#37352f;letter-spacing:.04em;text-transform:uppercase;font-family:inherit}
+        #page-home .ph4-list-title em{font-style:normal;color:var(--accent,#0f766e);font-family:inherit;font-weight:700;font-size:inherit}
+        #page-home .ph4-list-link{font-size:12px;color:var(--accent,#0f766e);font-weight:600;cursor:pointer;text-decoration:none;padding:4px 10px;border-radius:999px;transition:all .15s;background:rgba(15,118,110,.08)}
+        #page-home .ph4-list-link:hover{background:var(--accent,#0f766e);color:#fff}
 
-        /* Filtres — segment control Notion */
-        #page-home .ph4-fils{display:flex;gap:2px;margin:0 0 10px;overflow-x:auto;scrollbar-width:none;padding:3px;background:#f1f1ef;border-radius:5px}
+        /* Filtres — segment control avec relief */
+        #page-home .ph4-fils{display:flex;gap:3px;margin:0 0 12px;overflow-x:auto;scrollbar-width:none;padding:4px;background:#eceae6;border-radius:10px;box-shadow:inset 0 1px 2px rgba(10,10,10,.05)}
         #page-home .ph4-fils::-webkit-scrollbar{display:none}
-        #page-home .ph4-fil{flex:1 1 auto;min-width:fit-content;padding:5px 10px;background:transparent;border:none;border-radius:3px;font-family:inherit;font-size:12px;font-weight:500;color:#787774;cursor:pointer;transition:all .1s ease;white-space:nowrap}
+        #page-home .ph4-fil{flex:1 1 auto;min-width:fit-content;padding:7px 12px;background:transparent;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:600;color:#787774;cursor:pointer;transition:all .15s ease;white-space:nowrap}
         #page-home .ph4-fil:hover{color:#37352f}
-        #page-home .ph4-fil.on{background:#fff;color:#37352f;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+        #page-home .ph4-fil.on{background:#fff;color:var(--accent,#0f766e);box-shadow:0 2px 6px -1px rgba(10,10,10,.1),0 1px 2px rgba(10,10,10,.06)}
 
-        /* Liste modules — tuiles carrées cliquables Notion */
-        #page-home .mods-grid{grid-template-columns:1fr 1fr !important;gap:8px !important}
-        #page-home .mods-grid .mod{padding:14px 12px 12px !important;min-height:116px !important;flex-direction:column !important;align-items:flex-start !important;justify-content:flex-start !important;gap:10px !important;border-radius:6px !important;background:#fff !important;border:1px solid #e9e9e7 !important;box-shadow:none !important;transition:background .1s ease,border-color .1s ease !important;position:relative;animation:none !important;cursor:pointer !important;overflow:hidden}
-        #page-home .mods-grid .mod::before{display:none}
-        #page-home .mods-grid .mod:hover{background:#f7f6f3 !important;border-color:#d3d1cb !important;transform:none !important;box-shadow:none !important}
-        #page-home .mods-grid .mod:active{background:#efefed !important}
-        #page-home .mods-grid .mod-ico{width:30px !important;height:30px !important;border-radius:6px !important;background:#f1f1ef !important;color:#37352f !important;transition:none !important;flex-shrink:0;border:none !important;display:inline-flex !important;align-items:center;justify-content:center}
-        #page-home .mods-grid .mod:hover .mod-ico{background:#eceae6 !important;color:#37352f !important;transform:none !important}
-        #page-home .mods-grid .mod-ico svg{width:16px !important;height:16px !important;stroke-width:1.6 !important}
-        #page-home .mods-grid .mod-name{font-size:13px !important;font-weight:500 !important;line-height:1.3 !important;letter-spacing:-.005em;margin:0 !important;padding:0 !important;flex:1 !important;color:#37352f !important;display:block;overflow:hidden;width:100%}
+        /* Modules — tuiles 3D colorées cliquables */
+        #page-home .mods-grid{grid-template-columns:1fr 1fr !important;gap:10px !important}
+        #page-home .mods-grid .mod{padding:14px 12px 12px !important;min-height:124px !important;flex-direction:column !important;align-items:flex-start !important;justify-content:flex-start !important;gap:10px !important;border-radius:12px !important;background:#fff !important;border:1px solid #e9e9e7 !important;box-shadow:0 2px 6px -1px rgba(10,10,10,.05),0 1px 3px rgba(10,10,10,.04) !important;transition:all .2s cubic-bezier(.22,.6,.36,1) !important;position:relative;animation:none !important;cursor:pointer !important;overflow:hidden}
+        #page-home .mods-grid .mod::before{content:'';display:block !important;position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent,#0f766e),#d2ad46);opacity:0;transition:opacity .2s}
+        #page-home .mods-grid .mod:hover{transform:translateY(-3px) !important;border-color:#c5e5db !important;box-shadow:0 10px 24px -6px rgba(15,118,110,.18),0 4px 8px rgba(10,10,10,.06) !important;background:#fff !important}
+        #page-home .mods-grid .mod:hover::before{opacity:1}
+        #page-home .mods-grid .mod:active{transform:translateY(-1px) !important}
+        #page-home .mods-grid .mod-ico{width:34px !important;height:34px !important;border-radius:9px !important;background:linear-gradient(135deg,#f0faf7 0%,#d6ede5 100%) !important;color:var(--accent,#0f766e) !important;transition:all .2s cubic-bezier(.22,.6,.36,1) !important;flex-shrink:0;border:none !important;display:inline-flex !important;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(15,118,110,.08)}
+        #page-home .mods-grid .mod:hover .mod-ico{background:linear-gradient(135deg,var(--accent,#0f766e) 0%,#14b8a6 100%) !important;color:#fff !important;transform:scale(1.06) !important;box-shadow:0 4px 10px -2px rgba(15,118,110,.4) !important}
+        #page-home .mods-grid .mod-ico svg{width:17px !important;height:17px !important;stroke-width:1.75 !important}
+        #page-home .mods-grid .mod-name{font-size:13px !important;font-weight:600 !important;line-height:1.3 !important;letter-spacing:-.005em;margin:0 !important;padding:0 !important;flex:1 !important;color:#1f1e1b !important;display:block;overflow:hidden;width:100%}
         #page-home .mods-grid .mod-fn{display:none}
-        #page-home .mods-grid .mod-badge{position:static !important;top:auto !important;right:auto !important;transform:none !important;padding:2px 7px !important;font-size:10.5px !important;font-weight:500 !important;border-radius:3px !important;letter-spacing:0;border:none !important;align-self:flex-start !important;margin-top:0 !important}
-        /* Séparateurs de groupes "Tous les jours" / "Selon l'activité" */
-        #page-home .mods-grid > div[style*="grid-column"]{grid-column:1/-1 !important;font-family:inherit !important;font-style:normal !important;font-size:10.5px !important;font-weight:600 !important;color:#9b9a97 !important;margin:16px 2px 4px !important;letter-spacing:.06em !important;text-transform:uppercase !important;padding:0 !important;background:transparent !important;border:none !important}
-        #page-home .mods-grid > div[style*="grid-column"] span[style*="background:#22c55e"]{background:var(--accent,#0f766e) !important;opacity:.7;border-radius:999px}
-        #page-home .mods-grid > div[style*="grid-column"] span[style*="background:#f59e0b"]{background:#d2ad46 !important;opacity:.8;border-radius:999px}
+        #page-home .mods-grid .mod-badge{position:static !important;top:auto !important;right:auto !important;transform:none !important;padding:3px 9px !important;font-size:10.5px !important;font-weight:600 !important;border-radius:999px !important;letter-spacing:0;align-self:flex-start !important;margin-top:0 !important;border:1px solid transparent !important}
+        /* Styles d'état des badges plus contrastés */
+        #page-home .mods-grid .mod-badge.alert{background:#fef2f2 !important;color:#b91c1c !important;border-color:#fecaca !important}
+        #page-home .mods-grid .mod-badge.ok,#page-home .mods-grid .mod-badge.done{background:#f0faf7 !important;color:var(--accent,#0f766e) !important;border-color:#c5e5db !important}
+        #page-home .mods-grid .mod-badge.warn{background:#fefce8 !important;color:#a16207 !important;border-color:#fde68a !important}
+        /* Séparateurs de groupes */
+        #page-home .mods-grid > div[style*="grid-column"]{grid-column:1/-1 !important;font-family:inherit !important;font-style:normal !important;font-size:11px !important;font-weight:700 !important;color:#37352f !important;margin:18px 2px 6px !important;letter-spacing:.06em !important;text-transform:uppercase !important;padding:0 !important;background:transparent !important;border:none !important}
+        #page-home .mods-grid > div[style*="grid-column"] span[style*="background:#22c55e"]{background:var(--accent,#0f766e) !important;opacity:1 !important;border-radius:999px;box-shadow:0 0 0 2px rgba(15,118,110,.15)}
+        #page-home .mods-grid > div[style*="grid-column"] span[style*="background:#f59e0b"]{background:#d2ad46 !important;opacity:1 !important;border-radius:999px;box-shadow:0 0 0 2px rgba(210,173,70,.2)}
       </style>
 
       <!-- Hero legacy + irZone cachés mais IDs préservés pour compat JS -->
