@@ -214,14 +214,25 @@
   function installerTuile() {
     try {
       if (typeof FORMULE_ACTIVE !== 'undefined' && FORMULE_ACTIVE === 'rth') return;
-      var body = document.querySelector('#page-guide .pg-body') || (document.getElementById('barometreHaccp') || {}).parentNode;
-      if (!body || document.getElementById('daTuile')) return;
-      var w = document.createElement('div');
-      w.id = 'daTuile';
-      w.innerHTML = '<div class="pg-section"><span class="pg-section-dot"></span><span class="pg-section-title">Gestion administrative</span><span class="pg-section-hint">Réservé au Président</span></div>'
-        + '<button type="button" onclick="ouvrirDossierAdministratif()" style="width:100%;display:flex;align-items:center;gap:14px;border:none;border-radius:16px;padding:16px;margin:6px 0 14px;background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;text-align:left;cursor:pointer;font-family:Outfit,Inter,system-ui,sans-serif;box-shadow:0 6px 20px rgba(15,23,42,.25)">'
+      var bouton = '<button type="button" onclick="ouvrirDossierAdministratif()" style="width:100%;display:flex;align-items:center;gap:14px;border:none;border-radius:16px;padding:16px;margin:6px 0 14px;background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;text-align:left;cursor:pointer;font-family:Outfit,Inter,system-ui,sans-serif;box-shadow:0 6px 20px rgba(15,23,42,.25)">'
         + '<span style="font-size:28px">🗂️</span><span style="flex:1"><b style="display:block;font-size:16px;font-weight:900">Dossier administratif</b><small style="display:block;opacity:.75;font-size:12px">Personnel · associés · déclarations</small></span><span style="font-size:18px" aria-hidden="true">🔒</span></button>';
-      body.appendChild(w);
+      // Accueil guidé (mode simple)
+      var body = document.querySelector('#page-guide .pg-body') || (document.getElementById('barometreHaccp') || {}).parentNode;
+      if (body && !document.getElementById('daTuile')) {
+        var w = document.createElement('div');
+        w.id = 'daTuile';
+        w.innerHTML = '<div class="pg-section"><span class="pg-section-dot"></span><span class="pg-section-title">Gestion administrative</span><span class="pg-section-hint">Réservé au Président</span></div>' + bouton;
+        body.appendChild(w);
+      }
+      // Tableau de bord (mode expert) : sous la grille des modules
+      var grille = document.querySelector('#page-home .mods-wrap');
+      if (grille && !document.getElementById('daTuileExpert')) {
+        var w2 = document.createElement('div');
+        w2.id = 'daTuileExpert';
+        w2.style.cssText = 'padding:4px 16px 0';
+        w2.innerHTML = '<div style="font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;margin:14px 2px 4px">Gestion administrative · réservé au Président</div>' + bouton;
+        grille.parentNode.insertBefore(w2, grille.nextSibling);
+      }
     } catch (e) {}
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(installerTuile, 300); });
