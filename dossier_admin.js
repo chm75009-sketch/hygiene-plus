@@ -18,7 +18,7 @@
     { id: 'personnel', ico: '👥', titre: 'Dossier du personnel', sous: 'Salariés, embauche, paie, procédures',
       rub: [
         ['Salariés', 'Une fiche par salarié : identité, contrat, horaires, salaire, période d\'essai', 'salaries'],
-        ['Embauche', 'Contrats, avenants, déclarations d\'embauche, pièces d\'identité, titres de séjour, autorisations de travail'],
+        ['Embauche', 'Contrats, avenants, déclarations d\'embauche, pièces d\'identité, titres de séjour'],
         ['Paie', 'Bulletins de salaire'],
         ['Santé et formation', 'Visites médicales, formations hygiène'],
         ['Procédures', 'Rappel à l\'ordre, mise en garde, avertissement, blâme, mise à pied, licenciement', 'procs'],
@@ -71,7 +71,7 @@
     ['contrat', 'Contrat', 'text'], ['heures_hebdo', 'Heures par semaine', 'number'], ['salaire_brut', 'Salaire brut mensuel (€)', 'number'],
     ['essai_fin', 'Fin de période d\'essai', 'date'], ['repos', 'Jours de repos', 'text'],
     ['horaires', 'Horaires (une ligne par jour)', 'textarea'],
-    ['titre_travail_type', 'Autorisation de travail : type de titre (salarié étranger)', 'text'], ['titre_travail_num', 'Autorisation de travail : numéro', 'text'],
+    ['titre_travail_type', 'Titre de séjour : type (ex. : carte de résident, carte pluriannuelle)', 'text'], ['titre_travail_num', 'Titre de séjour : numéro', 'text'],
     ['titre_sejour_fin', 'Fin de validité du titre de séjour', 'date'], ['notes', 'Notes', 'textarea']
   ];
 
@@ -272,7 +272,7 @@
   }
   function vide(v) { return v == null || v === '' || (Array.isArray(v) && !v.length); }
   function champsManquants(s) { return champsObligatoires(s).filter(function (k) { return vide(s[k]); }); }
-  function libelleChamp(k) { var c = CHAMPS.filter(function (x) { return x[0] === k; })[0]; return c ? c[1].replace(/ \(.*\)$/, '').replace(/^Autorisation de travail : /, 'Titre de travail : ') : k; }
+  function libelleChamp(k) { var c = CHAMPS.filter(function (x) { return x[0] === k; })[0]; return c ? c[1].replace(/ \(.*\)$/, '') : k; }
   function manquants(s) { return champsManquants(s).length; }
   function ligneSalarie(s) {
     var init = ((s.prenom || ' ')[0] + (s.nom || ' ')[0]).toUpperCase();
@@ -1388,16 +1388,16 @@
       return { n: i + 1, s: s, aut: aut, manque: manque };
     });
   }
-  var LIB_MANQUE = { nom: 'nom', prenom: 'prénom', nationalite: 'nationalité', naissance_date: 'date de naissance', sexe: 'sexe', poste: 'emploi', qualification: 'qualification', date_embauche: 'date d\'entrée', contrat: 'type de contrat', titre: 'titre de travail', date_sortie: 'date de sortie' };
+  var LIB_MANQUE = { nom: 'nom', prenom: 'prénom', nationalite: 'nationalité', naissance_date: 'date de naissance', sexe: 'sexe', poste: 'emploi', qualification: 'qualification', date_embauche: 'date d\'entrée', contrat: 'type de contrat', titre: 'titre de séjour (type et n°)', date_sortie: 'date de sortie' };
   function tableRegistre(L, pourImpression) {
     var td = pourImpression ? 'border:1px solid #999;padding:4px 6px;vertical-align:top' : 'border-bottom:1px solid #e3e4ef;padding:6px;vertical-align:top';
     var th = pourImpression ? 'border:1px solid #999;padding:4px 6px;background:#eee;text-align:left' : 'padding:6px;background:#eef0ff;text-align:left;position:sticky;top:0';
     var h = '<table style="border-collapse:collapse;font-size:' + (pourImpression ? '10px' : '12px') + ';min-width:900px;width:100%"><thead><tr>'
-      + ['N°', 'Nom et prénoms', 'Nationalité', 'Date de naissance', 'Sexe', 'Emploi', 'Qualification', 'Date d\'entrée', 'Date de sortie', 'Type de contrat', 'Autorisation de travail (type et n°)']
+      + ['N°', 'Nom et prénoms', 'Nationalité', 'Date de naissance', 'Sexe', 'Emploi', 'Qualification', 'Date d\'entrée', 'Date de sortie', 'Type de contrat', 'Titre de séjour (type et n°)']
         .map(function (x) { return '<th style="' + th + '">' + esc(x) + '</th>'; }).join('') + '</tr></thead><tbody>';
     L.forEach(function (l) {
       var s = l.s, v = function (x) { return x ? esc(x) : (pourImpression ? '' : '<span style="color:#b45309">à compléter</span>'); };
-      var aut = l.aut === true ? (s.titre_travail_type || s.titre_travail_num ? esc([s.titre_travail_type, s.titre_travail_num].filter(Boolean).join(' n° ')) : v('')) : (l.aut === false ? 'Non requise' : v(''));
+      var aut = l.aut === true ? (s.titre_travail_type || s.titre_travail_num ? esc([s.titre_travail_type, s.titre_travail_num].filter(Boolean).join(' n° ')) : v('')) : (l.aut === false ? 'Non requis' : v(''));
       h += '<tr><td style="' + td + '">' + l.n + '</td><td style="' + td + '"><b>' + esc(String(s.nom || '').toUpperCase()) + '</b> ' + esc(s.prenom || '') + '</td>'
         + '<td style="' + td + '">' + v(s.nationalite) + '</td><td style="' + td + '">' + v(dateFr(s.naissance_date)) + '</td><td style="' + td + '">' + v(s.sexe) + '</td>'
         + '<td style="' + td + '">' + v(s.poste) + '</td><td style="' + td + '">' + v(s.qualification) + '</td><td style="' + td + '">' + v(dateFr(s.date_embauche)) + '</td>'
@@ -1418,7 +1418,7 @@
         + '<div class="da-item" style="cursor:default"><span class="i">📒</span><span><b>Registre unique du personnel</b><small>' + L.length + ' salarié' + (L.length > 1 ? 's' : '') + ', dans l\'ordre des embauches, y compris les départs</small></span></div>'
         + '<div class="da-form" style="font-size:13px;gap:6px"><b>Ce que dit la loi</b>'
         + '<span>• Obligatoire dès le premier salarié, tenu dans l\'établissement (article L1221-13 du Code du travail).</span>'
-        + '<span>• Mentions obligatoires : nom, prénoms, nationalité, date de naissance, sexe, emploi, qualification, dates d\'entrée et de sortie, type de contrat (CDD, temps partiel…), et pour un salarié étranger le type et le numéro de son autorisation de travail (articles D1221-23 à D1221-25).</span>'
+        + '<span>• Mentions obligatoires : nom, prénoms, nationalité, date de naissance, sexe, emploi, qualification, dates d\'entrée et de sortie, type de contrat (CDD, temps partiel…), et pour un salarié étranger hors UE le type et le numéro de son titre de séjour (articles D1221-23 à D1221-25).</span>'
         + '<span>• Inscription dans l\'ordre des embauches, sans rien effacer. Conservation <b>5 ans après le départ</b> du salarié (article R1221-26).</span>'
         + '<span>• À présenter à l\'inspection du travail sur demande.</span></div>';
       if (incomplets.length) {
@@ -1436,8 +1436,8 @@
         imprimer('<style>@page{size:A4 landscape;margin:10mm}body{font-family:Arial,sans-serif}</style>' + entetePrint + tableRegistre(L, true), 'Registre unique du personnel');
       });
       o.querySelector('#daRegCsv').addEventListener('click', function () {
-        var lignes = [['N°', 'Nom', 'Prénoms', 'Nationalité', 'Date de naissance', 'Sexe', 'Emploi', 'Qualification', 'Date d\'entrée', 'Date de sortie', 'Type de contrat', 'Autorisation de travail']];
-        L.forEach(function (l) { var s = l.s; lignes.push([l.n, s.nom, s.prenom, s.nationalite, dateFr(s.naissance_date), s.sexe, s.poste, s.qualification, dateFr(s.date_embauche), dateFr(s.date_sortie), typeContrat(s), l.aut === false ? 'Non requise' : [s.titre_travail_type, s.titre_travail_num].filter(Boolean).join(' n° ')]); });
+        var lignes = [['N°', 'Nom', 'Prénoms', 'Nationalité', 'Date de naissance', 'Sexe', 'Emploi', 'Qualification', 'Date d\'entrée', 'Date de sortie', 'Type de contrat', 'Titre de séjour']];
+        L.forEach(function (l) { var s = l.s; lignes.push([l.n, s.nom, s.prenom, s.nationalite, dateFr(s.naissance_date), s.sexe, s.poste, s.qualification, dateFr(s.date_embauche), dateFr(s.date_sortie), typeContrat(s), l.aut === false ? 'Non requis' : [s.titre_travail_type, s.titre_travail_num].filter(Boolean).join(' n° ')]); });
         var csv = '﻿' + lignes.map(function (r) { return r.map(function (x) { return '"' + String(x == null ? '' : x).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');
         var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'registre-unique-du-personnel.csv';
         document.body.appendChild(a); a.click(); setTimeout(function () { try { a.remove(); } catch (e) {} }, 1000);
