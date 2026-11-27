@@ -46,7 +46,7 @@
         ['Bail commercial', ''],
         ['Licence et permis d\'exploitation', ''],
         ['Contrats nuisibles et biodéchets', ''],
-        ['Affichages obligatoires', '']
+        ['Affichages obligatoires', '16 affiches prêtes à imprimer, une par fichier', 'affichages']
       ] },
     { id: 'echeances', ico: '⏰', titre: 'Échéances', sous: 'Alertes automatiques',
       rub: [
@@ -187,6 +187,8 @@
         else if (a === 'echeances') vueEcheances();
         else if (a === 'procs') vueProcs();
         else if (a === 'registre') vueRegistre();
+        else if (a === 'affichages') vueAffichages();
+        else if (a.indexOf('voirrub:') === 0) { var q5 = a.split(':'); docCourant = { pole: q5[1], i: +q5[2] }; voirDocument(q5[3]); }
         else if (a.indexOf('procmod:') === 0) vueProcNouvelle((cacheProcs || []).filter(function (x) { return x.id === a.slice(8); })[0]);
         else if (a.indexOf('procarch:') === 0) archiverProc(a.slice(9));
         else if (a.indexOf('docmod:') === 0) vueDocModifier(a.slice(7));
@@ -223,7 +225,8 @@
     if (!p) return vueMenu();
     var o = overlay();
     var h = '<div class="da-wrap">' + entete('menu')
-      + '<div class="da-item" style="cursor:default"><span class="i">' + p.ico + '</span><span><b>' + esc(p.titre) + '</b><small>' + esc(p.sous) + '</small></span></div>';
+      + '<div class="da-item" style="cursor:default"><span class="i">' + p.ico + '</span><span><b>' + esc(p.titre) + '</b><small>' + esc(p.sous) + '</small></span></div>'
+      + (p.id !== 'echeances' ? '<p class="da-note" id="daPoleResume" style="margin:0">Chargement…</p>' : '');
     p.rub.forEach(function (r, i) {
       var inner = '<span><b>' + esc(r[0]) + '</b>' + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</span>';
       // Rubriques de documents : tous les pôles sauf Échéances, hors « Procédures » (à venir)
@@ -233,12 +236,27 @@
     });
     h += '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
-    // Nombre de documents déjà rangés dans chaque rubrique (✓ n)
+    // Pour chaque rubrique : ✓ Voir (présent) · ⚠ À importer (obligatoire absent) · ＋ Importer (facultatif absent)
+    cacheDocs = null;
     chargerDocs().then(function (docs) {
+      var total = 0, manquants = 0;
       o.querySelectorAll('[data-compte]').forEach(function (sp) {
-        var n = docs.filter(function (d) { return !d.archive && docDansRubrique(d, id, sp.getAttribute('data-compte')); }).length;
-        if (n) { sp.textContent = '✓ ' + n + ' ›'; sp.style.background = '#e8f6ed'; sp.style.color = '#15803d'; }
+        var titre = sp.getAttribute('data-compte'), i = rubIndex(id, titre), row = sp.parentNode;
+        var L = docs.filter(function (d) { return !d.archive && docDansRubrique(d, id, titre); });
+        var oblig = OBLIG_SOC.some(function (x) { return x[0] === id && x[1] === titre; });
+        total += L.length;
+        if (L.length) {
+          sp.textContent = '✓ Voir' + (L.length > 1 ? ' (' + L.length + ')' : ''); sp.style.background = '#e8f6ed'; sp.style.color = '#15803d';
+          if (L.length === 1) row.setAttribute('data-da', 'voirrub:' + id + ':' + i + ':' + L[0].id);
+        } else {
+          if (oblig) manquants++;
+          sp.textContent = oblig ? '⚠ À importer' : '＋ Importer';
+          sp.style.background = oblig ? '#fff4e5' : '#f1f2f6'; sp.style.color = oblig ? '#b45309' : '#5b5e78';
+          row.setAttribute('data-da', 'ajout:' + id + ':' + i);
+        }
       });
+      var res = o.querySelector('#daPoleResume');
+      if (res) res.innerHTML = total + ' document' + (total > 1 ? 's' : '') + (manquants ? ' · <b style="color:#b45309">' + manquants + ' obligatoire' + (manquants > 1 ? 's' : '') + ' manquant' + (manquants > 1 ? 's' : '') + '</b>' : (id === 'personnel' ? '' : ' · <b style="color:#15803d">obligatoires complets</b>'));
     }).catch(function () {});
   }
 
@@ -1039,6 +1057,120 @@
       d.open(); d.write('<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' + esc(titre) + '</title><style>body{margin:16mm}</style></head><body>' + html + '</body></html>'); d.close();
       setTimeout(function () { try { w.focus(); w.print(); } catch (e) { window.print(); } setTimeout(function () { try { ifr.remove(); } catch (e) {} }, 2000); }, 300);
     } catch (e) { window.print(); }
+  }
+
+  // ── Affichages obligatoires : une affiche = un fichier indépendant, avec l'en-tête de la société ──
+  var AFF_SOC = [['nom', 'Nom de la société'], ['forme', 'Forme et capital'], ['adresse', 'Adresse'], ['tel', 'Téléphone'], ['ids', 'RCS / SIRET'], ['inspection', 'Inspection du travail (adresse)']];
+  var AFF_CHAMPS = [
+    ['insp_nom', 'Inspecteur ou contrôleur du travail compétent (nom)'], ['insp_tel', 'Inspection du travail : téléphone'],
+    ['med', 'Service de santé au travail : nom, adresse, téléphone'],
+    ['extincteurs', 'Emplacement des extincteurs'], ['rassemblement', 'Point de rassemblement en cas d\'évacuation'],
+    ['horaires', 'Horaires collectifs : un jour par ligne (ex. : Lundi : 10h-15h / 18h-23h)', 'textarea'], ['repos', 'Jour(s) de repos hebdomadaire'],
+    ['consult', 'Lieu où les documents sont consultables (ex. : bureau de la direction)'],
+    ['conges', 'Période de prise des congés payés (ex. : du 1er mai au 31 octobre)'],
+    ['viande', 'Origine des viandes bovines servies (ex. : France)'], ['mediateur', 'Médiateur de la consommation : nom, adresse, site internet']
+  ];
+  function affLigne(x) { return x ? esc(x) : '<span style="display:inline-block;min-width:70mm;border-bottom:1px dotted #555">&nbsp;</span>'; }
+  var AFFICHES = [
+    { t: 'Inspection du travail', p: 'sal', ref: 'Article D. 4711-1 du code du travail', c: function (s, f) {
+      return '<p>Adresse : <b>' + affLigne(s.inspection) + '</b></p><p>Inspecteur ou contrôleur compétent : <b>' + affLigne(f.insp_nom) + '</b></p><p>Téléphone : <b>' + affLigne(f.insp_tel) + '</b></p>'; } },
+    { t: 'Médecine du travail', p: 'sal', ref: 'Article D. 4711-1 du code du travail', c: function (s, f) {
+      return '<p>Service de prévention et de santé au travail :</p><p style="font-size:20px"><b>' + affLigne(f.med) + '</b></p>'; } },
+    { t: 'Numéros d\'urgence', p: 'sal', ref: 'Article D. 4711-1 du code du travail', c: function () {
+      return '<table style="width:100%;font-size:22px;border-collapse:collapse">' + [['SAMU', '15'], ['Pompiers', '18'], ['Police secours', '17'], ['Numéro d\'urgence européen', '112'], ['Urgence pour personnes sourdes ou malentendantes (SMS)', '114'], ['Centre antipoison (Paris)', '01 40 05 48 48']]
+        .map(function (l) { return '<tr><td style="padding:10px;border-bottom:1px solid #ccc">' + l[0] + '</td><td style="padding:10px;border-bottom:1px solid #ccc;text-align:right;font-weight:800;font-size:30px">' + l[1] + '</td></tr>'; }).join('') + '</table>'; } },
+    { t: 'Consignes de sécurité incendie', p: 'sal', ref: 'Articles R. 4227-37 et R. 4227-38 du code du travail', c: function (s, f) {
+      return '<p><b>Si vous découvrez un feu :</b></p><ol><li>Donnez l\'alerte : appelez les <b>pompiers (18 ou 112)</b> et prévenez la direction.</li><li>Coupez le gaz et l\'électricité des appareils de cuisson si c\'est sans danger.</li><li>Feu d\'huile ou de friteuse : <b>ne jetez jamais d\'eau</b>, couvrez avec un couvercle ou une couverture anti-feu.</li><li>Attaquez le feu avec un extincteur uniquement si vous ne courez aucun risque.</li></ol>'
+        + '<p><b>En cas d\'évacuation :</b> faites sortir les clients, fermez les portes derrière vous, n\'utilisez pas l\'ascenseur, ne revenez pas en arrière.</p>'
+        + '<p>Extincteurs : <b>' + affLigne(f.extincteurs) + '</b></p><p>Point de rassemblement : <b>' + affLigne(f.rassemblement) + '</b></p>'; } },
+    { t: 'Interdiction de fumer et de vapoter', p: 'cli', ref: 'Articles L. 3512-8, R. 3512-2, L. 3513-6 et R. 3513-2 du code de la santé publique', c: function () {
+      return '<p style="text-align:center;font-size:110px;margin:10px 0">🚭</p><p style="text-align:center;font-size:26px;font-weight:800">Il est interdit de fumer et de vapoter dans ces locaux.</p><p style="text-align:center">Toute infraction expose son auteur à une amende.</p>'; } },
+    { t: 'Horaires collectifs de travail', p: 'sal', ref: 'Articles L. 3171-1 et D. 3171-2 à D. 3171-4 du code du travail', c: function (s, f) {
+      var L = String(f.horaires || '').split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
+      if (!L.length) L = ['Lundi :', 'Mardi :', 'Mercredi :', 'Jeudi :', 'Vendredi :', 'Samedi :', 'Dimanche :'];
+      return '<table style="width:100%;font-size:18px;border-collapse:collapse">' + L.map(function (l) { return '<tr><td style="padding:9px;border:1px solid #999">' + esc(l) + '</td></tr>'; }).join('') + '</table>'
+        + '<p>Repos hebdomadaire : <b>' + affLigne(f.repos) + '</b></p><p>Copie adressée à l\'inspection du travail avant sa mise en service.</p>'
+        + '<p style="margin-top:24px">Date : ........................ &nbsp; Signature de l\'employeur :</p>'; } },
+    { t: 'Convention collective', p: 'sal', ref: 'Article R. 2262-3 du code du travail', c: function (s, f) {
+      return '<p>Convention collective applicable :</p><p style="font-size:20px"><b>Convention collective nationale des hôtels, cafés, restaurants (HCR) du 30 avril 1997 — IDCC 1979</b></p><p>Elle peut être consultée : <b>' + affLigne(f.consult) + '</b></p>'; } },
+    { t: 'Égalité de rémunération entre les femmes et les hommes', p: 'sal', ref: 'Articles L. 3221-1 à L. 3221-7 et R. 3221-2 du code du travail', c: function (s, f) {
+      return '<p><b>Article L. 3221-2 :</b> « Tout employeur assure, pour un même travail ou pour un travail de valeur égale, l\'égalité de rémunération entre les femmes et les hommes. »</p><p>Sont considérés comme ayant une valeur égale les travaux qui exigent des salariés un ensemble comparable de connaissances professionnelles, de capacités, de responsabilités et de charge physique ou nerveuse.</p><p>Toute disposition contraire est nulle. Le texte intégral des articles L. 3221-1 à L. 3221-7 peut être consulté : <b>' + affLigne(f.consult) + '</b></p>'; } },
+    { t: 'Harcèlement moral et sexuel', p: 'sal', ref: 'Articles L. 1152-4 et L. 1153-5 du code du travail', c: function (s, f) {
+      return '<p><b>Article 222-33-2 du code pénal :</b> « Le fait de harceler autrui par des propos ou comportements répétés ayant pour objet ou pour effet une dégradation des conditions de travail susceptible de porter atteinte à ses droits et à sa dignité, d\'altérer sa santé physique ou mentale ou de compromettre son avenir professionnel, est puni de deux ans d\'emprisonnement et de 30 000 € d\'amende. »</p>'
+        + '<p><b>Article 222-33 du code pénal (extrait) :</b> « Le harcèlement sexuel est le fait d\'imposer à une personne, de façon répétée, des propos ou comportements à connotation sexuelle ou sexiste qui soit portent atteinte à sa dignité en raison de leur caractère dégradant ou humiliant, soit créent à son encontre une situation intimidante, hostile ou offensante. Est assimilé au harcèlement sexuel le fait, même non répété, d\'user de toute forme de pression grave dans le but réel ou apparent d\'obtenir un acte de nature sexuelle. » Puni de deux ans d\'emprisonnement et de 30 000 € d\'amende.</p>'
+        + '<p><b>Qui contacter :</b><br>– Médecine du travail : ' + affLigne(f.med) + '<br>– Inspection du travail : ' + affLigne(s.inspection) + (f.insp_tel ? ' — ' + esc(f.insp_tel) : '') + '<br>– Défenseur des droits : 09 69 39 00 00 — defenseurdesdroits.fr<br>– Violences sexistes et sexuelles : 3919</p>'; } },
+    { t: 'Lutte contre les discriminations', p: 'sal', ref: 'Article L. 1142-6 du code du travail — articles 225-1 à 225-4 du code pénal', c: function () {
+      return '<p><b>Article 225-1 du code pénal (extrait) :</b> constitue une discrimination toute distinction opérée entre les personnes à raison de leur origine, de leur sexe, de leur situation de famille, de leur grossesse, de leur apparence physique, de la particulière vulnérabilité résultant de leur situation économique, de leur patronyme, de leur lieu de résidence, de leur état de santé, de leur perte d\'autonomie, de leur handicap, de leurs caractéristiques génétiques, de leurs mœurs, de leur orientation sexuelle, de leur identité de genre, de leur âge, de leurs opinions politiques, de leurs activités syndicales, de leur qualité de lanceur d\'alerte, de leur capacité à s\'exprimer dans une langue autre que le français, de leur appartenance ou de leur non-appartenance, vraie ou supposée, à une ethnie, une nation, une prétendue race ou une religion déterminée.</p>'
+        + '<p><b>Article 225-2 :</b> la discrimination, notamment lorsqu\'elle consiste à refuser d\'embaucher, à sanctionner ou à licencier une personne, est punie de trois ans d\'emprisonnement et de 45 000 € d\'amende.</p><p>Défenseur des droits : 09 69 39 00 00 — defenseurdesdroits.fr</p>'; } },
+    { t: 'Document unique d\'évaluation des risques', p: 'sal', ref: 'Article R. 4121-4 du code du travail', c: function (s, f) {
+      return '<p>Le document unique d\'évaluation des risques professionnels (DUERP) est tenu à la disposition des salariés, du médecin du travail et de l\'inspection du travail.</p><p>Il peut être consulté : <b>' + affLigne(f.consult) + '</b>, sur simple demande auprès de la direction.</p>'; } },
+    { t: 'Congés payés', p: 'sal', ref: 'Articles L. 3141-13, D. 3141-5 et D. 3141-6 du code du travail', c: function (s, f) {
+      return '<p>Période de prise des congés payés :</p><p style="font-size:22px"><b>' + affLigne(f.conges) + '</b></p><p>L\'ordre des départs est communiqué à chaque salarié au moins un mois avant son départ.</p>'; } },
+    { t: 'Protection des mineurs et répression de l\'ivresse publique', p: 'cli', ref: 'Articles L. 3342-1, L. 3342-4 et L. 3353-3 du code de la santé publique', c: function () {
+      return '<p style="font-size:22px;font-weight:800;text-align:center">La vente et l\'offre gratuite de boissons alcooliques à des mineurs de moins de 18 ans sont interdites.</p><p style="text-align:center">La personne qui délivre la boisson peut exiger la preuve de la majorité. Infraction punie de 7 500 € d\'amende.</p>'
+        + '<p style="font-size:20px;font-weight:800;text-align:center;margin-top:20px">Il est interdit de servir des boissons alcooliques à une personne manifestement ivre.</p>'; } },
+    { t: 'Origine des viandes bovines', p: 'cli', ref: 'Décret n° 2002-1465 du 17 décembre 2002', c: function (s, f) {
+      return '<p style="font-size:24px;text-align:center">Les viandes bovines servies dans notre établissement sont :</p><p style="font-size:26px;text-align:center"><b>nées, élevées et abattues en : ' + affLigne(f.viande) + '</b></p>'; } },
+    { t: 'Allergènes', p: 'cli', ref: 'Articles R. 412-12 à R. 412-16 du code de la consommation', c: function () {
+      return '<p style="font-size:22px;text-align:center">Les informations sur les <b>14 allergènes majeurs</b> présents dans nos plats sont disponibles <b>par écrit</b>, sur simple demande auprès de notre personnel.</p><p style="text-align:center">Gluten · crustacés · œufs · poissons · arachides · soja · lait · fruits à coque · céleri · moutarde · sésame · sulfites · lupin · mollusques</p>'; } },
+    { t: 'Médiateur de la consommation', p: 'cli', ref: 'Articles L. 612-1 et L. 616-1 du code de la consommation', c: function (s, f) {
+      return '<p>En cas de litige non résolu avec notre établissement, vous pouvez recourir gratuitement au médiateur de la consommation :</p><p style="font-size:20px"><b>' + affLigne(f.mediateur) + '</b></p>'; } }
+  ];
+  function affHTML(a, s, f) {
+    return '<div style="font-family:Arial,Helvetica,sans-serif;color:#111;font-size:16px;line-height:1.5">'
+      + '<div style="border-bottom:3px solid #111;padding-bottom:8px;margin-bottom:18px;font-size:13px"><b style="font-size:17px">' + esc(s.nom || '') + '</b>'
+      + (s.forme ? ' — ' + esc(s.forme) : '') + '<br>' + esc(s.adresse || '') + '<br>' + [s.tel ? 'Tél. ' + esc(s.tel) : '', esc(s.ids || '')].filter(Boolean).join(' · ') + '</div>'
+      + '<h1 style="font-size:30px;text-align:center;margin:8px 0 4px;text-transform:uppercase">' + esc(a.t) + '</h1>'
+      + '<div style="text-align:center;font-size:12px;color:#444;margin-bottom:22px">' + esc(a.ref) + '</div>'
+      + a.c(s, f) + '<div style="margin-top:28px;font-size:11px;color:#555">Affiché le ' + new Date().toLocaleDateString('fr-FR') + '</div></div>';
+  }
+  function affDonnees() {
+    var s = enteteSociete(), e = {}; try { e = JSON.parse(localStorage.getItem(cleEntete()) || '{}') || {}; } catch (x) { e = {}; }
+    var f = {}; AFF_CHAMPS.forEach(function (c) { f[c[0]] = e['aff_' + c[0]] || ''; }); return { s: s, f: f };
+  }
+  function vueAffichages() {
+    if (!encoreOuvert()) return;
+    var o = overlay(), D = affDonnees();
+    var rIdx = rubIndex('declarations', 'Affichages obligatoires');
+    function ligne(a, k) {
+      return '<div class="da-rub"><span><b>' + esc(a.t) + '</b><small>' + esc(a.ref) + '</small></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">'
+        + '<button class="da-btn" type="button" data-aff="voir" data-k="' + k + '">Voir</button><button class="da-btn" type="button" data-aff="imp" data-k="' + k + '">🖨️</button><button class="da-btn" type="button" data-aff="pdf" data-k="' + k + '">PDF</button></span></div>';
+    }
+    var h = '<div class="da-wrap">' + entete('declarations')
+      + '<div class="da-item" style="cursor:default"><span class="i">📌</span><span><b>Affichages obligatoires</b><small>Une affiche par fichier, avec l\'en-tête de la société : imprimez-les une par une</small></span></div>'
+      + '<details class="da-form"><summary style="cursor:pointer;font-weight:800">✏️ Informations à afficher (mémorisées)</summary>'
+      + AFF_SOC.map(function (c) { return '<label for="aff_s_' + c[0] + '">' + esc(c[1]) + '<input id="aff_s_' + c[0] + '" value="' + esc(D.s[c[0]] || '') + '"></label>'; }).join('')
+      + AFF_CHAMPS.map(function (c) { return '<label for="aff_' + c[0] + '">' + esc(c[1]) + (c[2] === 'textarea' ? '<textarea id="aff_' + c[0] + '" rows="7">' + esc(D.f[c[0]]) + '</textarea>' : '<input id="aff_' + c[0] + '" value="' + esc(D.f[c[0]]) + '">') + '</label>'; }).join('')
+      + '<button class="da-main" type="button" id="affSave">💾 Enregistrer</button><p class="da-note" id="affMsg">Ce qui reste vide s\'imprime en pointillés, à remplir à la main.</p></details>'
+      + '<div class="da-sect">👥 Pour les salariés</div>' + AFFICHES.map(function (a, k) { return a.p === 'sal' ? ligne(a, k) : ''; }).join('')
+      + '<div class="da-sect">🍽️ Pour les clients</div>' + AFFICHES.map(function (a, k) { return a.p === 'cli' ? ligne(a, k) : ''; }).join('')
+      + '<div id="affApercu"></div>'
+      + '<button class="da-btn" type="button" data-da="doc:declarations:' + rIdx + '">📁 Affiches signées ou scannées rangées ici</button></div>';
+    o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    function lireForm() {
+      var e = {}; try { e = JSON.parse(localStorage.getItem(cleEntete()) || '{}') || {}; } catch (x) { e = {}; }
+      AFF_SOC.forEach(function (c) { e[c[0]] = o.querySelector('#aff_s_' + c[0]).value.trim(); });
+      AFF_CHAMPS.forEach(function (c) { e['aff_' + c[0]] = o.querySelector('#aff_' + c[0]).value.trim(); });
+      return e;
+    }
+    o.querySelector('#affSave').addEventListener('click', function () { memoriserEntete(lireForm()); var m = o.querySelector('#affMsg'); m.style.color = '#15803d'; m.textContent = '✓ Enregistré.'; });
+    o.querySelectorAll('[data-aff]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (!encoreOuvert()) return;
+        memoriserEntete(lireForm());
+        var D2 = affDonnees(), a = AFFICHES[+b.getAttribute('data-k')], html = affHTML(a, D2.s, D2.f), act = b.getAttribute('data-aff');
+        if (act === 'imp') return imprimer(html, a.t);
+        if (act === 'pdf') {
+          var el = document.createElement('div'); el.style.cssText = 'background:#fff;padding:10px'; el.innerHTML = html;
+          var nom = 'Affichage - ' + sansAccent(a.t).trim().replace(/ /g, '-') + '.pdf';
+          if (typeof window._packEnvoyerPDF === 'function') return window._packEnvoyerPDF(el, nom, b);
+          return imprimer(html, a.t);
+        }
+        var ap = o.querySelector('#affApercu');
+        ap.innerHTML = '<div class="da-sect">Aperçu : ' + esc(a.t) + '</div><div style="background:#fff;border-radius:8px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow-x:auto">' + html + '</div>';
+        ap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
   }
 
   var cacheProcs = null;
