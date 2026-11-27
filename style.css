@@ -276,21 +276,21 @@ body{
 
 /* ── MODULE HEADER (page détail) ── */
 .mod-header{
-  padding:22px 20px 20px;color:#fff;position:relative;overflow:hidden;
-  background:linear-gradient(160deg,var(--accent-3),#0a2520);
+  padding:18px 20px 20px;color:var(--ink);position:relative;overflow:hidden;
+  background:var(--bg)!important;border-bottom:1px solid var(--line-soft);
 }
 .mod-header::before{
   content:'';position:absolute;bottom:-60px;right:-60px;width:220px;height:220px;
-  border-radius:50%;background:radial-gradient(circle,rgba(210,173,70,.14) 0%,transparent 70%);
+  border-radius:50%;background:radial-gradient(circle,rgba(15,118,110,.07) 0%,transparent 70%);
   pointer-events:none;
 }
 .btn-back{
-  display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.14);
-  border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:7px 15px;
-  font-size:12.5px;font-weight:600;color:#fff;cursor:pointer;margin-bottom:14px;
-  font-family:inherit;transition:background .15s;position:relative;z-index:2;
+  display:inline-flex;align-items:center;gap:6px;background:#fff;
+  border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+  font-size:12.5px;font-weight:500;color:var(--ink);cursor:pointer;margin-bottom:14px;
+  font-family:inherit;transition:background .15s,border-color .15s;position:relative;z-index:2;
 }
-.btn-back:hover{background:rgba(255,255,255,.22)}
+.btn-back:hover{background:var(--cream);border-color:#dcdcdc}
 
 /* NAV-1 — Boutons flottants */
 #floatBack{
@@ -310,16 +310,28 @@ body{
 #floatTop:active{opacity:1}
 #btnAppBack, #btnScrollTop{display:none !important}
 
-.mod-header-ico{position:absolute;top:16px;right:20px;font-size:56px;opacity:.14;pointer-events:none}
-.mod-header-num{font-size:10.5px;font-weight:600;opacity:.5;text-transform:uppercase;letter-spacing:.08em;position:relative;z-index:1}
-.mod-header-title{font-weight:700;font-size:20px;line-height:1.15;margin:4px 0 6px;position:relative;z-index:1;letter-spacing:-.02em}
-.mod-header-intro{font-size:12px;opacity:.68;line-height:1.5;position:relative;z-index:1;max-width:340px}
+.mod-header-ico{
+  position:absolute;top:14px;right:18px;
+  width:44px;height:44px;border-radius:12px;background:var(--cream);
+  color:var(--ink-2);display:inline-flex;align-items:center;justify-content:center;
+  font-size:22px;opacity:1;pointer-events:none;z-index:1;
+}
+.mod-header-ico svg{width:22px;height:22px;stroke-width:1.9}
+.mod-header-num{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:600;color:var(--accent);
+  background:var(--accent-soft);padding:3px 10px;border-radius:999px;
+  text-transform:uppercase;letter-spacing:.06em;position:relative;z-index:1;margin-bottom:10px;
+}
+.mod-header-title{font-weight:600;font-size:22px;line-height:1.14;margin:4px 0 6px;position:relative;z-index:1;letter-spacing:-.025em;color:var(--ink);max-width:calc(100% - 60px)}
+.mod-header-intro{font-size:13px;color:var(--ink-3);line-height:1.55;position:relative;z-index:1;max-width:340px;font-weight:500}
 .mod-header-ddpp{
-  display:inline-flex;align-items:center;gap:5px;margin-top:10px;
-  background:rgba(220,38,38,.2);border:1px solid rgba(220,38,38,.3);
-  border-radius:999px;padding:4px 11px;font-size:10.5px;font-weight:600;color:#fca5a5;
+  display:inline-flex;align-items:center;gap:5px;margin-top:12px;
+  background:var(--alert-soft);border:1px solid rgba(220,38,38,.18);
+  border-radius:999px;padding:4px 11px;font-size:11px;font-weight:600;color:var(--alert);
   position:relative;z-index:1;
 }
+.mod-header-ddpp::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--alert);display:inline-block}
 
 /* ── FORMULAIRE ── */
 .fwrap{padding:18px 20px;padding-bottom:130px}
