@@ -1829,14 +1829,12 @@ function injecterAvertissementResponsabilite() {
       if (prev && prev.classList && prev.classList.contains('bandeau-responsabilite')) return;
       var b = document.createElement('div');
       b.className = 'bandeau-responsabilite';
-      b.style.cssText = 'background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin:14px 14px 8px;color:#78350f;font-size:11.5px;line-height:1.55';
+      b.style.cssText = 'background:#fff;border:1px solid #e7e7e4;border-left:3px solid #d2ad46;border-radius:12px;padding:12px 14px;margin:14px 14px 10px;color:#4a4a4a;font-size:12.5px;line-height:1.55';
       b.innerHTML =
-        '<div style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:12.5px;color:#92400e;margin-bottom:6px">' +
-          '<span style="font-size:14px">⚠️</span>Avant de valider' +
-        '</div>' +
-        '<div style="margin-bottom:8px">Les cases marquées d\'un astérisque rouge <strong style="color:#dc2626">★</strong> doivent être renseignées. À défaut, le rapport sera considéré comme <strong>non conforme</strong> et pourra être rejeté lors d\'un contrôle DDPP.</div>' +
-        '<div style="font-size:11px;color:#92400e;font-style:italic;margin-bottom:8px">Validation sous votre seule responsabilité, conformément à votre Plan de Maîtrise Sanitaire (Règlement CE 852/2004).</div>' +
-        '<button type="button" class="btn-toggle-adv" data-adv-label="facultatifs" onclick="toggleAdvanced()" style="background:#fef3c7;border:1px solid #fde68a;color:#92400e;font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;font-family:Outfit,sans-serif">⚙️ Afficher champs facultatifs</button>';
+        '<div style="font-weight:600;font-size:13px;color:#0a0a0a;margin-bottom:6px;letter-spacing:-.01em">Avant de valider</div>' +
+        '<div style="margin-bottom:6px">Les cases marquées d\'un astérisque <strong style="color:#dc2626">*</strong> doivent être renseignées. À défaut, le rapport sera considéré comme <strong style="color:#0a0a0a;font-weight:600">non conforme</strong> et pourra être rejeté lors d\'un contrôle DDPP.</div>' +
+        '<div style="font-size:11.5px;color:#737373;margin-bottom:10px">Validation sous votre seule responsabilité, conformément à votre Plan de Maîtrise Sanitaire (Règlement CE 852/2004).</div>' +
+        '<button type="button" class="btn-toggle-adv" data-adv-label="facultatifs" onclick="toggleAdvanced()" style="background:#fff;border:1px solid #e7e7e4;color:#4a4a4a;font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;cursor:pointer;font-family:Inter,system-ui,sans-serif">Afficher champs facultatifs</button>';
       btn.parentNode.insertBefore(b, btn);
     });
   });
@@ -1844,7 +1842,7 @@ function injecterAvertissementResponsabilite() {
   if (typeof _advancedVisible !== 'undefined') {
     document.querySelectorAll('.btn-toggle-adv').forEach(function(b) {
       var labelType = b.dataset.advLabel || 'facultatifs';
-      b.textContent = (_advancedVisible ? '⚙️ Masquer champs ' : '⚙️ Afficher champs ') + labelType;
+      b.textContent = (_advancedVisible ? 'Masquer champs ' : 'Afficher champs ') + labelType;
     });
   }
 }
