@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v518';
+var APP_BUILD = 'v519';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -13181,7 +13181,10 @@ async function coffreView(id) {
 function coffreDelete(id) {
   if (!coffreDB) return;
   if (!confirm('Supprimer ce document du coffre-fort ?')) return;
-  coffreDB.docs.delete(id).then(function(){
+  // Document copié depuis le Dossier administratif : ne pas le recopier ensuite
+  Promise.resolve(coffreDB.docs.get(id)).then(function(rec){
+    if (rec && rec.daId) { try { var ig = JSON.parse(localStorage.getItem('haccp_da_ignores') || '[]'); if (ig.indexOf(rec.daId) < 0) ig.push(rec.daId); localStorage.setItem('haccp_da_ignores', JSON.stringify(ig)); } catch(_){} }
+  }).catch(function(){}).then(function(){ return coffreDB.docs.delete(id); }).then(function(){
     if (typeof showToast === 'function') showToast('Document supprimé', 'ok');
     renderCoffre();
   }).catch(function(e){ console.error('[Coffre-fort] Erreur suppression:', e); });

@@ -209,7 +209,8 @@
     var o = overlay();
     var h = '<div class="da-wrap">' + entete(null)
       + '<button class="da-item" type="button" data-da="coffre" style="border-color:#93c5fd"><span class="i">🗄️</span><span><b>Coffre-fort</b><small>Documents reçus et manquants : société et chaque salarié</small></span><span class="ch">›</span></button>'
-      + '<button class="da-item" type="button" data-da="import" style="border-color:#93c5fd"><span class="i">📥</span><span><b>Importer des documents</b><small>Plusieurs fichiers d\'un coup : contrats, DPAE, titres de séjour, statuts…</small></span><span class="ch">›</span></button>';
+      + '<button class="da-item" type="button" data-da="import" style="border-color:#93c5fd"><span class="i">📥</span><span><b>Importer des documents</b><small>Plusieurs fichiers d\'un coup : contrats, DPAE, titres de séjour, statuts…</small></span><span class="ch">›</span></button>'
+      + '<button class="da-item" type="button" data-da="registre" style="border-color:#93c5fd"><span class="i">📒</span><span><b>Registre unique du personnel</b><small>Tous les salariés, entrées et sorties · imprimer, exporter</small></span><span class="ch">›</span></button>';
     POLES.forEach(function (p) {
       h += '<button class="da-item" type="button" data-da="' + p.id + '"><span class="i">' + p.ico + '</span><span><b>' + esc(p.titre) + '</b><small>' + esc(p.sous) + '</small></span><span class="ch">›</span></button>';
     });
@@ -290,8 +291,20 @@
                                  : '<button class="da-btn" type="button" data-da="salarch:' + esc(id) + '">📦 Archiver (départ)</button>')
         + '<button class="da-btn" type="button" data-da="salsuppr:' + esc(id) + '" style="color:#b91c1c">🗑️ Supprimer</button></div>'
         + '<p class="da-note">Un salarié qui part s\'archive : il reste au registre du personnel 5 ans. « Supprimer » sert uniquement à effacer une fiche créée par erreur.</p>' : '')
-      + (id ? '<div class="da-sect">🗄️ Coffre-fort du salarié</div><div id="daFicheCoffre"><p class="da-note">Chargement…</p></div>' : '') + '</div>';
+      + (id ? '<div class="da-sect">🗄️ Coffre-fort du salarié</div><div id="daFicheCoffre"><p class="da-note">Chargement…</p></div>'
+            + '<div class="da-sect">⚖️ Procédures du salarié</div><div id="daFicheProcs"><p class="da-note">Chargement…</p></div>' : '') + '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    if (id) rpc('da_procedures_liste', { p_code: codeCompte(), p_pin: pinSession }).then(function (r) {
+      var box = o.querySelector('#daFicheProcs'); if (!box) return;
+      if (!r || r.ok !== true) { box.innerHTML = '<p class="da-err">Procédures indisponibles.</p>'; return; }
+      cacheProcs = r.procedures || [];
+      var L = cacheProcs.filter(function (p) { return p.salarie_id === id; });
+      box.innerHTML = (L.length ? L.map(function (p) {
+        var t = TYPES_PROC[p.type] || { titre: p.type };
+        return '<button class="da-item" type="button" data-da="procvoir:' + esc(p.id) + '"><span class="i">' + (p.statut === 'archivee' ? '📦' : (t.lourd ? '🔴' : '🟠')) + '</span><span><b>' + esc(t.titre) + '</b><small>Lettre du ' + esc(dateFr(p.date_lettre)) + '</small></span><span class="ch">›</span></button>';
+      }).join('') : '<p class="da-note">Aucune procédure.</p>') + '<button class="da-btn" type="button" data-da="procnew">＋ Nouvelle procédure</button>';
+      brancher(box);
+    }, function () { var box = o.querySelector('#daFicheProcs'); if (box) box.innerHTML = '<p class="da-err">Pas de connexion internet.</p>'; });
     if (id) chargerDocs().then(function () {
       var box = o.querySelector('#daFicheCoffre'); if (!box) return;
       box.innerHTML = blocCoffreSalarie(s, '') ; brancher(box);
@@ -414,7 +427,7 @@
             function (pc) { msg.textContent = pc < 100 ? 'Envoi… ' + pc + ' %' : 'Enregistrement dans le coffre-fort…'; }).then(function (res) {
             if (!res || res.ok !== true) { msg.style.color = '#b91c1c'; msg.textContent = res && res.raison === 'fichier_trop_gros' ? 'Fichier trop gros (6 Mo maximum).' : messageRefus(res); return; }
             cacheDocs = null;
-            allerA(retour);
+            allerA(retour); synchroApp();
           });
         }).catch(function () { msg.style.color = '#b91c1c'; msg.textContent = 'Envoi impossible. Vérifiez la connexion internet.'; });
       });
@@ -442,6 +455,70 @@
     rpc('da_document_supprimer', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function () {
       cacheDocs = null;
       if (docCourant) vueDocs(docCourant.pole, docCourant.i); else vueCoffre();
+      synchroApp();
+    });
+  }
+
+  // ── Lien avec le module Documents de l'app (coffre de l'appareil, Pack DDPP) ──
+  // Un même document ne se saisit qu'une fois : ajouté ici, il est copié dans le module
+  // Documents ; ajouté là-bas, il est copié ici (à l'ouverture du dossier, car il faut le code).
+  var CAT_DEPUIS_APP = {
+    cerfa: ['declarations', 'Déclaration d\'activité (DDPP)'], pms: ['declarations', 'Plan de maîtrise sanitaire (PMS)'],
+    contrat_nuisibles: ['declarations', 'Contrats nuisibles et biodéchets'], contrat_biodechets: ['declarations', 'Contrats nuisibles et biodéchets'],
+    formation: ['personnel', 'Formation hygiène'], medical: ['personnel', 'Visite médicale']
+  };
+  function cleApp(d) {
+    if (d.pole === 'declarations' && d.categorie === 'Contrats nuisibles et biodéchets')
+      return /biod|dechet/.test(sansAccent((d.titre || '') + ' ' + (d.nom_fichier || ''))) ? 'contrat_biodechets' : 'contrat_nuisibles';
+    for (var k in CAT_DEPUIS_APP) if (CAT_DEPUIS_APP[k][0] === d.pole && CAT_DEPUIS_APP[k][1] === d.categorie) return k;
+    return '';
+  }
+  function coffreApp() { try { var c = window.coffreDB; return c && c.docs ? c : null; } catch (e) { return null; } }
+  function b64De(dataUrl) { var s = String(dataUrl || ''); var i = s.indexOf(','); return i > -1 ? s.slice(i + 1) : s; }
+  function ignoresApp() { try { return JSON.parse(localStorage.getItem('haccp_da_ignores') || '[]'); } catch (e) { return []; } }
+  var synchroEnCours = false;
+  function synchroApp() {
+    var db = coffreApp(); if (!db || synchroEnCours || !pinSession) return Promise.resolve();
+    synchroEnCours = true;
+    var change = false, ignores = ignoresApp();
+    cacheDocs = null;
+    return Promise.all([chargerSalariesSiBesoin(), chargerDocs(), Promise.resolve(db.docs.toArray())]).then(function (res) {
+      var serveur = res[1] || [], local = res[2] || [], parId = {}, taches = [];
+      serveur.forEach(function (d) { parId[d.id] = d; });
+      // 1) Supprimé du dossier → retiré du module Documents
+      local.forEach(function (f) { if (f.daId && !parId[f.daId]) taches.push(function () { change = true; return db.docs.delete(f.id); }); });
+      // 2) Dossier → module Documents
+      serveur.forEach(function (d) {
+        var cle = cleApp(d); if (!cle || d.archive || ignores.indexOf(d.id) > -1) return;
+        if (local.some(function (f) { return f.daId === d.id; })) return;
+        var jumeau = local.filter(function (f) { return !f.daId && f.cle === cle && (f.nom === d.nom_fichier || Math.round(b64De(f.base64).length * 0.75) === +d.taille); })[0];
+        if (jumeau) { jumeau.daId = d.id; taches.push(function () { return db.docs.update(jumeau.id, { daId: d.id }); }); return; }
+        taches.push(function () {
+          return rpc('da_document_lire', { p_code: codeCompte(), p_pin: pinSession, p_id: d.id }).then(function (r) {
+            if (!r || r.ok !== true || !r.contenu) return;
+            var mime = r.type_mime || 'application/octet-stream'; change = true;
+            return db.docs.add({ cle: cle, nom: r.nom_fichier || d.titre || 'Document', mime: mime, base64: 'data:' + mime + ';base64,' + r.contenu, createdAt: new Date().toISOString(), daId: d.id });
+          });
+        });
+      });
+      // 3) Module Documents → dossier
+      local.forEach(function (f) {
+        var cat = CAT_DEPUIS_APP[f.cle]; if (!cat || f.daId) return;
+        var b64 = b64De(f.base64); if (!b64 || b64.length > 9000000) return;
+        var sal = cat[0] === 'personnel' ? devinerSalarie(f.nom || '') : null;
+        taches.push(function () {
+          return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
+            pole: cat[0], categorie: cat[1], titre: String(f.nom || 'Document').replace(/\.[^.]+$/, ''), salarie_id: sal ? sal.id : null,
+            date_doc: f.createdAt ? String(f.createdAt).slice(0, 10) : null, nom_fichier: f.nom || 'document', type_mime: f.mime || 'application/octet-stream',
+            taille: Math.round(b64.length * 0.75), contenu: b64 } }).then(function (r) {
+            if (r && r.ok && r.id) { cacheDocs = null; return db.docs.update(f.id, { daId: r.id }); }
+          });
+        });
+      });
+      return taches.reduce(function (p, t) { return p.then(function () { if (pinSession) return t(); }).catch(function () {}); }, Promise.resolve());
+    }).catch(function () {}).then(function () {
+      synchroEnCours = false;
+      if (change) { try { if (typeof window.renderCoffre === 'function') window.renderCoffre(); if (typeof window.renderInspDocs === 'function') window.renderInspDocs(); } catch (e) {} }
     });
   }
 
@@ -566,7 +643,7 @@
       var h = '<div class="da-wrap">' + entete('menu')
         + '<div class="da-item" style="cursor:default"><span class="i">🗄️</span><span><b>Coffre-fort</b><small>✓ reçu · ＋ à ajouter</small></span></div>'
         + '<button class="da-main" type="button" data-da="import">📥 Importer plusieurs documents</button>'
-        + '<p class="da-note">Un document n\'est enregistré qu\'une fois : ajouté ici ou dans son pôle (Associés, Déclarations), il apparaît aux deux endroits.</p>';
+        + '<p class="da-note">Un document n\'est enregistré qu\'une fois : ajouté ici, dans son pôle ou dans la fiche du salarié, il apparaît partout. Déclaration d\'activité, PMS, contrats nuisibles/biodéchets, formations et visites médicales sont aussi copiés dans le module Documents de l\'app (Pack DDPP), et inversement.</p>';
       // Société : TOUTES les rubriques des pôles Associés et Déclarations (les mêmes documents que dans ces pôles)
       [['associes', '🏛️ Dossier des associés'], ['declarations', '📋 Déclarations et obligations']].forEach(function (pp) {
         var pole = POLES.filter(function (x) { return x.id === pp[0]; })[0];
@@ -700,6 +777,7 @@
             msg.style.color = ko ? '#b91c1c' : '#15803d';
             msg.textContent = ok + ' importé' + (ok > 1 ? 's' : '') + (ko ? ', ' + ko + ' en erreur' : '') + '. Voir le coffre-fort.';
             btn.textContent = '🗄️ Ouvrir le coffre-fort'; btn.disabled = false; btn.setAttribute('data-fini', '1');
+            synchroApp();
           }).catch(function () { msg.textContent = 'Import interrompu (dossier verrouillé).'; });
         });
       });
@@ -1218,7 +1296,7 @@
       var err = o.querySelector('#daErr');
       err.style.color = '#5b5e78'; err.textContent = 'Vérification…';
       rpc('da_ouvrir', { p_code: codeCompte(), p_pin: code }).then(function (r) {
-        if (r && r.ok === true) { pinSession = code; actif(); vueMenu(); return; }
+        if (r && r.ok === true) { pinSession = code; actif(); vueMenu(); synchroApp(); return; }
         err.style.color = '#b91c1c'; err.textContent = messageRefus(r); code = ''; maj();
       }, function () { err.style.color = '#b91c1c'; err.textContent = 'Pas de connexion internet.'; code = ''; maj(); });
     }
