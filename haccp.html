@@ -1450,51 +1450,140 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <div class="page" id="page-inspecteur" style="background:#0f172a;min-height:100vh"></div>
     <!-- ═══ FIN MODE INSPECTEUR ═══ -->
     <div class="page" id="page-home">
-      <div class="hero">
-        <div style="text-align:center;padding-bottom:10px"><button onclick="showPage('page-guide')" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:8px 24px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif">← Retour à l'accueil</button></div>
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
-            <div class="hero-greeting" id="heroEtab">Mon établissement</div>
-            <div class="hero-title">Tableau de bord <em>HACCP</em></div>
-            <div class="hero-sub" id="heroDate"></div>
+      <style>
+        #page-home .ph-wrap{padding:14px 16px 30px;background:var(--cream);min-height:100%}
+        #page-home .ph-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+        #page-home .ph-greet{flex:1;min-width:0}
+        #page-home .ph-greet b{display:block;font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.02em;line-height:1.2}
+        #page-home .ph-greet small{display:block;font-size:12px;color:var(--ink-3);margin-top:2px;font-weight:500}
+        #page-home .ph-ico-btn{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s,border-color .15s}
+        #page-home .ph-ico-btn:hover{background:var(--cream);border-color:#dcdcdc}
+        #page-home .ph-ico-btn svg{width:16px;height:16px;stroke-width:1.9}
+
+        /* Stat compact en pill (remplace les 3 KPIs vides) */
+        #page-home .ph-status{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;margin-bottom:12px;font-size:12.5px;font-weight:500;color:var(--ink)}
+        #page-home .ph-status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:phPulse 2s ease-in-out infinite}
+        @keyframes phPulse{0%,100%{opacity:1}50%{opacity:.4}}
+        #page-home .ph-status-sep{color:var(--ink-4);margin:0 4px}
+        #page-home .ph-status small{color:var(--ink-3);font-weight:500}
+
+        /* CTA Inspecteur compact */
+        #page-home .ph-cta-insp{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 14px;margin-bottom:14px;cursor:pointer;border:none;width:100%;font-family:inherit;text-align:left;transition:background .15s,transform .1s}
+        #page-home .ph-cta-insp:hover{background:#262626}
+        #page-home .ph-cta-insp:active{transform:scale(.98)}
+        #page-home .ph-cta-insp-ico{width:36px;height:36px;border-radius:10px;background:var(--alert);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+        #page-home .ph-cta-insp-ico svg{width:17px;height:17px;color:#fff;stroke-width:2.2}
+        #page-home .ph-cta-insp-txt{flex:1}
+        #page-home .ph-cta-insp-txt b{display:block;font-size:14px;font-weight:600;letter-spacing:-.01em}
+        #page-home .ph-cta-insp-txt small{display:block;font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
+
+        /* Catégories en tabs compacts */
+        #page-home .ph-cats{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+        #page-home .ph-cats::-webkit-scrollbar{display:none}
+        #page-home .ph-cat{flex-shrink:0;padding:8px 14px;background:#fff;border:1px solid var(--line);border-radius:999px;font-family:inherit;font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s,color .15s}
+        #page-home .ph-cat:hover{border-color:#dcdcdc}
+        #page-home .ph-cat.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+        #page-home .ph-cat-count{background:var(--cream);color:var(--ink-3);padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:600}
+        #page-home .ph-cat.on .ph-cat-count{background:rgba(255,255,255,.18);color:#fff}
+
+        /* Section header */
+        #page-home .ph-sec{display:flex;align-items:center;gap:8px;margin:6px 2px 10px}
+        #page-home .ph-sec-title{font-size:11.5px;font-weight:600;color:var(--ink);text-transform:uppercase;letter-spacing:.06em}
+        #page-home .ph-sec-count{background:var(--accent-soft);color:var(--accent);font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px}
+        #page-home .ph-sec-link{margin-left:auto;font-size:12px;color:var(--ink-3);font-weight:500;cursor:pointer;text-decoration:none}
+        #page-home .ph-sec-link:hover{color:var(--accent)}
+
+        /* Alerte compacte (une seule ligne) */
+        #page-home .ph-alert{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;margin-bottom:10px;font-size:12px;color:var(--ink-2)}
+        #page-home .ph-alert svg{width:14px;height:14px;color:var(--accent);flex-shrink:0}
+      </style>
+      <div class="hero" style="display:none">
+        <!-- Vieux hero conservé caché pour compat JS héritée (id heroEtab, heroDate, kpi-*) -->
+        <div class="hero-greeting" id="heroEtab">Mon établissement</div>
+        <div class="hero-title">Tableau de bord <em>HACCP</em></div>
+        <div class="hero-sub" id="heroDate"></div>
+        <div class="kpi-row"><div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Contrôles aujourd'hui</div></div><div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">NC en cours</div></div><div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Score conformité</div></div></div>
+      </div>
+      <!-- Recherche « je veux… » — moteur utilisé par le chatbot, masqué visuellement -->
+      <div id="irZone-home" style="display:none"></div>
+
+      <div class="ph-wrap">
+        <!-- 1. Top compact : salutation + accès rapides -->
+        <div class="ph-top">
+          <div class="ph-greet">
+            <b id="phEtab">Mon établissement</b>
+            <small id="phDate"></small>
           </div>
-          <button onclick="ouvrirReglages()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 12px;color:white;font-size:12px;cursor:pointer;font-family:Inter,system-ui,sans-serif;flex-shrink:0;margin-top:4px;display:inline-flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Réglages</button>
+          <button class="ph-ico-btn" aria-label="Historique" onclick="showPage('page-history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+          <button class="ph-ico-btn" aria-label="Réglages" onclick="ouvrirReglages()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         </div>
-        <div class="kpi-row">
-          <div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Contrôles aujourd'hui</div></div>
-          <div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">NC en cours</div></div>
-          <div class="kpi"><div class="kpi-val">—</div><div class="kpi-lbl">Score conformité</div></div>
+
+        <!-- 2. Statut jour en pill -->
+        <div class="ph-status">
+          <span class="ph-status-dot"></span>
+          <span>Aujourd'hui</span>
+          <span class="ph-status-sep">·</span>
+          <span><b id="phStatCount">0</b>/10 contrôles</span>
+          <span class="ph-status-sep">·</span>
+          <small><b id="phStatNC">0</b> NC</small>
         </div>
-        <div role="button" tabindex="0" aria-label="Un contrôle ? Présenter ma conformité" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" onclick="ouvrirModeInspecteur('page-home')" style="background:linear-gradient(135deg,#dc2626,#ef4444);border-radius:14px;padding:14px;margin-top:12px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 6px 22px rgba(220,38,38,.4)">
-          <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.18);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div style="flex:1"><div style="color:white;font-weight:800;font-size:15px;font-family:Inter,system-ui,sans-serif;line-height:1.2">Un contrôle ? Appuyez ici</div><div style="color:rgba(255,255,255,.85);font-size:11px;margin-top:2px">Présenter votre conformité en 10 secondes</div></div>
-          <div style="color:rgba(255,255,255,.7);font-size:18px">›</div>
+
+        <!-- 3. CTA Inspecteur compact -->
+        <button type="button" class="ph-cta-insp" onclick="ouvrirModeInspecteur('page-home')">
+          <span class="ph-cta-insp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+          <span class="ph-cta-insp-txt"><b>L'inspecteur est là</b><small>Présenter votre conformité en 10 secondes</small></span>
+          <span style="color:rgba(255,255,255,.5);font-size:16px">›</span>
+        </button>
+
+        <!-- 4. Catégories pills -->
+        <div class="ph-cats">
+          <button class="ph-cat ctab ctab-q on" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien<span class="ph-cat-count ctab-count">10</span></button>
+          <button class="ph-cat ctab ctab-p" onclick="switchCat('periodique',this)" data-cat="periodique">Périodique<span class="ph-cat-count ctab-count">2</span></button>
+          <button class="ph-cat ctab ctab-u" onclick="switchCat('ponctuel',this)" data-cat="ponctuel">Ponctuel<span class="ph-cat-count ctab-count">2</span></button>
+          <button class="ph-cat ctab ctab-s" onclick="switchCat('pilotage',this)" data-cat="pilotage">Pilotage<span class="ph-cat-count ctab-count">5</span></button>
         </div>
-      </div>
-      <!-- Recherche « je veux… » (voix ou texte) — remplie par script.js -->
-      <div id="irZone-home" style="padding:1px 0"></div>
-      <div class="alert-wrap">
-        <div class="alert" style="opacity:.75">
-          <div class="alert-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-          <div><div class="alert-title">Aucune alerte pour le moment</div><div class="alert-desc">Vos non-conformités et dépassements de seuil s'afficheront ici automatiquement.</div></div>
+
+        <!-- 5. Section header + grille des modules -->
+        <div class="ph-sec">
+          <span class="ph-sec-title" id="phSecTitle">Contrôles du jour</span>
+          <span class="ph-sec-count" id="phSecCount"></span>
+          <a class="ph-sec-link" onclick="showPage('page-history')">Historique →</a>
         </div>
+        <!-- id catBand + cat-tabs conservés masqués pour compat JS switchCat -->
+        <div class="cat-band cb-q" id="catBand" style="display:none"></div>
+        <div class="cat-tabs" style="display:none"></div>
+        <div class="mods-wrap" style="padding:0"><div class="mods-grid" id="modsGrid"></div></div>
       </div>
-      <div class="legal-banner">
-        <div class="legal-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><path d="M5 7h14"/><path d="M5 7l-3 7h6l-3-7z"/><path d="M19 7l-3 7h6l-3-7z"/></svg></div>
-        <div class="legal-text"><strong>Avertissement :</strong> Ce logiciel est un outil d'aide à la gestion HACCP. Il ne remplace pas l'obligation légale de formation ni la mise en place d'un Plan de Maîtrise Sanitaire. L'établissement reste seul responsable de sa conformité réglementaire.</div>
-      </div>
-      <div class="sec-head"><h2>Modules de contrôle</h2><a onclick="showPage('page-history')">Historique →</a></div>
-      <div class="cat-tabs">
-        <button class="ctab ctab-q active" onclick="switchCat('quotidien',this)"><div class="ctab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div><div class="ctab-lbl">Quotidiens</div><span class="ctab-count">10</span></button>
-        <button class="ctab ctab-p" onclick="switchCat('periodique',this)"><div class="ctab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="ctab-lbl">Périodiques</div><span class="ctab-count">2</span></button>
-        <button class="ctab ctab-u" onclick="switchCat('ponctuel',this)"><div class="ctab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L13.09 8.26L19 7L15.74 12L19 17L13.09 15.74L12 22L10.91 15.74L5 17L8.26 12L5 7L10.91 8.26L12 2Z"/></svg></div><div class="ctab-lbl">Ponctuels</div><span class="ctab-count">2</span></button>
-        <button class="ctab ctab-s" onclick="switchCat('pilotage',this)"><div class="ctab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><div class="ctab-lbl">Pilotage</div><span class="ctab-count">5</span></button>
-      </div>
-      <div class="cat-band cb-q" id="catBand">
-        <div class="cat-band-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div>
-        <div><div class="cat-band-title">Contrôles quotidiens</div><div class="cat-band-sub">À effectuer chaque jour : réception, températures, hygiène, production, nettoyage.</div></div>
-      </div>
-      <div class="mods-wrap"><div class="mods-grid" id="modsGrid"></div></div>
+
+      <script>
+        // Miroir des données hero → nouvelle UI
+        (function(){
+          function sync(){
+            try{
+              var etab = document.getElementById('heroEtab');
+              var date = document.getElementById('heroDate');
+              var phEtab = document.getElementById('phEtab');
+              var phDate = document.getElementById('phDate');
+              if(etab && phEtab && etab.textContent.trim()) phEtab.textContent = etab.textContent.trim();
+              if(date && phDate && date.textContent.trim()) phDate.textContent = date.textContent.trim();
+              // Compteur à faire
+              var mods = document.querySelectorAll('#modsGrid .mod .mod-badge.alert');
+              var fait = document.querySelectorAll('#modsGrid .mod .mod-badge:not(.alert)');
+              var count = document.getElementById('phStatCount');
+              if(count) count.textContent = fait.length;
+            }catch(e){}
+          }
+          var mo = new MutationObserver(sync);
+          document.addEventListener('DOMContentLoaded', function(){
+            var hero = document.getElementById('heroEtab');
+            if(hero) mo.observe(hero.parentNode, {childList:true,subtree:true,characterData:true});
+            var g = document.getElementById('modsGrid');
+            if(g) mo.observe(g, {childList:true,subtree:true,characterData:true});
+            setInterval(sync, 2000);
+            sync();
+          });
+        })();
+      </script>
     </div>
     <!-- MODULE 1 — RÉCEPTION & TRAÇABILITÉ FUSIONNÉS -->
     <div class="page" id="page-reception">
