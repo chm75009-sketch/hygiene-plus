@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v514';
+var APP_BUILD = 'v515';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -4322,7 +4322,9 @@ function choisirSecteur(secteur) {
   if (ETAB_ID && ETAB.nom) {
     sauvegarderEtab();
     var heroEl2 = document.getElementById('heroEtab'); if (heroEl2) heroEl2.textContent = ETAB.nom;
-    showPage('page-choix');
+    try { lsSet('haccp_mode', 'expert'); } catch(eM){}
+    showPage('page-home');
+    try { if (typeof renderMods === 'function') renderMods('quotidien'); } catch(eR){}
     return;
   }
   // Sinon (1ère inscription / mode test), enchaîner vers étape 2 (fiche)
@@ -4361,7 +4363,9 @@ function validerOnboarding() {
   INGREDIENTS_DB = SECTEUR_ACTIF === 'bp' ? INGREDIENTS_BP : INGREDIENTS_RESTO;
   sauvegarderEtab();
   var heroEl2 = document.getElementById('heroEtab'); if (heroEl2) heroEl2.textContent = ETAB.nom;
-  showPage('page-choix');
+  try { lsSet('haccp_mode', 'expert'); } catch(eM){}
+  showPage('page-home');
+  try { if (typeof renderMods === 'function') renderMods('quotidien'); } catch(eR){}
 }
 
 // V106 — Bouton œil : afficher/masquer le mot de passe sur le login
@@ -7832,29 +7836,29 @@ var CAT_CONFIG = {
 };
 
 var MODULES = [
-  {id:'reception',    cat:'quotidien', num:1,  ico:'📦', name:'Suivi — Réception & Traçabilité produits',         color:'c1',  badge:'Auj. 3',    ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
-  {id:'temperatures', cat:'quotidien', num:2,  ico:'🌡️', name:'Relevé — Températures Frigos & Congélateurs',       color:'c2',  badge:'⚠ 1',      ddpp:true,  freq:'Quotidien',   alert:true,  fn:''},
-  {id:'hygiene',      cat:'quotidien', num:3,  ico:'🖐️', name:'Contrôle — Hygiène & Tenue du personnel',           color:'c3',  badge:'OK',        ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
-  {id:'nettoyage',   cat:'quotidien', num:4,  ico:'🧹', name:'Nettoyage',                                    desc:'Ouverture & Fermeture',  color:'c5',  badge:'',  ddpp:true,  freq:'Quotidien',  alert:false, fn:'', secteurs:['resto','bp','rapide','boucherie','collective']},
-  {id:'cuisson',      cat:'quotidien', num:5,  ico:'🍳', name:'Contrôle — Cuisson & Remise en T°',                 color:'c5',  badge:'Auj. 5',    ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
-  {id:'refroidissement',cat:'quotidien',num:6, ico:'❄️', name:'Contrôle — Refroidissement rapide',                 color:'c6',  badge:'OK',        ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
-  {id:'huiles',       cat:'quotidien', num:7,  ico:'🫙', name:'Contrôle — Huiles de friture',                      color:'c7',  badge:'OK',        ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['resto','bp','rapide','collective']},
-  {id:'etiquetage',   cat:'quotidien', num:8,  ico:'🏷️', name:'Édition — Étiquettes produits & DLC',               color:'c8',  badge:'OK',        ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
-  {id:'pertes',       cat:'quotidien', num:10, ico:'🗑️', name:'Suivi — Pertes & Invendus',                         color:'c10', badge:'Auj. 1',    ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
-  {id:'nuisibles',    cat:'periodique',num:11, ico:'🐛', name:'Suivi — Nuisibles & Rongeurs',                      color:'c12', badge:'RAS',       ddpp:true,  freq:'Périodique',  alert:false, fn:''},
-  {id:'dechets',      cat:'periodique',num:12, ico:'♻️', name:'Suivi — Déchets & Biodéchets',                      color:'c13', badge:'OK',        ddpp:true,  freq:'Périodique',  alert:false, fn:''},
-  {id:'documents',    cat:'ponctuel',  num:13, ico:'📁', name:'Vérification — Documents obligatoires',              color:'c14', badge:'3 docs',    ddpp:true,  freq:'Ponctuel',    alert:false, fn:''},
-  {id:'affichage',    cat:'ponctuel',  num:14, ico:'📌', name:'Contrôle — Affichages réglementaires',               color:'c15', badge:'OK',        ddpp:true,  freq:'Ponctuel',    alert:false, fn:''},
-  {id:'nc',           cat:'pilotage',  num:15, ico:'⚠️', name:'Suivi — Non-conformités & Corrections',             color:'c16', badge:'2 open',    ddpp:true,  freq:'Transversal', alert:true,  fn:''},
-  {id:'audits', hidden:true,       cat:'pilotage',  num:16, ico:'📋', name:'Réaliser — Votre audit interne',                    color:'c17', badge:'Recommandé',ddpp:false, freq:'Mensuel',     alert:false, fn:''},
-  {id:'dashboard',    cat:'pilotage',  num:17, ico:'📊', name:'Consulter — Votre tableau de bord',                 color:'c18', badge:'Live',      ddpp:false, freq:'Permanent',   alert:false, fn:''},
-  {id:'exports',      cat:'pilotage',  num:18, ico:'📄', name:'Générer — Votre Pack contrôle DDPP',                color:'c19', badge:'Pack DDPP', ddpp:false, freq:'Sur demande',  alert:false, fn:''},
-  {id:'allergenes',   cat:'pilotage',  num:19, ico:'🥜', name:'Affichage — Allergènes de votre carte',             color:'c20', badge:'Option',    ddpp:false, freq:'Ponctuel',    alert:false, option:true, fn:'Générer la matrice des 14 allergènes de votre carte'},
-  {id:'equipe',       cat:'pilotage',  num:24, ico:'👥', name:'Mon équipe — Personnes utilisatrices',              color:'c11', badge:'',          ddpp:false, freq:'Permanent',   alert:false, fn:''},
-  {id:'plat-temoin',  cat:'quotidien', num:20, ico:'🍽️', name:'Plat Témoin — Conservation 5 jours',               color:'c6',  badge:'DDPP',      ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
-  {id:'liaison-thermique', cat:'quotidien', num:21, ico:'🌡️', name:'Liaison Chaude/Froide — Distribution',           color:'c7',  badge:'DDPP',      ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
-  {id:'registre-convives', cat:'quotidien', num:22, ico:'👥', name:'Registre des Convives & Grammages',              color:'c8',  badge:'',          ddpp:false, freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
-  {id:'analyses-micro',    cat:'periodique', num:23, ico:'🔬', name:'Analyses Microbiologiques',                     color:'c9',  badge:'',          ddpp:false, freq:'Mensuel',     alert:false, fn:'', secteurs:['collective']},
+  {id:'reception',    cat:'quotidien', num:1,  ico:'📦', name:'Je reçois une livraison',                           color:'c1',  badge:'Auj. 3',    ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
+  {id:'temperatures', cat:'quotidien', num:2,  ico:'🌡️', name:'Je relève la température des frigos',               color:'c2',  badge:'⚠ 1',      ddpp:true,  freq:'Quotidien',   alert:true,  fn:''},
+  {id:'hygiene',      cat:'quotidien', num:3,  ico:'🖐️', name:"Je vérifie l'hygiène de l'équipe",                  color:'c3',  badge:'OK',        ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
+  {id:'nettoyage',   cat:'quotidien', num:4,  ico:'🧹', name:'Je fais le nettoyage',                          desc:'Ouverture & Fermeture',  color:'c5',  badge:'',  ddpp:true,  freq:'Quotidien',  alert:false, fn:'', secteurs:['resto','bp','rapide','boucherie','collective']},
+  {id:'cuisson',      cat:'quotidien', num:5,  ico:'🍳', name:"Je contrôle la cuisson d'un plat",                  color:'c5',  badge:'Auj. 5',    ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
+  {id:'refroidissement',cat:'quotidien',num:6, ico:'❄️', name:'Je refroidis rapidement un plat',                   color:'c6',  badge:'OK',        ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
+  {id:'huiles',       cat:'quotidien', num:7,  ico:'🫙', name:"Je contrôle mon huile de friture",                  color:'c7',  badge:'OK',        ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['resto','bp','rapide','collective']},
+  {id:'etiquetage',   cat:'quotidien', num:8,  ico:'🏷️', name:"J'étiquette mes préparations",                      color:'c8',  badge:'OK',        ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
+  {id:'pertes',       cat:'quotidien', num:10, ico:'🗑️', name:"J'enregistre des pertes ou invendus",               color:'c10', badge:'Auj. 1',    ddpp:true,  freq:'Quotidien',   alert:false, fn:''},
+  {id:'nuisibles',    cat:'periodique',num:11, ico:'🐛', name:'Je fais le suivi nuisibles',                        color:'c12', badge:'RAS',       ddpp:true,  freq:'Périodique',  alert:false, fn:''},
+  {id:'dechets',      cat:'periodique',num:12, ico:'♻️', name:'Je gère mes déchets et biodéchets',                 color:'c13', badge:'OK',        ddpp:true,  freq:'Périodique',  alert:false, fn:''},
+  {id:'documents',    cat:'ponctuel',  num:13, ico:'📁', name:'Je vérifie mes documents obligatoires',             color:'c14', badge:'3 docs',    ddpp:true,  freq:'Ponctuel',    alert:false, fn:''},
+  {id:'affichage',    cat:'ponctuel',  num:14, ico:'📌', name:"J'affiche mes mentions réglementaires",             color:'c15', badge:'OK',        ddpp:true,  freq:'Ponctuel',    alert:false, fn:''},
+  {id:'nc',           cat:'pilotage',  num:15, ico:'⚠️', name:"J'ai une non-conformité à corriger",                color:'c16', badge:'2 open',    ddpp:true,  freq:'Transversal', alert:true,  fn:''},
+  {id:'audits', hidden:true,       cat:'pilotage',  num:16, ico:'📋', name:'Je réalise mon audit interne',                      color:'c17', badge:'Recommandé',ddpp:false, freq:'Mensuel',     alert:false, fn:''},
+  {id:'dashboard',    cat:'pilotage',  num:17, ico:'📊', name:'Je consulte mon tableau de bord',                   color:'c18', badge:'Live',      ddpp:false, freq:'Permanent',   alert:false, fn:''},
+  {id:'exports',      cat:'pilotage',  num:18, ico:'📄', name:'Je génère mon Pack contrôle DDPP',                  color:'c19', badge:'Pack DDPP', ddpp:false, freq:'Sur demande',  alert:false, fn:''},
+  {id:'allergenes',   cat:'pilotage',  num:19, ico:'🥜', name:"J'affiche les allergènes de ma carte",              color:'c20', badge:'Option',    ddpp:false, freq:'Ponctuel',    alert:false, option:true, fn:'Générer la matrice des 14 allergènes de votre carte'},
+  {id:'equipe',       cat:'pilotage',  num:24, ico:'👥', name:'Je gère mon équipe',                                color:'c11', badge:'',          ddpp:false, freq:'Permanent',   alert:false, fn:''},
+  {id:'plat-temoin',  cat:'quotidien', num:20, ico:'🍽️', name:'Je conserve un plat témoin',                        color:'c6',  badge:'DDPP',      ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
+  {id:'liaison-thermique', cat:'quotidien', num:21, ico:'🌡️', name:'Je contrôle la liaison chaude / froide',         color:'c7',  badge:'DDPP',      ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
+  {id:'registre-convives', cat:'quotidien', num:22, ico:'👥', name:'Je remplis le registre des convives',            color:'c8',  badge:'',          ddpp:false, freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
+  {id:'analyses-micro',    cat:'periodique', num:23, ico:'🔬', name:'Je suis mes analyses microbiologiques',         color:'c9',  badge:'',          ddpp:false, freq:'Mensuel',     alert:false, fn:'', secteurs:['collective']},
 ];
 
 var COLOR_FROM={c1:'#f97316',c2:'#7c3aed',c3:'#0891b2',c4:'#db2777',c5:'#16a34a',c6:'#dc2626',c7:'#0284c7',c8:'#b45309',c9:'#0f766e',c10:'#065f46',c11:'#374151',c12:'#1e3a5f',c13:'#92400e',c14:'#4c1d95',c15:'#9f1239',c16:'#312e81',c17:'#0c4a6e',c18:'#14532d',c19:'#1e1b4b',c20:'#78350f'};
@@ -8954,6 +8958,10 @@ function _scrollHaut(t) {
   } catch(e) {}
 }
 function showPage(id, noReset) {
+  // Mode guidé supprimé : toute cible page-guide / page-choix est redirigée
+  // vers le dashboard expert (page-home). Préserve les anciens appels sans
+  // toucher à chaque site d'appel.
+  if (id === 'page-guide' || id === 'page-choix') id = 'page-home';
   // ── VERROU DE SÉCURITÉ AU POINT D'ENTRÉE ──────────────────────────────────
   // Toute page nécessitant une session est REFUSÉE si l'utilisateur est
   // déconnecté → on redirige vers le login. Couvre TOUS les déclencheurs (appels
