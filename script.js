@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v509';
+var APP_BUILD = 'v510';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -7985,6 +7985,16 @@ function switchCat(cat, tab) {
   band.className = 'cat-band ' + cfg.cls;
   band.innerHTML = '<div class="cat-band-ico">' + _echap(cfg.ico) + '</div><div><div class="cat-band-title">' + _echap(cfg.title) + '</div><div class="cat-band-sub">' + _echap(cfg.sub) + '</div></div>';
   renderMods(cat);
+  // Afficher la checklist des rappels périodiques uniquement sur l'onglet Périodique.
+  var perioHome = document.getElementById('tdbPerioHome');
+  if (perioHome) {
+    if (cat === 'periodique') {
+      perioHome.style.display = '';
+      try { if (typeof renderTdbPerio === 'function') renderTdbPerio(); } catch (e) {}
+    } else {
+      perioHome.style.display = 'none';
+    }
+  }
 }
 
 // ── HEADERS BP PAR MODULE ──
@@ -17387,8 +17397,11 @@ function _tdbPerioFreqChange(id, val) {
   renderTdbPerio();
 }
 function renderTdbPerio() {
-  var host = document.getElementById('tdbPerio');
-  if (!host) return;
+  var hosts = [];
+  var h1 = document.getElementById('tdbPerio'); if (h1) hosts.push(h1);
+  var h2 = document.getElementById('tdbPerioHome'); if (h2) hosts.push(h2);
+  if (!hosts.length) return;
+  var host = hosts[0];
   try {
     var conf = _tdbPerioConf();
     var today = _dateLoc();
@@ -17448,8 +17461,8 @@ function renderTdbPerio() {
         + '</div>';
     });
     html += '</div>';
-    host.innerHTML = html;
-  } catch (e) { host.innerHTML = ''; }
+    hosts.forEach(function (h) { h.innerHTML = html; });
+  } catch (e) { hosts.forEach(function (h) { h.innerHTML = ''; }); }
 }
 
 // ══════════════════════════════════════════════════════════════════
