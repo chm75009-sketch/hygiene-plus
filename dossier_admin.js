@@ -188,6 +188,7 @@
         else if (a === 'procs') vueProcs();
         else if (a === 'registre') vueRegistre();
         else if (a === 'affichages') vueAffichages();
+        else if (a.indexOf('lien:') === 0) lienFiche(a.slice(5) || null, b);
         else if (a.indexOf('voirrub:') === 0) { var q5 = a.split(':'); docCourant = { pole: q5[1], i: +q5[2] }; voirDocument(q5[3]); }
         else if (a.indexOf('procmod:') === 0) vueProcNouvelle((cacheProcs || []).filter(function (x) { return x.id === a.slice(8); })[0]);
         else if (a.indexOf('procarch:') === 0) archiverProc(a.slice(9));
@@ -294,6 +295,7 @@
       var anciens = cacheSalaries.filter(function (s) { return s.statut === 'ancien'; });
       var h = '<div class="da-wrap">' + entete('personnel')
         + '<button class="da-main" type="button" data-da="nouveau">＋ Ajouter un salarié</button>'
+        + '<button class="da-btn" type="button" data-da="lien:">🔗 Lien à envoyer à un nouveau salarié (il remplit sa fiche)</button><div id="daLienBox"></div>'
         + '<div class="da-sect">En activité · ' + actifs.length + '</div>';
       h += actifs.length ? actifs.map(ligneSalarie).join('') : '<p class="da-note">Aucun salarié enregistré.</p>';
       if (anciens.length) h += '<div class="da-sect">Anciens salariés · ' + anciens.length + '</div>' + anciens.map(ligneSalarie).join('');
@@ -313,6 +315,7 @@
       ? '<div style="border:2px solid #f59e0b;background:#fff7e6;border-radius:12px;padding:10px;font-size:13.5px"><b style="color:#b45309">⚠ ' + manq.length + ' information' + (manq.length > 1 ? 's' : '') + ' obligatoire' + (manq.length > 1 ? 's' : '') + ' à compléter :</b><br>'
         + manq.map(function (k) { return '<button type="button" class="da-btn" data-aller="' + k + '" style="margin:4px 4px 0 0;color:#b45309">' + esc(libelleChamp(k)) + '</button>'; }).join('') + '</div>'
       : (id ? '<div style="border:2px solid #86efac;background:#ecfdf3;border-radius:12px;padding:10px;font-size:13.5px;color:#15803d"><b>✓ Fiche complète</b></div>' : '');
+    if (id) h += '<button class="da-btn" type="button" data-da="lien:' + esc(id) + '" style="border-color:#16a34a;color:#15803d">🔗 Copier le lien : le salarié remplit lui-même sa fiche</button><div id="daLienBox"></div>';
     h += '<p class="da-note" style="margin:0"><b style="color:#dc2626">*</b> obligatoire (registre du personnel, déclaration d\'embauche, paie)</p>';
     CHAMPS.forEach(function (c) {
       var v = s[c[0]];
@@ -571,6 +574,33 @@
       synchroEnCours = false;
       if (change) { try { if (typeof window.renderCoffre === 'function') window.renderCoffre(); if (typeof window.renderInspDocs === 'function') window.renderInspDocs(); } catch (e) {} }
     });
+  }
+
+  // ── Lien « fiche à remplir » envoyé au salarié (WhatsApp) : valable 7 jours, une seule fois ──
+  function lienFiche(salId, btn) {
+    if (!encoreOuvert()) return;
+    var box = document.getElementById('daLienBox'); if (!box) return;
+    var lbl = btn ? btn.textContent : ''; if (btn) { btn.disabled = true; btn.textContent = 'Création du lien…'; }
+    rpc('da_lien_creer', { p_code: codeCompte(), p_pin: pinSession, p_salarie_id: salId }).then(function (r) {
+      if (btn) { btn.disabled = false; btn.textContent = lbl; }
+      if (!r || r.ok !== true || !r.jeton) { box.innerHTML = '<p class="da-err">' + esc(r && r.code === 'PGRST202' ? 'Fonction pas encore activée dans la base.' : messageRefus(r)) + '</p>'; return; }
+      var url = new URL('fiche-salarie.html?t=' + r.jeton, location.href).href;
+      var soc = enteteSociete().nom || 'votre employeur';
+      var s = salId ? (cacheSalaries || []).filter(function (x) { return x.id === salId; })[0] : null;
+      var texte = 'Bonjour' + (s && s.prenom ? ' ' + s.prenom : '') + ', merci de remplir votre fiche salarié pour ' + soc + ' en cliquant sur ce lien (valable 7 jours) : ' + url;
+      box.innerHTML = '<div class="da-form" style="border-color:#86efac;background:#f0fdf4;gap:8px"><b style="color:#15803d">✓ Lien prêt (valable 7 jours, une seule fois)</b>'
+        + '<input readonly value="' + esc(url) + '" style="font-size:12px" aria-label="Lien de la fiche">'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="da-btn" type="button" id="daLienCopier">📋 Copier le lien</button>'
+        + '<a class="da-btn" style="text-align:center;text-decoration:none;background:#25d366;color:#fff;border-color:#25d366" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(texte) + '">WhatsApp</a></div>'
+        + '<span class="da-note">Le salarié ouvre le lien, remplit sa fiche et l\'envoie : elle se remplit ici automatiquement. Le lien ne permet pas de voir le dossier.</span></div>';
+      var copier = function () {
+        var fin = function () { var b = box.querySelector('#daLienCopier'); if (b) b.textContent = '✓ Copié'; };
+        try { navigator.clipboard.writeText(texte).then(fin, function () { box.querySelector('input').select(); document.execCommand('copy'); fin(); }); }
+        catch (e) { box.querySelector('input').select(); try { document.execCommand('copy'); fin(); } catch (x) {} }
+      };
+      box.querySelector('#daLienCopier').addEventListener('click', copier);
+      copier();
+    }, function () { if (btn) { btn.disabled = false; btn.textContent = lbl; } box.innerHTML = '<p class="da-err">Pas de connexion internet.</p>'; });
   }
 
   // ── Archiver / supprimer un salarié ──
