@@ -1686,8 +1686,25 @@ html, body { max-width: 100%; overflow-x: hidden; }
           </button>
         </div>
 
-        <!-- 4bis. Actions principales : Export + Audit -->
-        <div class="ph4-actions">
+        <!-- 5. Liste épurée des contrôles du jour -->
+        <div class="ph4-list-head">
+          <span class="ph4-list-title">À faire aujourd'hui</span>
+          <a class="ph4-list-link" onclick="showPage('page-history')">Historique</a>
+        </div>
+        <div class="ph4-fils">
+          <button class="ph4-fil ctab ctab-q active" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien</button>
+          <button class="ph4-fil ctab ctab-p" onclick="switchCat('periodique',this)" data-cat="periodique">Périodique</button>
+          <button class="ph4-fil ctab ctab-u" onclick="switchCat('ponctuel',this)" data-cat="ponctuel">Ponctuel</button>
+          <button class="ph4-fil ctab ctab-s" onclick="switchCat('pilotage',this)" data-cat="pilotage">Pilotage</button>
+        </div>
+        <div class="cat-band cb-q" id="catBand" style="display:none"></div>
+        <div class="cat-tabs" style="display:none"></div>
+        <div class="mods-wrap" style="padding:0"><div class="mods-grid" id="modsGrid"></div></div>
+        <!-- Checklist des rappels périodiques (visible uniquement sur l'onglet Périodique) -->
+        <div id="tdbPerioHome" style="margin:16px 0 0;display:none"></div>
+
+        <!-- Actions secondaires : Export + Audit (en bas de page) -->
+        <div class="ph4-actions" style="margin-top:22px">
           <button type="button" class="ph4-action act-export" onclick="ouvrirExportHome()">
             <span class="ph4-action-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="8 13 12 17 16 13"/><line x1="12" y1="17" x2="12" y2="10"/></svg></span>
             <span class="ph4-action-txt">
@@ -1705,23 +1722,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <span class="ph4-action-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
           </a>
         </div>
-
-        <!-- 5. Liste épurée des contrôles du jour -->
-        <div class="ph4-list-head">
-          <span class="ph4-list-title">À faire aujourd'hui</span>
-          <a class="ph4-list-link" onclick="showPage('page-history')">Historique</a>
-        </div>
-        <div class="ph4-fils">
-          <button class="ph4-fil ctab ctab-q active" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien</button>
-          <button class="ph4-fil ctab ctab-p" onclick="switchCat('periodique',this)" data-cat="periodique">Périodique</button>
-          <button class="ph4-fil ctab ctab-u" onclick="switchCat('ponctuel',this)" data-cat="ponctuel">Ponctuel</button>
-          <button class="ph4-fil ctab ctab-s" onclick="switchCat('pilotage',this)" data-cat="pilotage">Pilotage</button>
-        </div>
-        <div class="cat-band cb-q" id="catBand" style="display:none"></div>
-        <div class="cat-tabs" style="display:none"></div>
-        <div class="mods-wrap" style="padding:0"><div class="mods-grid" id="modsGrid"></div></div>
-        <!-- Checklist des rappels périodiques (visible uniquement sur l'onglet Périodique) -->
-        <div id="tdbPerioHome" style="margin:16px 0 0;display:none"></div>
       </div>
 
       <script>
