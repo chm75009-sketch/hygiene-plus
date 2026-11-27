@@ -1450,76 +1450,80 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <div class="page" id="page-inspecteur" style="background:#0f172a;min-height:100vh"></div>
     <!-- ═══ FIN MODE INSPECTEUR ═══ -->
     <div class="page" id="page-home">
+
       <style>
-        /* === DASHBOARD INTUITIF v3 === */
-        #page-home{background:var(--cream)}
-        #page-home .ph-wrap{padding:14px 14px 30px}
+        /* === DASHBOARD v4 — minimaliste type Linear/Vercel === */
+        #page-home{background:#fff}
+        #page-home .ph4-wrap{padding:22px 20px 24px}
+        #page-home .ph4-row1{display:flex;align-items:center;gap:8px;margin-bottom:28px}
+        #page-home .ph4-eyebrow{flex:1;font-size:11.5px;color:var(--ink-3);font-weight:500;letter-spacing:.03em;line-height:1.3}
+        #page-home .ph4-eyebrow b{color:var(--ink);font-weight:600}
+        #page-home .ph4-icon{width:34px;height:34px;border-radius:50%;background:var(--cream);border:1px solid var(--line);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s}
+        #page-home .ph4-icon:hover{background:var(--line-soft)}
+        #page-home .ph4-icon svg{width:14px;height:14px;stroke-width:1.9}
 
-        /* Ligne 1 : bonjour + 2 icônes */
-        #page-home .ph-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-        #page-home .ph-hello{flex:1;min-width:0}
-        #page-home .ph-hello b{display:block;font-size:18px;font-weight:600;color:var(--ink);letter-spacing:-.025em;line-height:1.15}
-        #page-home .ph-hello small{display:block;font-size:12px;color:var(--ink-3);margin-top:2px;font-weight:500}
-        #page-home .ph-ico-btn{width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--ink-2);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
-        #page-home .ph-ico-btn:active{transform:scale(.94)}
-        #page-home .ph-ico-btn svg{width:15px;height:15px;stroke-width:1.9}
+        /* Score géant du jour */
+        #page-home .ph4-score{margin-bottom:22px;line-height:.95}
+        #page-home .ph4-score-big{font-size:clamp(72px,22vw,96px);font-weight:600;letter-spacing:-.05em;color:var(--ink);font-family:'Inter',system-ui,sans-serif;display:inline-flex;align-items:baseline;gap:6px}
+        #page-home .ph4-score-slash{color:var(--ink-4);font-size:.55em;font-weight:500}
+        #page-home .ph4-score-total{color:var(--ink-3);font-size:.55em;font-weight:500}
+        #page-home .ph4-score-label{font-size:14px;color:var(--ink-3);font-weight:500;margin-top:6px;letter-spacing:-.01em}
+        #page-home .ph4-score-label em{font-style:normal;color:var(--accent);font-weight:600}
 
-        /* Carte Progression du jour (hero card) */
-        #page-home .ph-day-card{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-radius:18px;padding:16px 18px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 10px 24px -8px rgba(15,118,110,.35)}
-        #page-home .ph-day-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none}
-        #page-home .ph-day-card::after{content:'';position:absolute;bottom:-50px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(210,173,70,.2) 0%,transparent 60%);pointer-events:none}
-        #page-home .ph-day-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;position:relative;z-index:1}
-        #page-home .ph-day-prog{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.14);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
-        #page-home .ph-day-prog svg{position:absolute;inset:0;transform:rotate(-90deg)}
-        #page-home .ph-day-prog circle{fill:none;stroke-width:4}
-        #page-home .ph-day-prog .track{stroke:rgba(255,255,255,.16)}
-        #page-home .ph-day-prog .fill{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
-        #page-home .ph-day-prog b{position:relative;z-index:1;font-size:14px;font-weight:600;letter-spacing:-.02em;font-family:'JetBrains Mono',monospace}
-        #page-home .ph-day-txt{flex:1;min-width:0;line-height:1.3}
-        #page-home .ph-day-txt b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em}
-        #page-home .ph-day-txt small{display:block;font-size:12px;color:rgba(255,255,255,.75);margin-top:2px}
-        #page-home .ph-day-stats{display:flex;gap:10px;position:relative;z-index:1}
-        #page-home .ph-day-stat{flex:1;background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;backdrop-filter:blur(4px)}
-        #page-home .ph-day-stat b{display:block;font-size:17px;font-weight:600;letter-spacing:-.02em;font-family:'JetBrains Mono',monospace;line-height:1}
-        #page-home .ph-day-stat small{display:block;font-size:10px;color:rgba(255,255,255,.72);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+        /* Progress bar linéaire */
+        #page-home .ph4-progress{height:5px;background:var(--line-soft);border-radius:999px;margin:16px 0 26px;overflow:hidden}
+        #page-home .ph4-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:999px;transition:width .6s ease;width:0%}
 
-        /* Action prioritaire (card blanche cliquable) */
-        #page-home .ph-next{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px;cursor:pointer;text-align:left;width:100%;font-family:inherit;transition:border-color .15s,transform .12s}
-        #page-home .ph-next:hover{border-color:var(--accent)}
-        #page-home .ph-next:active{transform:scale(.98)}
-        #page-home .ph-next-ico{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-        #page-home .ph-next-ico svg{width:20px;height:20px;stroke-width:1.9}
-        #page-home .ph-next-txt{flex:1;min-width:0;line-height:1.3}
-        #page-home .ph-next-tag{display:inline-block;font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:2px 7px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px}
-        #page-home .ph-next-txt b{display:block;font-size:14px;font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1.25}
-        #page-home .ph-next-txt small{display:block;font-size:11.5px;color:var(--ink-3);margin-top:2px;font-weight:500}
-        #page-home .ph-next-arr{color:var(--ink-4);flex-shrink:0;line-height:0}
-        #page-home .ph-next-arr svg{width:18px;height:18px}
+        /* Prochaine action (gros CTA) */
+        #page-home .ph4-next{display:flex;align-items:center;gap:14px;background:var(--ink);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:12px;cursor:pointer;border:none;width:100%;font-family:inherit;text-align:left;transition:background .15s,transform .1s}
+        #page-home .ph4-next:hover{background:#262626}
+        #page-home .ph4-next:active{transform:scale(.98)}
+        #page-home .ph4-next-ico{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.14);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+        #page-home .ph4-next-ico svg{width:18px;height:18px;stroke-width:2}
+        #page-home .ph4-next-txt{flex:1;line-height:1.25}
+        #page-home .ph4-next-tag{display:block;font-size:10.5px;color:rgba(255,255,255,.58);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+        #page-home .ph4-next-name{display:block;font-size:15px;font-weight:600;letter-spacing:-.015em}
+        #page-home .ph4-next-arr{color:rgba(255,255,255,.4);flex-shrink:0;line-height:0}
+        #page-home .ph4-next-arr svg{width:18px;height:18px}
 
-        /* Rangée actions rapides (Inspecteur + Chatbot) */
-        #page-home .ph-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-        #page-home .ph-quick-btn{display:flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border:none;border-radius:14px;padding:11px 12px;cursor:pointer;font-family:inherit;text-align:left;transition:background .15s}
-        #page-home .ph-quick-btn.alert{background:var(--alert)}
-        #page-home .ph-quick-btn:active{transform:scale(.96)}
-        #page-home .ph-quick-btn-ico{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.16);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-        #page-home .ph-quick-btn-ico svg{width:14px;height:14px;stroke-width:2.2}
-        #page-home .ph-quick-btn-txt{font-size:12px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
-        #page-home .ph-quick-btn-txt small{display:block;font-size:10px;color:rgba(255,255,255,.65);margin-top:1px;font-weight:500}
+        /* 3 shortcuts ronds */
+        #page-home .ph4-shortcuts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:28px}
+        #page-home .ph4-short{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:14px 10px 12px;cursor:pointer;font-family:inherit;text-align:center;transition:border-color .15s,background .15s,transform .1s}
+        #page-home .ph4-short:hover{border-color:var(--accent);background:#fff}
+        #page-home .ph4-short:active{transform:scale(.96)}
+        #page-home .ph4-short-ico{width:32px;height:32px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--ink-2);display:inline-flex;align-items:center;justify-content:center;margin:0 auto 8px}
+        #page-home .ph4-short.danger .ph4-short-ico{background:var(--alert-soft);border-color:rgba(220,38,38,.18);color:var(--alert)}
+        #page-home .ph4-short.gold .ph4-short-ico{background:rgba(210,173,70,.12);border-color:rgba(210,173,70,.22);color:var(--gold-dk)}
+        #page-home .ph4-short.accent .ph4-short-ico{background:var(--accent-soft);border-color:rgba(15,118,110,.18);color:var(--accent)}
+        #page-home .ph4-short-ico svg{width:15px;height:15px;stroke-width:1.9}
+        #page-home .ph4-short-lbl{font-size:11.5px;font-weight:500;color:var(--ink);letter-spacing:-.01em;line-height:1.25}
 
-        /* Section + liste */
-        #page-home .ph-sec-head{display:flex;align-items:center;gap:8px;margin:4px 2px 8px}
-        #page-home .ph-sec-title{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
-        #page-home .ph-sec-pill{font-size:10.5px;font-weight:600;color:var(--ink-3);background:#fff;border:1px solid var(--line);padding:2px 8px;border-radius:999px}
-        #page-home .ph-sec-link{margin-left:auto;font-size:12.5px;color:var(--accent);font-weight:500;cursor:pointer;text-decoration:none}
+        /* Liste "aujourd'hui" (tâches à faire) */
+        #page-home .ph4-list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        #page-home .ph4-list-title{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+        #page-home .ph4-list-link{font-size:12px;color:var(--ink-3);font-weight:500;cursor:pointer;text-decoration:none}
+        #page-home .ph4-list-link:hover{color:var(--accent)}
 
-        /* Pills catégories (filtre discret au-dessus de la liste) */
-        #page-home .ph-filters{display:flex;gap:6px;margin:0 0 10px;overflow-x:auto;scrollbar-width:none}
-        #page-home .ph-filters::-webkit-scrollbar{display:none}
-        #page-home .ph-f{flex-shrink:0;padding:6px 12px;background:#fff;border:1px solid var(--line);border-radius:999px;font-family:inherit;font-size:12px;font-weight:500;color:var(--ink-3);cursor:pointer}
-        #page-home .ph-f.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+        /* Filtres épurés */
+        #page-home .ph4-fils{display:flex;gap:5px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none}
+        #page-home .ph4-fils::-webkit-scrollbar{display:none}
+        #page-home .ph4-fil{flex-shrink:0;padding:5px 11px;background:transparent;border:1px solid var(--line);border-radius:999px;font-family:inherit;font-size:11.5px;font-weight:500;color:var(--ink-3);cursor:pointer}
+        #page-home .ph4-fil.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+        /* Override grille mods pour un aspect ultra-épuré en liste verticale */
+        #page-home .mods-grid{grid-template-columns:1fr !important;gap:6px !important}
+        #page-home .mods-grid .mod{padding:12px 14px !important;min-height:0 !important;flex-direction:row !important;align-items:center !important;gap:12px !important}
+        #page-home .mods-grid .mod::before{display:none}
+        #page-home .mods-grid .mod-ico{width:34px !important;height:34px !important;border-radius:10px !important}
+        #page-home .mods-grid .mod-ico svg{width:16px !important;height:16px !important}
+        #page-home .mods-grid .mod-name{font-size:13px !important;line-height:1.3 !important;letter-spacing:-.01em;margin:0;padding-right:70px;flex:1}
+        #page-home .mods-grid .mod-fn{display:none}
+        #page-home .mods-grid .mod-badge{top:50% !important;transform:translateY(-50%) !important;right:14px !important;padding:3px 9px !important;font-size:10.5px !important;font-weight:500 !important;position:absolute}
+        /* Groupes "Tous les jours" / "Selon l'activité" injectés par renderMods */
+        #page-home .mods-grid > div[style*="grid-column"]{font-size:10.5px !important;font-weight:600 !important;color:var(--ink-3) !important;margin:14px 2px 6px !important;letter-spacing:.08em !important;text-transform:uppercase}
       </style>
 
-      <!-- Hero legacy caché : garde IDs pour compat JS -->
+      <!-- Hero legacy + irZone cachés mais IDs préservés pour compat JS -->
       <div class="hero" style="display:none">
         <div class="hero-greeting" id="heroEtab">Mon établissement</div>
         <div class="hero-title">Tableau de bord <em>HACCP</em></div>
@@ -1528,154 +1532,115 @@ html, body { max-width: 100%; overflow-x: hidden; }
       </div>
       <div id="irZone-home" style="display:none"></div>
 
-      <div class="ph-wrap">
-        <!-- 1. Hello + accès rapides -->
-        <div class="ph-row">
-          <div class="ph-hello">
-            <b id="phEtab">Bonjour</b>
-            <small id="phDate"></small>
-          </div>
-          <button class="ph-ico-btn" aria-label="Historique" onclick="showPage('page-history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
-          <button class="ph-ico-btn" aria-label="Réglages" onclick="ouvrirReglages()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <div class="ph4-wrap">
+        <!-- 1. Greeting ultra-léger + 2 icônes -->
+        <div class="ph4-row1">
+          <div class="ph4-eyebrow"><span id="phGreet">Bonjour</span><br><b id="phEtab">Mon établissement</b></div>
+          <button class="ph4-icon" aria-label="Historique" onclick="showPage('page-history')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+          <button class="ph4-icon" aria-label="Réglages" onclick="ouvrirReglages()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
         </div>
 
-        <!-- 2. Carte "Progression du jour" -->
-        <div class="ph-day-card">
-          <div class="ph-day-top">
-            <div class="ph-day-prog">
-              <svg viewBox="0 0 56 56"><circle class="track" cx="28" cy="28" r="24"/><circle class="fill" id="phProgRing" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="150.8"/></svg>
-              <b><span id="phProgPct">0</span>%</b>
-            </div>
-            <div class="ph-day-txt">
-              <b id="phDayTitle">Votre journée HACCP</b>
-              <small id="phDaySub">Prêt à démarrer vos contrôles</small>
-            </div>
-          </div>
-          <div class="ph-day-stats">
-            <div class="ph-day-stat"><b id="phStatFait">0</b><small>Contrôles faits</small></div>
-            <div class="ph-day-stat"><b id="phStatToDo">—</b><small>À faire</small></div>
-            <div class="ph-day-stat"><b id="phStatNC">0</b><small>NC ouvertes</small></div>
-          </div>
+        <!-- 2. Score géant -->
+        <div class="ph4-score">
+          <div class="ph4-score-big"><span id="phScoreDone">0</span><span class="ph4-score-slash">/</span><span class="ph4-score-total" id="phScoreTotal">10</span></div>
+          <div class="ph4-score-label">contrôles effectués <em id="phScoreToday">aujourd'hui</em></div>
         </div>
 
-        <!-- 3. Action prioritaire -->
-        <button type="button" class="ph-next" id="phNextBtn" onclick="window._phNextOpen && window._phNextOpen()">
-          <span class="ph-next-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-          <span class="ph-next-txt">
-            <span class="ph-next-tag">Prochaine action</span>
-            <b id="phNextName">Choisir un contrôle</b>
-            <small id="phNextDesc">Toutes vos tâches du jour en un coup d'œil</small>
-          </span>
-          <span class="ph-next-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        <!-- Progress line -->
+        <div class="ph4-progress"><div class="ph4-progress-fill" id="phProgBar"></div></div>
+
+        <!-- 3. Prochaine action (CTA principal) -->
+        <button type="button" class="ph4-next" onclick="window._phNext && window._phNext()">
+          <span class="ph4-next-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg></span>
+          <span class="ph4-next-txt"><span class="ph4-next-tag">Prochain contrôle</span><span class="ph4-next-name" id="phNextName">Commencer la journée</span></span>
+          <span class="ph4-next-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
         </button>
 
-        <!-- 4. Actions rapides (Inspecteur + Assistant) -->
-        <div class="ph-quick">
-          <button class="ph-quick-btn alert" onclick="ouvrirModeInspecteur('page-home')">
-            <span class="ph-quick-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
-            <span class="ph-quick-btn-txt">Contrôle DDPP<small>Mode inspecteur</small></span>
+        <!-- 4. 3 raccourcis (DDPP / Assistant / Mode guidé) -->
+        <div class="ph4-shortcuts">
+          <button class="ph4-short danger" onclick="ouvrirModeInspecteur('page-home')">
+            <span class="ph4-short-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="ph4-short-lbl">Contrôle<br>DDPP</span>
           </button>
-          <button class="ph-quick-btn" onclick="window.prChatbotOpen && window.prChatbotOpen()">
-            <span class="ph-quick-btn-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M12 4v3"/></svg></span>
-            <span class="ph-quick-btn-txt">Assistant<small>Vocal ou texte</small></span>
+          <button class="ph4-short accent" onclick="window.prChatbotOpen && window.prChatbotOpen()">
+            <span class="ph4-short-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M12 4v3"/></svg></span>
+            <span class="ph4-short-lbl">Assistant<br>vocal</span>
+          </button>
+          <button class="ph4-short gold" onclick="showPage('page-guide')">
+            <span class="ph4-short-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            <span class="ph4-short-lbl">Mode<br>guidé</span>
           </button>
         </div>
 
-        <!-- 5. Section Tous les contrôles -->
-        <div class="ph-sec-head">
-          <span class="ph-sec-title">Tous mes contrôles</span>
-          <span class="ph-sec-pill" id="phSecPill">10</span>
-          <a class="ph-sec-link" onclick="showPage('page-history')">Historique →</a>
+        <!-- 5. Liste épurée des contrôles du jour -->
+        <div class="ph4-list-head">
+          <span class="ph4-list-title">À faire aujourd'hui</span>
+          <a class="ph4-list-link" onclick="showPage('page-history')">Historique →</a>
         </div>
-
-        <!-- Filtres catégories -->
-        <div class="ph-filters">
-          <button class="ph-f ctab ctab-q on" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien</button>
-          <button class="ph-f ctab ctab-p" onclick="switchCat('periodique',this)" data-cat="periodique">Périodique</button>
-          <button class="ph-f ctab ctab-u" onclick="switchCat('ponctuel',this)" data-cat="ponctuel">Ponctuel</button>
-          <button class="ph-f ctab ctab-s" onclick="switchCat('pilotage',this)" data-cat="pilotage">Pilotage</button>
+        <div class="ph4-fils">
+          <button class="ph4-fil ctab ctab-q on" onclick="switchCat('quotidien',this)" data-cat="quotidien">Quotidien</button>
+          <button class="ph4-fil ctab ctab-p" onclick="switchCat('periodique',this)" data-cat="periodique">Périodique</button>
+          <button class="ph4-fil ctab ctab-u" onclick="switchCat('ponctuel',this)" data-cat="ponctuel">Ponctuel</button>
+          <button class="ph4-fil ctab ctab-s" onclick="switchCat('pilotage',this)" data-cat="pilotage">Pilotage</button>
         </div>
-
-        <!-- Legacy (caché pour compat JS) -->
         <div class="cat-band cb-q" id="catBand" style="display:none"></div>
         <div class="cat-tabs" style="display:none"></div>
-
-        <!-- Grille des modules -->
         <div class="mods-wrap" style="padding:0"><div class="mods-grid" id="modsGrid"></div></div>
       </div>
 
       <script>
         (function(){
-          // Mémoire du 1er module "À faire" du jour pour ph-next
-          var _firstTodo = null;
-          window._phNextOpen = function(){
+          var _firstTodoId = null;
+          window._phNext = function(){
             try{
-              if(_firstTodo && typeof openModule === 'function'){ openModule(_firstTodo); return; }
-              // sinon scroll vers la grille
-              var el = document.getElementById('modsGrid');
+              if(_firstTodoId && typeof openModule === 'function'){ openModule(_firstTodoId); return; }
+              var el = document.querySelector('.mods-grid .mod');
               if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
             }catch(e){}
           };
-
-          function esc(s){ return String(s||'').replace(/[&<>]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]||c; }); }
-
           function sync(){
             try{
-              // Miroir hero legacy → nouvelle UI
               var etab = document.getElementById('heroEtab');
-              var date = document.getElementById('heroDate');
               var phEtab = document.getElementById('phEtab');
-              var phDate = document.getElementById('phDate');
+              var phGreet = document.getElementById('phGreet');
               var hr = new Date().getHours();
-              var salut = hr < 6 ? 'Bonne nuit' : (hr < 12 ? 'Bonjour' : (hr < 18 ? 'Bon après-midi' : 'Bonsoir'));
+              if(phGreet) phGreet.textContent = hr<6 ? 'Bonne nuit' : (hr<12 ? 'Bonjour' : (hr<18 ? 'Bon après-midi' : 'Bonsoir'));
               if(etab && phEtab){
                 var txt = etab.textContent.trim();
-                phEtab.textContent = txt && txt !== 'Mon établissement' ? (salut + ', ' + txt) : salut;
+                if(txt) phEtab.textContent = txt;
               }
-              if(date && phDate){
-                var d = date.textContent.trim();
-                if(d) phDate.textContent = d;
-              }
-
-              // Compteurs depuis la grille modules
               var grid = document.getElementById('modsGrid');
               if(!grid) return;
               var mods = grid.querySelectorAll('.mod');
               var total = mods.length;
               var fait = 0, afaire = 0;
-              var firstTodoBtn = null, firstTodoName = '';
+              var firstEl = null, firstName = '';
               mods.forEach(function(m){
                 var b = m.querySelector('.mod-badge');
-                if(!b){ afaire++; if(!firstTodoBtn){ firstTodoBtn=m; firstTodoName = (m.querySelector('.mod-name')||{textContent:''}).textContent; } return; }
-                if(b.classList.contains('alert')){ afaire++; if(!firstTodoBtn){ firstTodoBtn=m; firstTodoName = (m.querySelector('.mod-name')||{textContent:''}).textContent; } }
-                else fait++;
+                if(!b){
+                  afaire++;
+                  if(!firstEl){ firstEl=m; firstName = (m.querySelector('.mod-name')||{textContent:''}).textContent.trim(); }
+                  return;
+                }
+                if(b.classList.contains('alert')){
+                  afaire++;
+                  if(!firstEl){ firstEl=m; firstName = (m.querySelector('.mod-name')||{textContent:''}).textContent.trim(); }
+                }else fait++;
               });
+              var set = function(id,v){ var e=document.getElementById(id); if(e && e.textContent !== String(v)) e.textContent=v; };
+              set('phScoreDone', fait);
+              set('phScoreTotal', total || 10);
               var pct = total ? Math.round(fait*100/Math.max(1,fait+afaire)) : 0;
-              var setTxt = function(id,v){ var e=document.getElementById(id); if(e && e.textContent !== String(v)) e.textContent=v; };
-              setTxt('phProgPct', pct);
-              setTxt('phStatFait', fait);
-              setTxt('phStatToDo', afaire || '—');
-              setTxt('phSecPill', total);
+              var bar = document.getElementById('phProgBar'); if(bar) bar.style.width = pct + '%';
 
-              // Progress ring (dasharray = 2πr = 150.8 pour r=24)
-              var ring = document.getElementById('phProgRing');
-              if(ring){ ring.setAttribute('stroke-dashoffset', 150.8 - (150.8 * pct / 100)); }
-
-              // Prochaine action
-              if(firstTodoBtn){
-                var onclickAttr = firstTodoBtn.getAttribute('onclick') || '';
-                var m = onclickAttr.match(/openModule\(['"]([^'"]+)['"]\)/);
-                if(m) _firstTodo = m[1];
-                setTxt('phNextName', firstTodoName || 'Démarrer un contrôle');
-                setTxt('phNextDesc', afaire + ' contrôle' + (afaire>1?'s':'') + ' restant' + (afaire>1?'s':'') + ' aujourd\'hui');
-                setTxt('phDayTitle', 'Il reste ' + afaire + ' contrôle' + (afaire>1?'s':''));
-                setTxt('phDaySub', 'Démarrez quand vous êtes prêt');
-              } else if(total > 0){
-                _firstTodo = null;
-                setTxt('phNextName', 'Tout est fait, bravo !');
-                setTxt('phNextDesc', 'Vos contrôles du jour sont terminés');
-                setTxt('phDayTitle', 'Journée terminée');
-                setTxt('phDaySub', 'Tous les contrôles sont faits');
+              if(firstEl){
+                var oc = firstEl.getAttribute('onclick')||'';
+                var m = oc.match(/openModule\(['"]([^'"]+)['"]\)/);
+                if(m) _firstTodoId = m[1];
+                set('phNextName', firstName || 'Démarrer un contrôle');
+              }else if(total>0){
+                _firstTodoId = null;
+                set('phNextName', 'Tout est fait, bravo !');
               }
             }catch(e){}
           }
@@ -1691,7 +1656,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
           setTimeout(sync, 300);
         })();
       </script>
-    </div>
+        </div>
     <!-- MODULE 1 — RÉCEPTION & TRAÇABILITÉ FUSIONNÉS -->
     <div class="page" id="page-reception">
       <div class="mod-header">
