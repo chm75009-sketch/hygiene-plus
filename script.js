@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v512';
+var APP_BUILD = 'v513';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -7850,6 +7850,7 @@ var MODULES = [
   {id:'dashboard',    cat:'pilotage',  num:17, ico:'📊', name:'Consulter — Votre tableau de bord',                 color:'c18', badge:'Live',      ddpp:false, freq:'Permanent',   alert:false, fn:''},
   {id:'exports',      cat:'pilotage',  num:18, ico:'📄', name:'Générer — Votre Pack contrôle DDPP',                color:'c19', badge:'Pack DDPP', ddpp:false, freq:'Sur demande',  alert:false, fn:''},
   {id:'allergenes',   cat:'pilotage',  num:19, ico:'🥜', name:'Affichage — Allergènes de votre carte',             color:'c20', badge:'Option',    ddpp:false, freq:'Ponctuel',    alert:false, option:true, fn:'Générer la matrice des 14 allergènes de votre carte'},
+  {id:'equipe',       cat:'pilotage',  num:24, ico:'👥', name:'Mon équipe — Personnes utilisatrices',              color:'c11', badge:'',          ddpp:false, freq:'Permanent',   alert:false, fn:''},
   {id:'plat-temoin',  cat:'quotidien', num:20, ico:'🍽️', name:'Plat Témoin — Conservation 5 jours',               color:'c6',  badge:'DDPP',      ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
   {id:'liaison-thermique', cat:'quotidien', num:21, ico:'🌡️', name:'Liaison Chaude/Froide — Distribution',           color:'c7',  badge:'DDPP',      ddpp:true,  freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
   {id:'registre-convives', cat:'quotidien', num:22, ico:'👥', name:'Registre des Convives & Grammages',              color:'c8',  badge:'',          ddpp:false, freq:'Quotidien',   alert:false, fn:'', secteurs:['collective']},
@@ -7883,7 +7884,8 @@ var MOD_ICO_SVG = {
   'plat-temoin':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-9 9 9 9 0 0 1-9-9z"/><line x1="12" y1="3" x2="12" y2="11"/></svg>',
   'liaison-thermique':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M8 4l4 2 4-2M7 10c2 4 8 4 10 0M4 14c3 5 13 5 16 0M3 18c3 4 15 4 18 0"/></svg>',
   'registre-convives':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  'analyses-micro':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>'
+  'analyses-micro':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>',
+  equipe:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
 };
 
 function renderMods(cat) {
