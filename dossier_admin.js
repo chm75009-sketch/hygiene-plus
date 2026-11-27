@@ -1087,7 +1087,14 @@
     if (!t.lourd) {
       h += '<p style="margin-top:16px;font-weight:600">Objet : ' + esc(t.titre) + '<br>' + remise + '</p><p>' + esc(civ) + ',</p>'
         + '<p>Le ' + v(dateFr(f.date_faits)) + (f.heure ? ' à ' + esc(f.heure) : '') + ', ' + v(f.lieu) + ', ' + v(f.faits) + '.</p>'
-        + '<p>Nous vous rappelons que votre poste' + (s.poste ? ' de ' + esc(String(s.poste).toLowerCase()) : '') + ' impose ' + v(f.regle) + (f.hygiene ? ', conformément aux règles d\'hygiène applicables à notre établissement (plan de maîtrise sanitaire, méthode HACCP).' : '.') + '</p>'
+        + (function () {
+          var L = Array.isArray(f.regles) ? f.regles.map(function (r) { return r.t; }) : (f.regle ? [f.regle] : []);
+          var poste = 'Nous vous rappelons que votre poste' + (s.poste ? ' de ' + esc(String(s.poste).toLowerCase()) : '') + ' impose ';
+          var hyg = f.hygiene ? 'conformément aux règles d\'hygiène applicables à notre établissement (plan de maîtrise sanitaire, méthode HACCP)' : '';
+          if (L.length <= 1) return '<p>' + poste + v(L[0]) + (hyg ? ', ' + hyg + '.' : '.') + '</p>';
+          return '<p>' + poste + 'notamment' + (hyg ? ', ' + hyg : '') + ' :</p><ul style="margin:0 0 10px">'
+            + L.map(function (t, i) { return '<li>' + esc(t) + (i < L.length - 1 ? ' ;' : '.') + '</li>'; }).join('') + '</ul>';
+        })()
         + '<p>Nous vous demandons de ' + v(f.demande) + '.</p><p>' + esc(t.fin) + '</p>';
     } else {
       var nature = f.type === 'map' ? 'une sanction disciplinaire pouvant aller jusqu\'à une mise à pied' : 'une mesure de licenciement';
@@ -1299,9 +1306,10 @@
         + '<div id="dapSimple">'
         + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label for="dap_df">Date des faits<input id="dap_df" type="date" value="' + auj + '"></label><label for="dap_h">Heure<input id="dap_h" type="time"></label></div>'
         + '<label for="dap_lieu">Lieu<input id="dap_lieu" placeholder="Ex. : en cuisine, pendant le service du midi"></label>'
-        + '<label for="dap_faits">Ce qui s\'est passé<textarea id="dap_faits" placeholder="Ex. : vous ne portiez pas de coiffe"></textarea></label>'
-        + '<label for="dap_regle">Règle non respectée<select id="dap_regle">' + optRegle + '</select></label>'
-        + '<label for="dap_autre" id="dapAutreW" hidden>Précisez la règle<input id="dap_autre"></label>'
+        + '<label for="dap_faits">Ce qui s\'est passé<textarea id="dap_faits" placeholder="Ex. : vous ne portiez pas de coiffe et le sol de la cuisine n\'avait pas été nettoyé"></textarea></label>'
+        + '<div style="display:flex;flex-direction:column;gap:6px"><b style="font-size:14px">Règles non respectées <small style="font-weight:500;color:#5b5e78">(une ou plusieurs)</small></b><div id="dapRegles"></div>'
+        + '<label for="dap_regle">＋ Ajouter une règle<select id="dap_regle"><option value="">— Choisir une règle —</option>' + optRegle + '</select></label>'
+        + '<div id="dapAutreW" hidden><div style="display:flex;gap:6px"><input id="dap_autre" placeholder="Précisez la règle" aria-label="Autre règle" style="flex:1"><button type="button" class="da-btn" id="dapAutreOk">Ajouter</button></div></div></div>'
         + '<label for="dap_dem">Ce que nous attendons<input id="dap_dem" value="respecter cette règle à chaque service, dès aujourd\'hui"></label></div>'
         + '<div id="dapLourd" hidden>'
         + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label for="dap_de">Date de l\'entretien<input id="dap_de" type="date"></label><label for="dap_he">Heure<input id="dap_he" type="time" value="15:00"></label></div>'
@@ -1318,22 +1326,45 @@
         + '<b>La lettre, prête à imprimer</b><div id="dapLettre" style="background:#fff;border-radius:8px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow-x:auto"></div>'
         + '<button class="da-main" type="button" id="dapPrint">🖨️ Imprimer</button><button class="da-main" type="button" id="dapSave" style="background:#15803d">💾 Enregistrer dans le dossier du salarié</button><p class="da-err" id="dapMsg"></p></div>';
       brancher(o); o.scrollTop = 0;
-      var type = 'rappel', entManuel = false;
+      var type = 'rappel', entManuel = false, regles = [];
       function $(id) { return o.querySelector('#' + id); }
+      var DEM1 = 'respecter cette règle à chaque service, dès aujourd\'hui', DEM2 = 'respecter ces règles à chaque service, dès aujourd\'hui';
+      function dessinerRegles() {
+        var box = $('dapRegles');
+        box.innerHTML = regles.length ? regles.map(function (r, i) {
+          return '<div style="display:flex;align-items:center;gap:8px;background:#eef0ff;border:1px solid #c7cbf5;border-radius:10px;padding:8px 10px;font-size:14px"><span style="flex:1">' + (i + 1) + '. ' + esc(r.t) + '</span>'
+            + '<button type="button" class="da-btn" data-retire="' + i + '" aria-label="Retirer cette règle" style="padding:4px 9px">✕</button></div>';
+        }).join('') : '<span class="da-note">Aucune règle choisie : ajoutez-en une ou plusieurs ci-dessous.</span>';
+        box.querySelectorAll('[data-retire]').forEach(function (b) { b.addEventListener('click', function () { regles.splice(+b.getAttribute('data-retire'), 1); dessinerRegles(); rendre(); }); });
+        var dem = $('dap_dem'); if (dem.value === DEM1 || dem.value === DEM2) dem.value = regles.length > 1 ? DEM2 : DEM1;
+      }
+      function ajouterRegle(t, h) {
+        t = String(t || '').trim(); if (!t) return;
+        if (!regles.some(function (r) { return r.t === t; })) regles.push({ t: t, h: !!h });
+        dessinerRegles(); rendre();
+      }
+      $('dap_regle').addEventListener('change', function () {
+        var sel = this, opt = sel.selectedOptions[0];
+        if (sel.value === '__autre__') { $('dapAutreW').hidden = false; $('dap_autre').focus(); }
+        else if (sel.value) { ajouterRegle(sel.value, opt && opt.getAttribute('data-h') === '1'); $('dapAutreW').hidden = true; }
+        sel.value = '';
+      });
+      function ajouterAutre() { ajouterRegle($('dap_autre').value, false); $('dap_autre').value = ''; $('dapAutreW').hidden = true; }
+      $('dapAutreOk').addEventListener('click', ajouterAutre);
+      $('dap_autre').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); ajouterAutre(); } });
       if (pEdit && pEdit.donnees) {
         var dv = pEdit.donnees; type = pEdit.type || dv.type || 'rappel'; entManuel = true;
         var map = { dap_sal: pEdit.salarie_id, dap_civ: dv.civ, dap_df: dv.date_faits, dap_h: dv.heure, dap_lieu: dv.lieu, dap_faits: dv.faits, dap_dem: dv.demande,
           dap_de: dv.date_ent, dap_he: dv.heure_ent, dap_le: dv.lieu_ent, dap_mapc: dv.map_cons ? '1' : '', dap_dl: dv.date_lettre, dap_rem: dv.remise };
         Object.keys(map).forEach(function (k) { if (map[k] != null && $(k)) $(k).value = map[k]; });
-        var rs = $('dap_regle'); rs.value = dv.regle || '';
-        if (dv.regle && rs.value !== dv.regle) { rs.value = '__autre__'; $('dap_autre').value = dv.regle; }
+        // Anciennes lettres : une seule règle (dv.regle) ; nouvelles : liste (dv.regles)
+        regles = Array.isArray(dv.regles) ? dv.regles.map(function (r) { return { t: r.t, h: !!r.h }; }) : (dv.regle ? [{ t: dv.regle, h: !!dv.hygiene }] : []);
         if (dv.soc) Object.keys(dv.soc).forEach(function (k) { if ($('dap_s_' + k)) $('dap_s_' + k).value = dv.soc[k] || ''; });
       }
       function lire() {
-        var sel = $('dap_regle'), opt = sel.selectedOptions[0];
         var socv = {}; ['nom', 'forme', 'adresse', 'ids', 'tel', 'ville', 'signataire', 'mairie', 'inspection'].forEach(function (k) { socv[k] = $('dap_s_' + k).value.trim(); });
         return { type: type, salarie_id: $('dap_sal').value, civ: $('dap_civ').value, date_faits: $('dap_df').value, heure: $('dap_h').value, lieu: $('dap_lieu').value.trim(),
-          faits: $('dap_faits').value.trim(), regle: sel.value === '__autre__' ? $('dap_autre').value.trim() : sel.value, hygiene: !!(opt && opt.getAttribute('data-h') === '1'),
+          faits: $('dap_faits').value.trim(), regles: regles.slice(), regle: regles.map(function (r) { return r.t; }).join(' ; '), hygiene: regles.some(function (r) { return r.h; }),
           demande: $('dap_dem').value.trim(), date_ent: $('dap_de').value, heure_ent: $('dap_he').value, lieu_ent: $('dap_le').value.trim(), map_cons: $('dap_mapc').value === '1',
           date_lettre: $('dap_dl').value, remise: $('dap_rem').value, soc: socv };
       }
@@ -1342,7 +1373,6 @@
         var t = TYPES_PROC[type];
         o.querySelectorAll('.dap-type').forEach(function (b) { var on = b.getAttribute('data-t') === type; b.style.background = on ? '#eef0ff' : '#fff'; b.style.borderColor = on ? '#4338ca' : '#d9dbe8'; });
         $('dapSimple').hidden = t.lourd; $('dapLourd').hidden = !t.lourd;
-        $('dapAutreW').hidden = t.lourd || $('dap_regle').value !== '__autre__';
         $('dapNote').textContent = t.lourd ? 'Mise à pied ou licenciement : l\'entretien préalable est obligatoire. La convocation est remise en main propre contre décharge ou envoyée en recommandé.' : t.note;
         if (t.lourd) {
           var r = delais($('dap_dl').value, $('dap_rem').value === 'lrar', $('dap_de').value);
@@ -1369,6 +1399,7 @@
         if (!encoreOuvert()) return;
         var f = lire(), msg = $('dapMsg');
         if (!f.salarie_id) { msg.textContent = 'Choisissez un salarié.'; return; }
+        if (!TYPES_PROC[f.type].lourd && !f.regles.length) { msg.textContent = 'Ajoutez au moins une règle non respectée.'; return; }
         memoriserEntete(f.soc);
         msg.style.color = '#5b5e78'; msg.textContent = 'Enregistrement…';
         var donnees = JSON.parse(JSON.stringify(f)); donnees.html = $('dapLettre').innerHTML;
@@ -1381,6 +1412,7 @@
           vueProcs();
         }, function () { msg.style.color = '#b91c1c'; msg.textContent = 'Pas de connexion internet : rien n\'a été enregistré.'; });
       });
+      dessinerRegles();
       rendre();
     });
   }
