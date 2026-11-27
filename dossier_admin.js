@@ -218,20 +218,22 @@
         + '<span style="font-size:28px">🗂️</span><span style="flex:1"><b style="display:block;font-size:16px;font-weight:900">Dossier administratif</b><small style="display:block;opacity:.75;font-size:12px">Personnel · associés · déclarations</small></span><span style="font-size:18px" aria-hidden="true">🔒</span></button>';
       // Accueil guidé (mode simple)
       var body = document.querySelector('#page-guide .pg-body') || (document.getElementById('barometreHaccp') || {}).parentNode;
+      // Placée TOUT EN HAUT de l'écran, pour être vue du premier coup.
       if (body && !document.getElementById('daTuile')) {
         var w = document.createElement('div');
         w.id = 'daTuile';
-        w.innerHTML = '<div class="pg-section"><span class="pg-section-dot"></span><span class="pg-section-title">Gestion administrative</span><span class="pg-section-hint">Réservé au Président</span></div>' + bouton;
-        body.appendChild(w);
+        w.innerHTML = bouton;
+        body.insertBefore(w, body.firstChild);
       }
-      // Tableau de bord (mode expert) : sous la grille des modules
-      var grille = document.querySelector('#page-home .mods-wrap');
-      if (grille && !document.getElementById('daTuileExpert')) {
+      // Tableau de bord (mode expert) : juste sous l'en-tête
+      var tete = document.querySelector('#page-home .ph4-row1');
+      var hote = tete ? tete.parentNode : document.querySelector('#page-home .ph4-wrap');
+      if (hote && !document.getElementById('daTuileExpert')) {
         var w2 = document.createElement('div');
         w2.id = 'daTuileExpert';
-        w2.style.cssText = 'padding:4px 16px 0';
-        w2.innerHTML = '<div style="font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;margin:14px 2px 4px">Gestion administrative · réservé au Président</div>' + bouton;
-        grille.parentNode.insertBefore(w2, grille.nextSibling);
+        w2.style.cssText = 'margin-top:44px'; // laisse la place au bouton flottant « Mes rapports »
+        w2.innerHTML = bouton;
+        hote.insertBefore(w2, tete ? tete.nextSibling : hote.firstChild);
       }
     } catch (e) {}
   }
