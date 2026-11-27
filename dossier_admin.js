@@ -22,7 +22,7 @@
         ['Paie', 'Bulletins de salaire'],
         ['Santé et formation', 'Visites médicales, formations hygiène'],
         ['Procédures', 'Rappel à l\'ordre, mise en garde, avertissement, blâme, mise à pied, licenciement', 'procs'],
-        ['Registre unique du personnel', 'Entrées et sorties']
+        ['Registre unique du personnel', 'Obligatoire : tous les salariés, dans l\'ordre des embauches', 'registre']
       ] },
     { id: 'associes', ico: '🏛️', titre: 'Dossier des associés', sous: 'Statuts, assemblées, dirigeants',
       rub: [
@@ -64,12 +64,14 @@
     ['nom', 'Nom', 'text'], ['prenom', 'Prénom', 'text'],
     ['naissance_date', 'Date de naissance', 'date'], ['naissance_lieu', 'Lieu de naissance', 'text'],
     ['nationalite', 'Nationalité', 'text'], ['adresse', 'Adresse', 'text'], ['telephone', 'Téléphone', 'tel'],
+    ['sexe', 'Sexe', 'select', [['', '—'], ['Homme', 'Homme'], ['Femme', 'Femme']]],
     ['nir', 'N° de sécurité sociale', 'text'],
     ['poste', 'Poste', 'text'], ['qualification', 'Qualification (statut, niveau, échelon)', 'text'],
     ['date_embauche', 'Date d\'embauche', 'date'], ['date_sortie', 'Date de sortie', 'date'],
     ['contrat', 'Contrat', 'text'], ['heures_hebdo', 'Heures par semaine', 'number'], ['salaire_brut', 'Salaire brut mensuel (€)', 'number'],
     ['essai_fin', 'Fin de période d\'essai', 'date'], ['repos', 'Jours de repos', 'text'],
     ['horaires', 'Horaires (une ligne par jour)', 'textarea'],
+    ['titre_travail_type', 'Autorisation de travail : type de titre (salarié étranger)', 'text'], ['titre_travail_num', 'Autorisation de travail : numéro', 'text'],
     ['titre_sejour_fin', 'Fin de validité du titre de séjour', 'date'], ['notes', 'Notes', 'textarea']
   ];
 
@@ -171,6 +173,7 @@
         else if (a.indexOf('ajout:') === 0) { var q2 = a.split(':'); vueAjoutDoc(q2[1], +q2[2]); }
         else if (a === 'echeances') vueEcheances();
         else if (a === 'procs') vueProcs();
+        else if (a === 'registre') vueRegistre();
         else if (a === 'procnew') vueProcNouvelle();
         else if (a.indexOf('procvoir:') === 0) vueProcVoir(a.slice(9));
         else if (a.indexOf('procsuppr:') === 0) supprimerProc(a.slice(10), b);
@@ -980,6 +983,96 @@
         }, function () { msg.style.color = '#b91c1c'; msg.textContent = 'Pas de connexion internet : rien n\'a été enregistré.'; });
       });
       rendre();
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════════
+  // REGISTRE UNIQUE DU PERSONNEL (articles L1221-13 et D1221-23 à D1221-27)
+  // Tous les salariés, dans l'ordre des embauches, y compris ceux qui sont partis.
+  // Mentions : nom et prénoms, nationalité, date de naissance, sexe, emploi et
+  // qualification, dates d'entrée et de sortie, type de contrat (CDD, temps
+  // partiel…), et pour les étrangers soumis à autorisation : type et n° du titre.
+  // Conservation : 5 ans après le départ du salarié. Aucune ligne n'est supprimée.
+  // ══════════════════════════════════════════════════════════════════
+  var NAT_SANS_AUTORISATION = ['francaise', 'francais', 'allemande', 'autrichienne', 'belge', 'bulgare', 'chypriote', 'croate', 'danoise', 'espagnole', 'estonienne', 'finlandaise', 'grecque', 'hongroise', 'irlandaise', 'italienne', 'lettone', 'lituanienne', 'luxembourgeoise', 'maltaise', 'neerlandaise', 'polonaise', 'portugaise', 'roumaine', 'slovaque', 'slovene', 'suedoise', 'tcheque', 'islandaise', 'liechtensteinoise', 'norvegienne', 'suisse'];
+  function autorisationRequise(s) {
+    var n = sansAccent(s.nationalite || '').trim();
+    if (!n) return null; // nationalité inconnue : à compléter
+    return !NAT_SANS_AUTORISATION.some(function (x) { return n.indexOf(x) === 0; });
+  }
+  function typeContrat(s) {
+    var c = String(s.contrat || '');
+    var duree = /cdd/i.test(c) ? 'CDD' : (/cdi/i.test(c) ? 'CDI' : '');
+    var temps = s.heures_hebdo ? (Number(s.heures_hebdo) < 35 ? 'temps partiel (' + s.heures_hebdo + ' h)' : 'temps complet') : '';
+    return [duree, temps].filter(Boolean).join(', ') || c;
+  }
+  function lignesRegistre(sal) {
+    return sal.slice().sort(function (a, b) {
+      var da = a.date_embauche || '9999', db = b.date_embauche || '9999';
+      return da < db ? -1 : (da > db ? 1 : String(a.nom || '').localeCompare(String(b.nom || '')));
+    }).map(function (s, i) {
+      var aut = autorisationRequise(s);
+      var manque = [];
+      ['nom', 'prenom', 'nationalite', 'naissance_date', 'sexe', 'poste', 'qualification', 'date_embauche', 'contrat'].forEach(function (k) { if (!s[k]) manque.push(k); });
+      if (aut === true && !(s.titre_travail_type && s.titre_travail_num)) manque.push('titre');
+      if (s.statut === 'ancien' && !s.date_sortie) manque.push('date_sortie');
+      return { n: i + 1, s: s, aut: aut, manque: manque };
+    });
+  }
+  var LIB_MANQUE = { nom: 'nom', prenom: 'prénom', nationalite: 'nationalité', naissance_date: 'date de naissance', sexe: 'sexe', poste: 'emploi', qualification: 'qualification', date_embauche: 'date d\'entrée', contrat: 'type de contrat', titre: 'titre de travail', date_sortie: 'date de sortie' };
+  function tableRegistre(L, pourImpression) {
+    var td = pourImpression ? 'border:1px solid #999;padding:4px 6px;vertical-align:top' : 'border-bottom:1px solid #e3e4ef;padding:6px;vertical-align:top';
+    var th = pourImpression ? 'border:1px solid #999;padding:4px 6px;background:#eee;text-align:left' : 'padding:6px;background:#eef0ff;text-align:left;position:sticky;top:0';
+    var h = '<table style="border-collapse:collapse;font-size:' + (pourImpression ? '10px' : '12px') + ';min-width:900px;width:100%"><thead><tr>'
+      + ['N°', 'Nom et prénoms', 'Nationalité', 'Date de naissance', 'Sexe', 'Emploi', 'Qualification', 'Date d\'entrée', 'Date de sortie', 'Type de contrat', 'Autorisation de travail (type et n°)']
+        .map(function (x) { return '<th style="' + th + '">' + esc(x) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    L.forEach(function (l) {
+      var s = l.s, v = function (x) { return x ? esc(x) : (pourImpression ? '' : '<span style="color:#b45309">à compléter</span>'); };
+      var aut = l.aut === true ? (s.titre_travail_type || s.titre_travail_num ? esc([s.titre_travail_type, s.titre_travail_num].filter(Boolean).join(' n° ')) : v('')) : (l.aut === false ? 'Non requise' : v(''));
+      h += '<tr><td style="' + td + '">' + l.n + '</td><td style="' + td + '"><b>' + esc(String(s.nom || '').toUpperCase()) + '</b> ' + esc(s.prenom || '') + '</td>'
+        + '<td style="' + td + '">' + v(s.nationalite) + '</td><td style="' + td + '">' + v(dateFr(s.naissance_date)) + '</td><td style="' + td + '">' + v(s.sexe) + '</td>'
+        + '<td style="' + td + '">' + v(s.poste) + '</td><td style="' + td + '">' + v(s.qualification) + '</td><td style="' + td + '">' + v(dateFr(s.date_embauche)) + '</td>'
+        + '<td style="' + td + '">' + (s.date_sortie ? esc(dateFr(s.date_sortie)) : (s.statut === 'ancien' ? v('') : '')) + '</td>'
+        + '<td style="' + td + '">' + v(typeContrat(s)) + '</td><td style="' + td + '">' + aut + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
+  function vueRegistre() {
+    if (!encoreOuvert()) return;
+    var o = overlay();
+    o.innerHTML = '<div class="da-wrap">' + entete('personnel') + '<p class="da-note">Chargement…</p></div>'; brancher(o);
+    cacheSalaries = null;
+    chargerSalariesSiBesoin().then(function (sal) {
+      var L = lignesRegistre(sal), incomplets = L.filter(function (l) { return l.manque.length; });
+      var soc = enteteSociete();
+      var h = '<div class="da-wrap" style="max-width:1100px">' + entete('personnel')
+        + '<div class="da-item" style="cursor:default"><span class="i">📒</span><span><b>Registre unique du personnel</b><small>' + L.length + ' salarié' + (L.length > 1 ? 's' : '') + ', dans l\'ordre des embauches, y compris les départs</small></span></div>'
+        + '<div class="da-form" style="font-size:13px;gap:6px"><b>Ce que dit la loi</b>'
+        + '<span>• Obligatoire dès le premier salarié, tenu dans l\'établissement (article L1221-13 du Code du travail).</span>'
+        + '<span>• Mentions obligatoires : nom, prénoms, nationalité, date de naissance, sexe, emploi, qualification, dates d\'entrée et de sortie, type de contrat (CDD, temps partiel…), et pour un salarié étranger le type et le numéro de son autorisation de travail (articles D1221-23 à D1221-25).</span>'
+        + '<span>• Inscription dans l\'ordre des embauches, sans rien effacer. Conservation <b>5 ans après le départ</b> du salarié (article R1221-26).</span>'
+        + '<span>• À présenter à l\'inspection du travail sur demande.</span></div>';
+      if (incomplets.length) {
+        h += '<div class="da-form" style="border-color:#f59e0b;background:#fff8eb;font-size:13px;gap:4px"><b style="color:#b45309">⚠ ' + incomplets.length + ' ligne' + (incomplets.length > 1 ? 's' : '') + ' incomplète' + (incomplets.length > 1 ? 's' : '') + '</b>'
+          + incomplets.map(function (l) { return '<button type="button" class="da-btn" data-da="fiche:' + esc(l.s.id) + '" style="text-align:left">' + esc(((l.s.prenom || '') + ' ' + (l.s.nom || '')).trim()) + ' : ' + esc(l.manque.map(function (k) { return LIB_MANQUE[k]; }).join(', ')) + ' ›</button>'; }).join('')
+          + '<span class="da-note">Les anciens salariés partis depuis moins de 5 ans doivent aussi y figurer : ajoutez-les dans Salariés avec le statut « Ancien salarié » et leur date de sortie.</span></div>';
+      }
+      h += '<div style="overflow-x:auto;background:#fff;border:1px solid #e3e4ef;border-radius:12px">' + tableRegistre(L, false) + '</div>'
+        + '<button class="da-main" type="button" id="daRegPrint">🖨️ Imprimer le registre</button>'
+        + '<button class="da-btn" type="button" id="daRegCsv">⬇️ Télécharger (tableur)</button></div>';
+      o.innerHTML = h; brancher(o); o.scrollTop = 0;
+      o.querySelector('#daRegPrint').addEventListener('click', function () {
+        var entetePrint = '<h2 style="font-family:Arial;margin:0 0 4px">Registre unique du personnel</h2><div style="font-family:Arial;font-size:11px;margin-bottom:10px">'
+          + esc(soc.nom) + ' · ' + esc(soc.adresse) + ' · ' + esc(soc.ids) + ' · édité le ' + new Date().toLocaleDateString('fr-FR') + '</div>';
+        imprimer('<style>@page{size:A4 landscape;margin:10mm}body{font-family:Arial,sans-serif}</style>' + entetePrint + tableRegistre(L, true), 'Registre unique du personnel');
+      });
+      o.querySelector('#daRegCsv').addEventListener('click', function () {
+        var lignes = [['N°', 'Nom', 'Prénoms', 'Nationalité', 'Date de naissance', 'Sexe', 'Emploi', 'Qualification', 'Date d\'entrée', 'Date de sortie', 'Type de contrat', 'Autorisation de travail']];
+        L.forEach(function (l) { var s = l.s; lignes.push([l.n, s.nom, s.prenom, s.nationalite, dateFr(s.naissance_date), s.sexe, s.poste, s.qualification, dateFr(s.date_embauche), dateFr(s.date_sortie), typeContrat(s), l.aut === false ? 'Non requise' : [s.titre_travail_type, s.titre_travail_num].filter(Boolean).join(' n° ')]); });
+        var csv = '﻿' + lignes.map(function (r) { return r.map(function (x) { return '"' + String(x == null ? '' : x).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');
+        var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'registre-unique-du-personnel.csv';
+        document.body.appendChild(a); a.click(); setTimeout(function () { try { a.remove(); } catch (e) {} }, 1000);
+      });
     });
   }
 
