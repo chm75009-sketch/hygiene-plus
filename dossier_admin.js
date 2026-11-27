@@ -566,14 +566,20 @@
       var h = '<div class="da-wrap">' + entete('menu')
         + '<div class="da-item" style="cursor:default"><span class="i">🗄️</span><span><b>Coffre-fort</b><small>✓ reçu · ＋ à ajouter</small></span></div>'
         + '<button class="da-main" type="button" data-da="import">📥 Importer plusieurs documents</button>'
-        + '<details class="da-form" open><summary style="cursor:pointer;font-weight:800">🏢 Société</summary>';
-      OBLIG_SOC.forEach(function (x) {
-        var ok = (cacheDocs || []).some(function (d) { return d.pole === x[0] && d.categorie === x[1] && !d.archive; });
-        h += '<div class="da-rub" style="border:none;padding:6px 2px;border-bottom:1px solid #eef0f6;border-radius:0"><span>' + esc(x[1]) + '</span>'
-          + (ok ? '<button class="da-btn" type="button" data-da="doc:' + x[0] + ':' + rubIndex(x[0], x[1]) + '" style="color:#15803d">✓ Voir</button>'
-                : '<button class="da-btn" type="button" data-da="ajoutsoc:' + x[0] + ':' + rubIndex(x[0], x[1]) + '" style="color:#b45309">＋ Ajouter</button>') + '</div>';
+        + '<p class="da-note">Un document n\'est enregistré qu\'une fois : ajouté ici ou dans son pôle (Associés, Déclarations), il apparaît aux deux endroits.</p>';
+      // Société : TOUTES les rubriques des pôles Associés et Déclarations (les mêmes documents que dans ces pôles)
+      [['associes', '🏛️ Dossier des associés'], ['declarations', '📋 Déclarations et obligations']].forEach(function (pp) {
+        var pole = POLES.filter(function (x) { return x.id === pp[0]; })[0];
+        h += '<details class="da-form" open><summary style="cursor:pointer;font-weight:800">' + pp[1] + '</summary>';
+        pole.rub.forEach(function (r, i) {
+          var n = (cacheDocs || []).filter(function (d) { return d.pole === pp[0] && d.categorie === r[0] && !d.archive; }).length;
+          var oblig = OBLIG_SOC.some(function (x) { return x[0] === pp[0] && x[1] === r[0]; });
+          h += '<div class="da-rub" style="border:none;padding:6px 2px;border-bottom:1px solid #eef0f6;border-radius:0"><span>' + esc(r[0]) + (oblig ? ' <small style="display:inline;color:#b45309">· obligatoire</small>' : '') + '</span>'
+            + (n ? '<button class="da-btn" type="button" data-da="doc:' + pp[0] + ':' + i + '" style="color:#15803d">✓ ' + n + ' document' + (n > 1 ? 's' : '') + '</button>'
+                 : '<button class="da-btn" type="button" data-da="ajoutsoc:' + pp[0] + ':' + i + '" style="color:' + (oblig ? '#b45309' : '#5b5e78') + '">＋ Ajouter</button>') + '</div>';
+        });
+        h += '</details>';
       });
-      h += '</details>';
       var actifs = (cacheSalaries || []).filter(function (s) { return s.statut !== 'ancien'; });
       h += '<div class="da-sect">👥 Salariés en activité · ' + actifs.length + '</div>';
       actifs.forEach(function (s) {
