@@ -174,6 +174,12 @@
         else if (a === 'echeances') vueEcheances();
         else if (a === 'procs') vueProcs();
         else if (a === 'registre') vueRegistre();
+        else if (a.indexOf('procmod:') === 0) vueProcNouvelle((cacheProcs || []).filter(function (x) { return x.id === a.slice(8); })[0]);
+        else if (a.indexOf('procarch:') === 0) archiverProc(a.slice(9));
+        else if (a.indexOf('docmod:') === 0) vueDocModifier(a.slice(7));
+        else if (a.indexOf('docarch:') === 0) archiverDocument(a.slice(8));
+        else if (a.indexOf('salarch:') === 0) archiverSalarie(a.slice(8));
+        else if (a.indexOf('salsuppr:') === 0) supprimerSalarie(a.slice(9), b);
         else if (a === 'procnew') vueProcNouvelle();
         else if (a.indexOf('procvoir:') === 0) vueProcVoir(a.slice(9));
         else if (a.indexOf('procsuppr:') === 0) supprimerProc(a.slice(10), b);
@@ -266,6 +272,11 @@
       }
     });
     h += '<p class="da-err" id="daMsg"></p><button class="da-main" type="submit">💾 Enregistrer</button></form>'
+      + (id ? '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+        + (s.statut === 'ancien' ? '<button class="da-btn" type="button" data-da="salarch:' + esc(id) + '">📤 Réintégrer (en activité)</button>'
+                                 : '<button class="da-btn" type="button" data-da="salarch:' + esc(id) + '">📦 Archiver (départ)</button>')
+        + '<button class="da-btn" type="button" data-da="salsuppr:' + esc(id) + '" style="color:#b91c1c">🗑️ Supprimer</button></div>'
+        + '<p class="da-note">Un salarié qui part s\'archive : il reste au registre du personnel 5 ans. « Supprimer » sert uniquement à effacer une fiche créée par erreur.</p>' : '')
       + (id ? '<div class="da-sect">🗄️ Coffre-fort du salarié</div><div id="daFicheCoffre"><p class="da-note">Chargement…</p></div>' : '') + '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
     if (id) chargerDocs().then(function () {
@@ -309,19 +320,23 @@
     chargerSalariesSiBesoin().then(function () { return rpc('da_documents_liste', { p_code: codeCompte(), p_pin: pinSession }); }).then(function (res) {
       if (!res || res.ok !== true) { o.innerHTML = '<div class="da-wrap">' + entete(pole) + '<p class="da-err">' + esc(messageRefus(res)) + '</p></div>'; brancher(o); return; }
       cacheDocs = res.documents || [];
-      var docs = cacheDocs.filter(function (d) { return docDansRubrique(d, pole, r[0]); });
+      var tous = cacheDocs.filter(function (d) { return docDansRubrique(d, pole, r[0]); });
+      var docs = tous.filter(function (d) { return !d.archive; }), archives = tous.filter(function (d) { return d.archive; });
       var h = '<div class="da-wrap">' + entete(pole)
         + '<div class="da-item" style="cursor:default"><span><b>' + esc(r[0]) + '</b>' + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</span></div>'
         + '<button class="da-main" type="button" data-da="ajout:' + pole + ':' + i + '">＋ Ajouter un document</button>';
       if (!docs.length) h += '<p class="da-note">Aucun document pour l\'instant.</p>';
+      var finArchives = archives.length ? '<details class="da-form"><summary style="cursor:pointer;font-weight:800">📦 Archivés · ' + archives.length + '</summary>' + archives.map(ligneDoc).join('') + '</details>' : '';
       docs.forEach(function (d) {
         var sal = d.salarie_id ? nomSalarie(d.salarie_id) : '';
         h += '<div class="da-rub"><span><b>' + esc(d.titre || d.nom_fichier || 'Document') + '</b><small>'
           + esc([sal, d.date_doc ? dateFr(d.date_doc) : '', taille(d.taille)].filter(Boolean).join(' · ')) + '</small></span>'
           + '<span style="display:flex;gap:6px"><button class="da-btn" type="button" data-da="voir:' + esc(d.id) + '">Voir</button>'
+          + '<button class="da-btn" type="button" data-da="docmod:' + esc(d.id) + '" aria-label="Modifier">✏️</button>'
+          + '<button class="da-btn" type="button" data-da="docarch:' + esc(d.id) + '" aria-label="' + (d.archive ? 'Désarchiver' : 'Archiver') + '">' + (d.archive ? '📤' : '📦') + '</button>'
           + '<button class="da-btn" type="button" data-da="suppr:' + esc(d.id) + '" aria-label="Supprimer">🗑️</button></span></div>';
       });
-      h += '</div>';
+      h += finArchives + '</div>';
       o.innerHTML = h; brancher(o); o.scrollTop = 0;
     }, function () { o.innerHTML = '<div class="da-wrap">' + entete(pole) + '<p class="da-err">Pas de connexion internet.</p></div>'; brancher(o); });
   }
@@ -416,6 +431,71 @@
     });
   }
 
+  // ── Archiver / supprimer un salarié ──
+  function archiverSalarie(id) {
+    if (!encoreOuvert()) return;
+    var s = (cacheSalaries || []).filter(function (x) { return x.id === id; })[0]; if (!s) return vueSalaries();
+    var data = JSON.parse(JSON.stringify(s));
+    if (s.statut === 'ancien') { data.statut = 'actif'; data.date_sortie = null; }
+    else {
+      var d = prompt('Date de sortie du salarié (JJ/MM/AAAA) :', new Date().toLocaleDateString('fr-FR'));
+      if (d === null) return;
+      var m = String(d).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (!m) { alert('Date non reconnue. Exemple : 30/11/2026'); return; }
+      data.statut = 'ancien'; data.date_sortie = m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2);
+    }
+    rpc('da_enregistrer_salarie', { p_code: codeCompte(), p_pin: pinSession, p_s: data }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      cacheSalaries = null; vueSalaries();
+    });
+  }
+  function supprimerSalarie(id, btn) {
+    if (!encoreOuvert()) return;
+    if (btn.getAttribute('data-confirme') !== '1') { btn.setAttribute('data-confirme', '1'); btn.textContent = 'Effacer aussi ses documents ? Toucher pour confirmer'; return; }
+    rpc('da_supprimer_salarie', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      cacheSalaries = null; cacheDocs = null; vueSalaries();
+    });
+  }
+  function archiverDocument(id) {
+    if (!encoreOuvert()) return;
+    var d = (cacheDocs || []).filter(function (x) { return x.id === id; })[0]; if (!d) return;
+    rpc('da_document_modifier', { p_code: codeCompte(), p_pin: pinSession, p_id: id, p_d: { archive: !d.archive } }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      cacheDocs = null;
+      if (docCourant) vueDocs(docCourant.pole, docCourant.i); else vueCoffre();
+    });
+  }
+  // ── Modifier un document (titre, type, salarié, date) ──
+  function vueDocModifier(id) {
+    if (!encoreOuvert()) return;
+    var retour = docCourant ? 'doc:' + docCourant.pole + ':' + docCourant.i : 'coffre';
+    chargerDocs().then(function (docs) {
+      var d = docs.filter(function (x) { return x.id === id; })[0]; if (!d) return allerA(retour);
+      return chargerSalariesSiBesoin().then(function (sal) {
+        var o = overlay(), cats = toutesCategories(), val = d.pole + '|' + d.categorie;
+        var optSal = '<option value="">— Société (aucun salarié) —</option>' + sal.map(function (s) { return '<option value="' + esc(s.id) + '"' + (s.id === d.salarie_id ? ' selected' : '') + '>' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + '</option>'; }).join('');
+        o.innerHTML = '<div class="da-wrap">' + entete(retour) + '<form class="da-form" id="dadm"><b style="font-size:17px">Modifier le document</b>'
+          + '<label for="dadm_t">Titre<input id="dadm_t" value="' + esc(d.titre || '') + '"></label>'
+          + '<label for="dadm_c">Type<select id="dadm_c">' + cats.map(function (c) { var v = c[0] + '|' + c[1]; return '<option value="' + esc(v) + '"' + (v === val ? ' selected' : '') + '>' + esc(c[2]) + '</option>'; }).join('') + '</select></label>'
+          + '<label for="dadm_s">Salarié<select id="dadm_s">' + optSal + '</select></label>'
+          + '<label for="dadm_d">Date du document<input id="dadm_d" type="date" value="' + esc(d.date_doc ? String(d.date_doc).slice(0, 10) : '') + '"></label>'
+          + '<p class="da-err" id="dadmMsg"></p><button class="da-main" type="submit">💾 Enregistrer</button></form></div>';
+        brancher(o); o.scrollTop = 0;
+        o.querySelector('#dadm').addEventListener('submit', function (e) {
+          e.preventDefault(); if (!encoreOuvert()) return;
+          var cv = o.querySelector('#dadm_c').value.split('|'), sv = o.querySelector('#dadm_s').value;
+          rpc('da_document_modifier', { p_code: codeCompte(), p_pin: pinSession, p_id: id, p_d: {
+            titre: o.querySelector('#dadm_t').value.trim(), pole: cv[0], categorie: cv[1], salarie_id: cv[0] === 'personnel' && sv ? sv : null,
+            date_doc: o.querySelector('#dadm_d').value || null } }).then(function (r) {
+            if (!r || r.ok !== true) { o.querySelector('#dadmMsg').textContent = messageRefus(r); return; }
+            cacheDocs = null; allerA(retour);
+          });
+        });
+      });
+    });
+  }
+
   // ── Types de documents du personnel (rangés dans les rubriques du pôle) ──
   var TYPES_PERSO = [
     ['Contrat de travail', 'Embauche'], ['Avenant', 'Embauche'], ['Déclaration d\'embauche (DPAE)', 'Embauche'],
@@ -445,11 +525,11 @@
   }
   function ligneDoc(d) {
     return '<div class="da-rub"><span><b>' + esc(d.titre || d.nom_fichier || 'Document') + '</b><small>' + esc([d.categorie, d.date_doc ? dateFr(d.date_doc) : '', taille(d.taille)].filter(Boolean).join(' · ')) + '</small></span>'
-      + '<span style="display:flex;gap:6px"><button class="da-btn" type="button" data-da="voir:' + esc(d.id) + '">Voir</button><button class="da-btn" type="button" data-da="suppr:' + esc(d.id) + '" aria-label="Supprimer">🗑️</button></span></div>';
+      + '<span style="display:flex;gap:6px"><button class="da-btn" type="button" data-da="voir:' + esc(d.id) + '">Voir</button><button class="da-btn" type="button" data-da="docmod:' + esc(d.id) + '" aria-label="Modifier">✏️</button><button class="da-btn" type="button" data-da="docarch:' + esc(d.id) + '" aria-label="' + (d.archive ? 'Désarchiver' : 'Archiver') + '">' + (d.archive ? '📤' : '📦') + '</button><button class="da-btn" type="button" data-da="suppr:' + esc(d.id) + '" aria-label="Supprimer">🗑️</button></span></div>';
   }
   // Coffre-fort d'un salarié : documents attendus ✓/✗ + documents rangés. suffixe 'c' = retour au coffre-fort
   function blocCoffreSalarie(s, suffixe) {
-    var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id; });
+    var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id && !d.archive; });
     var h = '<div class="da-form" style="gap:6px">';
     OBLIG_PERSO.forEach(function (types) {
       var ok = docs.some(function (d) { return types.indexOf(d.categorie) > -1; });
@@ -474,7 +554,7 @@
         + '<button class="da-main" type="button" data-da="import">📥 Importer plusieurs documents</button>'
         + '<details class="da-form" open><summary style="cursor:pointer;font-weight:800">🏢 Société</summary>';
       OBLIG_SOC.forEach(function (x) {
-        var ok = (cacheDocs || []).some(function (d) { return d.pole === x[0] && d.categorie === x[1]; });
+        var ok = (cacheDocs || []).some(function (d) { return d.pole === x[0] && d.categorie === x[1] && !d.archive; });
         h += '<div class="da-rub" style="border:none;padding:6px 2px;border-bottom:1px solid #eef0f6;border-radius:0"><span>' + esc(x[1]) + '</span>'
           + (ok ? '<button class="da-btn" type="button" data-da="doc:' + x[0] + ':' + rubIndex(x[0], x[1]) + '" style="color:#15803d">✓ Voir</button>'
                 : '<button class="da-btn" type="button" data-da="ajoutsoc:' + x[0] + ':' + rubIndex(x[0], x[1]) + '" style="color:#b45309">＋ Ajouter</button>') + '</div>';
@@ -483,7 +563,7 @@
       var actifs = (cacheSalaries || []).filter(function (s) { return s.statut !== 'ancien'; });
       h += '<div class="da-sect">👥 Salariés en activité · ' + actifs.length + '</div>';
       actifs.forEach(function (s) {
-        var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id; });
+        var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id && !d.archive; });
         var manque = OBLIG_PERSO.filter(function (types) { return !docs.some(function (d) { return types.indexOf(d.categorie) > -1; }); }).length;
         h += '<details class="da-form"><summary style="cursor:pointer;display:flex;justify-content:space-between;gap:8px;font-weight:800"><span>' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + '</span>'
           + (manque ? '<span class="da-warn" style="margin:0">' + manque + ' manquant' + (manque > 1 ? 's' : '') + '</span>' : '<span class="da-go" style="background:#e8f6ed;color:#15803d">complet</span>') + '</summary>'
@@ -866,11 +946,14 @@
       var h = '<div class="da-wrap">' + entete('personnel') + '<div class="da-item" style="cursor:default"><span class="i">⚖️</span><span><b>Procédures</b><small>Lettres et convocations, rangées par salarié</small></span></div>'
         + '<button class="da-main" type="button" data-da="procnew">＋ Nouvelle procédure</button>';
       if (!cacheProcs.length) h += '<p class="da-note">Aucune procédure enregistrée.</p>';
-      cacheProcs.forEach(function (p) {
+      function ligneProc(p) {
         var t = TYPES_PROC[p.type] || { titre: p.type };
-        h += '<button class="da-item" type="button" data-da="procvoir:' + esc(p.id) + '"><span class="i">' + (t.lourd ? '🔴' : '🟠') + '</span><span><b>' + esc(t.titre) + ' — ' + esc(nomSalarie(p.salarie_id) || '?') + '</b><small>'
+        return '<button class="da-item" type="button" data-da="procvoir:' + esc(p.id) + '"><span class="i">' + (p.statut === 'archivee' ? '📦' : (t.lourd ? '🔴' : '🟠')) + '</span><span><b>' + esc(t.titre) + ' — ' + esc(nomSalarie(p.salarie_id) || '?') + '</b><small>'
           + esc(['Lettre du ' + dateFr(p.date_lettre), p.date_entretien ? 'entretien le ' + dateFr(p.date_entretien) : ''].filter(Boolean).join(' · ')) + '</small></span><span class="ch">›</span></button>';
-      });
+      }
+      var enCours = cacheProcs.filter(function (p) { return p.statut !== 'archivee'; }), archives = cacheProcs.filter(function (p) { return p.statut === 'archivee'; });
+      h += enCours.map(ligneProc).join('');
+      if (archives.length) h += '<details class="da-form"><summary style="cursor:pointer;font-weight:800">📦 Archivées · ' + archives.length + '</summary>' + archives.map(ligneProc).join('') + '</details>';
       h += '</div>';
       o.innerHTML = h; brancher(o); o.scrollTop = 0;
     }, function () { o.innerHTML = '<div class="da-wrap">' + entete('personnel') + '<p class="da-err">Pas de connexion internet.</p></div>'; brancher(o); });
@@ -884,16 +967,27 @@
     o.innerHTML = '<div class="da-wrap">' + entete('procs') + '<b style="font-size:17px">' + esc(t.titre) + ' — ' + esc(nomSalarie(p.salarie_id)) + '</b>'
       + '<div style="background:#fff;border-radius:8px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow-x:auto">' + html + '</div>'
       + '<button class="da-main" type="button" id="daProcPrint">🖨️ Imprimer</button>'
-      + '<button class="da-btn" type="button" data-da="procsuppr:' + esc(p.id) + '" style="color:#b91c1c">🗑️ Supprimer cette procédure</button></div>';
+      + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'
+      + '<button class="da-btn" type="button" data-da="procmod:' + esc(p.id) + '">✏️ Modifier</button>'
+      + '<button class="da-btn" type="button" data-da="procarch:' + esc(p.id) + '">' + (p.statut === 'archivee' ? '📤 Désarchiver' : '📦 Archiver') + '</button>'
+      + '<button class="da-btn" type="button" data-da="procsuppr:' + esc(p.id) + '" style="color:#b91c1c">🗑️ Supprimer</button></div></div>';
     brancher(o); o.scrollTop = 0;
     o.querySelector('#daProcPrint').addEventListener('click', function () { imprimer(html, t.titre); });
+  }
+  function archiverProc(id) {
+    if (!encoreOuvert()) return;
+    var p = (cacheProcs || []).filter(function (x) { return x.id === id; })[0]; if (!p) return vueProcs();
+    rpc('da_procedure_modifier', { p_code: codeCompte(), p_pin: pinSession, p_id: id, p_p: { statut: p.statut === 'archivee' ? 'preparee' : 'archivee' } }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      vueProcs();
+    });
   }
   function supprimerProc(id, btn) {
     if (!encoreOuvert()) return;
     if (btn.getAttribute('data-confirme') !== '1') { btn.setAttribute('data-confirme', '1'); btn.textContent = 'Toucher encore pour confirmer la suppression'; return; }
     rpc('da_procedure_supprimer', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function () { vueProcs(); });
   }
-  function vueProcNouvelle() {
+  function vueProcNouvelle(pEdit) {
     if (!encoreOuvert()) return;
     var o = overlay();
     chargerSalariesSiBesoin().then(function (sal) {
@@ -904,7 +998,7 @@
         + '<optgroup label="Autre"><option value="__autre__" data-h="0">Autre (à préciser)</option></optgroup>';
       var types = Object.keys(TYPES_PROC).map(function (k) { var t = TYPES_PROC[k]; return '<button type="button" class="da-btn dap-type" data-t="' + k + '" style="text-align:left;border-radius:12px;padding:10px">' + esc(t.titre) + '<br><small style="font-weight:500;color:' + (t.lourd ? '#b91c1c' : '#5b5e78') + '">' + (t.lourd ? 'entretien préalable obligatoire' : 'lettre à signer') + '</small></button>'; }).join('');
       o.innerHTML = '<div class="da-wrap">' + entete('procs') + '<form class="da-form" id="dapForm">'
-        + '<b style="font-size:17px">Nouvelle procédure</b>'
+        + '<b style="font-size:17px">' + (pEdit ? 'Modifier la procédure' : 'Nouvelle procédure') + '</b>'
         + '<label for="dap_sal">Salarié<select id="dap_sal">' + optSal + '</select></label>'
         + '<label for="dap_civ">Civilité<select id="dap_civ"><option>Monsieur</option><option>Madame</option></select></label>'
         + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="dapTypes">' + types + '</div>'
@@ -932,6 +1026,15 @@
       brancher(o); o.scrollTop = 0;
       var type = 'rappel', entManuel = false;
       function $(id) { return o.querySelector('#' + id); }
+      if (pEdit && pEdit.donnees) {
+        var dv = pEdit.donnees; type = pEdit.type || dv.type || 'rappel'; entManuel = true;
+        var map = { dap_sal: pEdit.salarie_id, dap_civ: dv.civ, dap_df: dv.date_faits, dap_h: dv.heure, dap_lieu: dv.lieu, dap_faits: dv.faits, dap_dem: dv.demande,
+          dap_de: dv.date_ent, dap_he: dv.heure_ent, dap_le: dv.lieu_ent, dap_mapc: dv.map_cons ? '1' : '', dap_dl: dv.date_lettre, dap_rem: dv.remise };
+        Object.keys(map).forEach(function (k) { if (map[k] != null && $(k)) $(k).value = map[k]; });
+        var rs = $('dap_regle'); rs.value = dv.regle || '';
+        if (dv.regle && rs.value !== dv.regle) { rs.value = '__autre__'; $('dap_autre').value = dv.regle; }
+        if (dv.soc) Object.keys(dv.soc).forEach(function (k) { if ($('dap_s_' + k)) $('dap_s_' + k).value = dv.soc[k] || ''; });
+      }
       function lire() {
         var sel = $('dap_regle'), opt = sel.selectedOptions[0];
         var socv = {}; ['nom', 'forme', 'adresse', 'ids', 'tel', 'ville', 'signataire', 'mairie', 'inspection'].forEach(function (k) { socv[k] = $('dap_s_' + k).value.trim(); });
@@ -975,9 +1078,11 @@
         memoriserEntete(f.soc);
         msg.style.color = '#5b5e78'; msg.textContent = 'Enregistrement…';
         var donnees = JSON.parse(JSON.stringify(f)); donnees.html = $('dapLettre').innerHTML;
-        rpc('da_procedure_enregistrer', { p_code: codeCompte(), p_pin: pinSession, p_p: {
-          salarie_id: f.salarie_id, type: f.type, statut: 'preparee', date_lettre: f.date_lettre || null,
-          date_entretien: TYPES_PROC[f.type].lourd && f.date_ent ? f.date_ent + 'T' + (f.heure_ent || '00:00') + ':00' : null, donnees: donnees } }).then(function (r) {
+        var donneesProc = {
+          salarie_id: f.salarie_id, type: f.type, statut: (pEdit && pEdit.statut) || 'preparee', date_lettre: f.date_lettre || null,
+          date_entretien: TYPES_PROC[f.type].lourd && f.date_ent ? f.date_ent + 'T' + (f.heure_ent || '00:00') + ':00' : null, donnees: donnees };
+        (pEdit ? rpc('da_procedure_modifier', { p_code: codeCompte(), p_pin: pinSession, p_id: pEdit.id, p_p: donneesProc })
+               : rpc('da_procedure_enregistrer', { p_code: codeCompte(), p_pin: pinSession, p_p: donneesProc })).then(function (r) {
           if (!r || r.ok !== true) { msg.style.color = '#b91c1c'; msg.textContent = messageRefus(r); return; }
           vueProcs();
         }, function () { msg.style.color = '#b91c1c'; msg.textContent = 'Pas de connexion internet : rien n\'a été enregistré.'; });
