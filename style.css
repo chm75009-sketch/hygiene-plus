@@ -567,13 +567,18 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 }
 .btn-s:hover{background:var(--cream);border-color:#dcdcdc}
 
-/* ── BOTTOM NAV : flex-item en bas, pas de position:fixed ── */
-/* Grâce au layout flex sur .app (height:100vh, flex-direction:column)
-   et .scroll {flex:1}, la bnav reste naturellement en bas de l'app
-   = en bas du viewport. Pas besoin de position:fixed */
+/* ── BOTTOM NAV : fixed sur body, hors de .app ── */
+/* La bnav est maintenant un enfant direct de <body>, sortie de .app.
+   Aucun parent ne peut créer de containing block (.app a transform:none
+   forcé). position:fixed est donc relatif au viewport. */
 .bnav{
-  position:static !important;
-  flex-shrink:0;
+  position:fixed !important;
+  bottom:0 !important;
+  left:50% !important;
+  right:auto !important;
+  transform:translateX(-50%) !important;
+  width:100% !important;
+  max-width:480px !important;
   background:rgba(255,255,255,.96);
   backdrop-filter:saturate(180%) blur(18px);
   -webkit-backdrop-filter:saturate(180%) blur(18px);
@@ -581,8 +586,8 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
   display:flex;padding:8px 0 env(safe-area-inset-bottom,10px);
   z-index:200;
 }
-/* .scroll prend toute la hauteur restante et scrolle en interne */
-.scroll{flex:1 1 auto !important;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:0}
+/* .scroll porte le défilement interne avec padding pour la bnav */
+.scroll{flex:1 1 auto !important;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
 /* La bnav ne s'affiche que quand l'utilisateur est connecté à l'app :
    les pages de connexion/présentation la masquent déjà via .app:has() */
 .app:has(#page-presentation.active) .bnav,
