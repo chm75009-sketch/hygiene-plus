@@ -159,6 +159,11 @@
         else if (a === 'salaries') vueSalaries();
         else if (a === 'nouveau') vueFiche(null);
         else if (a.indexOf('fiche:') === 0) vueFiche(a.slice(6));
+        else if (a.indexOf('doc:') === 0) { var q = a.split(':'); vueDocs(q[1], +q[2]); }
+        else if (a.indexOf('voir:') === 0) voirDocument(a.slice(5));
+        else if (a.indexOf('suppr:') === 0) supprimerDocument(a.slice(6), b);
+        else if (a.indexOf('ajout:') === 0) { var q2 = a.split(':'); vueAjoutDoc(q2[1], +q2[2]); }
+        else if (a === 'echeances') vueEcheances();
         else vuePole(a);
       });
     });
@@ -186,10 +191,12 @@
     var o = overlay();
     var h = '<div class="da-wrap">' + entete('menu')
       + '<div class="da-item" style="cursor:default"><span class="i">' + p.ico + '</span><span><b>' + esc(p.titre) + '</b><small>' + esc(p.sous) + '</small></span></div>';
-    p.rub.forEach(function (r) {
+    p.rub.forEach(function (r, i) {
       var inner = '<span><b>' + esc(r[0]) + '</b>' + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</span>';
-      h += r[2] ? '<button class="da-rub" type="button" data-da="' + r[2] + '">' + inner + '<span class="da-go">Ouvrir ›</span></button>'
-                : '<div class="da-rub">' + inner + '<span class="da-soon">bientôt</span></div>';
+      // Rubriques de documents : tous les pôles sauf Échéances, hors « Procédures » (à venir)
+      var action = r[2] || ((p.id !== 'echeances' && r[0] !== 'Procédures') ? 'doc:' + p.id + ':' + i : '');
+      h += action ? '<button class="da-rub" type="button" data-da="' + action + '">' + inner + '<span class="da-go">Ouvrir ›</span></button>'
+                  : '<div class="da-rub">' + inner + '<span class="da-soon">bientôt</span></div>';
     });
     h += '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
@@ -262,6 +269,153 @@
         if (!r || r.ok !== true) { msg.style.color = '#b91c1c'; msg.textContent = messageRefus(r); return; }
         vueSalaries();
       }, function () { msg.style.color = '#b91c1c'; msg.textContent = 'Pas de connexion internet : rien n\'a été enregistré.'; });
+    });
+  }
+
+  // ── Documents du coffre-fort (fichiers gardés dans la base, lus avec le code) ──
+  var cacheDocs = null, docCourant = null;
+  function rubrique(pole, i) { var p = POLES.filter(function (x) { return x.id === pole; })[0]; return p ? p.rub[i] : null; }
+  function nomSalarie(id) { var s = (cacheSalaries || []).filter(function (x) { return x.id === id; })[0]; return s ? ((s.prenom || '') + ' ' + (s.nom || '')).trim() : ''; }
+  function chargerSalariesSiBesoin() {
+    if (cacheSalaries) return Promise.resolve(cacheSalaries);
+    return rpc('da_salaries', { p_code: codeCompte(), p_pin: pinSession }).then(function (r) { cacheSalaries = (r && r.ok) ? (r.salaries || []) : []; return cacheSalaries; });
+  }
+  function taille(n) { n = +n || 0; return n > 1048576 ? (n / 1048576).toFixed(1) + ' Mo' : Math.max(1, Math.round(n / 1024)) + ' Ko'; }
+  function vueDocs(pole, i) {
+    if (!encoreOuvert()) return;
+    var r = rubrique(pole, i); if (!r) return vueMenu();
+    docCourant = { pole: pole, i: i };
+    var o = overlay();
+    o.innerHTML = '<div class="da-wrap">' + entete(pole) + '<p class="da-note">Chargement…</p></div>'; brancher(o);
+    chargerSalariesSiBesoin().then(function () { return rpc('da_documents_liste', { p_code: codeCompte(), p_pin: pinSession }); }).then(function (res) {
+      if (!res || res.ok !== true) { o.innerHTML = '<div class="da-wrap">' + entete(pole) + '<p class="da-err">' + esc(messageRefus(res)) + '</p></div>'; brancher(o); return; }
+      cacheDocs = res.documents || [];
+      var docs = cacheDocs.filter(function (d) { return d.pole === pole && d.categorie === r[0]; });
+      var h = '<div class="da-wrap">' + entete(pole)
+        + '<div class="da-item" style="cursor:default"><span><b>' + esc(r[0]) + '</b>' + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</span></div>'
+        + '<button class="da-main" type="button" data-da="ajout:' + pole + ':' + i + '">＋ Ajouter un document</button>';
+      if (!docs.length) h += '<p class="da-note">Aucun document pour l\'instant.</p>';
+      docs.forEach(function (d) {
+        var sal = d.salarie_id ? nomSalarie(d.salarie_id) : '';
+        h += '<div class="da-rub"><span><b>' + esc(d.titre || d.nom_fichier || 'Document') + '</b><small>'
+          + esc([sal, d.date_doc ? dateFr(d.date_doc) : '', taille(d.taille)].filter(Boolean).join(' · ')) + '</small></span>'
+          + '<span style="display:flex;gap:6px"><button class="da-btn" type="button" data-da="voir:' + esc(d.id) + '">Voir</button>'
+          + '<button class="da-btn" type="button" data-da="suppr:' + esc(d.id) + '" aria-label="Supprimer">🗑️</button></span></div>';
+      });
+      h += '</div>';
+      o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    }, function () { o.innerHTML = '<div class="da-wrap">' + entete(pole) + '<p class="da-err">Pas de connexion internet.</p></div>'; brancher(o); });
+  }
+  // Photo réduite (1600 px, JPEG) pour ne pas alourdir la base ; PDF envoyé tel quel.
+  function lireFichier(f) {
+    return new Promise(function (ok, ko) {
+      var rd = new FileReader();
+      rd.onerror = function () { ko(new Error('lecture')); };
+      if (/^image\//.test(f.type)) {
+        rd.onload = function () {
+          var img = new Image();
+          img.onload = function () {
+            var max = 1600, w = img.width, h = img.height, k = Math.min(1, max / Math.max(w, h));
+            var c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            var url = c.toDataURL('image/jpeg', 0.82);
+            ok({ type: 'image/jpeg', b64: url.split(',')[1], nom: f.name.replace(/\.[^.]+$/, '') + '.jpg' });
+          };
+          img.onerror = function () { ko(new Error('image')); };
+          img.src = rd.result;
+        };
+      } else {
+        rd.onload = function () { ok({ type: f.type || 'application/octet-stream', b64: String(rd.result).split(',')[1], nom: f.name }); };
+      }
+      rd.readAsDataURL(f);
+    });
+  }
+  function vueAjoutDoc(pole, i) {
+    if (!encoreOuvert()) return;
+    var r = rubrique(pole, i); if (!r) return vueMenu();
+    var o = overlay();
+    chargerSalariesSiBesoin().then(function (sal) {
+      var optSal = '<option value="">— Aucun (document de la société) —</option>' + sal.map(function (s) { return '<option value="' + esc(s.id) + '">' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + (s.statut === 'ancien' ? ' (ancien)' : '') + '</option>'; }).join('');
+      o.innerHTML = '<div class="da-wrap">' + entete('doc:' + pole + ':' + i) + '<form class="da-form" id="daDoc">'
+        + '<b style="font-size:17px">Ajouter : ' + esc(r[0]) + '</b>'
+        + '<label for="daf_fichier">Fichier (photo ou PDF)<input id="daf_fichier" type="file" accept="image/*,application/pdf" required></label>'
+        + '<label for="daf_titre">Titre<input id="daf_titre" placeholder="Ex. : Contrat CDI signé"></label>'
+        + (pole === 'personnel' ? '<label for="daf_sal">Salarié concerné<select id="daf_sal">' + optSal + '</select></label>' : '')
+        + '<label for="daf_date">Date du document<input id="daf_date" type="date"></label>'
+        + '<p class="da-err" id="dafMsg"></p><button class="da-main" type="submit">💾 Enregistrer le document</button></form></div>';
+      brancher(o); o.scrollTop = 0;
+      o.querySelector('#daDoc').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!encoreOuvert()) return;
+        var f = o.querySelector('#daf_fichier').files[0], msg = o.querySelector('#dafMsg');
+        if (!f) { msg.textContent = 'Choisissez un fichier.'; return; }
+        msg.style.color = '#5b5e78'; msg.textContent = 'Préparation du fichier…';
+        lireFichier(f).then(function (x) {
+          if (x.b64.length > 9000000) { msg.style.color = '#b91c1c'; msg.textContent = 'Fichier trop gros (6 Mo maximum).'; return; }
+          msg.textContent = 'Envoi…';
+          var sel = o.querySelector('#daf_sal');
+          return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
+            pole: pole, categorie: r[0], titre: o.querySelector('#daf_titre').value.trim() || x.nom,
+            salarie_id: sel && sel.value ? sel.value : null, date_doc: o.querySelector('#daf_date').value || null,
+            nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } }).then(function (res) {
+            if (!res || res.ok !== true) { msg.style.color = '#b91c1c'; msg.textContent = res && res.raison === 'fichier_trop_gros' ? 'Fichier trop gros (6 Mo maximum).' : messageRefus(res); return; }
+            vueDocs(pole, i);
+          });
+        }).catch(function () { msg.style.color = '#b91c1c'; msg.textContent = 'Envoi impossible. Vérifiez la connexion internet.'; });
+      });
+    });
+  }
+  function voirDocument(id) {
+    if (!encoreOuvert()) return;
+    rpc('da_document_lire', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      var bin = atob(r.contenu), arr = new Uint8Array(bin.length);
+      for (var k = 0; k < bin.length; k++) arr[k] = bin.charCodeAt(k);
+      var url = URL.createObjectURL(new Blob([arr], { type: r.type_mime || 'application/octet-stream' }));
+      var o = overlay(), retour = docCourant ? 'doc:' + docCourant.pole + ':' + docCourant.i : 'menu';
+      var vue = /^image\//.test(r.type_mime) ? '<img src="' + url + '" alt="' + esc(r.nom_fichier) + '" style="width:100%;border-radius:12px;background:#fff">'
+        : '<iframe src="' + url + '" title="' + esc(r.nom_fichier) + '" style="width:100%;height:70vh;border:1px solid #e3e4ef;border-radius:12px;background:#fff"></iframe>';
+      o.innerHTML = '<div class="da-wrap">' + entete(retour) + '<b>' + esc(r.nom_fichier) + '</b>' + vue
+        + '<a class="da-main" style="text-align:center;text-decoration:none" href="' + url + '" download="' + esc(r.nom_fichier) + '" target="_blank" rel="noopener">⬇️ Télécharger / ouvrir</a></div>';
+      brancher(o); o.scrollTop = 0;
+    }, function () { alert('Pas de connexion internet.'); });
+  }
+  // Suppression en deux touchers (le premier demande confirmation)
+  function supprimerDocument(id, btn) {
+    if (!encoreOuvert()) return;
+    if (btn.getAttribute('data-confirme') !== '1') { btn.setAttribute('data-confirme', '1'); btn.textContent = 'Confirmer ?'; btn.style.color = '#b91c1c'; return; }
+    rpc('da_document_supprimer', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function () {
+      if (docCourant) vueDocs(docCourant.pole, docCourant.i); else vueMenu();
+    });
+  }
+
+  // ── Échéances calculées à partir des fiches salariés ──
+  function vueEcheances() {
+    if (!encoreOuvert()) return;
+    var o = overlay();
+    o.innerHTML = '<div class="da-wrap">' + entete('menu') + '<p class="da-note">Chargement…</p></div>'; brancher(o);
+    cacheSalaries = null;
+    chargerSalariesSiBesoin().then(function (sal) {
+      var auj = new Date(); auj.setHours(0, 0, 0, 0);
+      var items = [];
+      sal.filter(function (s) { return s.statut !== 'ancien'; }).forEach(function (s) {
+        var nom = ((s.prenom || '') + ' ' + (s.nom || '')).trim();
+        [['essai_fin', 'Fin de période d\'essai'], ['titre_sejour_fin', 'Fin du titre de séjour']].forEach(function (c) {
+          if (!s[c[0]]) return;
+          var d = new Date(String(s[c[0]]).slice(0, 10) + 'T00:00:00'), j = Math.round((d - auj) / 86400000);
+          if (j < -30) return; // échéance passée depuis plus d'un mois : terminée
+          items.push({ j: j, txt: c[1] + ' — ' + nom, date: dateFr(s[c[0]]) });
+        });
+      });
+      items.sort(function (a, b) { return a.j - b.j; });
+      var h = '<div class="da-wrap">' + entete('menu') + '<div class="da-item" style="cursor:default"><span class="i">⏰</span><span><b>Échéances</b><small>Calculées à partir des fiches salariés</small></span></div>';
+      if (!items.length) h += '<p class="da-note">Aucune échéance à venir.</p>';
+      items.forEach(function (it) {
+        var etat = it.j < 0 ? 'passée' : (it.j === 0 ? 'aujourd\'hui' : 'dans ' + it.j + ' j');
+        h += '<div class="da-rub"><span><b>' + esc(it.txt) + '</b><small>' + esc(it.date) + '</small></span><span class="' + (it.j <= 15 ? 'da-warn' : 'da-go') + '">' + esc(etat) + '</span></div>';
+      });
+      h += '<p class="da-note">Les visites médicales et les entretiens s\'ajouteront avec les prochaines rubriques.</p></div>';
+      o.innerHTML = h; brancher(o); o.scrollTop = 0;
     });
   }
 
