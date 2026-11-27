@@ -7862,6 +7862,32 @@ var COLOR_FROM={c1:'#f97316',c2:'#7c3aed',c3:'#0891b2',c4:'#db2777',c5:'#16a34a'
 var COLOR_TO={c1:'#fb923c',c2:'#a78bfa',c3:'#22d3ee',c4:'#f472b6',c5:'#4ade80',c6:'#f87171',c7:'#38bdf8',c8:'#fbbf24',c9:'#2dd4bf',c10:'#34d399',c11:'#6b7280',c12:'#3b82f6',c13:'#d97706',c14:'#c084fc',c15:'#fb7185',c16:'#818cf8',c17:'#0ea5e9',c18:'#22c55e',c19:'#6366f1',c20:'#f59e0b'};
 var currentCat = 'quotidien';
 
+// SVG icons monochromes pour les modules (Lucide / Tabler style)
+var MOD_ICO_SVG = {
+  reception:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+  temperatures: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>',
+  hygiene:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M12 2v8M12 12c-3 0-6 2-6 5v5h12v-5c0-3-3-5-6-5z"/></svg>',
+  nettoyage:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h8l3-10-3-3-5 5-3 8z"/><path d="M14 11l6-6a2 2 0 0 0-3-3l-6 6"/></svg>',
+  cuisson:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><circle cx="12" cy="13" r="3"/><path d="M2 13h3M19 13h3"/></svg>',
+  refroidissement:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>',
+  huiles:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8v3H8z"/><path d="M6 5h12v2l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 7V5z"/><path d="M10 11v4M14 11v4"/></svg>',
+  etiquetage:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+  pertes:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>',
+  nuisibles:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="5"/><path d="M12 8v-2M12 18v2M7 13H4M20 13h-3M8 9l-2-2M18 9l2-2M8 17l-2 2M18 17l2 2"/></svg>',
+  dechets:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 19l-3-5 3-5M17 5l3 5-3 5M17 5h-7l-3 5M7 19h7l3-5"/></svg>',
+  documents:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>',
+  affichage:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L10 6l-6 1 4.5 4.5L7 18l5-3 5 3-1.5-6.5L20 7l-6-1z"/></svg>',
+  nc:           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  audits:       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+  dashboard:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg>',
+  exports:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="8 13 12 17 16 13"/><line x1="12" y1="17" x2="12" y2="10"/></svg>',
+  allergenes:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 8l8 8M16 8l-8 8"/></svg>',
+  'plat-temoin':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-9 9 9 9 0 0 1-9-9z"/><line x1="12" y1="3" x2="12" y2="11"/></svg>',
+  'liaison-thermique':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M8 4l4 2 4-2M7 10c2 4 8 4 10 0M4 14c3 5 13 5 16 0M3 18c3 4 15 4 18 0"/></svg>',
+  'registre-convives':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  'analyses-micro':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>'
+};
+
 function renderMods(cat) {
   var grid = document.getElementById('modsGrid');
   // V122 — Filtrage par secteur : un module portant une étiquette `secteurs` n'est affiché
@@ -7881,12 +7907,13 @@ function renderMods(cat) {
   function _btn(m, i) {
     var st = _statut[m.id];
     var badge = st ? ('<div class="mod-badge' + (st === 'afaire' ? ' alert' : '') + '" style="background:' + (st === 'fait' ? '#dcfce7' : '#fee2e2') + ';color:' + (st === 'fait' ? '#15803d' : '#dc2626') + '">' + (st === 'fait' ? '✅ Fait' : '⬜ À faire') + '</div>') : '';
+    var ico = (MOD_ICO_SVG && MOD_ICO_SVG[m.id]) ? MOD_ICO_SVG[m.id] : m.ico;
     return '<button class="mod ' + m.color + '" onclick="openModule(\'' + m.id + '\')" style="animation-delay:' + (i*0.04) + 's">' +
-      '<div class="mod-ico">' + m.ico + '</div>' +
+      '<div class="mod-ico">' + ico + '</div>' +
       '<div class="mod-name">' + m.name + '</div>' +
       (m.fn ? '<div class="mod-fn">' + m.fn + '</div>' : '') +
       badge +
-      (m.ddpp ? '<div class="mod-ddpp">🔴 DDPP</div>' : '') +
+      (m.ddpp ? '<div class="mod-ddpp">DDPP</div>' : '') +
       '<div class="mod-freq">' + m.freq + '</div>' +
       '</button>';
   }
