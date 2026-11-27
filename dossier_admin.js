@@ -80,6 +80,19 @@
   function dateFr(v) { if (!v) return ''; var p = String(v).slice(0, 10).split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : v; }
 
   // Appel d'une fonction serveur du dossier (le code secret est envoyé à chaque fois)
+  // Envoi d'un gros fichier avec suivi de la progression (pourcentage affiché pendant l'envoi)
+  function rpcAvecProgression(nom, params, surProgression) {
+    return new Promise(function (ok, ko) {
+      var cle = (typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '');
+      var x = new XMLHttpRequest();
+      x.open('POST', (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '') + '/rest/v1/rpc/' + nom);
+      x.setRequestHeader('apikey', cle); x.setRequestHeader('Authorization', 'Bearer ' + cle); x.setRequestHeader('Content-Type', 'application/json');
+      if (x.upload && surProgression) x.upload.onprogress = function (e) { if (e.lengthComputable) surProgression(Math.round(e.loaded * 100 / e.total)); };
+      x.onload = function () { try { ok(JSON.parse(x.responseText)); } catch (e) { ko(e); } };
+      x.onerror = function () { ko(new Error('reseau')); };
+      x.send(JSON.stringify(params));
+    });
+  }
   function rpc(nom, params) {
     var url = (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '') + '/rest/v1/rpc/' + nom;
     var cle = (typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '');
@@ -392,12 +405,13 @@
         msg.style.color = '#5b5e78'; msg.textContent = 'Préparation du fichier…';
         lireFichier(f).then(function (x) {
           if (x.b64.length > 9000000) { msg.style.color = '#b91c1c'; msg.textContent = 'Fichier trop gros (6 Mo maximum).'; return; }
-          msg.textContent = 'Envoi…';
+          msg.textContent = 'Envoi… 0 %';
           var sel = o.querySelector('#daf_sal'), ty = o.querySelector('#daf_type');
-          return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
+          return rpcAvecProgression('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
             pole: pole, categorie: ty ? ty.value : r[0], titre: o.querySelector('#daf_titre').value.trim() || x.nom,
             salarie_id: sel && sel.value ? sel.value : null, date_doc: o.querySelector('#daf_date').value || null,
-            nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } }).then(function (res) {
+            nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } },
+            function (pc) { msg.textContent = pc < 100 ? 'Envoi… ' + pc + ' %' : 'Enregistrement dans le coffre-fort…'; }).then(function (res) {
             if (!res || res.ok !== true) { msg.style.color = '#b91c1c'; msg.textContent = res && res.raison === 'fichier_trop_gros' ? 'Fichier trop gros (6 Mo maximum).' : messageRefus(res); return; }
             cacheDocs = null;
             allerA(retour);
@@ -666,9 +680,10 @@
               etat.textContent = 'Envoi…';
               return lireFichier(f).then(function (x) {
                 if (x.b64.length > 9000000) { ko++; etat.textContent = '✗ trop gros (6 Mo max)'; return; }
-                return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
+                return rpcAvecProgression('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
                   pole: tv[0], categorie: tv[1], titre: f.name.replace(/\.[^.]+$/, ''), salarie_id: tv[0] === 'personnel' && sv ? sv : null,
-                  nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } }).then(function (r) {
+                  nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } },
+                  function (pc) { etat.textContent = pc < 100 ? 'Envoi… ' + pc + ' %' : 'Enregistrement…'; }).then(function (r) {
                   if (r && r.ok) { ok++; etat.style.color = '#15803d'; etat.textContent = '✓ importé'; }
                   else { ko++; etat.style.color = '#b91c1c'; etat.textContent = '✗ ' + messageRefus(r); }
                 });
