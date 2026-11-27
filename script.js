@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v515';
+var APP_BUILD = 'v516';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1285,7 +1285,9 @@ async function sbSauvegarderEtab(etabData) {
       checkBack();
     })();
     
-document.getElementById('modeExpertBtn').addEventListener('click', function(){ showPage('page-guide'); renderMods('quotidien'); });
+// Legacy : le bouton #modeExpertBtn vivait dans page-guide (supprimée).
+// Guard préservé au cas où un hook externe le réinjecterait un jour.
+(function(){ var _b = document.getElementById('modeExpertBtn'); if (_b) _b.addEventListener('click', function(){ showPage('page-home'); renderMods('quotidien'); }); })();
 
 
 // ── LOCALSTORAGE SÉCURISÉ — anti quota exceeded ──
