@@ -26,6 +26,7 @@ const CORE = [
   './script.js',
   './patch_photo_bl.js',
   './pms_generateur.js',
+  './dossier_admin.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
