@@ -1241,12 +1241,19 @@
       }
       var tete = document.querySelector('#page-home .ph4-row1');
       var hote = tete ? tete.parentNode : document.querySelector('#page-home .ph4-wrap');
-      if (hote && !document.getElementById('daTuileExpert')) {
+      var hero = document.querySelector('#page-home > .hero');
+      if (!document.getElementById('daTuileExpert') && (hote || hero)) {
         var w2 = document.createElement('div');
         w2.id = 'daTuileExpert';
-        w2.style.cssText = 'margin-top:44px'; // laisse la place au bouton flottant « Mes rapports »
         w2.innerHTML = bouton;
-        hote.insertBefore(w2, tete ? tete.nextSibling : hote.firstChild);
+        if (hote) {
+          w2.style.cssText = 'margin-top:44px'; // laisse la place au bouton flottant « Mes rapports »
+          hote.insertBefore(w2, tete ? tete.nextSibling : hote.firstChild);
+        } else {
+          // Tableau de bord classique (site Nomos) : juste sous le bandeau du haut
+          w2.style.cssText = 'padding:12px 16px 0';
+          hero.parentNode.insertBefore(w2, hero.nextSibling);
+        }
       }
     } catch (e) {}
   }
