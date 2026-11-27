@@ -6,6 +6,8 @@
 - **SQL / procédures pas à pas : un seul bloc de code à la fois.** Donner l'instruction
   puis un unique bloc de code, attendre le résultat de l'utilisateur, puis le bloc suivant.
 - Langue de travail : **français**.
+- **Réponses COURTES, très courtes.** Jamais de longs textes : l'essentiel en quelques lignes,
+  lisible sur un téléphone.
 
 # Hygiène+ = COPIE DE TRAVAIL de Nomos (règle absolue)
 
