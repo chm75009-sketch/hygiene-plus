@@ -4026,11 +4026,123 @@ html, body { max-width: 100%; overflow-x: hidden; }
       </div>
     </div>
   <div class="bnav">
-    <button class="nitem active" id="nav-home" onclick="navTo('home')"><div class="nico">⊞</div><div>Modules</div><div class="ndot"></div></button>
-    <button class="nitem" id="nav-history" onclick="navTo('history')"><div class="nico">📂</div><div>Historique</div><div class="ndot"></div></button>
-    <button class="nitem" id="nav-reports" onclick="navTo('reports')"><div class="nico">📊</div><div>Rapports</div><div class="ndot"></div></button>
-    <button class="nitem" id="nav-settings" onclick="navTo('settings')"><div class="nico">⚙️</div><div>Réglages</div><div class="ndot"></div></button>
+    <button class="nitem active" id="nav-home" onclick="navTo('home')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><div>Modules</div><div class="ndot"></div></button>
+    <button class="nitem" id="nav-history" onclick="navTo('history')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg></div><div>Historique</div><div class="ndot"></div></button>
+    <button class="nitem" id="nav-reports" onclick="navTo('reports')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg></div><div>Rapports</div><div class="ndot"></div></button>
+    <button class="nitem" id="nav-settings" onclick="navTo('settings')"><div class="nico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div>Réglages</div><div class="ndot"></div></button>
   </div>
+
+  <!-- ══════════════════ CHATBOT FLOTTANT NOMOS TRAÇA ══════════════════ -->
+  <button type="button" class="pr-chatbot-fab" id="prChatbotFab" aria-label="Assistant Nomos Traça" onclick="prChatbotOpen()">
+    <span class="pr-fab-pulse"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="4" y="7" width="16" height="12" rx="3"/>
+      <circle cx="9" cy="13" r="1.3" fill="currentColor"/>
+      <circle cx="15" cy="13" r="1.3" fill="currentColor"/>
+      <path d="M8 19v2M16 19v2M12 4v3"/>
+      <circle cx="12" cy="3" r="1" fill="currentColor"/>
+    </svg>
+  </button>
+  <div class="pr-chatbot-overlay" id="prChatbotOverlay" onclick="prChatbotClose()"></div>
+  <div class="pr-chatbot-panel" id="prChatbotPanel" role="dialog" aria-modal="true" aria-label="Assistant Nomos Traça">
+    <div class="pr-chatbot-grip"></div>
+    <div class="pr-chatbot-head">
+      <div class="pr-chatbot-head-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="7" width="16" height="12" rx="3"/>
+          <circle cx="9" cy="13" r="1.3" fill="currentColor"/>
+          <circle cx="15" cy="13" r="1.3" fill="currentColor"/>
+          <path d="M8 19v2M16 19v2M12 4v3"/>
+        </svg>
+      </div>
+      <div class="pr-chatbot-head-title">
+        <b>Assistant Nomos</b>
+        <span>Vocal, texte, raccourci modules</span>
+      </div>
+      <button class="pr-chatbot-close" onclick="prChatbotClose()" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="pr-chatbot-body">
+      <div id="irZone-chatbot" style="padding:0"></div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      var openEls = function(){
+        var p=document.getElementById('prChatbotPanel'), o=document.getElementById('prChatbotOverlay');
+        if(p) p.classList.add('open');
+        if(o) o.classList.add('open');
+        document.body.style.overflow='hidden';
+        try{ var inp=document.querySelector('#irZone-chatbot .ir-input'); if(inp) setTimeout(function(){ inp.focus(); },320); }catch(e){}
+      };
+      var closeEls = function(){
+        var p=document.getElementById('prChatbotPanel'), o=document.getElementById('prChatbotOverlay');
+        if(p) p.classList.remove('open');
+        if(o) o.classList.remove('open');
+        document.body.style.overflow='';
+      };
+      window.prChatbotOpen = openEls;
+      window.prChatbotClose = closeEls;
+      document.addEventListener('keydown', function(e){
+        if(e.key==='Escape'){ var p=document.getElementById('prChatbotPanel'); if(p && p.classList.contains('open')) closeEls(); }
+      });
+      // Render IR dans le chatbot une fois le script.js chargé
+      function tryRenderChatbotIR(){
+        try{
+          var host = document.getElementById('irZone-chatbot');
+          if(!host || host.querySelector('.ir-bloc')) return;
+          // Trigger : ir(_rendre) est privé, mais on réutilise le clonage du bloc home
+          var home = document.getElementById('irZone-home');
+          if(home && home.querySelector('.ir-bloc')){
+            // Force re-init en appelant irMicro sur un nouveau suf — mais l'API pub est irOuvrir/irExemple/irMicro.
+            // Fallback : cloner le bloc visuel home et laisser le user interagir avec le vrai IR via events
+            // (approche la plus simple : juste cloner le DOM du bloc home dans le chatbot).
+            var clone = home.querySelector('.ir-bloc').cloneNode(true);
+            host.appendChild(clone);
+            // Relier les handlers : mic, tabs, submit — on redirige vers home
+            try{
+              var btnOk = clone.querySelector('.ir-ok');
+              var inp = clone.querySelector('.ir-input');
+              var mic = clone.querySelector('.ir-mic');
+              var tabs = clone.querySelectorAll('.ir-tab');
+              inp.addEventListener('input', function(){ var h = home.querySelector('.ir-input'); if(h){ h.value = inp.value; h.dispatchEvent(new Event('input')); } });
+              var form = clone.querySelector('form');
+              if(form) form.addEventListener('submit', function(ev){ ev.preventDefault(); var h = home.querySelector('form'); if(h) h.dispatchEvent(new Event('submit')); });
+              if(mic) mic.onclick = function(){ try{ window.irMicro && window.irMicro('home'); }catch(e){} };
+              tabs.forEach(function(t){
+                t.onclick = function(){ try{ var mode = t.getAttribute('data-mode'); window.irMode && window.irMode('home', mode); }catch(e){} };
+              });
+              // Mirror résultats et chips depuis home → chatbot (observer)
+              var mirrorTargets = [['.ir-res','.ir-res'],['.ir-chips','.ir-chips'],['.ir-titre','.ir-titre'],['.ir-aide','.ir-aide']];
+              var sync = function(){
+                mirrorTargets.forEach(function(pair){
+                  var src = home.querySelector(pair[0]), dst = clone.querySelector(pair[1]);
+                  if(src && dst && dst.innerHTML !== src.innerHTML) dst.innerHTML = src.innerHTML;
+                });
+                // tabs actives
+                var srcTabs = home.querySelectorAll('.ir-tab');
+                srcTabs.forEach(function(st, i){ var dt = tabs[i]; if(dt){ dt.classList.toggle('ir-active', st.classList.contains('ir-active')); } });
+              };
+              var mo = new MutationObserver(sync);
+              mo.observe(home, {subtree:true, childList:true, attributes:true, characterData:true});
+              sync();
+            }catch(e){ console.warn('chatbot IR link', e); }
+          }
+        }catch(e){ console.warn('chatbot init', e); }
+      }
+      // Essayer plusieurs fois (script.js remplit irZone-home après DOMContentLoaded)
+      var retries = 0;
+      var tick = function(){
+        tryRenderChatbotIR();
+        var host = document.getElementById('irZone-chatbot');
+        if(host && host.querySelector('.ir-bloc')) return;
+        if(++retries < 30) setTimeout(tick, 400);
+      };
+      if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(tick, 200); });
+      else setTimeout(tick, 200);
+    })();
+  </script>
 </div>
 <!-- MODAL PDF ÉTIQUETAGE -->
 <div class="modal-overlay" id="modalEtiqPdf">
