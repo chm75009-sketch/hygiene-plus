@@ -261,15 +261,25 @@
   }
 
   // ── Salariés ──
-  function manquants(s) {
-    return ['nom', 'prenom', 'naissance_date', 'nationalite', 'adresse', 'nir', 'poste', 'date_embauche', 'contrat', 'salaire_brut']
-      .filter(function (k) { return s[k] == null || s[k] === ''; }).length;
+  // Champs obligatoires (registre unique du personnel, DPAE, paie). Le titre de travail
+  // n'est exigé que pour un salarié étranger hors UE/EEE/Suisse, la date de sortie que pour un ancien salarié.
+  var CHAMPS_OBLIG = ['nom', 'prenom', 'sexe', 'naissance_date', 'nationalite', 'adresse', 'nir', 'poste', 'qualification', 'date_embauche', 'contrat', 'heures_hebdo', 'salaire_brut'];
+  function champsObligatoires(s) {
+    var L = CHAMPS_OBLIG.slice();
+    if (autorisationRequise(s) === true) L.push('titre_travail_type', 'titre_travail_num');
+    if (s.statut === 'ancien') L.push('date_sortie');
+    return L;
   }
+  function vide(v) { return v == null || v === '' || (Array.isArray(v) && !v.length); }
+  function champsManquants(s) { return champsObligatoires(s).filter(function (k) { return vide(s[k]); }); }
+  function libelleChamp(k) { var c = CHAMPS.filter(function (x) { return x[0] === k; })[0]; return c ? c[1].replace(/ \(.*\)$/, '').replace(/^Autorisation de travail : /, 'Titre de travail : ') : k; }
+  function manquants(s) { return champsManquants(s).length; }
   function ligneSalarie(s) {
     var init = ((s.prenom || ' ')[0] + (s.nom || ' ')[0]).toUpperCase();
-    var m = manquants(s);
+    var M = champsManquants(s), m = M.length;
     return '<button class="da-item" type="button" data-da="fiche:' + esc(s.id) + '"><span class="da-av">' + esc(init) + '</span>'
-      + '<span><b>' + esc((s.prenom || '') + ' ' + (s.nom || '')) + '</b><small>' + esc(s.poste || 'Poste à compléter') + (s.date_embauche ? ' · entré le ' + dateFr(s.date_embauche) : '') + '</small></span>'
+      + '<span><b>' + esc((s.prenom || '') + ' ' + (s.nom || '')) + '</b><small>' + esc(s.poste || 'Poste à compléter') + (s.date_embauche ? ' · entré le ' + dateFr(s.date_embauche) : '') + '</small>'
+      + (m ? '<small style="color:#b45309">Manque : ' + esc(M.map(libelleChamp).join(', ')) + '</small>' : '') + '</span>'
       + (m ? '<span class="da-warn">' + m + ' à compléter</span>' : '<span class="ch">›</span>') + '</button>';
   }
   function vueSalaries() {
@@ -298,16 +308,24 @@
     var o = overlay();
     var h = '<div class="da-wrap">' + entete('salaries') + '<form class="da-form" id="daFiche">'
       + '<b style="font-size:17px">' + (id ? esc((s.prenom || '') + ' ' + (s.nom || '')) : 'Nouveau salarié') + '</b>';
+    var oblig = champsObligatoires(s), manq = id ? champsManquants(s) : [];
+    h += manq.length
+      ? '<div style="border:2px solid #f59e0b;background:#fff7e6;border-radius:12px;padding:10px;font-size:13.5px"><b style="color:#b45309">⚠ ' + manq.length + ' information' + (manq.length > 1 ? 's' : '') + ' obligatoire' + (manq.length > 1 ? 's' : '') + ' à compléter :</b><br>'
+        + manq.map(function (k) { return '<button type="button" class="da-btn" data-aller="' + k + '" style="margin:4px 4px 0 0;color:#b45309">' + esc(libelleChamp(k)) + '</button>'; }).join('') + '</div>'
+      : (id ? '<div style="border:2px solid #86efac;background:#ecfdf3;border-radius:12px;padding:10px;font-size:13.5px;color:#15803d"><b>✓ Fiche complète</b></div>' : '');
+    h += '<p class="da-note" style="margin:0"><b style="color:#dc2626">*</b> obligatoire (registre du personnel, déclaration d\'embauche, paie)</p>';
     CHAMPS.forEach(function (c) {
       var v = s[c[0]];
       if (c[0] === 'horaires' && v) v = Array.isArray(v) ? v.join('\n') : String(v);
       var idc = 'da_' + c[0];
+      var etoile = oblig.indexOf(c[0]) > -1 ? ' <b style="color:#dc2626">*</b>' : '';
+      var styleManq = manq.indexOf(c[0]) > -1 ? ' style="border:2px solid #f59e0b;background:#fff7e6"' : '';
       if (c[2] === 'select') {
-        h += '<label for="' + idc + '">' + esc(c[1]) + '<select id="' + idc + '" name="' + c[0] + '">' + c[3].map(function (o2) { return '<option value="' + o2[0] + '"' + (v === o2[0] ? ' selected' : '') + '>' + esc(o2[1]) + '</option>'; }).join('') + '</select></label>';
+        h += '<label for="' + idc + '">' + '<span>' + esc(c[1]) + etoile + '</span><select' + styleManq + ' id="' + idc + '" name="' + c[0] + '">' + c[3].map(function (o2) { return '<option value="' + o2[0] + '"' + (v === o2[0] ? ' selected' : '') + '>' + esc(o2[1]) + '</option>'; }).join('') + '</select></label>';
       } else if (c[2] === 'textarea') {
-        h += '<label for="' + idc + '">' + esc(c[1]) + '<textarea id="' + idc + '" name="' + c[0] + '">' + esc(v || '') + '</textarea></label>';
+        h += '<label for="' + idc + '">' + '<span>' + esc(c[1]) + etoile + '</span><textarea' + styleManq + ' id="' + idc + '" name="' + c[0] + '">' + esc(v || '') + '</textarea></label>';
       } else {
-        h += '<label for="' + idc + '">' + esc(c[1]) + '<input id="' + idc + '" name="' + c[0] + '" type="' + c[2] + '"' + (c[2] === 'number' ? ' step="0.01" inputmode="decimal"' : '') + ' value="' + esc(v == null ? '' : (c[2] === 'date' ? String(v).slice(0, 10) : v)) + '"></label>';
+        h += '<label for="' + idc + '">' + '<span>' + esc(c[1]) + etoile + '</span><input' + styleManq + ' id="' + idc + '" name="' + c[0] + '" type="' + c[2] + '"' + (c[2] === 'number' ? ' step="0.01" inputmode="decimal"' : '') + ' value="' + esc(v == null ? '' : (c[2] === 'date' ? String(v).slice(0, 10) : v)) + '"></label>';
       }
     });
     h += '<p class="da-err" id="daMsg"></p><button class="da-main" type="submit">💾 Enregistrer</button></form>'
@@ -319,6 +337,14 @@
       + (id ? '<div class="da-sect">🗄️ Coffre-fort du salarié</div><div id="daFicheCoffre"><p class="da-note">Chargement…</p></div>'
             + '<div class="da-sect">⚖️ Procédures du salarié</div><div id="daFicheProcs"><p class="da-note">Chargement…</p></div>' : '') + '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    // Toucher un manquant : aller au champ ; un champ rempli perd sa couleur orange
+    o.querySelectorAll('[data-aller]').forEach(function (b) {
+      b.addEventListener('click', function () { var el = o.querySelector('#da_' + b.getAttribute('data-aller')); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(function () { try { el.focus(); } catch (e) {} }, 300); } });
+    });
+    manq.forEach(function (k) {
+      var el = o.querySelector('#da_' + k); if (!el) return;
+      ['input', 'change'].forEach(function (ev) { el.addEventListener(ev, function () { var ok = el.value.trim() !== ''; el.style.border = ok ? '' : '2px solid #f59e0b'; el.style.background = ok ? '' : '#fff7e6'; }); });
+    });
     if (id) rpc('da_procedures_liste', { p_code: codeCompte(), p_pin: pinSession }).then(function (r) {
       var box = o.querySelector('#daFicheProcs'); if (!box) return;
       if (!r || r.ok !== true) { box.innerHTML = '<p class="da-err">Procédures indisponibles.</p>'; return; }
