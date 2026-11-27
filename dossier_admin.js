@@ -151,9 +151,15 @@
   }
   function brancher(o) {
     o.querySelectorAll('[data-da]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var a = b.getAttribute('data-da');
+      b.addEventListener('click', function () { allerA(b.getAttribute('data-da'), b); });
+    });
+  }
+  function allerA(a, b) {
         if (a === 'fermer') fermer();
+        else if (a === 'coffre') vueCoffre();
+        else if (a === 'import') vueImport();
+        else if (a.indexOf('ajoutsal:') === 0) { var q3 = a.split(':'); var t = TYPES_PERSO[+q3[2]]; vueAjoutDoc('personnel', rubIndex('personnel', t[1]), q3[1], t[0], q3[3] === 'c' ? 'coffre' : 'fiche:' + q3[1]); }
+        else if (a.indexOf('ajoutsoc:') === 0) { var q4 = a.split(':'); vueAjoutDoc(q4[1], +q4[2], null, null, 'coffre'); }
         else if (a === 'verrou') verrouiller();
         else if (a === 'menu') vueMenu();
         else if (a === 'salaries') vueSalaries();
@@ -165,8 +171,6 @@
         else if (a.indexOf('ajout:') === 0) { var q2 = a.split(':'); vueAjoutDoc(q2[1], +q2[2]); }
         else if (a === 'echeances') vueEcheances();
         else vuePole(a);
-      });
-    });
   }
   function actif() { deverrouilleJusqua = Date.now() + VERROU_MS; }
   function encoreOuvert() {
@@ -177,7 +181,9 @@
   function vueMenu() {
     if (!encoreOuvert()) return;
     var o = overlay();
-    var h = '<div class="da-wrap">' + entete(null);
+    var h = '<div class="da-wrap">' + entete(null)
+      + '<button class="da-item" type="button" data-da="coffre" style="border-color:#93c5fd"><span class="i">🗄️</span><span><b>Coffre-fort</b><small>Documents reçus et manquants : société et chaque salarié</small></span><span class="ch">›</span></button>'
+      + '<button class="da-item" type="button" data-da="import" style="border-color:#93c5fd"><span class="i">📥</span><span><b>Importer des documents</b><small>Plusieurs fichiers d\'un coup : contrats, DPAE, titres de séjour, statuts…</small></span><span class="ch">›</span></button>';
     POLES.forEach(function (p) {
       h += '<button class="da-item" type="button" data-da="' + p.id + '"><span class="i">' + p.ico + '</span><span><b>' + esc(p.titre) + '</b><small>' + esc(p.sous) + '</small></span><span class="ch">›</span></button>';
     });
@@ -235,6 +241,7 @@
   }
   function vueFiche(id) {
     if (!encoreOuvert()) return;
+    docCourant = null;
     var s = id ? ((cacheSalaries || []).filter(function (x) { return x.id === id; })[0] || {}) : { statut: 'actif' };
     var o = overlay();
     var h = '<div class="da-wrap">' + entete('salaries') + '<form class="da-form" id="daFiche">'
@@ -251,8 +258,13 @@
         h += '<label for="' + idc + '">' + esc(c[1]) + '<input id="' + idc + '" name="' + c[0] + '" type="' + c[2] + '"' + (c[2] === 'number' ? ' step="0.01" inputmode="decimal"' : '') + ' value="' + esc(v == null ? '' : (c[2] === 'date' ? String(v).slice(0, 10) : v)) + '"></label>';
       }
     });
-    h += '<p class="da-err" id="daMsg"></p><button class="da-main" type="submit">💾 Enregistrer</button></form></div>';
+    h += '<p class="da-err" id="daMsg"></p><button class="da-main" type="submit">💾 Enregistrer</button></form>'
+      + (id ? '<div class="da-sect">🗄️ Coffre-fort du salarié</div><div id="daFicheCoffre"><p class="da-note">Chargement…</p></div>' : '') + '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    if (id) chargerDocs().then(function () {
+      var box = o.querySelector('#daFicheCoffre'); if (!box) return;
+      box.innerHTML = blocCoffreSalarie(s, '') ; brancher(box);
+    }, function () { var box = o.querySelector('#daFicheCoffre'); if (box) box.innerHTML = '<p class="da-err">Documents indisponibles.</p>'; });
     o.querySelector('#daFiche').addEventListener('submit', function (e) {
       e.preventDefault();
       if (!encoreOuvert()) return;
@@ -290,7 +302,7 @@
     chargerSalariesSiBesoin().then(function () { return rpc('da_documents_liste', { p_code: codeCompte(), p_pin: pinSession }); }).then(function (res) {
       if (!res || res.ok !== true) { o.innerHTML = '<div class="da-wrap">' + entete(pole) + '<p class="da-err">' + esc(messageRefus(res)) + '</p></div>'; brancher(o); return; }
       cacheDocs = res.documents || [];
-      var docs = cacheDocs.filter(function (d) { return d.pole === pole && d.categorie === r[0]; });
+      var docs = cacheDocs.filter(function (d) { return docDansRubrique(d, pole, r[0]); });
       var h = '<div class="da-wrap">' + entete(pole)
         + '<div class="da-item" style="cursor:default"><span><b>' + esc(r[0]) + '</b>' + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</span></div>'
         + '<button class="da-main" type="button" data-da="ajout:' + pole + ':' + i + '">＋ Ajouter un document</button>';
@@ -330,15 +342,21 @@
       rd.readAsDataURL(f);
     });
   }
-  function vueAjoutDoc(pole, i) {
+  // pole/i = rubrique d'origine ; salId/typeDefaut = pré-remplissage (depuis la fiche ou le coffre-fort)
+  function vueAjoutDoc(pole, i, salId, typeDefaut, retour) {
     if (!encoreOuvert()) return;
     var r = rubrique(pole, i); if (!r) return vueMenu();
     var o = overlay();
+    retour = retour || ('doc:' + pole + ':' + i);
     chargerSalariesSiBesoin().then(function (sal) {
-      var optSal = '<option value="">— Aucun (document de la société) —</option>' + sal.map(function (s) { return '<option value="' + esc(s.id) + '">' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + (s.statut === 'ancien' ? ' (ancien)' : '') + '</option>'; }).join('');
-      o.innerHTML = '<div class="da-wrap">' + entete('doc:' + pole + ':' + i) + '<form class="da-form" id="daDoc">'
-        + '<b style="font-size:17px">Ajouter : ' + esc(r[0]) + '</b>'
-        + '<label for="daf_fichier">Fichier (photo ou PDF)<input id="daf_fichier" type="file" accept="image/*,application/pdf" required></label>'
+      var optSal = '<option value="">— Aucun (document de la société) —</option>' + sal.map(function (s) { return '<option value="' + esc(s.id) + '"' + (s.id === salId ? ' selected' : '') + '>' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + (s.statut === 'ancien' ? ' (ancien)' : '') + '</option>'; }).join('');
+      var types = pole === 'personnel' ? TYPES_PERSO.filter(function (t) { return t[1] === r[0]; }).map(function (t) { return t[0]; }) : [];
+      if (pole === 'personnel' && !types.length) types = TYPES_PERSO.map(function (t) { return t[0]; });
+      var optType = types.map(function (t) { return '<option' + (t === typeDefaut ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('');
+      o.innerHTML = '<div class="da-wrap">' + entete(retour) + '<form class="da-form" id="daDoc">'
+        + '<b style="font-size:17px">Ajouter : ' + esc(typeDefaut || r[0]) + '</b>'
+        + '<label for="daf_fichier">Fichier (photo, PDF ou Word)<input id="daf_fichier" type="file" accept="image/*,application/pdf,.doc,.docx" required></label>'
+        + (pole === 'personnel' ? '<label for="daf_type">Type de document<select id="daf_type">' + optType + '</select></label>' : '')
         + '<label for="daf_titre">Titre<input id="daf_titre" placeholder="Ex. : Contrat CDI signé"></label>'
         + (pole === 'personnel' ? '<label for="daf_sal">Salarié concerné<select id="daf_sal">' + optSal + '</select></label>' : '')
         + '<label for="daf_date">Date du document<input id="daf_date" type="date"></label>'
@@ -353,13 +371,14 @@
         lireFichier(f).then(function (x) {
           if (x.b64.length > 9000000) { msg.style.color = '#b91c1c'; msg.textContent = 'Fichier trop gros (6 Mo maximum).'; return; }
           msg.textContent = 'Envoi…';
-          var sel = o.querySelector('#daf_sal');
+          var sel = o.querySelector('#daf_sal'), ty = o.querySelector('#daf_type');
           return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
-            pole: pole, categorie: r[0], titre: o.querySelector('#daf_titre').value.trim() || x.nom,
+            pole: pole, categorie: ty ? ty.value : r[0], titre: o.querySelector('#daf_titre').value.trim() || x.nom,
             salarie_id: sel && sel.value ? sel.value : null, date_doc: o.querySelector('#daf_date').value || null,
             nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } }).then(function (res) {
             if (!res || res.ok !== true) { msg.style.color = '#b91c1c'; msg.textContent = res && res.raison === 'fichier_trop_gros' ? 'Fichier trop gros (6 Mo maximum).' : messageRefus(res); return; }
-            vueDocs(pole, i);
+            cacheDocs = null;
+            allerA(retour);
           });
         }).catch(function () { msg.style.color = '#b91c1c'; msg.textContent = 'Envoi impossible. Vérifiez la connexion internet.'; });
       });
@@ -372,7 +391,7 @@
       var bin = atob(r.contenu), arr = new Uint8Array(bin.length);
       for (var k = 0; k < bin.length; k++) arr[k] = bin.charCodeAt(k);
       var url = URL.createObjectURL(new Blob([arr], { type: r.type_mime || 'application/octet-stream' }));
-      var o = overlay(), retour = docCourant ? 'doc:' + docCourant.pole + ':' + docCourant.i : 'menu';
+      var o = overlay(), retour = docCourant ? 'doc:' + docCourant.pole + ':' + docCourant.i : 'coffre';
       var vue = /^image\//.test(r.type_mime) ? '<img src="' + url + '" alt="' + esc(r.nom_fichier) + '" style="width:100%;border-radius:12px;background:#fff">'
         : '<iframe src="' + url + '" title="' + esc(r.nom_fichier) + '" style="width:100%;height:70vh;border:1px solid #e3e4ef;border-radius:12px;background:#fff"></iframe>';
       o.innerHTML = '<div class="da-wrap">' + entete(retour) + '<b>' + esc(r.nom_fichier) + '</b>' + vue
@@ -385,7 +404,197 @@
     if (!encoreOuvert()) return;
     if (btn.getAttribute('data-confirme') !== '1') { btn.setAttribute('data-confirme', '1'); btn.textContent = 'Confirmer ?'; btn.style.color = '#b91c1c'; return; }
     rpc('da_document_supprimer', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function () {
-      if (docCourant) vueDocs(docCourant.pole, docCourant.i); else vueMenu();
+      cacheDocs = null;
+      if (docCourant) vueDocs(docCourant.pole, docCourant.i); else vueCoffre();
+    });
+  }
+
+  // ── Types de documents du personnel (rangés dans les rubriques du pôle) ──
+  var TYPES_PERSO = [
+    ['Contrat de travail', 'Embauche'], ['Avenant', 'Embauche'], ['Déclaration d\'embauche (DPAE)', 'Embauche'],
+    ['Pièce d\'identité', 'Embauche'], ['Titre de séjour', 'Embauche'], ['Autorisation de travail', 'Embauche'],
+    ['Carte Vitale', 'Embauche'], ['Bulletin de paie', 'Paie'], ['Visite médicale', 'Santé et formation'],
+    ['Formation hygiène', 'Santé et formation'], ['Registre du personnel', 'Registre unique du personnel'], ['Autre document', 'Embauche']
+  ];
+  // Documents attendus pour chaque salarié (« Pièce d'identité » OU « Titre de séjour » suffit)
+  var OBLIG_PERSO = [['Contrat de travail'], ['Déclaration d\'embauche (DPAE)'], ['Pièce d\'identité', 'Titre de séjour'], ['Bulletin de paie'], ['Visite médicale'], ['Formation hygiène']];
+  // Documents attendus pour la société : [pôle, rubrique]
+  var OBLIG_SOC = [['associes', 'Statuts'], ['associes', 'Président'], ['associes', 'Annonce légale'], ['associes', 'Kbis'],
+    ['declarations', 'Déclaration d\'activité (DDPP)'], ['declarations', 'Plan de maîtrise sanitaire (PMS)'], ['declarations', 'Convention collective HCR'],
+    ['declarations', 'URSSAF'], ['declarations', 'Assurances'], ['declarations', 'Médecine du travail']];
+  function typeIndex(nom) { for (var k = 0; k < TYPES_PERSO.length; k++) if (TYPES_PERSO[k][0] === nom) return k; return TYPES_PERSO.length - 1; }
+  function rubIndex(pole, titre) { var p = POLES.filter(function (x) { return x.id === pole; })[0]; if (!p) return 0; for (var k = 0; k < p.rub.length; k++) if (p.rub[k][0] === titre) return k; return 0; }
+  function docDansRubrique(d, pole, titre) {
+    if (d.pole !== pole) return false;
+    if (d.categorie === titre) return true;
+    return pole === 'personnel' && TYPES_PERSO.some(function (t) { return t[0] === d.categorie && t[1] === titre; });
+  }
+  function chargerDocs() {
+    if (cacheDocs) return Promise.resolve(cacheDocs);
+    return rpc('da_documents_liste', { p_code: codeCompte(), p_pin: pinSession }).then(function (r) {
+      if (!r || r.ok !== true) throw new Error(messageRefus(r));
+      cacheDocs = r.documents || []; return cacheDocs;
+    });
+  }
+  function ligneDoc(d) {
+    return '<div class="da-rub"><span><b>' + esc(d.titre || d.nom_fichier || 'Document') + '</b><small>' + esc([d.categorie, d.date_doc ? dateFr(d.date_doc) : '', taille(d.taille)].filter(Boolean).join(' · ')) + '</small></span>'
+      + '<span style="display:flex;gap:6px"><button class="da-btn" type="button" data-da="voir:' + esc(d.id) + '">Voir</button><button class="da-btn" type="button" data-da="suppr:' + esc(d.id) + '" aria-label="Supprimer">🗑️</button></span></div>';
+  }
+  // Coffre-fort d'un salarié : documents attendus ✓/✗ + documents rangés. suffixe 'c' = retour au coffre-fort
+  function blocCoffreSalarie(s, suffixe) {
+    var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id; });
+    var h = '<div class="da-form" style="gap:6px">';
+    OBLIG_PERSO.forEach(function (types) {
+      var ok = docs.some(function (d) { return types.indexOf(d.categorie) > -1; });
+      h += '<div class="da-rub" style="border:none;padding:6px 2px;border-bottom:1px solid #eef0f6;border-radius:0"><span>' + esc(types.join(' ou ')) + '</span>'
+        + (ok ? '<span class="da-go" style="background:#e8f6ed;color:#15803d">✓ reçu</span>'
+              : '<button class="da-btn" type="button" data-da="ajoutsal:' + esc(s.id) + ':' + typeIndex(types[0]) + (suffixe ? ':' + suffixe : '') + '" style="color:#b45309">＋ Ajouter</button>') + '</div>';
+    });
+    h += '</div>';
+    if (docs.length) h += docs.map(ligneDoc).join('');
+    h += '<button class="da-btn" type="button" data-da="ajoutsal:' + esc(s.id) + ':' + typeIndex('Autre document') + (suffixe ? ':' + suffixe : '') + '">＋ Autre document pour ce salarié</button>';
+    return h;
+  }
+  function vueCoffre() {
+    if (!encoreOuvert()) return;
+    docCourant = null;
+    var o = overlay();
+    o.innerHTML = '<div class="da-wrap">' + entete('menu') + '<p class="da-note">Chargement…</p></div>'; brancher(o);
+    cacheDocs = null;
+    chargerSalariesSiBesoin().then(chargerDocs).then(function () {
+      var h = '<div class="da-wrap">' + entete('menu')
+        + '<div class="da-item" style="cursor:default"><span class="i">🗄️</span><span><b>Coffre-fort</b><small>✓ reçu · ＋ à ajouter</small></span></div>'
+        + '<button class="da-main" type="button" data-da="import">📥 Importer plusieurs documents</button>'
+        + '<details class="da-form" open><summary style="cursor:pointer;font-weight:800">🏢 Société</summary>';
+      OBLIG_SOC.forEach(function (x) {
+        var ok = (cacheDocs || []).some(function (d) { return d.pole === x[0] && d.categorie === x[1]; });
+        h += '<div class="da-rub" style="border:none;padding:6px 2px;border-bottom:1px solid #eef0f6;border-radius:0"><span>' + esc(x[1]) + '</span>'
+          + (ok ? '<button class="da-btn" type="button" data-da="doc:' + x[0] + ':' + rubIndex(x[0], x[1]) + '" style="color:#15803d">✓ Voir</button>'
+                : '<button class="da-btn" type="button" data-da="ajoutsoc:' + x[0] + ':' + rubIndex(x[0], x[1]) + '" style="color:#b45309">＋ Ajouter</button>') + '</div>';
+      });
+      h += '</details>';
+      var actifs = (cacheSalaries || []).filter(function (s) { return s.statut !== 'ancien'; });
+      h += '<div class="da-sect">👥 Salariés en activité · ' + actifs.length + '</div>';
+      actifs.forEach(function (s) {
+        var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id; });
+        var manque = OBLIG_PERSO.filter(function (types) { return !docs.some(function (d) { return types.indexOf(d.categorie) > -1; }); }).length;
+        h += '<details class="da-form"><summary style="cursor:pointer;display:flex;justify-content:space-between;gap:8px;font-weight:800"><span>' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + '</span>'
+          + (manque ? '<span class="da-warn" style="margin:0">' + manque + ' manquant' + (manque > 1 ? 's' : '') + '</span>' : '<span class="da-go" style="background:#e8f6ed;color:#15803d">complet</span>') + '</summary>'
+          + blocCoffreSalarie(s, 'c') + '</details>';
+      });
+      h += '</div>';
+      o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    }).catch(function (e) { o.innerHTML = '<div class="da-wrap">' + entete('menu') + '<p class="da-err">' + esc(e && e.message ? e.message : 'Coffre-fort indisponible.') + '</p></div>'; brancher(o); });
+  }
+
+  // ── Import groupé : l'app devine le salarié et le type d'après le nom du fichier ──
+  function sansAccent(t) { t = String(t || '').toLowerCase(); try { t = t.normalize('NFD').replace(/[̀-ͯ]/g, ''); } catch (e) {} return t.replace(/[^a-z0-9]+/g, ' '); }
+  function devinerSalarie(nomFichier) {
+    var n = ' ' + sansAccent(nomFichier) + ' ', meilleur = null, score = 0;
+    (cacheSalaries || []).forEach(function (s) {
+      var sc = 0;
+      sansAccent(s.nom).split(' ').filter(function (w) { return w.length > 2; }).forEach(function (w) { if (n.indexOf(' ' + w + ' ') > -1) sc += 2; });
+      sansAccent(s.prenom).split(' ').filter(function (w) { return w.length > 2; }).forEach(function (w) { if (n.indexOf(' ' + w + ' ') > -1) sc += 1; });
+      if (sc > score) { score = sc; meilleur = s; }
+    });
+    return meilleur;
+  }
+  // Renvoie [pôle, catégorie]
+  function devinerType(nomFichier) {
+    var n = ' ' + sansAccent(nomFichier) + ' ';
+    var R = [
+      [/ (dpae|due) |declaration prealable|embauche/, 'personnel', 'Déclaration d\'embauche (DPAE)'],
+      [/avenant/, 'personnel', 'Avenant'],
+      [/contrat (cdi|cdd|de travail)|contratcdi|contratcdd| cdi | cdd /, 'personnel', 'Contrat de travail'],
+      [/sejour|resident/, 'personnel', 'Titre de séjour'],
+      [/autorisation de travail|autorisation travail/, 'personnel', 'Autorisation de travail'],
+      [/vitale/, 'personnel', 'Carte Vitale'],
+      [/ cni |identite|passeport/, 'personnel', 'Pièce d\'identité'],
+      [/bulletin|fiche de paye|fiche de paie| paie /, 'personnel', 'Bulletin de paie'],
+      [/visite medicale|medecine du travail|aptitude/, 'personnel', 'Visite médicale'],
+      [/formation|hygiene alimentaire/, 'personnel', 'Formation hygiène'],
+      [/statut/, 'associes', 'Statuts'],
+      [/ pv |proces verbal|assemblee/, 'associes', 'Procès-verbaux d\'assemblée'],
+      [/president|demission/, 'associes', 'Président'],
+      [/annonce legale|parution/, 'associes', 'Annonce légale'],
+      [/kbis/, 'associes', 'Kbis'],
+      [/ inpi /, 'associes', 'Formalités INPI'],
+      [/pouvoir/, 'associes', 'Pouvoirs et pièces d\'identité des dirigeants'],
+      [/recepisse|cerfa|13984|declaration d activite/, 'declarations', 'Déclaration d\'activité (DDPP)'],
+      [/ pms |maitrise sanitaire/, 'declarations', 'Plan de maîtrise sanitaire (PMS)'],
+      [/convention collective|hcr|32604703/, 'declarations', 'Convention collective HCR'],
+      [/urssaf|vigilance/, 'declarations', 'URSSAF'],
+      [/assurance/, 'declarations', 'Assurances'],
+      [/ bail /, 'declarations', 'Bail commercial'],
+      [/licence|permis d exploitation/, 'declarations', 'Licence et permis d\'exploitation'],
+      [/nuisible|deratisation|biodechet/, 'declarations', 'Contrats nuisibles et biodéchets']
+    ];
+    for (var k = 0; k < R.length; k++) if (R[k][0].test(n)) return [R[k][1], R[k][2]];
+    return ['personnel', 'Autre document'];
+  }
+  function toutesCategories() {
+    var l = TYPES_PERSO.map(function (t) { return ['personnel', t[0], 'Personnel · ' + t[0]]; });
+    ['associes', 'declarations'].forEach(function (pid) {
+      var p = POLES.filter(function (x) { return x.id === pid; })[0];
+      p.rub.forEach(function (r) { l.push([pid, r[0], (pid === 'associes' ? 'Associés · ' : 'Déclarations · ') + r[0]]); });
+    });
+    return l;
+  }
+  function vueImport() {
+    if (!encoreOuvert()) return;
+    var o = overlay();
+    chargerSalariesSiBesoin().then(function () {
+      o.innerHTML = '<div class="da-wrap">' + entete('menu')
+        + '<div class="da-form"><b style="font-size:17px">📥 Importer des documents</b>'
+        + '<p class="da-note">Choisissez plusieurs fichiers d\'un coup (photos, PDF, Word). L\'app propose le salarié et le type d\'après le nom de chaque fichier : vérifiez, corrigez si besoin, puis importez.</p>'
+        + '<label for="dai_fichiers">Fichiers<input id="dai_fichiers" type="file" multiple accept="image/*,application/pdf,.doc,.docx"></label></div>'
+        + '<div id="daiListe"></div></div>';
+      brancher(o); o.scrollTop = 0;
+      var cats = toutesCategories();
+      var optSal = '<option value="">— Société (aucun salarié) —</option>' + (cacheSalaries || []).map(function (s) { return '<option value="' + esc(s.id) + '">' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + '</option>'; }).join('');
+      o.querySelector('#dai_fichiers').addEventListener('change', function () {
+        var files = Array.prototype.slice.call(this.files || []);
+        var liste = o.querySelector('#daiListe');
+        if (!files.length) { liste.innerHTML = ''; return; }
+        var h = '';
+        files.forEach(function (f, k) {
+          var s = devinerSalarie(f.name), t = devinerType(f.name), val = t[0] + '|' + t[1];
+          h += '<div class="da-form" data-k="' + k + '"><b style="font-size:14px;overflow-wrap:anywhere">' + esc(f.name) + '</b>'
+            + '<label>Type<select class="dai-type">' + cats.map(function (c) { var v = c[0] + '|' + c[1]; return '<option value="' + esc(v) + '"' + (v === val ? ' selected' : '') + '>' + esc(c[2]) + '</option>'; }).join('') + '</select></label>'
+            + '<label>Salarié<select class="dai-sal">' + optSal.replace('value="' + esc(s && t[0] === 'personnel' ? s.id : '') + '"', 'value="' + esc(s && t[0] === 'personnel' ? s.id : '') + '" selected') + '</select></label>'
+            + '<span class="da-note dai-etat"></span></div>';
+        });
+        h += '<button class="da-main" type="button" id="daiGo">📥 Importer ' + files.length + ' document' + (files.length > 1 ? 's' : '') + '</button><p class="da-err" id="daiMsg"></p>';
+        liste.innerHTML = h;
+        liste.querySelector('#daiGo').addEventListener('click', function () {
+          var btn = this;
+          if (btn.getAttribute('data-fini') === '1') { vueCoffre(); return; }
+          btn.disabled = true;
+          var ok = 0, ko = 0, msg = liste.querySelector('#daiMsg');
+          files.reduce(function (p, f, k) {
+            return p.then(function () {
+              if (!encoreOuvert()) throw new Error('verrou');
+              var bloc = liste.querySelector('[data-k="' + k + '"]'), etat = bloc.querySelector('.dai-etat');
+              var tv = bloc.querySelector('.dai-type').value.split('|'), sv = bloc.querySelector('.dai-sal').value;
+              etat.textContent = 'Envoi…';
+              return lireFichier(f).then(function (x) {
+                if (x.b64.length > 9000000) { ko++; etat.textContent = '✗ trop gros (6 Mo max)'; return; }
+                return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
+                  pole: tv[0], categorie: tv[1], titre: f.name.replace(/\.[^.]+$/, ''), salarie_id: tv[0] === 'personnel' && sv ? sv : null,
+                  nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } }).then(function (r) {
+                  if (r && r.ok) { ok++; etat.style.color = '#15803d'; etat.textContent = '✓ importé'; }
+                  else { ko++; etat.style.color = '#b91c1c'; etat.textContent = '✗ ' + messageRefus(r); }
+                });
+              }).catch(function () { ko++; etat.style.color = '#b91c1c'; etat.textContent = '✗ envoi impossible'; });
+            });
+          }, Promise.resolve()).then(function () {
+            cacheDocs = null;
+            msg.style.color = ko ? '#b91c1c' : '#15803d';
+            msg.textContent = ok + ' importé' + (ok > 1 ? 's' : '') + (ko ? ', ' + ko + ' en erreur' : '') + '. Voir le coffre-fort.';
+            btn.textContent = '🗄️ Ouvrir le coffre-fort'; btn.disabled = false; btn.setAttribute('data-fini', '1');
+          }).catch(function () { msg.textContent = 'Import interrompu (dossier verrouillé).'; });
+        });
+      });
     });
   }
 
