@@ -64,11 +64,16 @@ body{
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
 }
 
-/* ── CONTENEUR APP (mobile-first) ── */
+/* ── CONTENEUR APP (mobile-first) — layout 100vh ── */
+/* L'app occupe exactement la hauteur du viewport. Le header et
+   la bnav sont fixes (flex-shrink:0), seul .scroll défile.
+   Comme ça la bnav reste collée au bas de l'écran sans
+   position:fixed (robuste sur iOS Safari / Chrome Android) */
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 .app{
-  max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);
+  max-width:480px;margin:0 auto;height:100vh;height:100dvh;background:var(--bg);
   box-shadow:0 0 0 1px var(--line-soft),var(--shadow-lg);
-  display:flex;flex-direction:column;position:relative;
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
 }
 
 /* ── TOPBAR épurée ── */
@@ -562,15 +567,13 @@ body{
 }
 .btn-s:hover{background:var(--cream);border-color:#dcdcdc}
 
-/* ── BOTTOM NAV fixée en bas de l'écran (viewport), pas de la page ── */
+/* ── BOTTOM NAV : flex-item en bas, pas de position:fixed ── */
+/* Grâce au layout flex sur .app (height:100vh, flex-direction:column)
+   et .scroll {flex:1}, la bnav reste naturellement en bas de l'app
+   = en bas du viewport. Pas besoin de position:fixed */
 .bnav{
-  position:fixed !important;
-  bottom:0 !important;
-  left:50% !important;
-  right:auto !important;
-  transform:translateX(-50%) !important;
-  width:100% !important;
-  max-width:480px !important;
+  position:static !important;
+  flex-shrink:0;
   background:rgba(255,255,255,.96);
   backdrop-filter:saturate(180%) blur(18px);
   -webkit-backdrop-filter:saturate(180%) blur(18px);
@@ -578,12 +581,8 @@ body{
   display:flex;padding:8px 0 env(safe-area-inset-bottom,10px);
   z-index:200;
 }
-/* Pas de transform sur .app pour ne pas créer de containing block
-   (sinon position:fixed serait relatif à .app au lieu du viewport) */
-.app{transform:none !important;filter:none !important;perspective:none !important}
-/* Padding bas du scroll de l'app pour éviter que le contenu soit
-   masqué par la bnav fixe (hauteur approximative 60px + safe-area) */
-.scroll{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+/* .scroll prend toute la hauteur restante et scrolle en interne */
+.scroll{flex:1 1 auto !important;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:0}
 /* La bnav ne s'affiche que quand l'utilisateur est connecté à l'app :
    les pages de connexion/présentation la masquent déjà via .app:has() */
 .app:has(#page-presentation.active) .bnav,
