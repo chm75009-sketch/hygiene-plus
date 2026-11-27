@@ -4035,7 +4035,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
   <!-- ══════════════════ CHATBOT FLOTTANT NOMOS TRAÇA ══════════════════ -->
   <button type="button" class="pr-chatbot-fab" id="prChatbotFab" aria-label="Assistant Nomos Traça" onclick="prChatbotOpen()">
     <span class="pr-fab-pulse"></span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <rect x="4" y="7" width="16" height="12" rx="3"/>
       <circle cx="9" cy="13" r="1.3" fill="currentColor"/>
       <circle cx="15" cy="13" r="1.3" fill="currentColor"/>
@@ -4048,7 +4048,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
     <div class="pr-chatbot-grip"></div>
     <div class="pr-chatbot-head">
       <div class="pr-chatbot-head-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="4" y="7" width="16" height="12" rx="3"/>
           <circle cx="9" cy="13" r="1.3" fill="currentColor"/>
           <circle cx="15" cy="13" r="1.3" fill="currentColor"/>
@@ -4060,18 +4060,18 @@ html, body { max-width: 100%; overflow-x: hidden; }
         <span>En ligne</span>
       </div>
       <button class="pr-chatbot-close" onclick="prChatbotClose()" aria-label="Fermer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
       </button>
     </div>
     <div class="pr-chat-stream" id="prChatStream"></div>
     <div class="pr-chat-chips" id="prChatChips"></div>
     <form class="pr-chat-inputbar" id="prChatForm" onsubmit="return prChatSend(event)" autocomplete="off">
       <button type="button" class="pr-chat-mic" id="prChatMic" aria-label="Dicter">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
       </button>
       <input type="text" class="pr-chat-input" id="prChatInput" placeholder="Écrivez à l'assistant…" enterkeyhint="send" autocomplete="off"/>
       <button type="submit" class="pr-chat-send" id="prChatSend" aria-label="Envoyer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/></svg>
       </button>
     </form>
   </div>
@@ -4108,7 +4108,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
       function pushBot(htmlOrText, isHtml){
         var d = document.createElement('div');
         d.className = 'pr-chat-msg bot';
-        var avatar = '<div class="pr-chat-bot-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M12 4v3"/></svg></div>';
+        var avatar = '<div class="pr-chat-bot-avatar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1.2" fill="currentColor"/><circle cx="15" cy="13" r="1.2" fill="currentColor"/><path d="M12 4v3"/></svg></div>';
         d.innerHTML = avatar + '<div class="pr-chat-bubble"></div>';
         var bub = d.querySelector('.pr-chat-bubble');
         if(isHtml) bub.innerHTML = htmlOrText; else bub.textContent = htmlOrText;
@@ -4147,9 +4147,9 @@ html, body { max-width: 100%; overflow-x: hidden; }
           label = label.replace(/\s*(Ouvrir\s*›?|›|→|>)\s*$/i, '').trim();
           if(!label) return;
           actionsHtml += '<button class="pr-chat-action" onclick="prChatbotClose();' + oc.replace(/"/g,'&quot;') + '">' +
-            '<span class="pr-chat-action-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>' +
+            '<span class="pr-chat-action-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>' +
             '<span class="pr-chat-action-txt">' + label + '</span>' +
-            '<span class="pr-chat-action-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>' +
+            '<span class="pr-chat-action-arr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>' +
             '</button>';
         });
         if(actionsHtml){
