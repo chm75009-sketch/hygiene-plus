@@ -1467,16 +1467,16 @@ html, body { max-width: 100%; overflow-x: hidden; }
         #page-home .ph4-icon:active{background:#e9e9e7}
         #page-home .ph4-icon svg{width:16px;height:16px;stroke-width:1.5}
 
-        /* Bloc score — card discrète type Notion callout */
-        #page-home .ph4-score{margin:0 0 10px;background:#fbfbfa;border:1px solid #e9e9e7;border-radius:6px;padding:14px 16px 12px}
-        #page-home .ph4-score-cap{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+        /* Bloc score — card Notion avec chiffre très visible */
+        #page-home .ph4-score{margin:0 0 10px;background:#fbfbfa;border:1px solid #e9e9e7;border-radius:6px;padding:16px 18px 14px}
+        #page-home .ph4-score-cap{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
         #page-home .ph4-score-cap-l{font-size:11px;color:#9b9a97;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
         #page-home .ph4-score-cap-r{font-size:11px;color:#787774;font-weight:600;background:#eceae6;padding:2px 7px;border-radius:3px;font-variant-numeric:tabular-nums}
-        #page-home .ph4-score-line{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-        #page-home .ph4-score-big{font-size:30px;font-weight:700;letter-spacing:-.02em;color:#37352f;display:inline-flex;align-items:baseline;gap:0;font-family:inherit;line-height:1;font-variant-numeric:tabular-nums}
-        #page-home .ph4-score-slash{color:#d3d1cb;font-weight:500;font-size:.75em;margin:0 3px}
-        #page-home .ph4-score-total{color:#9b9a97;font-weight:500;font-size:.55em;font-variant-numeric:tabular-nums}
-        #page-home .ph4-score-label{font-size:13px;color:#787774;font-weight:400}
+        #page-home .ph4-score-line{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+        #page-home .ph4-score-big{font-size:clamp(48px,14vw,60px);font-weight:700;letter-spacing:-.035em;color:#37352f;display:inline-flex;align-items:baseline;gap:0;font-family:inherit;line-height:1;font-variant-numeric:tabular-nums}
+        #page-home .ph4-score-slash{color:#d3d1cb;font-weight:500;font-size:.6em;margin:0 4px}
+        #page-home .ph4-score-total{color:#9b9a97;font-weight:600;font-size:.42em;font-variant-numeric:tabular-nums}
+        #page-home .ph4-score-label{font-size:13px;color:#787774;font-weight:400;padding-bottom:4px}
         #page-home .ph4-score-label em{font-style:normal;color:#37352f;font-weight:500}
 
         /* Progress bar — minimale Notion */
@@ -1521,19 +1521,20 @@ html, body { max-width: 100%; overflow-x: hidden; }
         #page-home .ph4-fil:hover{color:#37352f}
         #page-home .ph4-fil.on{background:#fff;color:#37352f;box-shadow:0 1px 2px rgba(0,0,0,.06)}
 
-        /* Liste modules — type rows Notion database */
-        #page-home .mods-grid{grid-template-columns:1fr !important;gap:0 !important}
-        #page-home .mods-grid .mod{padding:7px 8px !important;min-height:0 !important;flex-direction:row !important;align-items:center !important;gap:8px !important;border-radius:4px !important;background:transparent !important;border:none !important;box-shadow:none !important;transition:background .1s ease !important;position:relative;animation:none !important}
+        /* Liste modules — tuiles carrées cliquables Notion */
+        #page-home .mods-grid{grid-template-columns:1fr 1fr !important;gap:8px !important}
+        #page-home .mods-grid .mod{padding:14px 12px 12px !important;min-height:116px !important;flex-direction:column !important;align-items:flex-start !important;justify-content:flex-start !important;gap:10px !important;border-radius:6px !important;background:#fff !important;border:1px solid #e9e9e7 !important;box-shadow:none !important;transition:background .1s ease,border-color .1s ease !important;position:relative;animation:none !important;cursor:pointer !important;overflow:hidden}
         #page-home .mods-grid .mod::before{display:none}
-        #page-home .mods-grid .mod:hover{background:#f7f6f3 !important;transform:none !important;border-color:transparent !important;box-shadow:none !important}
-        #page-home .mods-grid .mod-ico{width:22px !important;height:22px !important;border-radius:4px !important;background:transparent !important;color:#787774 !important;transition:none !important;flex-shrink:0;border:none !important}
-        #page-home .mods-grid .mod:hover .mod-ico{background:transparent !important;color:#37352f !important;transform:none !important}
-        #page-home .mods-grid .mod-ico svg{width:15px !important;height:15px !important;stroke-width:1.5 !important}
-        #page-home .mods-grid .mod-name{font-size:13.5px !important;font-weight:400 !important;line-height:1.3 !important;letter-spacing:-.005em;margin:0;padding-right:66px;flex:1;color:#37352f !important}
+        #page-home .mods-grid .mod:hover{background:#f7f6f3 !important;border-color:#d3d1cb !important;transform:none !important;box-shadow:none !important}
+        #page-home .mods-grid .mod:active{background:#efefed !important}
+        #page-home .mods-grid .mod-ico{width:30px !important;height:30px !important;border-radius:6px !important;background:#f1f1ef !important;color:#37352f !important;transition:none !important;flex-shrink:0;border:none !important;display:inline-flex !important;align-items:center;justify-content:center}
+        #page-home .mods-grid .mod:hover .mod-ico{background:#eceae6 !important;color:#37352f !important;transform:none !important}
+        #page-home .mods-grid .mod-ico svg{width:16px !important;height:16px !important;stroke-width:1.6 !important}
+        #page-home .mods-grid .mod-name{font-size:13px !important;font-weight:500 !important;line-height:1.3 !important;letter-spacing:-.005em;margin:0 !important;padding:0 !important;flex:1 !important;color:#37352f !important;display:block;overflow:hidden;width:100%}
         #page-home .mods-grid .mod-fn{display:none}
-        #page-home .mods-grid .mod-badge{top:50% !important;transform:translateY(-50%) !important;right:8px !important;padding:1px 6px !important;font-size:10.5px !important;font-weight:500 !important;position:absolute !important;border-radius:3px !important;letter-spacing:0;border:none !important}
+        #page-home .mods-grid .mod-badge{position:static !important;top:auto !important;right:auto !important;transform:none !important;padding:2px 7px !important;font-size:10.5px !important;font-weight:500 !important;border-radius:3px !important;letter-spacing:0;border:none !important;align-self:flex-start !important;margin-top:0 !important}
         /* Séparateurs de groupes "Tous les jours" / "Selon l'activité" */
-        #page-home .mods-grid > div[style*="grid-column"]{font-family:inherit !important;font-style:normal !important;font-size:10.5px !important;font-weight:600 !important;color:#9b9a97 !important;margin:16px 2px 4px !important;letter-spacing:.06em !important;text-transform:uppercase !important;padding:0 !important;background:transparent !important;border:none !important}
+        #page-home .mods-grid > div[style*="grid-column"]{grid-column:1/-1 !important;font-family:inherit !important;font-style:normal !important;font-size:10.5px !important;font-weight:600 !important;color:#9b9a97 !important;margin:16px 2px 4px !important;letter-spacing:.06em !important;text-transform:uppercase !important;padding:0 !important;background:transparent !important;border:none !important}
         #page-home .mods-grid > div[style*="grid-column"] span[style*="background:#22c55e"]{background:var(--accent,#0f766e) !important;opacity:.7;border-radius:999px}
         #page-home .mods-grid > div[style*="grid-column"] span[style*="background:#f59e0b"]{background:#d2ad46 !important;opacity:.8;border-radius:999px}
       </style>
