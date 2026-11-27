@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v516';
+var APP_BUILD = 'v517';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -28986,14 +28986,15 @@ window.faqChercher = faqChercher;
 // y compris après une déconnexion, pour arriver directement au bon écran.
 // ══════════════════════════════════════════════════════════════════
 function entrerModeAccueil(mode) {
-  mode = (mode === 'expert') ? 'expert' : 'guide';
-  try { lsSet('haccp_mode', mode); } catch (e) {}
+  // Mode guidé supprimé : tout passe par le dashboard expert.
+  mode = 'expert';
+  try { lsSet('haccp_mode', 'expert'); } catch (e) {}
   try {
     var _s = { etabId: ETAB_ID || lsGet('haccp_etab_id') || 'local', etabNom: ETAB.nom || 'Mon établissement', secteur: SECTEUR_ACTIF || 'resto', pwdOk: true, loginAt: Date.now() };
     sessionWrite(JSON.stringify(_s));
   } catch (e) {}
-  if (mode === 'expert') { showPage('page-home'); try { renderMods('quotidien'); } catch (e) {} }
-  else { showPage('page-guide'); }
+  showPage('page-home');
+  try { renderMods('quotidien'); } catch (e) {}
 }
 (function () {
   // Mémoriser le mode par compte à chaque fois qu'il est choisi (écran de choix,
