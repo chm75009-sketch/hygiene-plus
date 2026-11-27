@@ -27880,7 +27880,7 @@ try{(function(){
     d.textContent='Version '+String(v).replace(/^v/i,'');
     // Coin BAS-GAUCHE + pointer-events:none : lisible mais ne recouvre JAMAIS un
     // bouton (les taps passent au travers) — surtout pas le « Fermer » en haut à droite.
-    d.style.cssText='position:fixed;left:10px;bottom:10px;z-index:2147483647;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,#2563eb,#1e40af);padding:5px 11px;border-radius:10px;font-family:Outfit,sans-serif;letter-spacing:.3px;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none';
+    d.style.cssText='position:fixed;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:2147483647;font-size:9.5px;font-weight:500;color:#8a8a8a;background:rgba(255,255,255,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:3px 8px;border-radius:999px;font-family:JetBrains Mono,monospace;letter-spacing:.02em;border:1px solid rgba(231,227,217,.6);pointer-events:none;opacity:.55';
     (document.body||document.documentElement).appendChild(d);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',tag); else tag();

@@ -562,15 +562,34 @@ body{
 }
 .btn-s:hover{background:var(--cream);border-color:#dcdcdc}
 
-/* ── BOTTOM NAV épurée ── */
+/* ── BOTTOM NAV fixée en bas ── */
 .bnav{
-  position:sticky;bottom:0;background:rgba(255,255,255,.96);
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;
+  background:rgba(255,255,255,.96);
   backdrop-filter:saturate(180%) blur(18px);
   -webkit-backdrop-filter:saturate(180%) blur(18px);
   border-top:1px solid var(--line-soft);
   display:flex;padding:8px 0 env(safe-area-inset-bottom,10px);
   z-index:200;flex-shrink:0;
 }
+/* Padding bas du scroll de l'app pour éviter que le contenu soit
+   masqué par la bnav fixe (hauteur approximative 60px + safe-area) */
+.scroll{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+/* La bnav ne s'affiche que quand l'utilisateur est connecté à l'app :
+   les pages de connexion/présentation la masquent déjà via .app:has() */
+.app:has(#page-presentation.active) .bnav,
+.app:has(#page-login.active) .bnav,
+.app:has(#page-onboarding.active) .bnav,
+.app:has(#page-choix.active) .bnav,
+.app:has(#page-admin.active) .bnav,
+.app:has(#page-inspecteur.active) .bnav{display:none!important}
+.app:has(#page-presentation.active) .scroll,
+.app:has(#page-login.active) .scroll,
+.app:has(#page-onboarding.active) .scroll,
+.app:has(#page-choix.active) .scroll,
+.app:has(#page-admin.active) .scroll,
+.app:has(#page-inspecteur.active) .scroll{padding-bottom:0}
 .nitem{
   flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:4px 0;cursor:pointer;color:var(--ink-3);font-size:10px;font-weight:500;
