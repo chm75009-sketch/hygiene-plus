@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=531">
-    <script src="pms_secteurs.js?v=531" defer></script>
-    <script src="script.js?v=531" defer></script>
-<script src="patch_photo_bl.js?v=531" defer></script>
-<script src="pms_generateur.js?v=531" defer></script>
+    <link rel="stylesheet" href="style.css?v=532">
+    <script src="pms_secteurs.js?v=532" defer></script>
+    <script src="script.js?v=532" defer></script>
+<script src="patch_photo_bl.js?v=532" defer></script>
+<script src="pms_generateur.js?v=532" defer></script>
 <script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
@@ -4316,53 +4316,125 @@ html, body { max-width: 100%; overflow-x: hidden; }
       </div>
     </div>
 <div class="page" id="page-reports">
-      <div class="mod-header">
-        <button class="btn-back" onclick="goHome()">← Retour</button>
-        <div class="mod-header-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg></div>
-        <div class="mod-header-num">Rapports & Analytics</div>
-        <div class="mod-header-title">Rapports</div>
-        <div class="mod-header-intro">Accéder à vos tableaux de bord et générez vos rapports réglementaires.</div>
-      </div>
-      <div class="fwrap">
-        <div class="fblock" onclick="openModule('dashboard')" style="cursor:pointer;border:2px solid #059669">
-          <div style="display:flex;align-items:center;gap:14px">
-            <div style="font-size:32px"></div>
-            <div>
-              <div style="font-weight:800;font-size:15px;margin-bottom:4px">Tableau de bord</div>
-              <div style="font-size:12px;color:var(--dim)">Score conformité, KPIs, alertes actives, suivi NC</div>
-            </div>
-            <div style="margin-left:auto;color:var(--dim);font-size:20px">›</div>
+      <style>
+        /* === RAPPORTS v7 — cohérent avec dashboard Modules et Historique === */
+        #page-reports{background:#faf8f3;color:#37352f;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+        #page-reports .rp-wrap{padding:16px 16px 28px}
+
+        /* Header sobre + pilule retour + titre + sous-titre */
+        #page-reports .rp-top{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+        #page-reports .rp-back{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e9e9e7;color:#37352f;font-family:inherit;font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer;transition:all .15s;box-shadow:0 1px 2px rgba(10,10,10,.04)}
+        #page-reports .rp-back:hover{background:#f7f6f3;border-color:#d3d1cb}
+        #page-reports .rp-back svg{width:13px;height:13px;stroke-width:2}
+        #page-reports .rp-cap{display:flex;align-items:center;gap:12px;margin:4px 0 2px}
+        #page-reports .rp-cap-ico{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent,#0f766e) 0%,#115e59 100%);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px -3px rgba(15,118,110,.4),inset 0 1px 0 rgba(255,255,255,.15)}
+        #page-reports .rp-cap-ico svg{width:19px;height:19px}
+        #page-reports .rp-cap-txt{min-width:0;line-height:1.15}
+        #page-reports .rp-cap-t{display:block;font-size:26px;color:#1f1e1b;font-weight:700;letter-spacing:-.025em;line-height:1.1}
+        #page-reports .rp-cap-s{display:block;font-size:12px;color:#787774;font-weight:500;margin-top:4px}
+        #page-reports .rp-cap-s em{font-style:normal;color:var(--accent,#0f766e);font-weight:600}
+
+        /* CTA principal Pack DDPP (teal gradient avec halo or) */
+        #page-reports .rp-cta{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--accent,#0f766e) 0%,#115e59 100%);color:#fff;border-radius:14px;padding:16px 16px 14px;margin:18px 0 22px;cursor:pointer;border:none;width:100%;font-family:inherit;text-align:left;transition:all .2s cubic-bezier(.22,.6,.36,1);box-shadow:0 8px 20px -4px rgba(15,118,110,.4),0 2px 4px rgba(15,118,110,.2);position:relative;overflow:hidden}
+        #page-reports .rp-cta::before{content:'';position:absolute;top:-40%;right:-15%;width:220px;height:220px;background:radial-gradient(circle,rgba(210,173,70,.2) 0%,transparent 65%);pointer-events:none}
+        #page-reports .rp-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px -6px rgba(15,118,110,.5),0 4px 8px rgba(15,118,110,.25)}
+        #page-reports .rp-cta:active{transform:translateY(0)}
+        #page-reports .rp-cta-ico{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.18);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;position:relative;z-index:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-reports .rp-cta-ico svg{width:20px;height:20px}
+        #page-reports .rp-cta-txt{flex:1;line-height:1.25;min-width:0;position:relative;z-index:1}
+        #page-reports .rp-cta-tag{display:block;font-size:10.5px;color:#fde68a;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+        #page-reports .rp-cta-name{display:block;font-size:16px;font-weight:700;letter-spacing:-.015em}
+        #page-reports .rp-cta-sub{display:block;font-size:11.5px;color:rgba(255,255,255,.75);font-weight:500;margin-top:3px}
+        #page-reports .rp-cta-arr{color:rgba(255,255,255,.75);flex-shrink:0;line-height:0;position:relative;z-index:1;transition:transform .2s}
+        #page-reports .rp-cta:hover .rp-cta-arr{transform:translateX(3px)}
+        #page-reports .rp-cta-arr svg{width:18px;height:18px}
+
+        /* Section headers (uppercase gris) */
+        #page-reports .rp-section{font-size:11px;font-weight:700;color:#37352f;letter-spacing:.06em;text-transform:uppercase;margin:4px 2px 10px;display:flex;align-items:baseline;gap:8px}
+        #page-reports .rp-section em{font-style:normal;color:#9b9a97;font-weight:500;font-size:10.5px;text-transform:none;letter-spacing:0}
+
+        /* Cards v7 actions secondaires */
+        #page-reports .rp-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+        #page-reports .rp-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e9e9e7;border-radius:12px;padding:13px 14px;cursor:pointer;font-family:inherit;text-align:left;transition:all .2s cubic-bezier(.22,.6,.36,1);box-shadow:0 2px 6px -1px rgba(10,10,10,.05),0 1px 3px rgba(10,10,10,.04);width:100%;position:relative;overflow:hidden}
+        #page-reports .rp-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:transparent;transition:background .2s}
+        #page-reports .rp-card:hover{transform:translateY(-2px);box-shadow:0 10px 22px -6px rgba(10,10,10,.12),0 2px 4px rgba(10,10,10,.06);border-color:#d3d1cb}
+        #page-reports .rp-card.accent:hover::before{background:var(--accent,#0f766e)}
+        #page-reports .rp-card.alert:hover::before{background:#dc2626}
+        #page-reports .rp-card.dark:hover::before{background:#37352f}
+        #page-reports .rp-card:active{transform:translateY(0)}
+        #page-reports .rp-card-ico{width:38px;height:38px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;box-shadow:0 3px 8px -2px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-reports .rp-card.accent .rp-card-ico{background:linear-gradient(135deg,var(--accent,#0f766e) 0%,#115e59 100%);box-shadow:0 4px 10px -2px rgba(15,118,110,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-reports .rp-card.alert .rp-card-ico{background:linear-gradient(135deg,#dc2626 0%,#991b1b 100%);box-shadow:0 4px 10px -2px rgba(220,38,38,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-reports .rp-card.dark .rp-card-ico{background:linear-gradient(135deg,#37352f 0%,#1a1a1a 100%);box-shadow:0 4px 10px -2px rgba(55,53,47,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+        #page-reports .rp-card-ico svg{width:18px;height:18px}
+        #page-reports .rp-card-txt{flex:1;line-height:1.25;min-width:0}
+        #page-reports .rp-card-txt b{display:block;font-size:14px;font-weight:700;color:#1f1e1b;letter-spacing:-.01em}
+        #page-reports .rp-card-txt small{display:block;font-size:11.5px;color:#787774;margin-top:2px;font-weight:500;line-height:1.4}
+        #page-reports .rp-card-arr{color:#9b9a97;flex-shrink:0;line-height:0;transition:all .2s}
+        #page-reports .rp-card:hover .rp-card-arr{color:#37352f;transform:translateX(3px)}
+        #page-reports .rp-card-arr svg{width:16px;height:16px}
+
+        /* Bloc info / tip en bas */
+        #page-reports .rp-tip{background:linear-gradient(135deg,#fff 0%,#f0faf7 100%);border:1px solid #d6ede5;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-top:18px}
+        #page-reports .rp-tip-ico{width:28px;height:28px;border-radius:8px;background:rgba(15,118,110,.1);color:var(--accent,#0f766e);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+        #page-reports .rp-tip-ico svg{width:15px;height:15px}
+        #page-reports .rp-tip-txt{flex:1;font-size:11.5px;color:#37352f;line-height:1.5;font-weight:500}
+        #page-reports .rp-tip-txt b{color:var(--accent,#0f766e);font-weight:700}
+      </style>
+
+      <div class="rp-wrap">
+        <!-- 1. En-tête : retour + titre + sous-titre -->
+        <div class="rp-top">
+          <button type="button" class="rp-back" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
+        </div>
+        <div class="rp-cap">
+          <span class="rp-cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg></span>
+          <div class="rp-cap-txt">
+            <span class="rp-cap-t">Rapports</span>
+            <span class="rp-cap-s">Tableaux de bord et <em>exports réglementaires</em></span>
           </div>
         </div>
-        <div class="fblock" onclick="openModule('exports')" style="cursor:pointer;border:2px solid #2563eb">
-          <div style="display:flex;align-items:center;gap:14px">
-            <div style="font-size:32px"></div>
-            <div>
-              <div style="font-weight:800;font-size:15px;margin-bottom:4px">Pack DDPP</div>
-              <div style="font-size:12px;color:var(--dim)">Générer le rapport complet pour contrôle DDPP en 1 clic</div>
-            </div>
-            <div style="margin-left:auto;color:var(--dim);font-size:20px">›</div>
-          </div>
+
+        <!-- 2. CTA principal : Pack DDPP -->
+        <button type="button" class="rp-cta" onclick="openModule('exports')">
+          <span class="rp-cta-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="8 13 12 17 16 13"/><line x1="12" y1="17" x2="12" y2="10"/></svg></span>
+          <span class="rp-cta-txt">
+            <span class="rp-cta-tag">Prêt pour contrôle DDPP</span>
+            <span class="rp-cta-name">Générer le Pack DDPP</span>
+            <span class="rp-cta-sub">Tous vos contrôles réunis en un seul PDF conforme</span>
+          </span>
+          <span class="rp-cta-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </button>
+
+        <!-- 3. Consulter -->
+        <div class="rp-section">Consulter <em>· vue d'ensemble en temps réel</em></div>
+        <div class="rp-cards">
+          <button type="button" class="rp-card accent" onclick="openModule('dashboard')">
+            <span class="rp-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg></span>
+            <span class="rp-card-txt"><b>Tableau de bord</b><small>Score conformité, KPIs, alertes et suivi des NC</small></span>
+            <span class="rp-card-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </button>
+          <button type="button" class="rp-card alert" onclick="openModule('nc')">
+            <span class="rp-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            <span class="rp-card-txt"><b>Registre des non-conformités</b><small>NC actives et actions correctives en cours</small></span>
+            <span class="rp-card-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </button>
         </div>
-        <div class="fblock" onclick="openModule('dashboard')" style="cursor:pointer;border:2px solid #dc2626">
-          <div style="display:flex;align-items:center;gap:14px">
-            <div style="font-size:32px"></div>
-            <div>
-              <div style="font-weight:800;font-size:15px;margin-bottom:4px">Registre NC</div>
-              <div style="font-size:12px;color:var(--dim)">Non-conformités actives et actions correctives</div>
-            </div>
-            <div style="margin-left:auto;color:var(--dim);font-size:20px">›</div>
-          </div>
+
+        <!-- 4. Archives -->
+        <div class="rp-section">Archives <em>· traçabilité 3 ans</em></div>
+        <div class="rp-cards">
+          <button type="button" class="rp-card dark" onclick="navTo('history')">
+            <span class="rp-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="10"/></svg></span>
+            <span class="rp-card-txt"><b>Historique complet</b><small>Tous vos enregistrements horodatés et signés</small></span>
+            <span class="rp-card-arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+          </button>
         </div>
-        <div class="fblock" onclick="navTo('history')" style="cursor:pointer">
-          <div style="display:flex;align-items:center;gap:14px">
-            <div style="font-size:32px"></div>
-            <div>
-              <div style="font-weight:800;font-size:15px;margin-bottom:4px">Historique complet</div>
-              <div style="font-size:12px;color:var(--dim)">Tous vos enregistrements — archivage 3 ans</div>
-            </div>
-            <div style="margin-left:auto;color:var(--dim);font-size:20px">›</div>
-          </div>
+
+        <!-- 5. Tip pédagogique -->
+        <div class="rp-tip">
+          <span class="rp-tip-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+          <span class="rp-tip-txt"><b>Astuce :</b> en cas de contrôle DDPP, un seul geste suffit — le Pack DDPP regroupe automatiquement tous vos contrôles signés des derniers jours.</span>
         </div>
       </div>
     </div>
