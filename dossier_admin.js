@@ -1565,21 +1565,18 @@
         w.innerHTML = bouton;
         body.insertBefore(w, body.firstChild);
       }
-      var tete = document.querySelector('#page-home .ph4-row1');
-      var hote = tete ? tete.parentNode : document.querySelector('#page-home .ph4-wrap');
+      // Hygiène+ v527 : plus de bandeau "Dossier administratif" injecté en haut
+      // de page-home — l'accès passe désormais par le raccourci dédié (3e tuile
+      // des ph4-shortcuts) qui appelle ouvrirDossierAdministratif().
       var hero = document.querySelector('#page-home > .hero');
-      if (!document.getElementById('daTuileExpert') && (hote || hero)) {
+      if (hero && !document.querySelector('#page-home .ph4-wrap') && !document.getElementById('daTuileExpert')) {
+        // Dashboard classique (site Nomos d'origine) : garder le bandeau juste
+        // sous le hero, uniquement si la refonte v7 n'est pas présente.
         var w2 = document.createElement('div');
         w2.id = 'daTuileExpert';
         w2.innerHTML = bouton;
-        if (hote) {
-          w2.style.cssText = 'margin-top:44px'; // laisse la place au bouton flottant « Mes rapports »
-          hote.insertBefore(w2, tete ? tete.nextSibling : hote.firstChild);
-        } else {
-          // Tableau de bord classique (site Nomos) : juste sous le bandeau du haut
-          w2.style.cssText = 'padding:12px 16px 0';
-          hero.parentNode.insertBefore(w2, hero.nextSibling);
-        }
+        w2.style.cssText = 'padding:12px 16px 0';
+        hero.parentNode.insertBefore(w2, hero.nextSibling);
       }
     } catch (e) {}
   }

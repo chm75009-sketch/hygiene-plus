@@ -183,12 +183,12 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=527">
-    <script src="pms_secteurs.js?v=527" defer></script>
-    <script src="script.js?v=527" defer></script>
-<script src="patch_photo_bl.js?v=527" defer></script>
-<script src="pms_generateur.js?v=527" defer></script>
-<script src="dossier_admin.js?v=18" defer></script>
+    <link rel="stylesheet" href="style.css?v=528">
+    <script src="pms_secteurs.js?v=528" defer></script>
+    <script src="script.js?v=528" defer></script>
+<script src="patch_photo_bl.js?v=528" defer></script>
+<script src="pms_generateur.js?v=528" defer></script>
+<script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
 <!-- Bandeau « COPIE DE TRAVAIL » : affiché uniquement hors du site officiel nomos-haccp.fr -->
@@ -1445,9 +1445,9 @@ html, body { max-width: 100%; overflow-x: hidden; }
             <span class="ph4-short-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
             <span class="ph4-short-lbl">Contrôle DDPP</span>
           </button>
-          <button class="ph4-short accent" onclick="window.prChatbotOpen && window.prChatbotOpen()">
-            <span class="ph4-short-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><circle cx="9" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/><path d="M12 4v3"/></svg></span>
-            <span class="ph4-short-lbl">Assistant</span>
+          <button class="ph4-short accent" onclick="if(typeof ouvrirDossierAdministratif==='function')ouvrirDossierAdministratif();">
+            <span class="ph4-short-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg></span>
+            <span class="ph4-short-lbl">Dossier admin</span>
           </button>
           <button class="ph4-short gold" onclick="openModule('equipe')">
             <span class="ph4-short-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
