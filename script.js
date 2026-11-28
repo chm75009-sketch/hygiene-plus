@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v557';
+var APP_BUILD = 'v558';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -13282,17 +13282,20 @@ try {
 // nettoyage, fiches techniques) ne sont PAS listées à part pour éviter
 // les doublons : elles font partie du PMS.
 var COFFRE_DOCS = [
-  { cle:'cerfa',              label:"Déclaration d'activité (Cerfa 13984)",       icon:'🏛️' },
-  { cle:'formation',          label:'Attestation Formation HACCP',                icon:'🎓' },
-  { cle:'medical',            label:'Aptitudes médicales du personnel',           icon:'🩺' },
-  { cle:'pms',                label:'Plan de Maîtrise Sanitaire (PMS) — inclut plan HACCP, plan de flux, plan de nettoyage, fiches techniques', icon:'📄' },
-  { cle:'contrat_nuisibles',  label:'Contrat prestataire nuisibles',              icon:'🐭' },
-  { cle:'contrat_huiles',     label:'Contrat collecte huiles usagées',            icon:'🛢️' },
-  { cle:'agrement',           label:'Agrément sanitaire',                         icon:'✅' },
-  { cle:'micro',              label:'Analyses microbiologiques',                  icon:'🧪' },
-  { cle:'contrat_biodechets', label:'Contrat collecte biodéchets',                icon:'♻️' },
-  { cle:'autre',              label:'Autres documents',                           icon:'📎' }
+  { cle:'cerfa',              label:"Déclaration d'activité (Cerfa 13984)",       icon:'' },
+  { cle:'formation',          label:'Attestation Formation HACCP',                icon:'' },
+  { cle:'medical',            label:'Aptitudes médicales du personnel',           icon:'' },
+  { cle:'pms',                label:'Plan de Maîtrise Sanitaire (PMS) — inclut plan HACCP, plan de flux, plan de nettoyage, fiches techniques', icon:'' },
+  { cle:'contrat_nuisibles',  label:'Contrat prestataire nuisibles',              icon:'' },
+  { cle:'contrat_huiles',     label:'Contrat collecte huiles usagées',            icon:'' },
+  { cle:'agrement',           label:'Agrément sanitaire',                         icon:'' },
+  { cle:'micro',              label:'Analyses microbiologiques',                  icon:'' },
+  { cle:'contrat_biodechets', label:'Contrat collecte biodéchets',                icon:'' },
+  { cle:'autre',              label:'Autres documents',                           icon:'' }
 ];
+// v558 : SVG générique document (dossier) utilisé en remplacement des emojis
+// dans les deux rendus du coffre (renderCoffre + renderCoffreInspecteur).
+var _COFFRE_ICO_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>';
 
 // Affiche le coffre-fort (appelé à l'ouverture du module Documents)
 async function renderCoffre() {
@@ -13308,27 +13311,27 @@ async function renderCoffre() {
   COFFRE_DOCS.forEach(function(d) {
     var fichiers = tous.filter(function(f){ return f.cle === d.cle; });
     html += '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;margin-bottom:8px">';
-    html += '<div style="display:flex;align-items:center;gap:8px">';
-    html += '<span style="font-size:18px">' + _echap(d.icon) + '</span>';
+    html += '<div style="display:flex;align-items:center;gap:10px">';
+    html += '<span style="width:30px;height:30px;border-radius:8px;background:#f0faf7;color:#0f766e;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">' + _COFFRE_ICO_SVG + '</span>';
     html += '<span style="flex:1;font-size:12.5px;font-weight:700;color:#1f2937">' + _echap(d.label) + '</span>';
     if (d.cle === 'pms' && typeof window.genererPMS === 'function') {
-      html += '<button onclick="genererPMS()" style="background:#4338ca;color:white;border:none;border-radius:8px;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;white-space:nowrap;margin-right:6px">✨ Générer mon PMS</button>';
+      html += '<button onclick="genererPMS()" style="background:linear-gradient(135deg,#d2ad46,#8b6f1d);color:white;border:none;border-radius:999px;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;white-space:nowrap;margin-right:6px">Générer mon PMS</button>';
     }
-    html += '<button onclick="coffreUpload(\'' + d.cle + '\')" style="background:#16a34a;color:white;border:none;border-radius:8px;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;white-space:nowrap">📎 Téléverser</button>';
+    html += '<button onclick="coffreUpload(\'' + d.cle + '\')" style="background:linear-gradient(135deg,#0f766e,#115e59);color:white;border:none;border-radius:999px;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;white-space:nowrap">Téléverser</button>';
     html += '</div>';
     if (d.cle === 'pms') {
-      html += '<div style="font-size:10.5px;color:#6b7280;margin-top:6px;line-height:1.45">✨ Génère un PMS complet pré-rempli (BPH, plan HACCP, CCP, traçabilité) adapté à votre secteur, à relire et compléter. Modèle — vous restez responsable de sa mise à jour.</div>';
+      html += '<div style="font-size:10.5px;color:#6b7280;margin-top:6px;line-height:1.45">Génère un PMS complet pré-rempli (BPH, plan HACCP, CCP, traçabilité) adapté à votre secteur, à relire et compléter. Modèle — vous restez responsable de sa mise à jour.</div>';
     }
     if (fichiers.length === 0) {
       html += '<div style="font-size:11px;color:#9ca3af;margin-top:6px">Aucun document</div>';
     } else {
       fichiers.forEach(function(f) {
         var d2 = f.createdAt ? new Date(f.createdAt).toLocaleDateString('fr-FR') : '';
-        html += '<div style="display:flex;align-items:center;gap:8px;margin-top:6px;background:#f9fafb;border-radius:8px;padding:6px 8px">';
-        html += '<span style="font-size:14px">' + (String(f.mime||'').indexOf('pdf') > -1 ? '📄' : '🖼️') + '</span>';
+        html += '<div style="display:flex;align-items:center;gap:8px;margin-top:6px;background:#f9fafb;border-radius:8px;padding:6px 10px">';
+        html += '<span style="width:18px;height:18px;flex-shrink:0;color:#787774"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">' + (String(f.mime||'').indexOf('pdf') > -1 ? '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' : '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>') + '</svg></span>';
         html += '<span style="flex:1;font-size:11px;color:#374151;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (_echap(f.nom || 'Document')) + (d2 ? ' · ' + d2 : '') + '</span>';
-        html += '<button onclick="coffreView(' + f.id + ')" style="background:#eef2ff;color:#4338ca;border:none;border-radius:6px;font-size:11px;font-weight:700;padding:4px 9px;cursor:pointer">👁️ Voir</button>';
-        html += '<button onclick="coffreDelete(' + f.id + ')" style="background:#fef2f2;color:#dc2626;border:none;border-radius:6px;font-size:11px;font-weight:700;padding:4px 9px;cursor:pointer">✕</button>';
+        html += '<button onclick="coffreView(' + f.id + ')" style="background:#f0faf7;color:#0f766e;border:1px solid #c5e5db;border-radius:999px;font-size:11px;font-weight:600;padding:5px 11px;cursor:pointer">Voir</button>';
+        html += '<button onclick="coffreDelete(' + f.id + ')" style="background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;border-radius:999px;font-size:11px;font-weight:600;padding:5px 11px;cursor:pointer">Retirer</button>';
         html += '</div>';
       });
     }
@@ -13437,11 +13440,11 @@ function _inspDocsHTML(tous) {
     } else {
       html += '<span style="width:24px;height:24px;flex-shrink:0;border-radius:50%;background:#f1f5f9;color:#94a3b8;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center">' + (i+1) + '</span>';
     }
-    html += '<span style="font-size:22px;flex-shrink:0">' + _echap(d.icon) + '</span>';
-    html += '<span style="flex:1;min-width:0;font-size:13.5px;font-weight:800;color:#0f172a;line-height:1.25">' + d.label
+    html += '<span style="width:32px;height:32px;border-radius:8px;background:#f0faf7;color:#0f766e;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">' + _COFFRE_ICO_SVG + '</span>';
+    html += '<span style="flex:1;min-width:0;font-size:13.5px;font-weight:700;color:#0f172a;line-height:1.25">' + _echap(d.label)
          + '<span style="display:block;font-size:11.5px;font-weight:600;margin-top:2px;color:' + (aFichier ? '#15803d' : '#dc2626') + '">'
-         + (aFichier ? ('✓ ' + fichiers.length + ' fichier' + (fichiers.length>1?'s':'') + ' — coché = à présenter') : '⚠ Manquant — à téléverser') + '</span></span>';
-    html += '<button onclick="coffreUpload(\'' + d.cle + '\')" style="flex-shrink:0;background:' + (aFichier ? '#eef2ff' : '#16a34a') + ';color:' + (aFichier ? '#4338ca' : '#fff') + ';border:none;border-radius:10px;font-size:12px;font-weight:800;padding:10px 14px;cursor:pointer;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.08)">' + (aFichier ? '＋' : '📎 Ajouter') + '</button>';
+         + (aFichier ? (fichiers.length + ' fichier' + (fichiers.length>1?'s':'') + ' — coché = à présenter') : 'Manquant — à téléverser') + '</span></span>';
+    html += '<button onclick="coffreUpload(\'' + d.cle + '\')" style="flex-shrink:0;background:' + (aFichier ? '#f0faf7' : 'linear-gradient(135deg,#0f766e,#115e59)') + ';color:' + (aFichier ? '#0f766e' : '#fff') + ';border:' + (aFichier ? '1px solid #c5e5db' : 'none') + ';border-radius:999px;font-size:12px;font-weight:600;padding:9px 14px;cursor:pointer;white-space:nowrap;box-shadow:' + (aFichier ? 'none' : '0 4px 10px -2px rgba(15,118,110,.35)') + '">' + (aFichier ? '+ Ajouter' : 'Téléverser') + '</button>';
     html += '</div>';
   });
   return html;
