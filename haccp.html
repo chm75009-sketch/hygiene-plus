@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=533">
-    <script src="pms_secteurs.js?v=533" defer></script>
-    <script src="script.js?v=533" defer></script>
-<script src="patch_photo_bl.js?v=533" defer></script>
-<script src="pms_generateur.js?v=533" defer></script>
+    <link rel="stylesheet" href="style.css?v=534">
+    <script src="pms_secteurs.js?v=534" defer></script>
+    <script src="script.js?v=534" defer></script>
+<script src="patch_photo_bl.js?v=534" defer></script>
+<script src="pms_generateur.js?v=534" defer></script>
 <script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
@@ -242,10 +242,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
         style="display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);color:var(--ink-2);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;transition:border-color .15s,color .15s" onmouseover="this.style.borderColor='#d84f43';this.style.color='#d84f43'" onmouseout="this.style.borderColor='';this.style.color=''"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Quitter</button>
     </div>
   </div>
-  <!-- NAV-1 — Boutons flottants d'aide à la navigation (additifs, n'altèrent aucune
-       logique existante). « Retour » rejoue le clic du bouton retour de la page ;
-       « Haut » ramène en haut du contenu. Ils n'apparaissent que quand on a défilé. -->
-  <button id="floatBack" type="button" aria-label="Retour" style="display:none">← Retour</button>
+  <!-- NAV-1 — Boutons flottants d'aide à la navigation.
+       v534 : le bouton flottant « Retour » est supprimé car il faisait doublon
+       avec le .btn-back du mod-header en haut de chaque module et coupait
+       visuellement la page. La bnav (icône Modules) et le scroll vers le haut
+       assurent le retour sans ambiguïté. Seul « ↑ » (haut) reste. -->
   <button id="floatTop" type="button" aria-label="Remonter en haut" style="display:none">↑</button>
   <div class="scroll" id="scrollArea">
     <!-- HOME -->
