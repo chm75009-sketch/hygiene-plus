@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v540';
+var APP_BUILD = 'v541';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1288,6 +1288,59 @@ async function sbSauvegarderEtab(etabData) {
 // Legacy : le bouton #modeExpertBtn vivait dans page-guide (supprimée).
 // Guard préservé au cas où un hook externe le réinjecterait un jour.
 (function(){ var _b = document.getElementById('modeExpertBtn'); if (_b) _b.addEventListener('click', function(){ showPage('page-home'); renderMods('quotidien'); }); })();
+
+// === v540 : Nettoyage global des emojis décoratifs dans les modules ===
+// Retire les emojis fréquents (pictogrammes Unicode des plans 1F300-1F9FF,
+// 2700-27BF, 2600-26FF) des titres/intros/boutons des modules. Préserve les
+// indicateurs utiles (✓ U+2713, ✗ U+2717, ★ U+2605, ⚠ U+26A0) et tout SVG.
+(function(){
+  if (typeof window === 'undefined') return;
+  var EMOJI_RE = /(?:[\u{1F300}-\u{1F6FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F1E6}-\u{1F1FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F600}-\u{1F64F}]|[\u{2700}-\u{27BF}]|[\u{1F3FB}-\u{1F3FF}]|[\u{200D}]|[️])+/gu;
+  var SELECTORS = [
+    '.mod-header-title', '.mod-header-intro', '.mod-header-num',
+    '.fblock-title', '.flabel', '.st-cap-s',
+    'button.btn-p', 'button.btn-s'
+  ];
+  function nettoyerTexte(t){
+    if(!t) return t;
+    // Retire les plages d'emojis puis trim; conserve ✓ ✗ ★ ⚠ hors de ces plages.
+    var out = t.replace(EMOJI_RE, '');
+    // Compacte les espaces multiples et retire un éventuel séparateur esseulé.
+    out = out.replace(/[ \t]{2,}/g, ' ').replace(/^\s*[·—\-·]\s*/, '').replace(/\s*[·—\-·]\s*$/, '').trim();
+    return out;
+  }
+  function nettoyerSousArbre(root){
+    try{
+      SELECTORS.forEach(function(sel){
+        root.querySelectorAll(sel).forEach(function(el){
+          // Parcours des noeuds texte uniquement (préserve les SVG, enfants structurés)
+          var it = document.createNodeIterator(el, NodeFilter.SHOW_TEXT);
+          var node;
+          while ((node = it.nextNode())) {
+            if (!node.nodeValue) continue;
+            var cleaned = nettoyerTexte(node.nodeValue);
+            if (cleaned !== node.nodeValue) node.nodeValue = cleaned;
+          }
+        });
+      });
+    }catch(e){}
+  }
+  function nettoyerTout(){ nettoyerSousArbre(document.body); }
+  // Au chargement et à chaque showPage (via hook léger).
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', nettoyerTout);
+  else nettoyerTout();
+  // Re-passe à chaque changement de page (mutation observer sur .page.active class).
+  try{
+    var obs = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        if (m.type === 'attributes' && m.target && m.target.classList && m.target.classList.contains('active') && m.target.classList.contains('page')) {
+          setTimeout(function(){ nettoyerSousArbre(m.target); }, 60);
+        }
+      });
+    });
+    obs.observe(document.body, { subtree:true, attributes:true, attributeFilter:['class'] });
+  }catch(e){}
+})();
 
 
 // ── LOCALSTORAGE SÉCURISÉ — anti quota exceeded ──
