@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v535';
+var APP_BUILD = 'v536';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -16680,6 +16680,15 @@ function initDashboard() {
     var scoreDetail = document.getElementById('db_score_detail');
     var avgEl = document.getElementById('db_conf_avg');
     if (scoreEl) scoreEl.innerHTML = (score !== null ? score : '—') + '<span style="font-size:28px">%</span>';
+    // Alimente les chips du nouveau header v7 (page-dashboard).
+    try {
+      var chipScore = document.getElementById('db_chip_score');
+      var chipNc = document.getElementById('db_chip_nc');
+      var chipWeek = document.getElementById('db_chip_week');
+      if (chipScore) chipScore.textContent = score !== null ? (score + '%') : '—';
+      if (chipNc) chipNc.textContent = ncsActives.length;
+      if (chipWeek) chipWeek.textContent = entries7j.length;
+    } catch (eDbChips) {}
     if (scoreEl) scoreEl.parentElement.style.background = score !== null ? (score>=80 ? 'linear-gradient(135deg,#14532d,#16a34a)' : score>=60 ? 'linear-gradient(135deg,#78350f,#f59e0b)' : 'linear-gradient(135deg,#7f1d1d,#dc2626)') : 'linear-gradient(135deg,#1e3a5f,#3b82f6)';
     if (scoreDetail) scoreDetail.textContent = (totalControles > 0 ? totalConf + '/' + totalControles + ' controles conformes' : 'Ouvrir les modules pour calculer le score') + ' — ' + periode.label;
     var chartModTitle = document.getElementById('db_chart_mod_title');
