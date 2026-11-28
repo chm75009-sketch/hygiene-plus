@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v528';
+var APP_BUILD = 'v529';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -20757,6 +20757,20 @@ function chargerHistorique() {
   });
 
   if (countEl) countEl.textContent = '(' + filtered.length + ')';
+  // Bloc stats v7 (refonte) : alimente le gros chiffre + le libellé contextuel.
+  try {
+    var num = document.getElementById('hist_count_num');
+    var sfx = document.getElementById('hist_count_s');
+    var lab = document.getElementById('hist_count_label');
+    if (num) num.textContent = filtered.length;
+    if (sfx) sfx.textContent = filtered.length > 1 ? 's' : '';
+    if (lab) {
+      lab.textContent = _histFilter === 'today' ? "aujourd'hui"
+        : _histFilter === 'week' ? 'ces 7 derniers jours'
+        : _histFilter === 'month' ? 'ces 30 derniers jours'
+        : 'au total';
+    }
+  } catch (eStats) {}
 
   if (filtered.length === 0) {
     container.innerHTML = '<div style="font-size:12px;color:#9ca3af;padding:12px;text-align:center">Aucun enregistrement trouvé</div>';
@@ -20817,7 +20831,13 @@ function filtrerHistorique(filter) {
   _histFilter = filter;
   ['all','today','week','month'].forEach(function(f) {
     var btn = document.getElementById('hist_' + f);
-    if (btn) { btn.style.background = f === filter ? '#2563eb' : ''; btn.style.color = f === filter ? 'white' : ''; }
+    if (btn) {
+      // Refonte v7 : segment control type Notion. Pour la compat avec un éventuel
+      // ancien markup (boutons .stat-btn) on remet aussi les styles inline à vide.
+      btn.classList.toggle('active', f === filter);
+      btn.style.background = '';
+      btn.style.color = '';
+    }
   });
   chargerHistorique();
 }
