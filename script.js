@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v561';
+var APP_BUILD = 'v562';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -16231,11 +16231,11 @@ function chargerHistoriqueControles() {
     });
     entries.sort(function(a, b) { return new Date(b.ts) - new Date(a.ts); });
 
-    var html = '<div class="bloc-section-title" style="margin-top:8px">🗂️ Historique des contrôles</div>';
+    var html = '<div class="bloc-section-title" style="margin-top:24px;font-size:11px;font-weight:700;color:#9b9a97;letter-spacing:.06em;text-transform:uppercase">Historique des contrôles</div>';
     if (entries.length === 0) {
-      html += '<div style="color:#6b7280;font-size:13px;padding:8px 0">Aucun contrôle enregistré pour le moment.</div>';
+      html += '<div style="color:#787774;font-size:12.5px;padding:8px 0;font-weight:500">Aucun contrôle enregistré pour le moment.</div>';
     } else {
-      html += '<div style="font-size:12px;color:#6b7280;margin-bottom:10px">Retrouver, consultez et réimprimez n\'importe quel contrôle validé.</div>';
+      html += '<div style="font-size:11.5px;color:#787774;margin-bottom:10px;font-weight:500">Retrouver, consulter et réimprimer n\'importe quel contrôle validé.</div>';
       entries.forEach(function(e) {
         var d = new Date(e.ts);
         var ok = !isNaN(d.getTime());
@@ -16252,9 +16252,12 @@ function chargerHistoriqueControles() {
     if (!box) {
       box = document.createElement('div');
       box.id = 'histo_controles_section';
-      box.style.cssText = 'margin:14px 0';
+      box.style.cssText = 'margin:14px 0 0';
       var fwrap = page.querySelector('.fwrap') || page;
-      fwrap.insertBefore(box, fwrap.firstChild);
+      // v562 : positionné EN BAS de page-exports (après toutes les sections
+      // Pack DDPP / Ordre / Exports individuels / Archives) au lieu de la
+      // tête, pour ne plus chevaucher le mod-header ni rester orphelin.
+      fwrap.appendChild(box);
     }
     box.innerHTML = html;
     // V118 — Puis on va chercher TOUS les contrôles dans Supabase (tous appareils, survit au vidage du navigateur)
@@ -16557,8 +16560,8 @@ async function chargerHistoriqueControlesCloud() {
       return;
     }
 
-    var html = '<div class="bloc-section-title" style="margin-top:8px">🗂️ Historique des contrôles</div>';
-    html += '<div style="font-size:12px;color:#6b7280;margin-bottom:10px">Retrouver, consultez et réimprimez n\'importe quel contrôle validé (synchronisé sur tous vos appareils).</div>';
+    var html = '<div class="bloc-section-title" style="margin-top:24px;font-size:11px;font-weight:700;color:#9b9a97;letter-spacing:.06em;text-transform:uppercase">Historique des contrôles</div>';
+    html += '<div style="font-size:11.5px;color:#787774;margin-bottom:10px;font-weight:500">Retrouver, consulter et réimprimer n\'importe quel contrôle validé (synchronisé sur tous vos appareils).</div>';
     rows.forEach(function(r) {
       var contenu = r.contenu;
       if (typeof contenu === 'string') { try { contenu = JSON.parse(contenu); } catch(eP) { contenu = {}; } }
@@ -16587,9 +16590,10 @@ async function chargerHistoriqueControlesCloud() {
       if (page) {
         box = document.createElement('div');
         box.id = 'histo_controles_section';
-        box.style.cssText = 'margin:14px 0';
+        box.style.cssText = 'margin:14px 0 0';
         var fwrap = page.querySelector('.fwrap') || page;
-        fwrap.insertBefore(box, fwrap.firstChild);
+        // v562 : en BAS plutôt qu'en tête (voir chargerHistoriqueControles).
+        fwrap.appendChild(box);
       }
     }
     if (box) box.innerHTML = html;
