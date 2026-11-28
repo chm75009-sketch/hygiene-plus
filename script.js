@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v536';
+var APP_BUILD = 'v537';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1826,8 +1826,25 @@ function injecterAvertissementResponsabilite() {
     // Trouver les boutons "Valider" / "Enregistrer" dans cette page
     var validerBtns = page.querySelectorAll('button.btn-p[onclick*="valider"], button.btn-p[onclick*="enregistrer"], button.btn-p[onclick*="Valider"]');
     validerBtns.forEach(function(btn) {
-      // Si un bandeau existe déjà juste avant ce bouton, ne rien faire
-      var prev = btn.previousElementSibling;
+      // v536 : si le bouton Valider est dans une .cta sticky (flex), on insère
+      // le bandeau JUSTE AVANT la .cta, pas à l'intérieur — sinon le bandeau
+      // devient un enfant flex et stretch les boutons Retour/Valider sur toute
+      // sa hauteur, résultant en pilules géantes qui mangent l'écran.
+      var ancre = btn;
+      var parent = btn.parentNode;
+      if (parent && parent.classList && parent.classList.contains('cta')) {
+        ancre = parent;
+        parent = parent.parentNode;
+      }
+      if (!parent) return;
+      // Nettoyer un éventuel bandeau existant au MAUVAIS endroit (dans .cta).
+      try {
+        var oldInCta = btn.parentNode && btn.parentNode.classList && btn.parentNode.classList.contains('cta')
+          ? btn.parentNode.querySelector('.bandeau-responsabilite') : null;
+        if (oldInCta) oldInCta.remove();
+      } catch (eOld) {}
+      // Si un bandeau existe déjà juste avant l'ancre, ne rien faire
+      var prev = ancre.previousElementSibling;
       if (prev && prev.classList && prev.classList.contains('bandeau-responsabilite')) return;
       var b = document.createElement('div');
       b.className = 'bandeau-responsabilite';
@@ -1837,7 +1854,7 @@ function injecterAvertissementResponsabilite() {
         '<div style="margin-bottom:6px">Les cases marquées d\'un astérisque <strong style="color:#dc2626">*</strong> doivent être renseignées. À défaut, le rapport sera considéré comme <strong style="color:#0a0a0a;font-weight:600">non conforme</strong> et pourra être rejeté lors d\'un contrôle DDPP.</div>' +
         '<div style="font-size:11.5px;color:#737373;margin-bottom:10px">Validation sous votre seule responsabilité, conformément à votre Plan de Maîtrise Sanitaire (Règlement CE 852/2004).</div>' +
         '<button type="button" class="btn-toggle-adv" data-adv-label="facultatifs" onclick="toggleAdvanced()" style="background:#fff;border:1px solid #e7e7e4;color:#4a4a4a;font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;cursor:pointer;font-family:Inter,system-ui,sans-serif">Afficher champs facultatifs</button>';
-      btn.parentNode.insertBefore(b, btn);
+      parent.insertBefore(b, ancre);
     });
   });
   // V80 — Synchroniser tous les boutons toggle avec l'état actuel

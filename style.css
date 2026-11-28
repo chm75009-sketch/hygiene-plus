@@ -552,6 +552,13 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
  * (doublon avec .btn-back du mod-header, coupait l'écran). Fallback pour tout
  * module de consultation sans bouton Valider qui aurait encore ce vestige. */
 .cta:has(> .btn-s:only-child){display:none !important}
+/* v536 : filet contre le bandeau "Avant de valider" injecté PAR ERREUR dans
+ * la .cta (ancien bundle en cache). On repasse la .cta en wrap + align-items
+ * center : les boutons Retour / Valider gardent leur hauteur naturelle, et
+ * le bandeau passe en ligne au-dessus. */
+.cta{align-items:center;flex-wrap:wrap}
+.cta > .bandeau-responsabilite{flex:1 1 100%;order:-1;margin:0 0 10px !important}
+.cta > .btn-s,.cta > .btn-p{flex:1 1 auto;align-self:center}
 .btn-p{
   flex:1;padding:13px 18px;border:none;background:var(--ink);color:#fff;border-radius:999px;
   font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;
