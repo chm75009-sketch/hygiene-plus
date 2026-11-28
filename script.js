@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v548';
+var APP_BUILD = 'v549';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1329,17 +1329,32 @@ async function sbSauvegarderEtab(etabData) {
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', chasseParasites);
   else chasseParasites();
+  // v549 : le user confirme que les emojis apparaissent APRÈS le chargement
+  // initial (injection différée par un script lointain). On lance donc des
+  // passes multiples à +80/+400/+1200/+2500/+5000 ms, plus un intervalle
+  // de garde toutes les 3s pendant toute la session.
+  function burst(){
+    [80, 400, 1200, 2500, 5000].forEach(function(d){ setTimeout(chasseParasites, d); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', burst);
+  else burst();
+  setInterval(chasseParasites, 3000);
   // Re-passe à chaque changement de .page.active (showPage)
   try{
     var moP = new MutationObserver(function(muts){
       muts.forEach(function(m){
         if (m.type === 'attributes' && m.target && m.target.classList && m.target.classList.contains('page') && m.target.classList.contains('active')) {
-          setTimeout(chasseParasites, 80);
-          setTimeout(chasseParasites, 400);
+          burst();
         }
       });
     });
     moP.observe(document.body, { subtree:true, attributes:true, attributeFilter:['class'] });
+  }catch(e){}
+  // Re-passe aussi sur toute mutation qui ajoute des enfants au body (overlay
+  // injecté tardivement) — scope limité, ne scanne qu'une fois par rafale.
+  try{
+    var moB = new MutationObserver(function(){ clearTimeout(window._emojiHuntTimer); window._emojiHuntTimer = setTimeout(chasseParasites, 120); });
+    moB.observe(document.body, { subtree:true, childList:true });
   }catch(e){}
 })();
 
