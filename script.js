@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v518';
+var APP_BUILD = 'v519';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -27628,22 +27628,68 @@ function _sqContinuerSansSauv() {
 }
 function _ouvrirModalSauvegardeQuot() {
   if (document.getElementById('sqOverlay')) return;
+  // Styles v7 Nomos : teal + or, Inter, relief 3D. Injectés UNE fois.
+  if (!document.getElementById('sqV7Styles')) {
+    var st = document.createElement('style');
+    st.id = 'sqV7Styles';
+    st.textContent = ''
+      + '#sqOverlay{position:fixed;inset:0;z-index:99999;background:rgba(10,10,10,.5);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;animation:sqFade .18s ease}'
+      + '@keyframes sqFade{from{opacity:0}to{opacity:1}}'
+      + '@keyframes sqPop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}'
+      + '#sqOverlay .sq-sheet{background:#fff;max-width:440px;width:100%;max-height:90vh;overflow-y:auto;border-radius:16px;padding:22px 20px 18px;box-shadow:0 20px 48px -8px rgba(10,10,10,.35),0 4px 12px rgba(10,10,10,.1);box-sizing:border-box;position:relative;animation:sqPop .22s cubic-bezier(.22,.6,.36,1)}'
+      + '#sqOverlay .sq-ico{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#0f766e 0%,#115e59 100%);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 6px 16px -4px rgba(15,118,110,.45),inset 0 1px 0 rgba(255,255,255,.15)}'
+      + '#sqOverlay .sq-ico svg{width:22px;height:22px}'
+      + '#sqOverlay .sq-title{font-size:18px;font-weight:700;color:#1f1e1b;text-align:center;letter-spacing:-.015em;margin:0 0 6px}'
+      + '#sqOverlay .sq-sub{font-size:12.5px;color:#787774;text-align:center;margin:0 0 16px;line-height:1.5}'
+      + '#sqOverlay .sq-sub strong{color:#37352f;font-weight:600}'
+      + '#sqOverlay .sq-lbl{display:block;font-size:11px;color:#9b9a97;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px}'
+      + '#sqOverlay .sq-input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #e9e9e7;border-radius:8px;font-size:13px;margin-bottom:14px;color:#37352f;background:#fbfbfa;font-family:inherit;transition:all .15s}'
+      + '#sqOverlay .sq-input:focus{outline:none;border-color:#0f766e;background:#fff;box-shadow:0 0 0 3px rgba(15,118,110,.1)}'
+      + '#sqOverlay .sq-card{display:flex;align-items:center;gap:12px;width:100%;background:#fff;border:1px solid #e9e9e7;border-radius:12px;padding:12px 14px;cursor:pointer;font-family:inherit;text-align:left;transition:all .18s cubic-bezier(.22,.6,.36,1);box-shadow:0 2px 6px -1px rgba(10,10,10,.04);margin-bottom:6px}'
+      + '#sqOverlay .sq-card:hover{transform:translateY(-2px);box-shadow:0 10px 20px -6px rgba(10,10,10,.1);border-color:#d3d1cb}'
+      + '#sqOverlay .sq-card:active{transform:translateY(0)}'
+      + '#sqOverlay .sq-card-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;box-shadow:0 3px 8px -2px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.2)}'
+      + '#sqOverlay .sq-card-ico svg{width:17px;height:17px}'
+      + '#sqOverlay .sq-card.pdf .sq-card-ico{background:linear-gradient(135deg,#0f766e 0%,#115e59 100%)}'
+      + '#sqOverlay .sq-card.json .sq-card-ico{background:linear-gradient(135deg,#d2ad46 0%,#8b6f1d 100%)}'
+      + '#sqOverlay .sq-card.folder .sq-card-ico{background:linear-gradient(135deg,#37352f 0%,#1a1a1a 100%)}'
+      + '#sqOverlay .sq-card-txt{flex:1;min-width:0;line-height:1.25}'
+      + '#sqOverlay .sq-card-txt b{display:block;font-size:13.5px;font-weight:600;color:#1f1e1b;letter-spacing:-.005em}'
+      + '#sqOverlay .sq-card-txt small{display:block;font-size:11px;color:#787774;margin-top:2px;line-height:1.35}'
+      + '#sqOverlay .sq-card-ok{color:#0f766e;font-size:16px;font-weight:700;flex-shrink:0}'
+      + '#sqOverlay .sq-done{width:100%;background:linear-gradient(135deg,#0f766e 0%,#115e59 100%);color:#fff;border:none;border-radius:999px;padding:13px;font-size:13.5px;font-weight:700;cursor:pointer;margin:14px 0 8px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 16px -4px rgba(15,118,110,.4);transition:all .18s}'
+      + '#sqOverlay .sq-done:hover{transform:translateY(-1px);box-shadow:0 10px 20px -6px rgba(15,118,110,.5)}'
+      + '#sqOverlay .sq-done svg{width:14px;height:14px}'
+      + '#sqOverlay .sq-later{display:block;text-align:center;font-size:11.5px;color:#9b9a97;text-decoration:none;font-weight:500;padding:6px;cursor:pointer}'
+      + '#sqOverlay .sq-later:hover{color:#37352f;text-decoration:underline}';
+    document.head.appendChild(st);
+  }
   var ov = document.createElement('div');
   ov.id = 'sqOverlay';
-  ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,.78);display:flex;align-items:center;justify-content:center;padding:18px';
-  ov.innerHTML = '<div style="background:#fff;max-width:440px;width:100%;border-radius:18px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.4);font-family:inherit;box-sizing:border-box">'
-    + '<div style="font-size:30px;text-align:center">🛡️</div>'
-    + '<h2 style="font-size:18px;color:#0f172a;text-align:center;margin:8px 0 6px">Sauvegarde quotidienne</h2>'
-    + '<p style="font-size:13px;color:#475569;text-align:center;margin:0 0 14px;line-height:1.5">Avant de commencer la journée, enregistrez vos contrôles sur votre appareil. <strong>Vos contrôles sont vos documents réglementaires : leur sauvegarde est votre responsabilité.</strong></p>'
-    + '<label style="display:block;font-size:11px;color:#475569;font-weight:700;margin:0 0 4px">Nom du fichier (modifiable)</label>'
-    + '<input id="sqNomFichier" type="text" value="' + _echap(_sqNomDefaut()) + '" style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:13px;margin-bottom:14px;color:#0f172a;background:#fff" />'
-    + '<button onclick="_sqTelechargerPDF()" style="width:100%;background:#4338ca;color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:4px">📄 Enregistrer en PDF (Pack DDPP) <span id="sq_pdf_ok" style="display:none">✅</span></button>'
-    + '<div style="font-size:10px;color:#94a3b8;text-align:center;margin-bottom:10px">Sur iPhone/iPad : touchez Partager ↑ puis « Enregistrer dans Fichiers ».</div>'
-    + '<button onclick="_sqTelechargerJSON()" style="width:100%;background:#0891b2;color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:4px">💾 Sauvegarde complète (restauration) <span id="sq_json_ok" style="display:none">✅</span></button>'
-    + '<div style="font-size:10px;color:#94a3b8;text-align:center;margin-bottom:12px">Fichier de secours, à réimporter pour tout récupérer si vous perdez ou changez d\'appareil (ne se lit pas).</div>'
-    + (_sqFsSupporte() ? '<button onclick="choisirDossierSauvegarde()" style="width:100%;background:#0f766e;color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:14px">📁 Sauvegarder automatiquement dans un dossier <span id="sq_dossier_ok" style="display:none">✅</span></button>' : '')
-    + '<button id="sqBtnTermine" onclick="_sqContinuerSansSauv()" style="width:100%;background:#16a34a;color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:10px">✅ J\'ai sauvegardé, continuer</button>'
-    + '<div style="text-align:center"><a href="#" onclick="event.preventDefault();_sqFermer(true)" style="font-size:11px;color:#94a3b8;text-decoration:underline">Je l\'ai déjà fait / Plus tard</a></div>'
+  var cardPdf = '<button class="sq-card pdf" onclick="_sqTelechargerPDF()">'
+    + '<span class="sq-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="8 13 12 17 16 13"/><line x1="12" y1="17" x2="12" y2="10"/></svg></span>'
+    + '<span class="sq-card-txt"><b>Enregistrer en PDF (Pack DDPP)</b><small>Sur iPhone/iPad : Partager ↑ puis « Enregistrer dans Fichiers »</small></span>'
+    + '<span class="sq-card-ok" id="sq_pdf_ok" style="display:none">✓</span>'
+    + '</button>';
+  var cardJson = '<button class="sq-card json" onclick="_sqTelechargerJSON()">'
+    + '<span class="sq-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>'
+    + '<span class="sq-card-txt"><b>Sauvegarde complète (restauration)</b><small>Fichier de secours à réimporter en cas de perte ou changement d\'appareil</small></span>'
+    + '<span class="sq-card-ok" id="sq_json_ok" style="display:none">✓</span>'
+    + '</button>';
+  var cardFolder = _sqFsSupporte() ? '<button class="sq-card folder" onclick="choisirDossierSauvegarde()">'
+    + '<span class="sq-card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>'
+    + '<span class="sq-card-txt"><b>Sauvegarder automatiquement</b><small>Choisir un dossier qui recevra chaque sauvegarde future</small></span>'
+    + '<span class="sq-card-ok" id="sq_dossier_ok" style="display:none">✓</span>'
+    + '</button>' : '';
+  ov.innerHTML = '<div class="sq-sheet">'
+    + '<div class="sq-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>'
+    + '<h2 class="sq-title">Sauvegarde quotidienne</h2>'
+    + '<p class="sq-sub">Avant de commencer la journée, enregistrez vos contrôles sur votre appareil. <strong>Ils sont vos documents réglementaires : leur sauvegarde est votre responsabilité.</strong></p>'
+    + '<label class="sq-lbl" for="sqNomFichier">Nom du fichier (modifiable)</label>'
+    + '<input id="sqNomFichier" class="sq-input" type="text" value="' + _echap(_sqNomDefaut()) + '" />'
+    + cardPdf + cardJson + cardFolder
+    + '<button id="sqBtnTermine" class="sq-done" onclick="_sqContinuerSansSauv()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>J\'ai sauvegardé, continuer</button>'
+    + '<a class="sq-later" onclick="event.preventDefault();_sqFermer(true)">Je l\'ai déjà fait, plus tard</a>'
     + '</div>';
   document.body.appendChild(ov);
 }
