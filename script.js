@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v559';
+var APP_BUILD = 'v560';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1990,15 +1990,38 @@ function injecterAvertissementResponsabilite() {
         '<div style="font-weight:600;font-size:13px;color:#0a0a0a;margin-bottom:6px;letter-spacing:-.01em">Avant de valider</div>' +
         '<div style="margin-bottom:6px">Les cases marquées d\'un astérisque <strong style="color:#dc2626">*</strong> doivent être renseignées. À défaut, le rapport sera considéré comme <strong style="color:#0a0a0a;font-weight:600">non conforme</strong> et pourra être rejeté lors d\'un contrôle DDPP.</div>' +
         '<div style="font-size:11.5px;color:#737373;margin-bottom:10px">Validation sous votre seule responsabilité, conformément à votre Plan de Maîtrise Sanitaire (Règlement CE 852/2004).</div>' +
-        '<button type="button" class="btn-toggle-adv" data-adv-label="facultatifs" onclick="toggleAdvanced()" style="background:#fff;border:1px solid #e7e7e4;color:#4a4a4a;font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;cursor:pointer;font-family:Inter,system-ui,sans-serif">Afficher champs facultatifs</button>';
+        '<button type="button" class="btn-toggle-adv btn-toggle-adv-pulse" data-adv-label="facultatifs" onclick="toggleAdvanced()" aria-label="Afficher champs facultatifs">'
+          + '<span class="btn-toggle-adv-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>'
+          + '<span class="btn-toggle-adv-txt">Afficher champs facultatifs</span>'
+        + '</button>';
       parent.insertBefore(b, ancre);
     });
   });
-  // V80 — Synchroniser tous les boutons toggle avec l'état actuel
+  // V80 — Synchroniser tous les boutons toggle avec l'état actuel.
+  // v560 : refonde d'abord tout bouton .btn-toggle-adv sans structure interne
+  // (hardcodé dans le markup des pages réglages/nuisibles/etc.) en y
+  // injectant l'icône SVG + un span texte, puis synchronise le libellé.
+  var ICO = '<span class="btn-toggle-adv-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>';
+  document.querySelectorAll('.btn-toggle-adv').forEach(function(b) {
+    if (!b.querySelector('.btn-toggle-adv-txt')) {
+      var txt0 = (b.textContent || '').trim() || ('Afficher champs ' + (b.dataset.advLabel || 'facultatifs'));
+      b.innerHTML = ICO + '<span class="btn-toggle-adv-txt">' + _echap(txt0) + '</span>';
+      if (!b.classList.contains('is-open')) b.classList.add('btn-toggle-adv-pulse');
+      // Vide tout style inline hérité (ancien fond gris) pour que le CSS v7 prime.
+      b.removeAttribute('style');
+    }
+  });
   if (typeof _advancedVisible !== 'undefined') {
     document.querySelectorAll('.btn-toggle-adv').forEach(function(b) {
       var labelType = b.dataset.advLabel || 'facultatifs';
-      b.textContent = (_advancedVisible ? 'Masquer champs ' : 'Afficher champs ') + labelType;
+      var newTxt = (_advancedVisible ? 'Masquer champs ' : 'Afficher champs ') + labelType;
+      var txtEl = b.querySelector('.btn-toggle-adv-txt');
+      if (txtEl) txtEl.textContent = newTxt;
+      else b.textContent = newTxt;
+      // Bascule classe .is-open pour que le CSS tourne le + en × et passe en or.
+      b.classList.toggle('is-open', !!_advancedVisible);
+      // Arrête la pulsation une fois la révélation faite.
+      if (_advancedVisible) b.classList.remove('btn-toggle-adv-pulse');
     });
   }
 }
