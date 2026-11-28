@@ -548,6 +548,10 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
   -webkit-backdrop-filter:saturate(180%) blur(14px);
   border-top:1px solid var(--line-soft);position:sticky;bottom:60px;z-index:10;
 }
+/* v535 : masque la .cta sticky lorsqu'elle ne contient qu'un seul bouton Retour
+ * (doublon avec .btn-back du mod-header, coupait l'écran). Fallback pour tout
+ * module de consultation sans bouton Valider qui aurait encore ce vestige. */
+.cta:has(> .btn-s:only-child){display:none !important}
 .btn-p{
   flex:1;padding:13px 18px;border:none;background:var(--ink);color:#fff;border-radius:999px;
   font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;
