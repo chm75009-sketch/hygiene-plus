@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v530';
+var APP_BUILD = 'v531';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -20757,23 +20757,59 @@ function chargerHistorique() {
   });
 
   if (countEl) countEl.textContent = '(' + filtered.length + ')';
-  // Bloc stats v7 (refonte) : alimente le gros chiffre + le libellé contextuel.
+  // === v7 Dynamique : KPIs + sparkline 7 jours + regroupement timeline ===
   try {
+    var todayStr = _dateLoc(now);
+    var _d7 = new Date(now); _d7.setDate(_d7.getDate() - 7);
+    var _d30 = new Date(now); _d30.setDate(_d30.getDate() - 30);
+    // Compteur 7 derniers jours sur TOUT l'historique (indépendant du filtre),
+    // + signataires distincts, + dernière date.
+    var allScope = historique.filter(function (h) { return !h.secteur || !_curSecteur || h.secteur === _curSecteur; });
+    var week7 = allScope.filter(function (h) { return h.date && new Date(h.date) >= _d7; }).length;
+    var sigSet = {};
+    allScope.forEach(function (h) { if (h.signe) sigSet[String(h.signe).trim()] = 1; });
+    var sigCount = Object.keys(sigSet).length;
+    var lastDate = allScope.length ? (allScope[0].date || '') : '';
     var num = document.getElementById('hist_count_num');
-    var sfx = document.getElementById('hist_count_s');
     var lab = document.getElementById('hist_count_label');
     if (num) num.textContent = filtered.length;
-    if (sfx) sfx.textContent = filtered.length > 1 ? 's' : '';
     if (lab) {
       lab.textContent = _histFilter === 'today' ? "aujourd'hui"
         : _histFilter === 'week' ? 'ces 7 derniers jours'
         : _histFilter === 'month' ? 'ces 30 derniers jours'
         : 'au total';
     }
+    var kw = document.getElementById('hist_kpi_week'); if (kw) kw.textContent = week7;
+    var ks = document.getElementById('hist_kpi_signers'); if (ks) ks.textContent = sigCount;
+    var ld = document.getElementById('hist_last_date');
+    if (ld) {
+      if (!lastDate) { ld.textContent = '—'; }
+      else {
+        var p = lastDate.split('-');
+        ld.textContent = p.length === 3 ? ('dernier : ' + p[2] + '/' + p[1]) : lastDate;
+      }
+    }
+    // Sparkline 7 derniers jours (barres).
+    var spark = document.getElementById('hist_sparkline');
+    if (spark) {
+      var days = [];
+      for (var i = 6; i >= 0; i--) {
+        var d = new Date(now); d.setDate(d.getDate() - i);
+        days.push({ iso: _dateLoc(d), count: 0 });
+      }
+      allScope.forEach(function (h) {
+        for (var j = 0; j < days.length; j++) if (days[j].iso === h.date) { days[j].count++; break; }
+      });
+      var maxC = Math.max.apply(null, days.map(function (x) { return x.count; }).concat([1]));
+      spark.innerHTML = days.map(function (x) {
+        var h = Math.max(3, Math.round((x.count / maxC) * 28));
+        return '<span class="hh-spark-bar' + (x.count === 0 ? ' empty' : '') + '" style="height:' + h + 'px" title="' + x.iso + ' : ' + x.count + '"></span>';
+      }).join('');
+    }
   } catch (eStats) {}
 
   if (filtered.length === 0) {
-    container.innerHTML = '<div style="font-size:12px;color:#9ca3af;padding:12px;text-align:center">Aucun enregistrement trouvé</div>';
+    container.innerHTML = '<div class="hh-empty"><div class="hh-empty-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><b>Aucun enregistrement</b>Rien à afficher sur cette période.</div>';
     return;
   }
 
@@ -20797,33 +20833,62 @@ function chargerHistorique() {
     'Contrôle documentaire': 'documents',
     'Suivi nuisibles': 'nuisibles'
   };
-  filtered.forEach(function(h) {
-    var row = document.createElement('div');
-    row.style.cssText = 'background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px';
-    var ico = document.createElement('div');
-    ico.style.cssText = 'width:36px;height:36px;border-radius:8px;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0';
-    ico.textContent = '✅';
-    var info = document.createElement('div');
-    info.style.flex = '1';
-    info.innerHTML = '<div style="font-size:13px;font-weight:700">' + (_echap(h.module||'Module')) + '</div>' +
-      '<div style="font-size:11px;color:#6b7280">' + (h.date||'') + ' — ' + (h.heure||'') + '</div>' +
-      '<div style="font-size:11px;color:#374151">Signé : ' + (h.signe||'—') + '</div>';
-    row.appendChild(ico);
-    row.appendChild(info);
-    // V113 — K : bouton 📄 pour re-générer le PDF du module
-    var exportId = _moduleNameToExportId[h.module];
-    if (exportId) {
-      var btnPdf = document.createElement('button');
-      btnPdf.textContent = '📄';
-      btnPdf.title = 'Re-générer le PDF de ce contrôle';
-      btnPdf.style.cssText = 'background:#eff6ff;border:1px solid #93c5fd;color:#1d4ed8;border-radius:8px;padding:6px 10px;font-size:16px;cursor:pointer;flex-shrink:0';
-      btnPdf.onclick = function() {
-        if (typeof exportModule === 'function') exportModule(exportId);
-        else if (typeof showToast === 'function') showToast('Export indisponible', 'warn');
-      };
-      row.appendChild(btnPdf);
-    }
-    container.appendChild(row);
+  // === v7 Dynamique : groupement par période (Aujourd'hui / Hier / …) ===
+  var _todayISO = _dateLoc(now);
+  var _yest = new Date(now); _yest.setDate(_yest.getDate() - 1);
+  var _yestISO = _dateLoc(_yest);
+  var _w7 = new Date(now); _w7.setDate(_w7.getDate() - 7);
+  var _m30 = new Date(now); _m30.setDate(_m30.getDate() - 30);
+  var buckets = { today: [], yesterday: [], week: [], month: [], older: [] };
+  filtered.forEach(function (h) {
+    var d = new Date(h.date);
+    if (h.date === _todayISO) buckets.today.push(h);
+    else if (h.date === _yestISO) buckets.yesterday.push(h);
+    else if (d >= _w7) buckets.week.push(h);
+    else if (d >= _m30) buckets.month.push(h);
+    else buckets.older.push(h);
+  });
+  var groupOrder = [
+    { key: 'today',     label: "Aujourd'hui",       dotCls: '' },
+    { key: 'yesterday', label: 'Hier',              dotCls: '' },
+    { key: 'week',      label: '7 derniers jours',  dotCls: 'gold' },
+    { key: 'month',     label: '30 derniers jours', dotCls: 'gold' },
+    { key: 'older',     label: 'Plus ancien',       dotCls: 'dim' }
+  ];
+  var defaultIco = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  groupOrder.forEach(function (g) {
+    if (!buckets[g.key].length) return;
+    var grp = document.createElement('div');
+    grp.className = 'hh-group';
+    var head = document.createElement('div');
+    head.className = 'hh-group-h' + (g.dotCls ? ' ' + g.dotCls : '');
+    head.innerHTML = _baroEsc(g.label) + '<span class="hh-group-h-count">' + buckets[g.key].length + '</span>';
+    grp.appendChild(head);
+    buckets[g.key].forEach(function (h) {
+      var row = document.createElement('div');
+      row.className = 'hh-row';
+      var modId = _moduleNameToExportId[h.module] || '';
+      var svg = (window.MOD_ICO_SVG && window.MOD_ICO_SVG[modId]) || defaultIco;
+      var sig = h.signe ? ('<span class="hh-row-sig">' + _echap(h.signe) + '</span>') : '<span>—</span>';
+      row.innerHTML = '<span class="hh-row-ico">' + svg + '</span>'
+        + '<span class="hh-row-txt">'
+        + '<span class="hh-row-name">' + _echap(h.module || 'Module') + '</span>'
+        + '<span class="hh-row-meta"><span>' + _echap(h.heure || '') + '</span><span class="hh-dot">·</span>' + sig + '</span>'
+        + '</span>';
+      if (modId) {
+        var btn = document.createElement('button');
+        btn.className = 'hh-row-pdf';
+        btn.title = 'Re-générer le PDF';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF';
+        btn.onclick = function () {
+          if (typeof exportModule === 'function') exportModule(modId);
+          else if (typeof showToast === 'function') showToast('Export indisponible', 'warn');
+        };
+        row.appendChild(btn);
+      }
+      grp.appendChild(row);
+    });
+    container.appendChild(grp);
   });
 }
 

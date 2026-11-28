@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=530">
-    <script src="pms_secteurs.js?v=530" defer></script>
-    <script src="script.js?v=530" defer></script>
-<script src="patch_photo_bl.js?v=530" defer></script>
-<script src="pms_generateur.js?v=530" defer></script>
+    <link rel="stylesheet" href="style.css?v=531">
+    <script src="pms_secteurs.js?v=531" defer></script>
+    <script src="script.js?v=531" defer></script>
+<script src="patch_photo_bl.js?v=531" defer></script>
+<script src="pms_generateur.js?v=531" defer></script>
 <script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
@@ -4195,15 +4195,25 @@ html, body { max-width: 100%; overflow-x: hidden; }
         #page-history .hh-cap-s{display:block;font-size:12px;color:#787774;font-weight:500;margin-top:4px;letter-spacing:0}
         #page-history .hh-cap-s em{font-style:normal;color:var(--accent,#0f766e);font-weight:600}
 
-        /* Carte stats type callout v7 */
-        #page-history .hh-stats{background:linear-gradient(135deg,#fff 0%,#f0faf7 100%);border:1px solid #d6ede5;border-radius:12px;padding:14px 16px 12px;margin-bottom:12px;box-shadow:0 2px 8px -2px rgba(15,118,110,.08),0 1px 3px rgba(10,10,10,.04);position:relative;overflow:hidden}
-        #page-history .hh-stats::before{content:'';position:absolute;top:-40px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(210,173,70,.12) 0%,transparent 65%);pointer-events:none}
-        #page-history .hh-stats-row{display:flex;align-items:center;justify-content:space-between;position:relative}
-        #page-history .hh-stats-l{display:flex;align-items:baseline;gap:8px}
-        #page-history .hh-stats-num{font-size:34px;font-weight:800;color:var(--accent,#0f766e);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
-        #page-history .hh-stats-lbl{font-size:12.5px;color:#37352f;font-weight:500}
-        #page-history .hh-stats-lbl em{font-style:normal;color:var(--accent,#0f766e);font-weight:600}
-        #page-history .hh-stats-info{font-size:10.5px;color:#787774;font-weight:500;background:#eceae6;padding:3px 9px;border-radius:999px}
+        /* 3 mini KPI cards type dashboard produit SaaS */
+        #page-history .hh-kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px}
+        #page-history .hh-kpi{background:#fff;border:1px solid #e9e9e7;border-radius:12px;padding:12px 11px 10px;box-shadow:0 2px 6px -1px rgba(10,10,10,.05),0 1px 3px rgba(10,10,10,.04);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+        #page-history .hh-kpi:hover{transform:translateY(-2px);box-shadow:0 10px 20px -6px rgba(10,10,10,.1)}
+        #page-history .hh-kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
+        #page-history .hh-kpi.k1::before{background:linear-gradient(90deg,var(--accent,#0f766e),#14b8a6)}
+        #page-history .hh-kpi.k2::before{background:linear-gradient(90deg,#d2ad46,#8b6f1d)}
+        #page-history .hh-kpi.k3::before{background:linear-gradient(90deg,#37352f,#1a1a1a)}
+        #page-history .hh-kpi-lbl{font-size:10px;font-weight:700;color:#9b9a97;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+        #page-history .hh-kpi-val{font-size:22px;font-weight:800;color:#1f1e1b;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+        #page-history .hh-kpi.k1 .hh-kpi-val{color:var(--accent,#0f766e)}
+        #page-history .hh-kpi.k2 .hh-kpi-val{color:#8b6f1d}
+        #page-history .hh-kpi-sub{font-size:10.5px;color:#787774;font-weight:500;margin-top:4px}
+
+        /* Mini sparkline barres sur 7 derniers jours */
+        #page-history .hh-spark{display:flex;align-items:flex-end;gap:3px;margin-top:8px;height:28px}
+        #page-history .hh-spark-bar{flex:1;background:linear-gradient(180deg,var(--accent,#0f766e),#14b8a6);border-radius:2px 2px 0 0;min-height:3px;opacity:.85;transition:opacity .15s}
+        #page-history .hh-spark-bar.empty{background:#efefed;opacity:1}
+        #page-history .hh-spark-bar:hover{opacity:1}
 
         /* Section title (Filtrer / Enregistrements) */
         #page-history .hh-section{font-size:11px;font-weight:700;color:#37352f;letter-spacing:.06em;text-transform:uppercase;margin:20px 2px 10px}
@@ -4215,18 +4225,33 @@ html, body { max-width: 100%; overflow-x: hidden; }
         #page-history .hh-fil:hover{color:#37352f}
         #page-history .hh-fil.active,#page-history .hh-fil.on{background:#fff;color:var(--accent,#0f766e);box-shadow:0 2px 6px -1px rgba(10,10,10,.1),0 1px 2px rgba(10,10,10,.06)}
 
-        /* Container entrées : liste de cards v7 */
-        #page-history #histContainer{display:flex;flex-direction:column;gap:6px}
-        #page-history #histContainer > div{background:#fff !important;border:1px solid #e9e9e7 !important;border-radius:10px !important;padding:12px 14px !important;margin-bottom:0 !important;box-shadow:0 1px 3px rgba(10,10,10,.04) !important;transition:all .18s cubic-bezier(.22,.6,.36,1) !important;display:flex !important;align-items:center !important;gap:12px !important}
-        #page-history #histContainer > div:hover{transform:translateY(-1px) !important;border-color:#d3d1cb !important;box-shadow:0 6px 14px -4px rgba(10,10,10,.08),0 1px 3px rgba(10,10,10,.04) !important}
-        #page-history #histContainer > div > div:first-child{width:36px !important;height:36px !important;border-radius:10px !important;background:linear-gradient(135deg,#f0faf7 0%,#d6ede5 100%) !important;color:var(--accent,#0f766e) !important;font-size:16px !important;flex-shrink:0 !important;display:flex !important;align-items:center !important;justify-content:center !important;box-shadow:0 1px 2px rgba(15,118,110,.08) !important}
-        #page-history #histContainer > div > div:nth-child(2){flex:1 !important;line-height:1.3 !important;min-width:0 !important}
-        #page-history #histContainer > div > div:nth-child(2) > div:first-child{font-size:13.5px !important;font-weight:600 !important;color:#1f1e1b !important;letter-spacing:-.005em !important;margin-bottom:3px !important}
-        #page-history #histContainer > div > div:nth-child(2) > div:nth-child(2){font-size:11px !important;color:#787774 !important;font-weight:500 !important;font-variant-numeric:tabular-nums !important}
-        #page-history #histContainer > div > div:nth-child(2) > div:nth-child(3){font-size:11px !important;color:#37352f !important;font-weight:500 !important;margin-top:2px !important}
-        #page-history #histContainer > div > button{background:var(--accent,#0f766e) !important;border:none !important;color:#fff !important;border-radius:8px !important;padding:7px 10px !important;font-size:12px !important;cursor:pointer !important;flex-shrink:0 !important;font-family:inherit !important;font-weight:700 !important;box-shadow:0 2px 6px -1px rgba(15,118,110,.3) !important;transition:all .15s !important}
-        #page-history #histContainer > div > button:hover{background:#115e59 !important;transform:translateY(-1px) !important}
-        #page-history #histContainer > div[style*="padding:12px"][style*="text-align:center"]{background:#fff !important;border:1px dashed #e9e9e7 !important;color:#9b9a97 !important;font-size:12.5px !important;font-weight:500 !important;padding:20px !important;justify-content:center !important;box-shadow:none !important;display:block !important;text-align:center !important}
+        /* Container entrées : timeline avec regroupement par date */
+        #page-history #histContainer{position:relative;padding-left:16px}
+        #page-history #histContainer::before{content:'';position:absolute;left:5px;top:16px;bottom:6px;width:1.5px;background:linear-gradient(180deg,#d6ede5 0%,#e9e9e7 100%);border-radius:1px}
+        #page-history .hh-group{position:relative;margin:0 0 14px}
+        #page-history .hh-group-h{position:relative;font-size:10.5px;font-weight:700;color:#9b9a97;text-transform:uppercase;letter-spacing:.08em;margin:12px 0 8px;padding-left:4px;display:flex;align-items:center;gap:8px}
+        #page-history .hh-group-h::before{content:'';position:absolute;left:-16px;top:50%;width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--accent,#0f766e);transform:translateY(-50%);box-shadow:0 0 0 3px #faf8f3}
+        #page-history .hh-group-h.gold::before{border-color:#d2ad46}
+        #page-history .hh-group-h.dim::before{border-color:#c5c3bb}
+        #page-history .hh-group-h-count{font-size:10px;color:#787774;background:#eceae6;padding:1px 7px;border-radius:999px;letter-spacing:0;text-transform:none;font-weight:600}
+        #page-history .hh-row{position:relative;background:#fff;border:1px solid #e9e9e7;border-radius:10px;padding:11px 12px;margin-bottom:6px;box-shadow:0 1px 3px rgba(10,10,10,.04);transition:all .18s cubic-bezier(.22,.6,.36,1);display:flex;align-items:center;gap:11px;cursor:default}
+        #page-history .hh-row::before{content:'';position:absolute;left:-13px;top:50%;width:7px;height:7px;border-radius:50%;background:var(--accent,#0f766e);transform:translateY(-50%);box-shadow:0 0 0 2px #faf8f3,0 0 0 3px rgba(15,118,110,.2)}
+        #page-history .hh-row:hover{transform:translateX(3px);border-color:#c5e5db;box-shadow:0 6px 14px -4px rgba(15,118,110,.14),0 1px 3px rgba(10,10,10,.04)}
+        #page-history .hh-row-ico{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f0faf7 0%,#d6ede5 100%);color:var(--accent,#0f766e);flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;transition:all .2s}
+        #page-history .hh-row:hover .hh-row-ico{background:linear-gradient(135deg,var(--accent,#0f766e),#14b8a6);color:#fff;transform:scale(1.05)}
+        #page-history .hh-row-ico svg{width:16px;height:16px;stroke-width:1.9}
+        #page-history .hh-row-txt{flex:1;min-width:0;line-height:1.3}
+        #page-history .hh-row-name{font-size:13px;font-weight:600;color:#1f1e1b;letter-spacing:-.005em;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        #page-history .hh-row-meta{font-size:11px;color:#787774;font-weight:500;font-variant-numeric:tabular-nums;margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        #page-history .hh-row-meta .hh-dot{opacity:.4}
+        #page-history .hh-row-sig{color:#37352f;font-weight:500}
+        #page-history .hh-row-pdf{background:transparent;border:1px solid #d6ede5;color:var(--accent,#0f766e);border-radius:7px;padding:6px 8px;font-size:11.5px;cursor:pointer;flex-shrink:0;font-family:inherit;font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:4px}
+        #page-history .hh-row-pdf:hover{background:var(--accent,#0f766e);color:#fff;border-color:var(--accent,#0f766e)}
+        #page-history .hh-row-pdf svg{width:12px;height:12px}
+        #page-history .hh-empty{background:#fff;border:1px dashed #e9e9e7;border-radius:10px;padding:28px 16px;text-align:center;color:#9b9a97;font-size:12.5px;font-weight:500;margin-left:-16px}
+        #page-history .hh-empty-ico{width:40px;height:40px;border-radius:12px;background:#f1f1ef;color:#9b9a97;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px}
+        #page-history .hh-empty-ico svg{width:20px;height:20px}
+        #page-history .hh-empty b{display:block;color:#37352f;font-size:13.5px;margin-bottom:4px;font-weight:600}
 
         /* Zone danger (vider l'historique) */
         #page-history .hh-danger{margin-top:22px;padding:14px;background:#fff;border:1px solid #fecaca;border-radius:10px}
@@ -4249,16 +4274,26 @@ html, body { max-width: 100%; overflow-x: hidden; }
           </div>
         </div>
 
-        <!-- 2. Bloc stats : nombre d'enregistrements sur la période -->
-        <div class="hh-stats">
-          <div class="hh-stats-row">
-            <div class="hh-stats-l">
-              <span class="hh-stats-num" id="hist_count_num">0</span>
-              <span class="hh-stats-lbl">contrôle<span id="hist_count_s"></span> <em id="hist_count_label">au total</em></span>
-            </div>
-            <span class="hh-stats-info">tout secteur</span>
+        <!-- 2. 3 KPI cards + sparkline 7 derniers jours -->
+        <div class="hh-kpis">
+          <div class="hh-kpi k1">
+            <div class="hh-kpi-lbl">Total</div>
+            <div class="hh-kpi-val" id="hist_count_num">0</div>
+            <div class="hh-kpi-sub" id="hist_count_label">au total</div>
+          </div>
+          <div class="hh-kpi k2">
+            <div class="hh-kpi-lbl">7 derniers jours</div>
+            <div class="hh-kpi-val" id="hist_kpi_week">0</div>
+            <div class="hh-spark" id="hist_sparkline"></div>
+          </div>
+          <div class="hh-kpi k3">
+            <div class="hh-kpi-lbl">Signataires</div>
+            <div class="hh-kpi-val" id="hist_kpi_signers">0</div>
+            <div class="hh-kpi-sub" id="hist_last_date">—</div>
           </div>
         </div>
+        <!-- Compat : ces IDs restent pour les anciens appels éventuels. -->
+        <span id="hist_count_s" style="display:none"></span>
 
         <!-- 3. Filtres : segment control v7 -->
         <div class="hh-section">Période</div>
