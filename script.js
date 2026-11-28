@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v544';
+var APP_BUILD = 'v545';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -26427,22 +26427,24 @@ function _sondeBlockEditable(s, i) {
   var heures = (Array.isArray(s.heures) && s.heures.length) ? s.heures : getRelevesConfig().heures.slice();
   var nb = heures.length || 2;
   var hh = '';
-  for (var h = 0; h < nb; h++) hh += '<input type="time" id="cap_h_' + i + '_' + h + '" value="' + _capV(heures[h]) + '" style="padding:7px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:\'JetBrains Mono\',monospace">';
+  for (var h = 0; h < nb; h++) hh += '<input type="time" id="cap_h_' + i + '_' + h + '" value="' + _capV(heures[h]) + '" style="padding:7px 9px;border:1px solid #e9e9e7;border-radius:8px;font-size:13px;font-family:\'JetBrains Mono\',monospace;background:#fbfbfa;color:#37352f">';
   var releves = _capReleves(s);
   var relHtml = '';
   for (var j = 0; j < releves.length; j++) relHtml += _capReleveBlock(releves[j], i, j, releves.length, s.channel);
-  return '<div class="fblock" id="cap_block_' + i + '" style="border-left:4px solid var(--blue)">'
-    + '<div class="fblock-title"><span>📟 Capteur N°' + (i + 1) + ' (boîtier)</span>'
-    + '<button onclick="supprimerSondeBeta(' + i + ')" style="border:none;background:#fee2e2;color:#b91c1c;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer">Retirer</button></div>'
-    + '<div class="frow"><div class="flabel">Nom du capteur</div><input id="cap_nom_' + i + '" class="finput" value="' + _capV(s.nom) + '" placeholder="Ex : Boîtier cuisine"></div>'
-    + '<div class="frow"><div class="flabel">N° de canal UbiBot</div><input id="cap_chan_' + i + '" class="finput" value="' + _capV(s.channel) + '" placeholder="channel id"></div>'
-    + '<div class="frow"><div class="flabel">Clé de lecture du capteur</div><input id="cap_cle_' + i + '" class="finput" value="' + _capV(s.cle) + '" placeholder="clé de lecture API de ce capteur"></div>'
-    + '<div style="font-weight:800;font-size:12.5px;color:var(--dark);margin:14px 2px 8px">🌡️ Relevés de ce capteur <span style="color:var(--dim);font-weight:600">(sonde et/ou boîtier)</span></div>'
+  return '<div class="fblock cap-block" id="cap_block_' + i + '" style="background:#fff;border:1px solid #e9e9e7;border-radius:12px;padding:16px 14px 12px;margin-bottom:12px;box-shadow:0 2px 6px -1px rgba(10,10,10,.04);position:relative">'
+    + '<div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,#0f766e,#115e59);border-radius:12px 0 0 12px"></div>'
+    + '<div class="fblock-title" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-left:4px">'
+    + '<span style="font-size:14px;font-weight:700;color:#1f1e1b;letter-spacing:-.01em">Capteur N°' + (i + 1) + '</span>'
+    + '<button onclick="supprimerSondeBeta(' + i + ')" style="border:1px solid #fecaca;background:#fff;color:#b91c1c;border-radius:999px;padding:5px 12px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.background=\'#fef2f2\'" onmouseout="this.style.background=\'#fff\'">Retirer</button></div>'
+    + '<div class="frow" style="padding-left:4px"><div class="flabel" style="font-size:11px;color:#9b9a97;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px">Nom du capteur</div><input id="cap_nom_' + i + '" class="finput" value="' + _capV(s.nom) + '" placeholder="Ex : Boîtier cuisine" style="padding:9px 12px;border:1px solid #e9e9e7;border-radius:8px;background:#fbfbfa;font-size:13px;color:#37352f;font-family:inherit;width:100%;box-sizing:border-box"></div>'
+    + '<div class="frow" style="padding-left:4px"><div class="flabel" style="font-size:11px;color:#9b9a97;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px">N° de canal UbiBot</div><input id="cap_chan_' + i + '" class="finput" value="' + _capV(s.channel) + '" placeholder="channel id" style="padding:9px 12px;border:1px solid #e9e9e7;border-radius:8px;background:#fbfbfa;font-size:13px;color:#37352f;font-family:inherit;width:100%;box-sizing:border-box"></div>'
+    + '<div class="frow" style="padding-left:4px"><div class="flabel" style="font-size:11px;color:#9b9a97;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px">Clé de lecture du capteur</div><input id="cap_cle_' + i + '" class="finput" value="' + _capV(s.cle) + '" placeholder="Clé API de ce capteur" style="padding:9px 12px;border:1px solid #e9e9e7;border-radius:8px;background:#fbfbfa;font-size:13px;color:#37352f;font-family:\'JetBrains Mono\',monospace;width:100%;box-sizing:border-box"></div>'
+    + '<div style="font-weight:700;font-size:11px;color:#9b9a97;letter-spacing:.06em;text-transform:uppercase;margin:16px 4px 8px;padding-left:4px">Relevés de ce capteur <span style="color:#787774;font-weight:500;text-transform:none;letter-spacing:0">· sonde et/ou boîtier</span></div>'
     + relHtml
-    + '<div style="margin:2px 0 14px;text-align:center"><button onclick="ajouterReleve(' + i + ')" style="background:#ecfeff;border:1.5px solid #67e8f9;color:#0e7490;font-size:13px;font-weight:800;padding:9px 16px;border-radius:10px;cursor:pointer;font-family:Outfit,sans-serif"><span style="font-size:16px">+</span> Ajouter un relevé</button></div>'
-    + '<div class="frow" style="margin:0"><div class="flabel">⏰ Relevés par jour (au choix)</div>'
+    + '<div style="margin:4px 0 14px;text-align:center"><button onclick="ajouterReleve(' + i + ')" style="background:#fff;border:1px dashed #c5e5db;color:#0f766e;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:999px;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.background=\'#f0faf7\';this.style.borderColor=\'#0f766e\'" onmouseout="this.style.background=\'#fff\';this.style.borderColor=\'#c5e5db\'">+ Ajouter un relevé</button></div>'
+    + '<div class="frow" style="margin:0;padding-left:4px"><div class="flabel" style="font-size:11px;color:#9b9a97;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px">Relevés par jour</div>'
     + '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
-    + '<input type="number" min="1" max="48" id="cap_nb_' + i + '" value="' + nb + '" onchange="onSondeNbChange(' + i + ')" style="width:64px;padding:8px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;font-weight:800;text-align:center;font-family:\'JetBrains Mono\',monospace;color:var(--dark)">'
+    + '<input type="number" min="1" max="48" id="cap_nb_' + i + '" value="' + nb + '" onchange="onSondeNbChange(' + i + ')" style="width:60px;padding:8px;border:1px solid #e9e9e7;border-radius:8px;font-size:14px;font-weight:700;text-align:center;font-family:\'JetBrains Mono\',monospace;color:#37352f;background:#fbfbfa">'
     + '<div style="display:flex;gap:6px;flex-wrap:wrap">' + hh + '</div>'
     + '</div></div>'
     + '</div>';
@@ -26453,44 +26455,66 @@ function _renderCapteursBeta() {
   if (!ov) {
     ov = document.createElement('div');
     ov.id = 'capteurs_beta_overlay';
-    ov.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:99999;overflow:auto;-webkit-overflow-scrolling:touch';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,10,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:99999;overflow:auto;-webkit-overflow-scrolling:touch;font-family:\'Inter\',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;color:#37352f;padding:16px 0;animation:capFade .2s ease';
+    // Injecte @keyframes une seule fois
+    if (!document.getElementById('cap_v7_styles')) {
+      var st = document.createElement('style');
+      st.id = 'cap_v7_styles';
+      st.textContent = '@keyframes capFade{from{opacity:0}to{opacity:1}}@keyframes capPop{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}#capteurs_beta_overlay .cap-sheet{animation:capPop .25s cubic-bezier(.22,.6,.36,1)}#capteurs_beta_overlay .cap-btn{transition:all .18s cubic-bezier(.22,.6,.36,1)}#capteurs_beta_overlay .cap-btn:hover{transform:translateY(-1px)}#capteurs_beta_overlay .finput:focus{outline:none;border-color:#0f766e;background:#fff;box-shadow:0 0 0 3px rgba(15,118,110,.1)}';
+      document.head.appendChild(st);
+    }
     document.body.appendChild(ov);
   }
   _capInit();
   var listeHtml = '';
   if (!_capWork.length) {
-    listeHtml = '<div style="color:var(--dim);font-size:13px;padding:8px 2px">Aucun capteur pour l\'instant. Cliquer « + Ajouter un capteur », remplissez le bloc, puis « 💾 Enregistrer mes capteurs ».</div>';
+    listeHtml = '<div style="background:#fff;border:1px dashed #e9e9e7;border-radius:12px;padding:22px 16px;text-align:center;color:#9b9a97;font-size:12.5px;font-weight:500;margin-bottom:14px"><b style="display:block;color:#37352f;font-size:13.5px;margin-bottom:4px;font-weight:600">Aucun capteur configuré</b>Ajoutez votre premier capteur UbiBot pour relever automatiquement les températures.</div>';
   } else {
     _capWork.forEach(function (s, i) { listeHtml += _sondeBlockEditable(s, i); });
   }
   ov.innerHTML =
-    '<div style="max-width:560px;margin:24px auto;background:var(--bg);border-radius:18px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.3)">'
-    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
-    + '<h2 style="margin:0;font-size:18px;color:var(--dark)">🌡️ Capteurs de température</h2>'
-    + '<button onclick="fermerCapteursBeta()" style="border:none;background:#e2e8f0;border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer">Fermer</button></div>'
-    + '<div style="background:#fef3c7;border:1px solid #fde68a;color:#92400e;border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:14px">⚙️ Espace <strong>interne (BÊTA)</strong> — invisible pour vos clients. Un bloc par capteur (comme une enceinte) ; renseignez tout, puis <strong>💾 Enregistrer mes capteurs</strong>.</div>'
+    '<div class="cap-sheet" style="max-width:560px;margin:18px auto;background:#faf8f3;border-radius:16px;padding:0;box-shadow:0 20px 48px -8px rgba(10,10,10,.35);overflow:hidden">'
+    // Header
+    + '<div style="display:flex;align-items:center;gap:12px;padding:16px 18px;background:#fff;border-bottom:1px solid #e9e9e7">'
+    + '<span style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#0f766e 0%,#115e59 100%);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 16px -4px rgba(15,118,110,.4),inset 0 1px 0 rgba(255,255,255,.18)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></span>'
+    + '<div style="flex:1;min-width:0;line-height:1.15"><div style="font-size:16px;font-weight:700;color:#1f1e1b;letter-spacing:-.015em">Capteurs de température</div><div style="font-size:11px;color:#9b9a97;font-weight:500;margin-top:2px;text-transform:uppercase;letter-spacing:.05em">Sondes connectées UbiBot</div></div>'
+    + '<button class="cap-btn" onclick="fermerCapteursBeta()" style="width:34px;height:34px;border-radius:50%;border:1px solid #e9e9e7;background:#fff;color:#787774;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-family:inherit" title="Fermer" onmouseover="this.style.background=\'#f7f6f3\';this.style.color=\'#37352f\'" onmouseout="this.style.background=\'#fff\';this.style.color=\'#787774\'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>'
+    + '</div>'
 
-    + '<div style="font-weight:800;font-size:13px;color:var(--dark);margin:2px 2px 10px">Mes capteurs <span style="color:var(--green)">(' + _capWork.length + ')</span></div>'
+    // Corps
+    + '<div style="padding:16px 16px 20px">'
+    // Bandeau bêta teal
+    + '<div style="background:linear-gradient(135deg,#fff 0%,#f0faf7 100%);border:1px solid #d6ede5;border-radius:10px;padding:10px 12px;font-size:11.5px;color:#37352f;margin-bottom:16px;line-height:1.5;display:flex;align-items:flex-start;gap:8px">'
+    + '<span style="width:20px;height:20px;border-radius:6px;background:rgba(15,118,110,.14);color:#0f766e;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>'
+    + '<span><b style="color:#0f766e;font-weight:700">Espace bêta interne</b> — invisible pour vos clients. Un bloc par capteur (comme une enceinte) ; renseignez tout, puis cliquez <b>Enregistrer mes capteurs</b>.</span>'
+    + '</div>'
+
+    // Section header "Mes capteurs (N)"
+    + '<div style="font-size:11px;font-weight:700;color:#37352f;letter-spacing:.06em;text-transform:uppercase;margin:4px 2px 10px;display:flex;align-items:center;gap:8px">Mes capteurs <span style="background:#0f766e;color:#fff;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:999px;letter-spacing:0;text-transform:none">' + _capWork.length + '</span></div>'
     + listeHtml
 
-    // + Ajouter un capteur (même bouton que « + Ajouter une enceinte »)
-    + '<div style="margin:6px 0 4px;text-align:center"><button onclick="ajouterSondeVide()" style="background:#ecfeff;border:1.5px solid #67e8f9;color:#0e7490;font-size:14px;font-weight:800;padding:12px 20px;border-radius:11px;cursor:pointer;font-family:Outfit,sans-serif"><span style="font-size:18px">+</span> Ajouter un capteur</button></div>'
-    // 💾 Enregistrer mes capteurs (le SEUL enregistrement, tout est dedans)
-    + '<button onclick="enregistrerMesCapteurs()" style="width:100%;border:none;background:#16a34a;color:#fff;border-radius:11px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px">💾 Enregistrer mes capteurs</button>'
-    + '<div id="cap_save_msg" style="text-align:center;font-size:12.5px;font-weight:700;color:#16a34a;margin-top:6px;min-height:16px"></div>'
+    // + Ajouter un capteur (pilule teal outline dashed)
+    + '<div style="margin:12px 0 18px;text-align:center"><button class="cap-btn" onclick="ajouterSondeVide()" style="background:#fff;border:1px dashed #c5e5db;color:#0f766e;font-size:13px;font-weight:600;padding:11px 20px;border-radius:999px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px" onmouseover="this.style.background=\'#f0faf7\';this.style.borderColor=\'#0f766e\'" onmouseout="this.style.background=\'#fff\';this.style.borderColor=\'#c5e5db\'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ajouter un capteur</button></div>'
 
-    + '<button onclick="rafraichirTemperaturesBeta()" style="width:100%;border:none;background:var(--blue);color:#fff;border-radius:11px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px">🔄 Lire les températures maintenant</button>'
-    + '<button onclick="ouvrirTableauTemp()" style="width:100%;border:none;background:#0f766e;color:#fff;border-radius:11px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px">📊 Tableau des températures (Excel)</button>'
-    + '<div id="cap_resultats" style="margin-top:12px"></div>'
+    // Enregistrer (principal, teal gradient)
+    + '<button class="cap-btn" onclick="enregistrerMesCapteurs()" style="width:100%;border:none;background:linear-gradient(135deg,#0f766e 0%,#115e59 100%);color:#fff;border-radius:999px;padding:13px 18px;font-size:13.5px;font-weight:700;cursor:pointer;margin-top:4px;box-shadow:0 6px 16px -4px rgba(15,118,110,.4);font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer mes capteurs</button>'
+    + '<div id="cap_save_msg" style="text-align:center;font-size:12px;font-weight:600;color:#0f766e;margin-top:6px;min-height:16px"></div>'
 
-    // Clé par défaut — optionnelle, discrète, tout en bas
-    + '<details style="margin-top:14px;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:10px 12px">'
-    + '<summary style="font-size:12px;font-weight:700;color:var(--dim);cursor:pointer">Clé de lecture par défaut (optionnel)</summary>'
-    + '<div style="display:flex;gap:6px;margin-top:8px"><input id="cap_ubikey" type="text" value="' + _echap(getUbibotKey()) + '" placeholder="Clé de lecture API (par défaut)" class="finput" style="flex:1">'
-    + '<button onclick="enregistrerCleUbibot()" style="border:none;background:#2563eb;color:#fff;border-radius:9px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer">Enregistrer</button></div>'
-    + '<div style="color:var(--dim);font-size:11px;margin-top:6px">Utilisée seulement pour un capteur qui n\'a pas sa propre clé.</div></details>'
-    // Bouton FERMER de secours, tout en bas (au cas où celui du haut serait masqué).
-    + '<button onclick="fermerCapteursBeta()" style="width:100%;border:none;background:#e2e8f0;color:#334155;border-radius:11px;padding:14px;font-size:15px;font-weight:800;cursor:pointer;margin-top:16px">⬅︎ Fermer cette page</button>'
+    // Actions secondaires
+    + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">'
+    + '<button class="cap-btn" onclick="rafraichirTemperaturesBeta()" style="width:100%;border:1px solid #e9e9e7;background:#fff;color:#37352f;border-radius:999px;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:8px" onmouseover="this.style.borderColor=\'#0f766e\';this.style.color=\'#0f766e\'" onmouseout="this.style.borderColor=\'#e9e9e7\';this.style.color=\'#37352f\'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Lire les températures maintenant</button>'
+    + '<button class="cap-btn" onclick="ouvrirTableauTemp()" style="width:100%;border:1px solid #e9e9e7;background:#fff;color:#37352f;border-radius:999px;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:8px" onmouseover="this.style.borderColor=\'#0f766e\';this.style.color=\'#0f766e\'" onmouseout="this.style.borderColor=\'#e9e9e7\';this.style.color=\'#37352f\'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg>Tableau des températures (Excel)</button>'
+    + '</div>'
+    + '<div id="cap_resultats" style="margin-top:14px"></div>'
+
+    // Clé par défaut (details discret)
+    + '<details style="margin-top:18px;background:#fff;border:1px solid #e9e9e7;border-radius:10px;padding:10px 14px">'
+    + '<summary style="font-size:11.5px;font-weight:600;color:#787774;cursor:pointer;letter-spacing:.01em;outline:none">Clé de lecture par défaut (optionnel)</summary>'
+    + '<div style="display:flex;gap:6px;margin-top:10px"><input id="cap_ubikey" type="text" value="' + _echap(getUbibotKey()) + '" placeholder="Clé API utilisée par défaut" class="finput" style="flex:1;padding:9px 12px;border:1px solid #e9e9e7;border-radius:8px;background:#fbfbfa;font-size:12.5px;color:#37352f;font-family:\'JetBrains Mono\',monospace;box-sizing:border-box">'
+    + '<button class="cap-btn" onclick="enregistrerCleUbibot()" style="border:none;background:#37352f;color:#fff;border-radius:8px;padding:9px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">Enregistrer</button></div>'
+    + '<div style="color:#9b9a97;font-size:10.5px;margin-top:8px;line-height:1.4">Utilisée uniquement pour un capteur qui n\'a pas sa propre clé.</div></details>'
+
+    + '</div>' // fin corps
     + '</div>';
   // Découverte des sondes réelles du/des boîtier(s) → peuple les menus « Source ».
   _capChargerChamps();
