@@ -69,7 +69,11 @@ body{
    la bnav sont fixes (flex-shrink:0), seul .scroll défile.
    Comme ça la bnav reste collée au bas de l'écran sans
    position:fixed (robuste sur iOS Safari / Chrome Android) */
-html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+html,body{height:100%;overflow:hidden;overflow-x:hidden;overscroll-behavior:none;overscroll-behavior-x:none;touch-action:pan-y}
+/* v553 : garde-fou global — aucune page ne doit scroller horizontalement.
+ * Un input/card qui dépasserait est contenu, pas exposé via swipe latéral. */
+.app,.page,.fwrap,.mod-header{overflow-x:hidden;max-width:100%}
+.page img,.page input,.page select,.page textarea,.page video{max-width:100%;box-sizing:border-box}
 .app{
   max-width:480px;margin:0 auto;height:100vh;height:100dvh;background:var(--bg);
   box-shadow:0 0 0 1px var(--line-soft),var(--shadow-lg);
@@ -123,7 +127,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 }
 
 /* ── ZONE SCROLL ── */
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--cream)}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--cream)}
 
 /* ── PAGE ROUTER ── */
 .page{display:none}
@@ -654,7 +658,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
   z-index:200;
 }
 /* .scroll porte le défilement interne avec padding pour la bnav */
-.scroll{flex:1 1 auto !important;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+.scroll{flex:1 1 auto !important;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
 /* La bnav ne s'affiche que quand l'utilisateur est connecté à l'app :
    les pages de connexion/présentation la masquent déjà via .app:has() */
 .app:has(#page-presentation.active) .bnav,
