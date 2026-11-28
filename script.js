@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v543';
+var APP_BUILD = 'v544';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1302,9 +1302,13 @@ async function sbSauvegarderEtab(etabData) {
   var RESTORE_MAP = { '\u0001':'✓', '\u0002':'✗', '\u0003':'★', '\u0004':'⚠', '\u0005':'ℹ' };
   var EMOJI_RE = /(?:[\u{1F300}-\u{1F6FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F1E6}-\u{1F1FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F600}-\u{1F64F}]|[\u{2600}-\u{27BF}]|[\u{1F3FB}-\u{1F3FF}]|[\u{200D}]|[︎-️])+/gu;
   var SELECTORS = [
-    '.mod-header-title', '.mod-header-intro', '.mod-header-num',
-    '.fblock-title', '.flabel', '.st-cap-s',
-    'button.btn-p', 'button.btn-s'
+    '.mod-header', '.mod-header-title', '.mod-header-intro', '.mod-header-num',
+    '.fblock', '.fblock-title', '.flabel', '.st-cap-s',
+    '.hh-top', '.hh-cap', '.rp-top', '.rp-cap', '.db-top', '.db-cap', '.st-top', '.st-cap',
+    '.fblock-sub', '.frow',
+    'button.btn-p', 'button.btn-s', 'button.status-btn',
+    '.cta', '.cat-band', '.cat-tabs',
+    '.mod', '.mod-name', '.mod-fn'
   ];
   function nettoyerTexte(t){
     if(!t) return t;

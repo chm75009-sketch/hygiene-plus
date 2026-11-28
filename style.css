@@ -328,6 +328,12 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
   box-shadow:0 8px 20px -4px rgba(15,118,110,.45),inset 0 1px 0 rgba(255,255,255,.18);
   animation:mhFade .6s cubic-bezier(.22,.6,.36,1) .1s both;
 }
+/* v544 : défensif — masque explicitement toute mod-header-ico de page non
+ * active (filet si un ancêtre en display:none ne suffit pas sur certains
+ * navigateurs/configurations), et toute mod-header-ico vide/orpheline. */
+.page:not(.active) .mod-header-ico{display:none !important}
+.mod-header-ico:empty{display:none !important}
+.mod-header-ico > *:not(svg){display:none !important}
 .mod-header-ico::after{
   content:'';position:absolute;inset:-3px;border-radius:15px;
   border:2px solid rgba(15,118,110,.14);pointer-events:none;
