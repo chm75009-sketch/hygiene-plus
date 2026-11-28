@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v550';
+var APP_BUILD = 'v551';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -25133,11 +25133,10 @@ function _peuplerListeRapports(content, attenteCloud) {
       }
       var cfg = cfgSecteur();
       var now = maintenant();
-      // v550 : pilules repeintes façon v7 Nomos (fond cream + border teal clair,
-      // texte teal), et retrait des emojis 📅 / 🕐 qui s'affichaient en haut de
-      // chaque module (rendu "boîtes" sur iPhone).
-      var pill = 'display:inline-flex;align-items:center;gap:5px;background:#f0faf7;color:#0f766e;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;line-height:1.3;border:1px solid #c5e5db;font-family:inherit;letter-spacing:.02em';
-      var pillGold = 'display:inline-flex;align-items:center;gap:5px;background:#fefce8;color:#8b6f1d;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;line-height:1.3;border:1px solid #fde68a;font-family:inherit;letter-spacing:.02em';
+      // v551 : pilules v7 Nomos avec !important pour forcer la couleur même
+      // si un ancien CSS en cache garde color:#fff hérité du .mod-header.
+      var pill = 'display:inline-flex !important;align-items:center;gap:5px;background:#f0faf7 !important;color:#0f766e !important;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;line-height:1.3;border:1px solid #c5e5db !important;font-family:inherit;letter-spacing:.02em;text-shadow:none';
+      var pillGold = 'display:inline-flex !important;align-items:center;gap:5px;background:#fefce8 !important;color:#8b6f1d !important;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;line-height:1.3;border:1px solid #fde68a !important;font-family:inherit;letter-spacing:.02em;text-shadow:none';
       var html = '';
       if (cfg && cfg.label) {
         // On nettoie aussi d'éventuels emojis dans le libellé du secteur.
