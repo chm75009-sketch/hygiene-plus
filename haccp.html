@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=529">
-    <script src="pms_secteurs.js?v=529" defer></script>
-    <script src="script.js?v=529" defer></script>
-<script src="patch_photo_bl.js?v=529" defer></script>
-<script src="pms_generateur.js?v=529" defer></script>
+    <link rel="stylesheet" href="style.css?v=530">
+    <script src="pms_secteurs.js?v=530" defer></script>
+    <script src="script.js?v=530" defer></script>
+<script src="patch_photo_bl.js?v=530" defer></script>
+<script src="pms_generateur.js?v=530" defer></script>
 <script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
@@ -4187,9 +4187,13 @@ html, body { max-width: 100%; overflow-x: hidden; }
         #page-history .hh-back{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e9e9e7;color:#37352f;font-family:inherit;font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer;transition:all .15s;box-shadow:0 1px 2px rgba(10,10,10,.04)}
         #page-history .hh-back:hover{background:#f7f6f3;border-color:#d3d1cb}
         #page-history .hh-back svg{width:13px;height:13px;stroke-width:2}
-        #page-history .hh-cap{flex:1;min-width:0}
-        #page-history .hh-cap-l{display:block;font-size:11px;color:var(--accent,#0f766e);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-        #page-history .hh-cap-t{display:block;font-size:22px;color:#1f1e1b;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
+        #page-history .hh-cap{flex:1;min-width:0;display:flex;align-items:center;gap:12px;margin:4px 0 2px}
+        #page-history .hh-cap-ico{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent,#0f766e) 0%,#115e59 100%);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px -3px rgba(15,118,110,.4),inset 0 1px 0 rgba(255,255,255,.15)}
+        #page-history .hh-cap-ico svg{width:19px;height:19px}
+        #page-history .hh-cap-txt{min-width:0;line-height:1.15}
+        #page-history .hh-cap-t{display:block;font-size:26px;color:#1f1e1b;font-weight:700;letter-spacing:-.025em;line-height:1.1}
+        #page-history .hh-cap-s{display:block;font-size:12px;color:#787774;font-weight:500;margin-top:4px;letter-spacing:0}
+        #page-history .hh-cap-s em{font-style:normal;color:var(--accent,#0f766e);font-weight:600}
 
         /* Carte stats type callout v7 */
         #page-history .hh-stats{background:linear-gradient(135deg,#fff 0%,#f0faf7 100%);border:1px solid #d6ede5;border-radius:12px;padding:14px 16px 12px;margin-bottom:12px;box-shadow:0 2px 8px -2px rgba(15,118,110,.08),0 1px 3px rgba(10,10,10,.04);position:relative;overflow:hidden}
@@ -4238,8 +4242,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
           <button type="button" class="hh-back" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
         </div>
         <div class="hh-cap">
-          <span class="hh-cap-l">Archivage légal · 3 ans</span>
-          <span class="hh-cap-t">Historique</span>
+          <span class="hh-cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="10"/></svg></span>
+          <div class="hh-cap-txt">
+            <span class="hh-cap-t">Historique</span>
+            <span class="hh-cap-s">Toutes vos preuves HACCP · <em>archivage 3 ans</em></span>
+          </div>
         </div>
 
         <!-- 2. Bloc stats : nombre d'enregistrements sur la période -->
