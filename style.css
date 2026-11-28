@@ -297,15 +297,29 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 }
 .btn-back:hover{background:var(--cream);border-color:#dcdcdc}
 
-/* NAV-1 — Boutons flottants */
+/* NAV-1 — Boutons flottants
+ * v532 : #floatBack devient un FAB rond discret en bas à gauche (symétrique
+ * du FAB chatbot en bas à droite) au lieu d'une pilule horizontale en haut
+ * qui coupait l'écran et faisait doublon avec le .btn-back du mod-header. */
 #floatBack{
-  position:fixed;left:12px;top:64px;z-index:295;align-items:center;gap:6px;
-  background:var(--ink);color:#fff;border:1px solid rgba(255,255,255,.28);
-  border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:700;
-  cursor:pointer;font-family:inherit;box-shadow:var(--shadow);
-  -webkit-tap-highlight-color:transparent;
+  position:fixed !important;left:16px !important;
+  bottom:calc(76px + env(safe-area-inset-bottom,0px)) !important;
+  top:auto !important;
+  z-index:95;width:44px;height:44px;border-radius:50%;
+  align-items:center;justify-content:center;gap:0;padding:0;
+  background:#fff;color:var(--ink);border:1px solid var(--line);
+  font-size:0;font-weight:500;line-height:0;
+  cursor:pointer;font-family:inherit;
+  box-shadow:0 6px 18px -4px rgba(10,10,10,.18),0 2px 4px rgba(10,10,10,.08);
+  -webkit-tap-highlight-color:transparent;transition:transform .15s,box-shadow .15s;
 }
-#floatBack:active{transform:scale(.96)}
+#floatBack::before{
+  content:'';display:block;width:14px;height:14px;
+  border-top:2px solid var(--ink);border-left:2px solid var(--ink);
+  transform:rotate(-45deg) translate(2px,2px);border-radius:1px;
+}
+#floatBack:hover{transform:translateY(-1px);box-shadow:0 10px 22px -4px rgba(10,10,10,.22),0 3px 6px rgba(10,10,10,.1)}
+#floatBack:active{transform:scale(.94)}
 #floatTop{
   position:fixed;right:10px;top:50%;transform:translateY(-50%);z-index:295;
   width:40px;height:40px;border-radius:50%;align-items:center;justify-content:center;
