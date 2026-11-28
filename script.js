@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v546';
+var APP_BUILD = 'v547';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -9670,11 +9670,12 @@ function updateEnceinteRef_check() {
 function updateEnceinteRef(id) {
   var typeEl = document.getElementById('enc_ref_type_' + id);
   var numEl = document.getElementById('enc_ref_num_' + id);
-  var titleEl = document.querySelector('#enc_block_' + id + ' .fblock-title span');
+  // v547 : cible le span du nom (premier), pas le badge .enc-type-badge ajouté
+  // à côté — sinon on écrasait le badge visuel.
+  var titleEl = document.querySelector('#enc_block_' + id + ' .fblock-title > span:not(.enc-type-badge)');
   if (!titleEl) return;
   var typeTxt = typeEl && typeEl.value ? typeEl.value : '';
   var numTxt = numEl && numEl.value ? ' — ' + numEl.value : '';
-  // Sans emoji : juste le type et le numéro.
   var origText = titleEl.textContent;
   if (typeTxt) titleEl.textContent = typeTxt + numTxt;
   else if (numTxt) titleEl.textContent = origText.split(' — ')[0] + numTxt;
@@ -9699,6 +9700,41 @@ function buildEnceinteOptions() {
   }
   return html;
 }
+// v547 : palette + libellés pour le badge "type d'enceinte" visible en tête de bloc.
+// Couleurs cohérentes Nomos : froid positif → teal, congélateur → bleu glacé,
+// ambiant/manuel → or, autres → gris.
+function _encTypeNice(t) {
+  var MAP = {
+    chambre_froide:'Chambre froide', refrigerateur:'Réfrigérateur', congelateur:'Congélateur',
+    cellule_refroidissement:'Cellule refroidissement', vitrine_refrigeree:'Vitrine réfrigérée',
+    armoire_refrigeree:'Armoire réfrigérée', bain_marie:'Bain-marie', cellule_pousse:'Cellule de pousse',
+    four:'Four', friteuse:'Friteuse', autre:'Autre équipement',
+    chambre_froide_legumes:'Chambre froide légumes', chambre_froide_service:'Chambre froide service',
+    chambre_froide_viandes:'Chambre froide viandes', chambre_patisserie:'Chambre pâtisserie',
+    chambre_carcasses:'Chambre carcasses', chambre_abats:'Chambre abats',
+    chambre_pousse:'Chambre de pousse', refrigerateur_ultra:'Réfrigérateur ultra-frais',
+    conservateur_glaces:'Conservateur glaces', cellule_collective:'Cellule collective',
+    vitrine_traiteur:'Vitrine traiteur', vitrine_vente:'Vitrine de vente', vitrine_grab:'Vitrine grab&go',
+    vitrine_vins:'Vitrine vins', garde_manger:'Garde-manger', meuble_bas:'Meuble bas réfrigéré',
+    saladette:'Saladette', armoire_boissons:'Armoire à boissons', machine_glace:'Machine à glace',
+    salle_decoupe:'Salle de découpe', sechoir:'Séchoir', bac_saumure:'Bac à saumure',
+    armoire_fermentation:'Armoire fermentation'
+  };
+  return MAP[t] || '';
+}
+function _encTypeColor(t) {
+  // Congélateur / conservateur glaces / cellule refroidissement → bleu glacé
+  if (/cong|glaces|refroidissement|ultra|cellule_collective/i.test(t || '')) return { bg:'#eff6ff', fg:'#1e40af', bd:'#bfdbfe' };
+  // Chaud / manuel (bain-marie, four, friteuse, fermentation, séchoir, pousse) → or
+  if (/bain|four|frit|fermentation|sechoir|pousse|saumure|decoupe|salle/i.test(t || '')) return { bg:'#fefce8', fg:'#8b6f1d', bd:'#fde68a' };
+  // Vitrine vins ≈ frais légèrement supérieur → teal clair
+  if (/vins/i.test(t || '')) return { bg:'#f0faf7', fg:'#0f766e', bd:'#c5e5db' };
+  // Frais positif par défaut → teal
+  if (t) return { bg:'#f0faf7', fg:'#0f766e', bd:'#c5e5db' };
+  // Pas de type choisi
+  return { bg:'#fbfbfa', fg:'#787774', bd:'#e9e9e7' };
+}
+
 function buildEnceinteBlock(id, nom, type, seuil) {
   var cfg = SEUILS_ENCEINTE[type] || {ico:'🌡️', label:'?'};
   var seuilTxt = seuil !== null ? ((seuil < 0 ? '' : '+') + seuil + '°C') : '?';
@@ -9724,22 +9760,31 @@ function buildEnceinteBlock(id, nom, type, seuil) {
     seuilDisplay = '<div class="tcard-seuil" id="enc_seuil_display_' + id + '" style="color:#f59e0b">—</div>';
   }
 
-  return '<div class="fblock" id="enc_block_' + id + '" style="border-left:3px solid #0f766e">' +
-    '<div class="fblock-title">' +
-      '<span>' + nom + '</span>' +
+  // Couleur du badge/border selon le type (froid/surgelé/ambiant).
+  var typeLabel = cfg.label && cfg.label !== '?' ? cfg.label : '';
+  var typeNice = _encTypeNice(type);
+  var typeColor = _encTypeColor(type);
+  var badgeHtml = typeNice
+    ? '<span class="enc-type-badge" id="enc_type_badge_' + id + '" style="display:inline-flex;align-items:center;gap:5px;background:' + typeColor.bg + ';color:' + typeColor.fg + ';border:1px solid ' + typeColor.bd + ';border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-family:inherit;white-space:nowrap">' + _echap(typeNice) + (typeLabel ? '<span style="opacity:.7;font-weight:600;letter-spacing:0;text-transform:none">' + _echap(typeLabel) + '</span>' : '') + '</span>'
+    : '<span class="enc-type-badge enc-type-badge-empty" id="enc_type_badge_' + id + '" style="display:inline-flex;align-items:center;gap:4px;background:#f1f1ef;color:#9b9a97;border:1px dashed #d3d1cb;border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:600;letter-spacing:.02em;font-family:inherit;white-space:nowrap">Choisir le type</span>';
+
+  return '<div class="fblock" id="enc_block_' + id + '" style="border-left:3px solid ' + typeColor.bd + '">' +
+    '<div class="fblock-title" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">' +
+      '<span style="font-size:14px;font-weight:700;color:#1f1e1b;letter-spacing:-.01em">' + nom + '</span>' +
+      badgeHtml +
     '</div>' +
     '<div class="frow" style="margin-bottom:8px">' +
       '<div class="flabel">Localisation / Emplacement</div>' +
       '<input type=\"text\" class=\"finput\" id=\"enc_precision_' + id + '\" data-loc-auto=\"1\" placeholder=\"Ex: Cuisine, Salle, N2...\" style=\"font-size:12px\"/>' +
     '</div>' +
     '<div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">' +
-      '<select id="enc_ref_type_' + id + '" data-enc-id="' + id + '" onchange="onTypeEnceinteChange(this)" style="width:100%;padding:7px 10px;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:9px;font-size:12px;font-weight:600;color:#0369a1">' +
+      '<select id="enc_ref_type_' + id + '" data-enc-id="' + id + '" onchange="onTypeEnceinteChange(this)" style="flex:1;padding:9px 12px;background:' + typeColor.bg + ';border:1px solid ' + typeColor.bd + ';border-radius:10px;font-size:13px;font-weight:600;color:' + typeColor.fg + ';font-family:inherit">' +
         buildEnceinteOptions() +
       '</select>' +
       '<div id="enc_nom_custom_wrap_' + id + '" style="display:none;margin-top:6px;width:100%">' +
-        '<input type="text" id="enc_nom_custom_' + id + '" placeholder="Nom équipement (ex: Armoire pâtisserie)" style="width:100%;padding:7px 10px;background:#fff8f0;border:1.5px solid #fed7aa;border-radius:9px;font-size:12px;color:#c2410c;font-family:Outfit,sans-serif"/>' +
+        '<input type="text" id="enc_nom_custom_' + id + '" placeholder="Nom équipement (ex: Armoire pâtisserie)" style="width:100%;padding:9px 12px;background:#fefce8;border:1px solid #fde68a;border-radius:10px;font-size:13px;color:#8b6f1d;font-family:inherit"/>' +
       '</div>' +
-      '<input type="text" id="enc_ref_num_' + id + '" placeholder="N° Réf." style="width:80px;padding:7px 10px;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:9px;font-size:12px;color:#0369a1;font-family:Outfit,sans-serif"/>' +
+      '<input type="text" id="enc_ref_num_' + id + '" placeholder="N° Réf." style="width:80px;padding:9px 10px;background:#fbfbfa;border:1px solid #e9e9e7;border-radius:10px;font-size:13px;color:#37352f;font-family:inherit;text-align:center"/>' +
     '</div>' +
     seuilBlock +
     '<div class="tgrid">' +
@@ -9836,13 +9881,43 @@ function onTypeEnceinteChange(selectEl) {
   }
 
   // Mettre à jour le titre du bloc (sans emoji).
-  var titleEl = document.querySelector('#enc_block_' + id + ' .fblock-title span');
+  var titleEl = document.querySelector('#enc_block_' + id + ' .fblock-title span:not(.enc-type-badge)');
   if (titleEl && type) {
     var currentText = titleEl.textContent;
-    // Retire tout emoji en tête (pictogrammes, symboles, variation selectors).
     var namePart = currentText.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\s]+/u, '').trim();
     titleEl.textContent = namePart;
   }
+  // Rafraîchir le badge de type visible en tête du bloc (v547).
+  try {
+    var badge = document.getElementById('enc_type_badge_' + id);
+    if (badge) {
+      var nice = _encTypeNice(type);
+      var col = _encTypeColor(type);
+      var seuilLabel = (SEUILS_ENCEINTE[type] && SEUILS_ENCEINTE[type].label && SEUILS_ENCEINTE[type].label !== '?') ? SEUILS_ENCEINTE[type].label : '';
+      if (nice) {
+        badge.classList.remove('enc-type-badge-empty');
+        badge.style.background = col.bg;
+        badge.style.color = col.fg;
+        badge.style.border = '1px solid ' + col.bd;
+        badge.style.borderStyle = 'solid';
+        badge.innerHTML = _echap(nice) + (seuilLabel ? '<span style="opacity:.7;font-weight:600;letter-spacing:0;text-transform:none;margin-left:5px">' + _echap(seuilLabel) + '</span>' : '');
+      } else {
+        badge.classList.add('enc-type-badge-empty');
+        badge.style.background = '#f1f1ef';
+        badge.style.color = '#9b9a97';
+        badge.style.border = '1px dashed #d3d1cb';
+        badge.textContent = 'Choisir le type';
+      }
+    }
+    // Rafraîchir la border-left du fblock + la couleur du select.
+    var blk = document.getElementById('enc_block_' + id);
+    if (blk) blk.style.borderLeft = '3px solid ' + _encTypeColor(type).bd;
+    var sel = document.getElementById('enc_ref_type_' + id);
+    if (sel) {
+      var c2 = _encTypeColor(type);
+      sel.style.background = c2.bg; sel.style.color = c2.fg; sel.style.borderColor = c2.bd;
+    }
+  } catch (eBadge) {}
 }
 
 function onSeuilCustomChange(id) {
