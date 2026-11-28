@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v554';
+var APP_BUILD = 'v555';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1983,7 +1983,7 @@ function injecterAvertissementResponsabilite() {
       if (prev && prev.classList && prev.classList.contains('bandeau-responsabilite')) return;
       var b = document.createElement('div');
       b.className = 'bandeau-responsabilite';
-      b.style.cssText = 'background:#fff;border:1px solid #e7e7e4;border-left:3px solid #d2ad46;border-radius:12px;padding:12px 14px;margin:14px 14px 10px;color:#4a4a4a;font-size:12.5px;line-height:1.55';
+      b.style.cssText = 'background:#fff;border:1px solid #e7e7e4;border-left:3px solid #d2ad46;border-radius:12px;padding:12px 14px;margin:2px 0 12px;color:#4a4a4a;font-size:12.5px;line-height:1.55';
       b.innerHTML =
         '<div style="font-weight:600;font-size:13px;color:#0a0a0a;margin-bottom:6px;letter-spacing:-.01em">Avant de valider</div>' +
         '<div style="margin-bottom:6px">Les cases marquées d\'un astérisque <strong style="color:#dc2626">*</strong> doivent être renseignées. À défaut, le rapport sera considéré comme <strong style="color:#0a0a0a;font-weight:600">non conforme</strong> et pourra être rejeté lors d\'un contrôle DDPP.</div>' +
