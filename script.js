@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v533';
+var APP_BUILD = 'v534';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -27426,25 +27426,17 @@ function _confirmSuppr(msg, cb) {
 //  uniquement sur les pages qui possèdent déjà un bouton retour.
 // ════════════════════════════════════════════════════════════════════════
 (function () {
-  function _navActiveBack() {
-    var p = document.querySelector('.page.active');
-    return p ? p.querySelector('.btn-back, .back-home, .btn-retour-haut') : null;
-  }
+  // v534 : plus que le bouton « ↑ » (haut) — « ← Retour » flottant supprimé.
+  // Un bouton #floatBack injecté par un vieux cache est immédiatement neutralisé.
   function _navWire() {
     var sa = document.getElementById('scrollArea');
-    var fb = document.getElementById('floatBack');
     var ft = document.getElementById('floatTop');
-    var tb = document.getElementById('appTopbar');
-    if (!sa || !fb || !ft) return;
-    fb.addEventListener('click', function () { var b = _navActiveBack(); if (b) b.click(); });
+    var fbLegacy = document.getElementById('floatBack');
+    if (fbLegacy) { try { fbLegacy.remove(); } catch (e) { fbLegacy.style.display = 'none'; } }
+    if (!sa || !ft) return;
     ft.addEventListener('click', function () { try { sa.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) { sa.scrollTop = 0; } });
     function _maj() {
       var descendu = sa.scrollTop > 140;
-      var b = _navActiveBack();
-      if (b && descendu) {
-        try { fb.style.top = ((tb ? tb.offsetHeight : 56) + 8) + 'px'; } catch (e) {}
-        fb.style.display = 'inline-flex';
-      } else { fb.style.display = 'none'; }
       ft.style.display = descendu ? 'inline-flex' : 'none';
     }
     sa.addEventListener('scroll', _maj, { passive: true });
