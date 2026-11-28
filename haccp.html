@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=535">
-    <script src="pms_secteurs.js?v=535" defer></script>
-    <script src="script.js?v=535" defer></script>
-<script src="patch_photo_bl.js?v=535" defer></script>
-<script src="pms_generateur.js?v=535" defer></script>
+    <link rel="stylesheet" href="style.css?v=536">
+    <script src="pms_secteurs.js?v=536" defer></script>
+    <script src="script.js?v=536" defer></script>
+<script src="patch_photo_bl.js?v=536" defer></script>
+<script src="pms_generateur.js?v=536" defer></script>
 <script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
@@ -3942,12 +3942,59 @@ html, body { max-width: 100%; overflow-x: hidden; }
     </div>
     <!-- MODULE 17 — TABLEAU DE BORD -->
     <div class="page" id="page-dashboard">
-      <div class="mod-header">
-        <button class="btn-back" onclick="goHome()">← Retour</button>
-        <div class="mod-header-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg></div>
-        <div class="mod-header-num">Module 17 · Permanent · Suivi & Pilotage</div>
-        <div class="mod-header-title">Tableau de Bord & Analytics</div>
-        <div class="mod-header-intro">Visualiser en temps réel votre score de conformité, vos non-conformités actives et vos alertes. Disponible dans la version connectée avec Supabase.</div>
+      <style>
+        /* === TABLEAU DE BORD v7 — cohérent avec Modules, Historique, Rapports === */
+        #page-dashboard{background:#faf8f3;color:#37352f;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+        /* Neutralisation défensive : masque toute icône/emoji parasite héritée de l'ancien
+         * mod-header ou injectée par un ancien bundle en cache. */
+        #page-dashboard > .mod-header,#page-dashboard > *:not(.db-head):not(.fwrap):not(style):not(script):first-of-type ~ .mod-header-ico{display:none !important}
+        #page-dashboard .db-head{padding:16px 16px 4px;position:relative;overflow:hidden}
+        #page-dashboard .db-head::before{content:'';position:absolute;top:-50px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(15,118,110,.08) 0%,transparent 65%);pointer-events:none}
+        #page-dashboard .db-head::after{content:'';position:absolute;top:60px;left:-60px;width:160px;height:160px;background:radial-gradient(circle,rgba(210,173,70,.09) 0%,transparent 65%);pointer-events:none}
+        #page-dashboard .db-head > *{position:relative;z-index:1}
+
+        #page-dashboard .db-top{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+        #page-dashboard .db-back{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e9e9e7;color:#37352f;font-family:inherit;font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer;transition:all .15s;box-shadow:0 1px 2px rgba(10,10,10,.04)}
+        #page-dashboard .db-back:hover{background:#f7f6f3;border-color:#d3d1cb}
+        #page-dashboard .db-back svg{width:13px;height:13px;stroke-width:2}
+        #page-dashboard .db-live{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #d6ede5;color:var(--accent,#0f766e);padding:5px 11px 5px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.02em;text-transform:uppercase}
+        #page-dashboard .db-live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent,#0f766e);animation:dbPulse 1.6s ease-in-out infinite;box-shadow:0 0 0 0 rgba(15,118,110,.5)}
+        @keyframes dbPulse{0%,100%{box-shadow:0 0 0 0 rgba(15,118,110,.45)}50%{box-shadow:0 0 0 6px rgba(15,118,110,0)}}
+
+        #page-dashboard .db-cap{display:flex;align-items:center;gap:14px;margin:0 0 6px}
+        #page-dashboard .db-cap-ico{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--accent,#0f766e) 0%,#115e59 100%);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 8px 20px -4px rgba(15,118,110,.4),inset 0 1px 0 rgba(255,255,255,.18);position:relative}
+        #page-dashboard .db-cap-ico::after{content:'';position:absolute;inset:-3px;border-radius:17px;border:2px solid rgba(15,118,110,.14);pointer-events:none}
+        #page-dashboard .db-cap-ico svg{width:22px;height:22px}
+        #page-dashboard .db-cap-txt{min-width:0;line-height:1.1}
+        #page-dashboard .db-cap-t{display:block;font-size:28px;color:#1f1e1b;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+        #page-dashboard .db-cap-t em{font-style:normal;color:var(--accent,#0f766e);font-weight:800}
+        #page-dashboard .db-cap-s{display:block;font-size:12.5px;color:#787774;font-weight:500;margin-top:5px}
+        #page-dashboard .db-cap-s b{color:#37352f;font-weight:600}
+
+        /* 3 chips de navigation rapide : KPI inline en header */
+        #page-dashboard .db-chips{display:flex;gap:6px;margin:14px 0 10px;flex-wrap:wrap}
+        #page-dashboard .db-chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #e9e9e7;border-radius:999px;padding:5px 10px 5px 5px;font-size:11.5px;font-weight:600;color:#37352f;box-shadow:0 1px 2px rgba(10,10,10,.04)}
+        #page-dashboard .db-chip-val{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--accent,#0f766e);color:#fff;font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+        #page-dashboard .db-chip.warn .db-chip-val{background:#d2ad46}
+        #page-dashboard .db-chip.alert .db-chip-val{background:#b91c1c}
+      </style>
+      <div class="db-head">
+        <div class="db-top">
+          <button type="button" class="db-back" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
+          <span class="db-live"><span class="db-live-dot"></span>Temps réel</span>
+        </div>
+        <div class="db-cap">
+          <span class="db-cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg></span>
+          <div class="db-cap-txt">
+            <span class="db-cap-t">Tableau <em>de bord</em></span>
+            <span class="db-cap-s">Score, <b>KPIs</b> et alertes de conformité HACCP</span>
+          </div>
+        </div>
+        <div class="db-chips">
+          <span class="db-chip"><span class="db-chip-val" id="db_chip_score">—</span>Score</span>
+          <span class="db-chip alert"><span class="db-chip-val" id="db_chip_nc">0</span>NC actives</span>
+          <span class="db-chip warn"><span class="db-chip-val" id="db_chip_week">0</span>Cette semaine</span>
+        </div>
       </div>
       <div class="fwrap">
         <!-- SÉLECTEUR PLAGE + BOUTONS EXPORT -->
