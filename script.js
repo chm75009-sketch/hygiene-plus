@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v542';
+var APP_BUILD = 'v543';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1289,13 +1289,18 @@ async function sbSauvegarderEtab(etabData) {
 // Guard préservé au cas où un hook externe le réinjecterait un jour.
 (function(){ var _b = document.getElementById('modeExpertBtn'); if (_b) _b.addEventListener('click', function(){ showPage('page-home'); renderMods('quotidien'); }); })();
 
-// === v540 : Nettoyage global des emojis décoratifs dans les modules ===
-// Retire les emojis fréquents (pictogrammes Unicode des plans 1F300-1F9FF,
-// 2700-27BF, 2600-26FF) des titres/intros/boutons des modules. Préserve les
-// indicateurs utiles (✓ U+2713, ✗ U+2717, ★ U+2605, ⚠ U+26A0) et tout SVG.
+// === v543 : Nettoyage global des emojis décoratifs — version renforcée ===
+// Retire les emojis Unicode des plans pictogrammes 2600-27BF, 1F300-1F9FF,
+// 1F600-1F64F, 1F680-1F6FF, 1F1E6-1F1FF ainsi que les sélecteurs de variation
+// (FE0E/FE0F) et les joiners ZWJ (200D) + modifieurs de teint (1F3FB-1F3FF).
+// PROTÈGE les indicateurs fonctionnels ✓ U+2713, ✗ U+2717, ★ U+2605, ⚠ U+26A0,
+// ℹ U+2139 en les bufferisant avant retrait, puis en les restaurant après.
 (function(){
   if (typeof window === 'undefined') return;
-  var EMOJI_RE = /(?:[\u{1F300}-\u{1F6FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F1E6}-\u{1F1FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F600}-\u{1F64F}]|[\u{2700}-\u{27BF}]|[\u{1F3FB}-\u{1F3FF}]|[\u{200D}]|[️])+/gu;
+  var PRESERVE = { '✓':'\u0001', '✗':'\u0002', '★':'\u0003', '⚠':'\u0004', 'ℹ':'\u0005' };
+  var RESTORE_RE = /[\u0001-\u0005]/g;
+  var RESTORE_MAP = { '\u0001':'✓', '\u0002':'✗', '\u0003':'★', '\u0004':'⚠', '\u0005':'ℹ' };
+  var EMOJI_RE = /(?:[\u{1F300}-\u{1F6FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F1E6}-\u{1F1FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F600}-\u{1F64F}]|[\u{2600}-\u{27BF}]|[\u{1F3FB}-\u{1F3FF}]|[\u{200D}]|[︎-️])+/gu;
   var SELECTORS = [
     '.mod-header-title', '.mod-header-intro', '.mod-header-num',
     '.fblock-title', '.flabel', '.st-cap-s',
@@ -1303,11 +1308,15 @@ async function sbSauvegarderEtab(etabData) {
   ];
   function nettoyerTexte(t){
     if(!t) return t;
-    // Retire les plages d'emojis puis trim; conserve ✓ ✗ ★ ⚠ hors de ces plages.
-    var out = t.replace(EMOJI_RE, '');
-    // Compacte les espaces multiples et retire un éventuel séparateur esseulé.
-    out = out.replace(/[ \t]{2,}/g, ' ').replace(/^\s*[·—\-·]\s*/, '').replace(/\s*[·—\-·]\s*$/, '').trim();
-    return out;
+    // 1) Bufferiser les indicateurs à préserver
+    var tmp = t.replace(/[✓✗★⚠ℹ]/g, function(c){ return PRESERVE[c] || c; });
+    // 2) Retirer tout emoji des plages ciblées
+    tmp = tmp.replace(EMOJI_RE, '');
+    // 3) Restaurer les indicateurs préservés
+    tmp = tmp.replace(RESTORE_RE, function(c){ return RESTORE_MAP[c] || c; });
+    // 4) Compactage
+    tmp = tmp.replace(/[ \t]{2,}/g, ' ').replace(/^\s*[·—\-·]\s*/, '').replace(/\s*[·—\-·]\s*$/, '').trim();
+    return tmp;
   }
   function nettoyerSousArbre(root){
     try{
