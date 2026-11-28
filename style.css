@@ -610,8 +610,11 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;overscroll-behavior:none
   max-width:480px;
   z-index:10;
 }
-/* Évite que les derniers champs du module soient cachés par la .cta fixed. */
-.page:has(> .cta) .fwrap{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+/* Évite que les derniers champs du module soient cachés par la .cta fixed.
+ * v555 : élargi à 112px pour que le bandeau "Avant de valider" injecté
+ * en dernier dans le flux soit entièrement visible au-dessus de la .cta. */
+.page:has(> .cta) .fwrap{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+.bandeau-responsabilite{margin:2px 0 12px !important}
 /* v535 : masque la .cta sticky lorsqu'elle ne contient qu'un seul bouton Retour
  * (doublon avec .btn-back du mod-header, coupait l'écran). Fallback pour tout
  * module de consultation sans bouton Valider qui aurait encore ce vestige. */
