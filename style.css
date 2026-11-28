@@ -546,8 +546,21 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
   display:flex;gap:8px;background:rgba(255,255,255,.96);
   backdrop-filter:saturate(180%) blur(14px);
   -webkit-backdrop-filter:saturate(180%) blur(14px);
-  border-top:1px solid var(--line-soft);position:sticky;bottom:60px;z-index:10;
+  border-top:1px solid var(--line-soft);
+  /* v538 : passe de sticky à fixed pour être TOUJOURS collée en bas du
+   * viewport, juste au-dessus de la bnav, peu importe la hauteur du contenu.
+   * En sticky elle "tombait" au milieu quand le module était plus court
+   * que la fenêtre (cas des petits modules sur grand écran). */
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(60px + env(safe-area-inset-bottom,0px));
+  width:100%;
+  max-width:480px;
+  z-index:10;
 }
+/* Évite que les derniers champs du module soient cachés par la .cta fixed. */
+.page:has(> .cta) .fwrap{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
 /* v535 : masque la .cta sticky lorsqu'elle ne contient qu'un seul bouton Retour
  * (doublon avec .btn-back du mod-header, coupait l'écran). Fallback pour tout
  * module de consultation sans bouton Valider qui aurait encore ce vestige. */
