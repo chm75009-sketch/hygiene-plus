@@ -334,6 +334,9 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 .page:not(.active) .mod-header-ico{display:none !important}
 .mod-header-ico:empty{display:none !important}
 .mod-header-ico > *:not(svg){display:none !important}
+/* v552 : bandeau secteur + date/heure supprimé — filet contre tout bundle
+ * en cache qui tenterait de le réinjecter. */
+.secteur-date-badge{display:none !important}
 .mod-header-ico::after{
   content:'';position:absolute;inset:-3px;border-radius:15px;
   border:2px solid rgba(15,118,110,.14);pointer-events:none;
