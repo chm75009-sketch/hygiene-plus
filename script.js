@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v560';
+var APP_BUILD = 'v561';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1356,6 +1356,34 @@ async function sbSauvegarderEtab(etabData) {
     var moB = new MutationObserver(function(){ clearTimeout(window._emojiHuntTimer); window._emojiHuntTimer = setTimeout(chasseParasites, 120); });
     moB.observe(document.body, { subtree:true, childList:true });
   }catch(e){}
+})();
+
+// === v561 : Masquage des fblocks "Horodatage automatique" ===
+// Ces blocs ne servaient qu'à AFFICHER une date/heure que l'utilisateur ne
+// modifie jamais : ils alourdissaient inutilement chaque module. La logique
+// d'horodatage reste intacte côté JS (les spans #xxx_timestamp sont toujours
+// mis à jour, mais rendus invisibles via display:none sur leur fblock parent).
+(function(){
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  function cacherHorodatages(){
+    try{
+      document.querySelectorAll('.fblock .fblock-title').forEach(function(t){
+        var txt = (t.textContent || '').trim().toLowerCase();
+        if (txt.indexOf('horodatage') === 0) {
+          var fb = t.closest('.fblock');
+          if (fb) fb.style.display = 'none';
+        }
+      });
+    }catch(e){}
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', cacherHorodatages);
+  else cacherHorodatages();
+  try {
+    var _origSPH = window.showPage;
+    if (typeof _origSPH === 'function') {
+      window.showPage = function(){ var r = _origSPH.apply(this, arguments); setTimeout(cacherHorodatages, 60); return r; };
+    }
+  } catch(e){}
 })();
 
 // === v543 : Nettoyage global des emojis décoratifs — version renforcée ===
