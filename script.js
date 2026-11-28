@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v553';
+var APP_BUILD = 'v554';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -9846,14 +9846,14 @@ function buildEnceinteBlock(id, nom, type, seuil) {
       '<div class="flabel">Localisation / Emplacement</div>' +
       '<input type=\"text\" class=\"finput\" id=\"enc_precision_' + id + '\" data-loc-auto=\"1\" placeholder=\"Ex: Cuisine, Salle, N2...\" style=\"font-size:12px\"/>' +
     '</div>' +
-    '<div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">' +
-      '<select id="enc_ref_type_' + id + '" data-enc-id="' + id + '" onchange="onTypeEnceinteChange(this)" style="flex:1;padding:9px 12px;background:' + typeColor.bg + ';border:1px solid ' + typeColor.bd + ';border-radius:10px;font-size:13px;font-weight:600;color:' + typeColor.fg + ';font-family:inherit">' +
+    '<div style="display:flex;gap:6px;margin-bottom:10px;align-items:center;max-width:100%;min-width:0;overflow:hidden">' +
+      '<select id="enc_ref_type_' + id + '" data-enc-id="' + id + '" onchange="onTypeEnceinteChange(this)" style="flex:1 1 0;min-width:0;padding:9px 10px;background:' + typeColor.bg + ';border:1px solid ' + typeColor.bd + ';border-radius:10px;font-size:13px;font-weight:600;color:' + typeColor.fg + ';font-family:inherit;box-sizing:border-box;max-width:100%;text-overflow:ellipsis">' +
         buildEnceinteOptions() +
       '</select>' +
-      '<div id="enc_nom_custom_wrap_' + id + '" style="display:none;margin-top:6px;width:100%">' +
-        '<input type="text" id="enc_nom_custom_' + id + '" placeholder="Nom équipement (ex: Armoire pâtisserie)" style="width:100%;padding:9px 12px;background:#fefce8;border:1px solid #fde68a;border-radius:10px;font-size:13px;color:#8b6f1d;font-family:inherit"/>' +
-      '</div>' +
-      '<input type="text" id="enc_ref_num_' + id + '" placeholder="N° Réf." style="width:92px;min-width:0;flex-shrink:0;padding:9px 10px;background:#fbfbfa;border:1px solid #e9e9e7;border-radius:10px;font-size:13px;color:#37352f;font-family:inherit;text-align:center;box-sizing:border-box"/>' +
+      '<input type="text" id="enc_ref_num_' + id + '" placeholder="N° Réf." style="width:84px;flex:0 0 84px;min-width:0;padding:9px 8px;background:#fbfbfa;border:1px solid #e9e9e7;border-radius:10px;font-size:12.5px;color:#37352f;font-family:inherit;text-align:center;box-sizing:border-box"/>' +
+    '</div>' +
+    '<div id="enc_nom_custom_wrap_' + id + '" style="display:none;margin:0 0 10px">' +
+      '<input type="text" id="enc_nom_custom_' + id + '" placeholder="Nom équipement (ex: Armoire pâtisserie)" style="width:100%;padding:9px 12px;background:#fefce8;border:1px solid #fde68a;border-radius:10px;font-size:13px;color:#8b6f1d;font-family:inherit;box-sizing:border-box"/>' +
     '</div>' +
     seuilBlock +
     '<div class="tgrid">' +
