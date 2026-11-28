@@ -18,11 +18,11 @@
     { id: 'personnel', ico: '👥', titre: 'Dossier du personnel', sous: 'Salariés, embauche, paie, procédures',
       rub: [
         ['Salariés', 'Une fiche par salarié : identité, contrat, horaires, salaire, période d\'essai', 'salaries'],
-        ['Embauche', 'Contrats, avenants, déclarations d\'embauche, pièces d\'identité, titres de séjour, autorisations de travail'],
+        ['Embauche', 'Contrats, avenants, déclarations d\'embauche, pièces d\'identité, titres de séjour'],
         ['Paie', 'Bulletins de salaire'],
         ['Santé et formation', 'Visites médicales, formations hygiène'],
-        ['Procédures', 'Rappel à l\'ordre, mise en garde, avertissement, blâme, mise à pied, licenciement'],
-        ['Registre unique du personnel', 'Entrées et sorties']
+        ['Procédures', 'Rappel à l\'ordre, mise en garde, avertissement, blâme, mise à pied, licenciement', 'procs'],
+        ['Registre unique du personnel', 'Obligatoire : tous les salariés, dans l\'ordre des embauches', 'registre']
       ] },
     { id: 'associes', ico: '🏛️', titre: 'Dossier des associés', sous: 'Statuts, assemblées, dirigeants',
       rub: [
@@ -46,7 +46,7 @@
         ['Bail commercial', ''],
         ['Licence et permis d\'exploitation', ''],
         ['Contrats nuisibles et biodéchets', ''],
-        ['Affichages obligatoires', '']
+        ['Affichages obligatoires', '16 affiches prêtes à imprimer, une par fichier', 'affichages']
       ] },
     { id: 'echeances', ico: '⏰', titre: 'Échéances', sous: 'Alertes automatiques',
       rub: [
@@ -64,12 +64,14 @@
     ['nom', 'Nom', 'text'], ['prenom', 'Prénom', 'text'],
     ['naissance_date', 'Date de naissance', 'date'], ['naissance_lieu', 'Lieu de naissance', 'text'],
     ['nationalite', 'Nationalité', 'text'], ['adresse', 'Adresse', 'text'], ['telephone', 'Téléphone', 'tel'],
+    ['sexe', 'Sexe', 'select', [['', '—'], ['Homme', 'Homme'], ['Femme', 'Femme']]],
     ['nir', 'N° de sécurité sociale', 'text'],
     ['poste', 'Poste', 'text'], ['qualification', 'Qualification (statut, niveau, échelon)', 'text'],
     ['date_embauche', 'Date d\'embauche', 'date'], ['date_sortie', 'Date de sortie', 'date'],
     ['contrat', 'Contrat', 'text'], ['heures_hebdo', 'Heures par semaine', 'number'], ['salaire_brut', 'Salaire brut mensuel (€)', 'number'],
     ['essai_fin', 'Fin de période d\'essai', 'date'], ['repos', 'Jours de repos', 'text'],
     ['horaires', 'Horaires (une ligne par jour)', 'textarea'],
+    ['titre_travail_type', 'Titre de séjour : type (ex. : carte de résident, carte pluriannuelle)', 'text'], ['titre_travail_num', 'Titre de séjour : numéro', 'text'],
     ['titre_sejour_fin', 'Fin de validité du titre de séjour', 'date'], ['notes', 'Notes', 'textarea']
   ];
 
@@ -78,6 +80,19 @@
   function dateFr(v) { if (!v) return ''; var p = String(v).slice(0, 10).split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : v; }
 
   // Appel d'une fonction serveur du dossier (le code secret est envoyé à chaque fois)
+  // Envoi d'un gros fichier avec suivi de la progression (pourcentage affiché pendant l'envoi)
+  function rpcAvecProgression(nom, params, surProgression) {
+    return new Promise(function (ok, ko) {
+      var cle = (typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '');
+      var x = new XMLHttpRequest();
+      x.open('POST', (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '') + '/rest/v1/rpc/' + nom);
+      x.setRequestHeader('apikey', cle); x.setRequestHeader('Authorization', 'Bearer ' + cle); x.setRequestHeader('Content-Type', 'application/json');
+      if (x.upload && surProgression) x.upload.onprogress = function (e) { if (e.lengthComputable) surProgression(Math.round(e.loaded * 100 / e.total)); };
+      x.onload = function () { try { ok(JSON.parse(x.responseText)); } catch (e) { ko(e); } };
+      x.onerror = function () { ko(new Error('reseau')); };
+      x.send(JSON.stringify(params));
+    });
+  }
   function rpc(nom, params) {
     var url = (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : '') + '/rest/v1/rpc/' + nom;
     var cle = (typeof SUPABASE_ANON !== 'undefined' ? SUPABASE_ANON : '');
@@ -170,6 +185,20 @@
         else if (a.indexOf('suppr:') === 0) supprimerDocument(a.slice(6), b);
         else if (a.indexOf('ajout:') === 0) { var q2 = a.split(':'); vueAjoutDoc(q2[1], +q2[2]); }
         else if (a === 'echeances') vueEcheances();
+        else if (a === 'procs') vueProcs();
+        else if (a === 'registre') vueRegistre();
+        else if (a === 'affichages') vueAffichages();
+        else if (a.indexOf('lien:') === 0) lienFiche(a.slice(5) || null, b);
+        else if (a.indexOf('voirrub:') === 0) { var q5 = a.split(':'); docCourant = { pole: q5[1], i: +q5[2] }; voirDocument(q5[3]); }
+        else if (a.indexOf('procmod:') === 0) vueProcNouvelle((cacheProcs || []).filter(function (x) { return x.id === a.slice(8); })[0]);
+        else if (a.indexOf('procarch:') === 0) archiverProc(a.slice(9));
+        else if (a.indexOf('docmod:') === 0) vueDocModifier(a.slice(7));
+        else if (a.indexOf('docarch:') === 0) archiverDocument(a.slice(8));
+        else if (a.indexOf('salarch:') === 0) archiverSalarie(a.slice(8));
+        else if (a.indexOf('salsuppr:') === 0) supprimerSalarie(a.slice(9), b);
+        else if (a === 'procnew') vueProcNouvelle();
+        else if (a.indexOf('procvoir:') === 0) vueProcVoir(a.slice(9));
+        else if (a.indexOf('procsuppr:') === 0) supprimerProc(a.slice(10), b);
         else vuePole(a);
   }
   function actif() { deverrouilleJusqua = Date.now() + VERROU_MS; }
@@ -183,7 +212,8 @@
     var o = overlay();
     var h = '<div class="da-wrap">' + entete(null)
       + '<button class="da-item" type="button" data-da="coffre" style="border-color:#93c5fd"><span class="i">🗄️</span><span><b>Coffre-fort</b><small>Documents reçus et manquants : société et chaque salarié</small></span><span class="ch">›</span></button>'
-      + '<button class="da-item" type="button" data-da="import" style="border-color:#93c5fd"><span class="i">📥</span><span><b>Importer des documents</b><small>Plusieurs fichiers d\'un coup : contrats, DPAE, titres de séjour, statuts…</small></span><span class="ch">›</span></button>';
+      + '<button class="da-item" type="button" data-da="import" style="border-color:#93c5fd"><span class="i">📥</span><span><b>Importer des documents</b><small>Plusieurs fichiers d\'un coup : contrats, DPAE, titres de séjour, statuts…</small></span><span class="ch">›</span></button>'
+      + '<button class="da-item" type="button" data-da="registre" style="border-color:#93c5fd"><span class="i">📒</span><span><b>Registre unique du personnel</b><small>Tous les salariés, entrées et sorties · imprimer, exporter</small></span><span class="ch">›</span></button>';
     POLES.forEach(function (p) {
       h += '<button class="da-item" type="button" data-da="' + p.id + '"><span class="i">' + p.ico + '</span><span><b>' + esc(p.titre) + '</b><small>' + esc(p.sous) + '</small></span><span class="ch">›</span></button>';
     });
@@ -196,28 +226,61 @@
     if (!p) return vueMenu();
     var o = overlay();
     var h = '<div class="da-wrap">' + entete('menu')
-      + '<div class="da-item" style="cursor:default"><span class="i">' + p.ico + '</span><span><b>' + esc(p.titre) + '</b><small>' + esc(p.sous) + '</small></span></div>';
+      + '<div class="da-item" style="cursor:default"><span class="i">' + p.ico + '</span><span><b>' + esc(p.titre) + '</b><small>' + esc(p.sous) + '</small></span></div>'
+      + (p.id !== 'echeances' ? '<p class="da-note" id="daPoleResume" style="margin:0">Chargement…</p>' : '');
     p.rub.forEach(function (r, i) {
       var inner = '<span><b>' + esc(r[0]) + '</b>' + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</span>';
       // Rubriques de documents : tous les pôles sauf Échéances, hors « Procédures » (à venir)
       var action = r[2] || ((p.id !== 'echeances' && r[0] !== 'Procédures') ? 'doc:' + p.id + ':' + i : '');
-      h += action ? '<button class="da-rub" type="button" data-da="' + action + '">' + inner + '<span class="da-go">Ouvrir ›</span></button>'
+      h += action ? '<button class="da-rub" type="button" data-da="' + action + '">' + inner + '<span class="da-go"' + (action.indexOf('doc:') === 0 ? ' data-compte="' + esc(r[0]) + '"' : '') + '>Ouvrir ›</span></button>'
                   : '<div class="da-rub">' + inner + '<span class="da-soon">bientôt</span></div>';
     });
     h += '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    // Pour chaque rubrique : ✓ Voir (présent) · ⚠ À importer (obligatoire absent) · ＋ Importer (facultatif absent)
+    cacheDocs = null;
+    chargerDocs().then(function (docs) {
+      var total = 0, manquants = 0;
+      o.querySelectorAll('[data-compte]').forEach(function (sp) {
+        var titre = sp.getAttribute('data-compte'), i = rubIndex(id, titre), row = sp.parentNode;
+        var L = docs.filter(function (d) { return !d.archive && docDansRubrique(d, id, titre); });
+        var oblig = OBLIG_SOC.some(function (x) { return x[0] === id && x[1] === titre; });
+        total += L.length;
+        if (L.length) {
+          sp.textContent = '✓ Voir' + (L.length > 1 ? ' (' + L.length + ')' : ''); sp.style.background = '#e8f6ed'; sp.style.color = '#15803d';
+          if (L.length === 1) row.setAttribute('data-da', 'voirrub:' + id + ':' + i + ':' + L[0].id);
+        } else {
+          if (oblig) manquants++;
+          sp.textContent = oblig ? '⚠ À importer' : '＋ Importer';
+          sp.style.background = oblig ? '#fff4e5' : '#f1f2f6'; sp.style.color = oblig ? '#b45309' : '#5b5e78';
+          row.setAttribute('data-da', 'ajout:' + id + ':' + i);
+        }
+      });
+      var res = o.querySelector('#daPoleResume');
+      if (res) res.innerHTML = total + ' document' + (total > 1 ? 's' : '') + (manquants ? ' · <b style="color:#b45309">' + manquants + ' obligatoire' + (manquants > 1 ? 's' : '') + ' manquant' + (manquants > 1 ? 's' : '') + '</b>' : (id === 'personnel' ? '' : ' · <b style="color:#15803d">obligatoires complets</b>'));
+    }).catch(function () {});
   }
 
   // ── Salariés ──
-  function manquants(s) {
-    return ['nom', 'prenom', 'naissance_date', 'nationalite', 'adresse', 'nir', 'poste', 'date_embauche', 'contrat', 'salaire_brut']
-      .filter(function (k) { return s[k] == null || s[k] === ''; }).length;
+  // Champs obligatoires (registre unique du personnel, DPAE, paie). Le titre de travail
+  // n'est exigé que pour un salarié étranger hors UE/EEE/Suisse, la date de sortie que pour un ancien salarié.
+  var CHAMPS_OBLIG = ['nom', 'prenom', 'sexe', 'naissance_date', 'nationalite', 'adresse', 'nir', 'poste', 'qualification', 'date_embauche', 'contrat', 'heures_hebdo', 'salaire_brut'];
+  function champsObligatoires(s) {
+    var L = CHAMPS_OBLIG.slice();
+    if (autorisationRequise(s) === true) L.push('titre_travail_type', 'titre_travail_num');
+    if (s.statut === 'ancien') L.push('date_sortie');
+    return L;
   }
+  function vide(v) { return v == null || v === '' || (Array.isArray(v) && !v.length); }
+  function champsManquants(s) { return champsObligatoires(s).filter(function (k) { return vide(s[k]); }); }
+  function libelleChamp(k) { var c = CHAMPS.filter(function (x) { return x[0] === k; })[0]; return c ? c[1].replace(/ \(.*\)$/, '') : k; }
+  function manquants(s) { return champsManquants(s).length; }
   function ligneSalarie(s) {
     var init = ((s.prenom || ' ')[0] + (s.nom || ' ')[0]).toUpperCase();
-    var m = manquants(s);
+    var M = champsManquants(s), m = M.length;
     return '<button class="da-item" type="button" data-da="fiche:' + esc(s.id) + '"><span class="da-av">' + esc(init) + '</span>'
-      + '<span><b>' + esc((s.prenom || '') + ' ' + (s.nom || '')) + '</b><small>' + esc(s.poste || 'Poste à compléter') + (s.date_embauche ? ' · entré le ' + dateFr(s.date_embauche) : '') + '</small></span>'
+      + '<span><b>' + esc((s.prenom || '') + ' ' + (s.nom || '')) + '</b><small>' + esc(s.poste || 'Poste à compléter') + (s.date_embauche ? ' · entré le ' + dateFr(s.date_embauche) : '') + '</small>'
+      + (m ? '<small style="color:#b45309">Manque : ' + esc(M.map(libelleChamp).join(', ')) + '</small>' : '') + '</span>'
       + (m ? '<span class="da-warn">' + m + ' à compléter</span>' : '<span class="ch">›</span>') + '</button>';
   }
   function vueSalaries() {
@@ -232,6 +295,7 @@
       var anciens = cacheSalaries.filter(function (s) { return s.statut === 'ancien'; });
       var h = '<div class="da-wrap">' + entete('personnel')
         + '<button class="da-main" type="button" data-da="nouveau">＋ Ajouter un salarié</button>'
+        + '<button class="da-btn" type="button" data-da="lien:">🔗 Lien à envoyer à un nouveau salarié (il remplit sa fiche)</button><div id="daLienBox"></div>'
         + '<div class="da-sect">En activité · ' + actifs.length + '</div>';
       h += actifs.length ? actifs.map(ligneSalarie).join('') : '<p class="da-note">Aucun salarié enregistré.</p>';
       if (anciens.length) h += '<div class="da-sect">Anciens salariés · ' + anciens.length + '</div>' + anciens.map(ligneSalarie).join('');
@@ -246,21 +310,55 @@
     var o = overlay();
     var h = '<div class="da-wrap">' + entete('salaries') + '<form class="da-form" id="daFiche">'
       + '<b style="font-size:17px">' + (id ? esc((s.prenom || '') + ' ' + (s.nom || '')) : 'Nouveau salarié') + '</b>';
+    var oblig = champsObligatoires(s), manq = id ? champsManquants(s) : [];
+    h += manq.length
+      ? '<div style="border:2px solid #f59e0b;background:#fff7e6;border-radius:12px;padding:10px;font-size:13.5px"><b style="color:#b45309">⚠ ' + manq.length + ' information' + (manq.length > 1 ? 's' : '') + ' obligatoire' + (manq.length > 1 ? 's' : '') + ' à compléter :</b><br>'
+        + manq.map(function (k) { return '<button type="button" class="da-btn" data-aller="' + k + '" style="margin:4px 4px 0 0;color:#b45309">' + esc(libelleChamp(k)) + '</button>'; }).join('') + '</div>'
+      : (id ? '<div style="border:2px solid #86efac;background:#ecfdf3;border-radius:12px;padding:10px;font-size:13.5px;color:#15803d"><b>✓ Fiche complète</b></div>' : '');
+    if (id) h += '<button class="da-btn" type="button" data-da="lien:' + esc(id) + '" style="border-color:#16a34a;color:#15803d">🔗 Copier le lien : le salarié remplit lui-même sa fiche</button><div id="daLienBox"></div>';
+    h += '<p class="da-note" style="margin:0"><b style="color:#dc2626">*</b> obligatoire (registre du personnel, déclaration d\'embauche, paie)</p>';
     CHAMPS.forEach(function (c) {
       var v = s[c[0]];
       if (c[0] === 'horaires' && v) v = Array.isArray(v) ? v.join('\n') : String(v);
       var idc = 'da_' + c[0];
+      var etoile = oblig.indexOf(c[0]) > -1 ? ' <b style="color:#dc2626">*</b>' : '';
+      var styleManq = manq.indexOf(c[0]) > -1 ? ' style="border:2px solid #f59e0b;background:#fff7e6"' : '';
       if (c[2] === 'select') {
-        h += '<label for="' + idc + '">' + esc(c[1]) + '<select id="' + idc + '" name="' + c[0] + '">' + c[3].map(function (o2) { return '<option value="' + o2[0] + '"' + (v === o2[0] ? ' selected' : '') + '>' + esc(o2[1]) + '</option>'; }).join('') + '</select></label>';
+        h += '<label for="' + idc + '">' + '<span>' + esc(c[1]) + etoile + '</span><select' + styleManq + ' id="' + idc + '" name="' + c[0] + '">' + c[3].map(function (o2) { return '<option value="' + o2[0] + '"' + (v === o2[0] ? ' selected' : '') + '>' + esc(o2[1]) + '</option>'; }).join('') + '</select></label>';
       } else if (c[2] === 'textarea') {
-        h += '<label for="' + idc + '">' + esc(c[1]) + '<textarea id="' + idc + '" name="' + c[0] + '">' + esc(v || '') + '</textarea></label>';
+        h += '<label for="' + idc + '">' + '<span>' + esc(c[1]) + etoile + '</span><textarea' + styleManq + ' id="' + idc + '" name="' + c[0] + '">' + esc(v || '') + '</textarea></label>';
       } else {
-        h += '<label for="' + idc + '">' + esc(c[1]) + '<input id="' + idc + '" name="' + c[0] + '" type="' + c[2] + '"' + (c[2] === 'number' ? ' step="0.01" inputmode="decimal"' : '') + ' value="' + esc(v == null ? '' : (c[2] === 'date' ? String(v).slice(0, 10) : v)) + '"></label>';
+        h += '<label for="' + idc + '">' + '<span>' + esc(c[1]) + etoile + '</span><input' + styleManq + ' id="' + idc + '" name="' + c[0] + '" type="' + c[2] + '"' + (c[2] === 'number' ? ' step="0.01" inputmode="decimal"' : '') + ' value="' + esc(v == null ? '' : (c[2] === 'date' ? String(v).slice(0, 10) : v)) + '"></label>';
       }
     });
     h += '<p class="da-err" id="daMsg"></p><button class="da-main" type="submit">💾 Enregistrer</button></form>'
-      + (id ? '<div class="da-sect">🗄️ Coffre-fort du salarié</div><div id="daFicheCoffre"><p class="da-note">Chargement…</p></div>' : '') + '</div>';
+      + (id ? '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+        + (s.statut === 'ancien' ? '<button class="da-btn" type="button" data-da="salarch:' + esc(id) + '">📤 Réintégrer (en activité)</button>'
+                                 : '<button class="da-btn" type="button" data-da="salarch:' + esc(id) + '">📦 Archiver (départ)</button>')
+        + '<button class="da-btn" type="button" data-da="salsuppr:' + esc(id) + '" style="color:#b91c1c">🗑️ Supprimer</button></div>'
+        + '<p class="da-note">Un salarié qui part s\'archive : il reste au registre du personnel 5 ans. « Supprimer » sert uniquement à effacer une fiche créée par erreur.</p>' : '')
+      + (id ? '<div class="da-sect">🗄️ Coffre-fort du salarié</div><div id="daFicheCoffre"><p class="da-note">Chargement…</p></div>'
+            + '<div class="da-sect">⚖️ Procédures du salarié</div><div id="daFicheProcs"><p class="da-note">Chargement…</p></div>' : '') + '</div>';
     o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    // Toucher un manquant : aller au champ ; un champ rempli perd sa couleur orange
+    o.querySelectorAll('[data-aller]').forEach(function (b) {
+      b.addEventListener('click', function () { var el = o.querySelector('#da_' + b.getAttribute('data-aller')); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(function () { try { el.focus(); } catch (e) {} }, 300); } });
+    });
+    manq.forEach(function (k) {
+      var el = o.querySelector('#da_' + k); if (!el) return;
+      ['input', 'change'].forEach(function (ev) { el.addEventListener(ev, function () { var ok = el.value.trim() !== ''; el.style.border = ok ? '' : '2px solid #f59e0b'; el.style.background = ok ? '' : '#fff7e6'; }); });
+    });
+    if (id) rpc('da_procedures_liste', { p_code: codeCompte(), p_pin: pinSession }).then(function (r) {
+      var box = o.querySelector('#daFicheProcs'); if (!box) return;
+      if (!r || r.ok !== true) { box.innerHTML = '<p class="da-err">Procédures indisponibles.</p>'; return; }
+      cacheProcs = r.procedures || [];
+      var L = cacheProcs.filter(function (p) { return p.salarie_id === id; });
+      box.innerHTML = (L.length ? L.map(function (p) {
+        var t = TYPES_PROC[p.type] || { titre: p.type };
+        return '<button class="da-item" type="button" data-da="procvoir:' + esc(p.id) + '"><span class="i">' + (p.statut === 'archivee' ? '📦' : (t.lourd ? '🔴' : '🟠')) + '</span><span><b>' + esc(t.titre) + '</b><small>Lettre du ' + esc(dateFr(p.date_lettre)) + '</small></span><span class="ch">›</span></button>';
+      }).join('') : '<p class="da-note">Aucune procédure.</p>') + '<button class="da-btn" type="button" data-da="procnew">＋ Nouvelle procédure</button>';
+      brancher(box);
+    }, function () { var box = o.querySelector('#daFicheProcs'); if (box) box.innerHTML = '<p class="da-err">Pas de connexion internet.</p>'; });
     if (id) chargerDocs().then(function () {
       var box = o.querySelector('#daFicheCoffre'); if (!box) return;
       box.innerHTML = blocCoffreSalarie(s, '') ; brancher(box);
@@ -302,19 +400,23 @@
     chargerSalariesSiBesoin().then(function () { return rpc('da_documents_liste', { p_code: codeCompte(), p_pin: pinSession }); }).then(function (res) {
       if (!res || res.ok !== true) { o.innerHTML = '<div class="da-wrap">' + entete(pole) + '<p class="da-err">' + esc(messageRefus(res)) + '</p></div>'; brancher(o); return; }
       cacheDocs = res.documents || [];
-      var docs = cacheDocs.filter(function (d) { return docDansRubrique(d, pole, r[0]); });
+      var tous = cacheDocs.filter(function (d) { return docDansRubrique(d, pole, r[0]); });
+      var docs = tous.filter(function (d) { return !d.archive; }), archives = tous.filter(function (d) { return d.archive; });
       var h = '<div class="da-wrap">' + entete(pole)
         + '<div class="da-item" style="cursor:default"><span><b>' + esc(r[0]) + '</b>' + (r[1] ? '<small>' + esc(r[1]) + '</small>' : '') + '</span></div>'
         + '<button class="da-main" type="button" data-da="ajout:' + pole + ':' + i + '">＋ Ajouter un document</button>';
       if (!docs.length) h += '<p class="da-note">Aucun document pour l\'instant.</p>';
+      var finArchives = archives.length ? '<details class="da-form"><summary style="cursor:pointer;font-weight:800">📦 Archivés · ' + archives.length + '</summary>' + archives.map(ligneDoc).join('') + '</details>' : '';
       docs.forEach(function (d) {
         var sal = d.salarie_id ? nomSalarie(d.salarie_id) : '';
         h += '<div class="da-rub"><span><b>' + esc(d.titre || d.nom_fichier || 'Document') + '</b><small>'
           + esc([sal, d.date_doc ? dateFr(d.date_doc) : '', taille(d.taille)].filter(Boolean).join(' · ')) + '</small></span>'
           + '<span style="display:flex;gap:6px"><button class="da-btn" type="button" data-da="voir:' + esc(d.id) + '">Voir</button>'
+          + '<button class="da-btn" type="button" data-da="docmod:' + esc(d.id) + '" aria-label="Modifier">✏️</button>'
+          + '<button class="da-btn" type="button" data-da="docarch:' + esc(d.id) + '" aria-label="' + (d.archive ? 'Désarchiver' : 'Archiver') + '">' + (d.archive ? '📤' : '📦') + '</button>'
           + '<button class="da-btn" type="button" data-da="suppr:' + esc(d.id) + '" aria-label="Supprimer">🗑️</button></span></div>';
       });
-      h += '</div>';
+      h += finArchives + '</div>';
       o.innerHTML = h; brancher(o); o.scrollTop = 0;
     }, function () { o.innerHTML = '<div class="da-wrap">' + entete(pole) + '<p class="da-err">Pas de connexion internet.</p></div>'; brancher(o); });
   }
@@ -370,15 +472,16 @@
         msg.style.color = '#5b5e78'; msg.textContent = 'Préparation du fichier…';
         lireFichier(f).then(function (x) {
           if (x.b64.length > 9000000) { msg.style.color = '#b91c1c'; msg.textContent = 'Fichier trop gros (6 Mo maximum).'; return; }
-          msg.textContent = 'Envoi…';
+          msg.textContent = 'Envoi… 0 %';
           var sel = o.querySelector('#daf_sal'), ty = o.querySelector('#daf_type');
-          return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
+          return rpcAvecProgression('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
             pole: pole, categorie: ty ? ty.value : r[0], titre: o.querySelector('#daf_titre').value.trim() || x.nom,
             salarie_id: sel && sel.value ? sel.value : null, date_doc: o.querySelector('#daf_date').value || null,
-            nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } }).then(function (res) {
+            nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } },
+            function (pc) { msg.textContent = pc < 100 ? 'Envoi… ' + pc + ' %' : 'Enregistrement dans le coffre-fort…'; }).then(function (res) {
             if (!res || res.ok !== true) { msg.style.color = '#b91c1c'; msg.textContent = res && res.raison === 'fichier_trop_gros' ? 'Fichier trop gros (6 Mo maximum).' : messageRefus(res); return; }
             cacheDocs = null;
-            allerA(retour);
+            allerA(retour); synchroApp();
           });
         }).catch(function () { msg.style.color = '#b91c1c'; msg.textContent = 'Envoi impossible. Vérifiez la connexion internet.'; });
       });
@@ -406,6 +509,162 @@
     rpc('da_document_supprimer', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function () {
       cacheDocs = null;
       if (docCourant) vueDocs(docCourant.pole, docCourant.i); else vueCoffre();
+      synchroApp();
+    });
+  }
+
+  // ── Lien avec le module Documents de l'app (coffre de l'appareil, Pack DDPP) ──
+  // Un même document ne se saisit qu'une fois : ajouté ici, il est copié dans le module
+  // Documents ; ajouté là-bas, il est copié ici (à l'ouverture du dossier, car il faut le code).
+  var CAT_DEPUIS_APP = {
+    cerfa: ['declarations', 'Déclaration d\'activité (DDPP)'], pms: ['declarations', 'Plan de maîtrise sanitaire (PMS)'],
+    contrat_nuisibles: ['declarations', 'Contrats nuisibles et biodéchets'], contrat_biodechets: ['declarations', 'Contrats nuisibles et biodéchets'],
+    formation: ['personnel', 'Formation hygiène'], medical: ['personnel', 'Visite médicale']
+  };
+  function cleApp(d) {
+    if (d.pole === 'declarations' && d.categorie === 'Contrats nuisibles et biodéchets')
+      return /biod|dechet/.test(sansAccent((d.titre || '') + ' ' + (d.nom_fichier || ''))) ? 'contrat_biodechets' : 'contrat_nuisibles';
+    for (var k in CAT_DEPUIS_APP) if (CAT_DEPUIS_APP[k][0] === d.pole && CAT_DEPUIS_APP[k][1] === d.categorie) return k;
+    return '';
+  }
+  function coffreApp() { try { var c = window.coffreDB; return c && c.docs ? c : null; } catch (e) { return null; } }
+  function b64De(dataUrl) { var s = String(dataUrl || ''); var i = s.indexOf(','); return i > -1 ? s.slice(i + 1) : s; }
+  function ignoresApp() { try { return JSON.parse(localStorage.getItem('haccp_da_ignores') || '[]'); } catch (e) { return []; } }
+  var synchroEnCours = false;
+  function synchroApp() {
+    var db = coffreApp(); if (!db || synchroEnCours || !pinSession) return Promise.resolve();
+    synchroEnCours = true;
+    var change = false, ignores = ignoresApp();
+    cacheDocs = null;
+    return Promise.all([chargerSalariesSiBesoin(), chargerDocs(), Promise.resolve(db.docs.toArray())]).then(function (res) {
+      var serveur = res[1] || [], local = res[2] || [], parId = {}, taches = [];
+      serveur.forEach(function (d) { parId[d.id] = d; });
+      // 1) Supprimé du dossier → retiré du module Documents
+      local.forEach(function (f) { if (f.daId && !parId[f.daId]) taches.push(function () { change = true; return db.docs.delete(f.id); }); });
+      // 2) Dossier → module Documents
+      serveur.forEach(function (d) {
+        var cle = cleApp(d); if (!cle || d.archive || ignores.indexOf(d.id) > -1) return;
+        if (local.some(function (f) { return f.daId === d.id; })) return;
+        var jumeau = local.filter(function (f) { return !f.daId && f.cle === cle && (f.nom === d.nom_fichier || Math.round(b64De(f.base64).length * 0.75) === +d.taille); })[0];
+        if (jumeau) { jumeau.daId = d.id; taches.push(function () { return db.docs.update(jumeau.id, { daId: d.id }); }); return; }
+        taches.push(function () {
+          return rpc('da_document_lire', { p_code: codeCompte(), p_pin: pinSession, p_id: d.id }).then(function (r) {
+            if (!r || r.ok !== true || !r.contenu) return;
+            var mime = r.type_mime || 'application/octet-stream'; change = true;
+            return db.docs.add({ cle: cle, nom: r.nom_fichier || d.titre || 'Document', mime: mime, base64: 'data:' + mime + ';base64,' + r.contenu, createdAt: new Date().toISOString(), daId: d.id });
+          });
+        });
+      });
+      // 3) Module Documents → dossier
+      local.forEach(function (f) {
+        var cat = CAT_DEPUIS_APP[f.cle]; if (!cat || f.daId) return;
+        var b64 = b64De(f.base64); if (!b64 || b64.length > 9000000) return;
+        var sal = cat[0] === 'personnel' ? devinerSalarie(f.nom || '') : null;
+        taches.push(function () {
+          return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
+            pole: cat[0], categorie: cat[1], titre: String(f.nom || 'Document').replace(/\.[^.]+$/, ''), salarie_id: sal ? sal.id : null,
+            date_doc: f.createdAt ? String(f.createdAt).slice(0, 10) : null, nom_fichier: f.nom || 'document', type_mime: f.mime || 'application/octet-stream',
+            taille: Math.round(b64.length * 0.75), contenu: b64 } }).then(function (r) {
+            if (r && r.ok && r.id) { cacheDocs = null; return db.docs.update(f.id, { daId: r.id }); }
+          });
+        });
+      });
+      return taches.reduce(function (p, t) { return p.then(function () { if (pinSession) return t(); }).catch(function () {}); }, Promise.resolve());
+    }).catch(function () {}).then(function () {
+      synchroEnCours = false;
+      if (change) { try { if (typeof window.renderCoffre === 'function') window.renderCoffre(); if (typeof window.renderInspDocs === 'function') window.renderInspDocs(); } catch (e) {} }
+    });
+  }
+
+  // ── Lien « fiche à remplir » envoyé au salarié (WhatsApp) : valable 7 jours, une seule fois ──
+  function lienFiche(salId, btn) {
+    if (!encoreOuvert()) return;
+    var box = document.getElementById('daLienBox'); if (!box) return;
+    var lbl = btn ? btn.textContent : ''; if (btn) { btn.disabled = true; btn.textContent = 'Création du lien…'; }
+    rpc('da_lien_creer', { p_code: codeCompte(), p_pin: pinSession, p_salarie_id: salId }).then(function (r) {
+      if (btn) { btn.disabled = false; btn.textContent = lbl; }
+      if (!r || r.ok !== true || !r.jeton) { box.innerHTML = '<p class="da-err">' + esc(r && r.code === 'PGRST202' ? 'Fonction pas encore activée dans la base.' : messageRefus(r)) + '</p>'; return; }
+      var url = new URL('fiche-salarie.html?t=' + r.jeton, location.href).href;
+      var soc = enteteSociete().nom || 'votre employeur';
+      var s = salId ? (cacheSalaries || []).filter(function (x) { return x.id === salId; })[0] : null;
+      var texte = 'Bonjour' + (s && s.prenom ? ' ' + s.prenom : '') + ', merci de remplir votre fiche salarié pour ' + soc + ' en cliquant sur ce lien (valable 7 jours) : ' + url;
+      box.innerHTML = '<div class="da-form" style="border-color:#86efac;background:#f0fdf4;gap:8px"><b style="color:#15803d">✓ Lien prêt (valable 7 jours, une seule fois)</b>'
+        + '<input readonly value="' + esc(url) + '" style="font-size:12px" aria-label="Lien de la fiche">'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="da-btn" type="button" id="daLienCopier">📋 Copier le lien</button>'
+        + '<a class="da-btn" style="text-align:center;text-decoration:none;background:#25d366;color:#fff;border-color:#25d366" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(texte) + '">WhatsApp</a></div>'
+        + '<span class="da-note">Le salarié ouvre le lien, remplit sa fiche et l\'envoie : elle se remplit ici automatiquement. Le lien ne permet pas de voir le dossier.</span></div>';
+      var copier = function () {
+        var fin = function () { var b = box.querySelector('#daLienCopier'); if (b) b.textContent = '✓ Copié'; };
+        try { navigator.clipboard.writeText(texte).then(fin, function () { box.querySelector('input').select(); document.execCommand('copy'); fin(); }); }
+        catch (e) { box.querySelector('input').select(); try { document.execCommand('copy'); fin(); } catch (x) {} }
+      };
+      box.querySelector('#daLienCopier').addEventListener('click', copier);
+      copier();
+    }, function () { if (btn) { btn.disabled = false; btn.textContent = lbl; } box.innerHTML = '<p class="da-err">Pas de connexion internet.</p>'; });
+  }
+
+  // ── Archiver / supprimer un salarié ──
+  function archiverSalarie(id) {
+    if (!encoreOuvert()) return;
+    var s = (cacheSalaries || []).filter(function (x) { return x.id === id; })[0]; if (!s) return vueSalaries();
+    var data = JSON.parse(JSON.stringify(s));
+    if (s.statut === 'ancien') { data.statut = 'actif'; data.date_sortie = null; }
+    else {
+      var d = prompt('Date de sortie du salarié (JJ/MM/AAAA) :', new Date().toLocaleDateString('fr-FR'));
+      if (d === null) return;
+      var m = String(d).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (!m) { alert('Date non reconnue. Exemple : 30/11/2026'); return; }
+      data.statut = 'ancien'; data.date_sortie = m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2);
+    }
+    rpc('da_enregistrer_salarie', { p_code: codeCompte(), p_pin: pinSession, p_s: data }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      cacheSalaries = null; vueSalaries();
+    });
+  }
+  function supprimerSalarie(id, btn) {
+    if (!encoreOuvert()) return;
+    if (btn.getAttribute('data-confirme') !== '1') { btn.setAttribute('data-confirme', '1'); btn.textContent = 'Effacer aussi ses documents ? Toucher pour confirmer'; return; }
+    rpc('da_supprimer_salarie', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      cacheSalaries = null; cacheDocs = null; vueSalaries();
+    });
+  }
+  function archiverDocument(id) {
+    if (!encoreOuvert()) return;
+    var d = (cacheDocs || []).filter(function (x) { return x.id === id; })[0]; if (!d) return;
+    rpc('da_document_modifier', { p_code: codeCompte(), p_pin: pinSession, p_id: id, p_d: { archive: !d.archive } }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      cacheDocs = null;
+      if (docCourant) vueDocs(docCourant.pole, docCourant.i); else vueCoffre();
+    });
+  }
+  // ── Modifier un document (titre, type, salarié, date) ──
+  function vueDocModifier(id) {
+    if (!encoreOuvert()) return;
+    var retour = docCourant ? 'doc:' + docCourant.pole + ':' + docCourant.i : 'coffre';
+    chargerDocs().then(function (docs) {
+      var d = docs.filter(function (x) { return x.id === id; })[0]; if (!d) return allerA(retour);
+      return chargerSalariesSiBesoin().then(function (sal) {
+        var o = overlay(), cats = toutesCategories(), val = d.pole + '|' + d.categorie;
+        var optSal = '<option value="">— Société (aucun salarié) —</option>' + sal.map(function (s) { return '<option value="' + esc(s.id) + '"' + (s.id === d.salarie_id ? ' selected' : '') + '>' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + '</option>'; }).join('');
+        o.innerHTML = '<div class="da-wrap">' + entete(retour) + '<form class="da-form" id="dadm"><b style="font-size:17px">Modifier le document</b>'
+          + '<label for="dadm_t">Titre<input id="dadm_t" value="' + esc(d.titre || '') + '"></label>'
+          + '<label for="dadm_c">Type<select id="dadm_c">' + cats.map(function (c) { var v = c[0] + '|' + c[1]; return '<option value="' + esc(v) + '"' + (v === val ? ' selected' : '') + '>' + esc(c[2]) + '</option>'; }).join('') + '</select></label>'
+          + '<label for="dadm_s">Salarié<select id="dadm_s">' + optSal + '</select></label>'
+          + '<label for="dadm_d">Date du document<input id="dadm_d" type="date" value="' + esc(d.date_doc ? String(d.date_doc).slice(0, 10) : '') + '"></label>'
+          + '<p class="da-err" id="dadmMsg"></p><button class="da-main" type="submit">💾 Enregistrer</button></form></div>';
+        brancher(o); o.scrollTop = 0;
+        o.querySelector('#dadm').addEventListener('submit', function (e) {
+          e.preventDefault(); if (!encoreOuvert()) return;
+          var cv = o.querySelector('#dadm_c').value.split('|'), sv = o.querySelector('#dadm_s').value;
+          rpc('da_document_modifier', { p_code: codeCompte(), p_pin: pinSession, p_id: id, p_d: {
+            titre: o.querySelector('#dadm_t').value.trim(), pole: cv[0], categorie: cv[1], salarie_id: cv[0] === 'personnel' && sv ? sv : null,
+            date_doc: o.querySelector('#dadm_d').value || null } }).then(function (r) {
+            if (!r || r.ok !== true) { o.querySelector('#dadmMsg').textContent = messageRefus(r); return; }
+            cacheDocs = null; allerA(retour);
+          });
+        });
+      });
     });
   }
 
@@ -438,11 +697,11 @@
   }
   function ligneDoc(d) {
     return '<div class="da-rub"><span><b>' + esc(d.titre || d.nom_fichier || 'Document') + '</b><small>' + esc([d.categorie, d.date_doc ? dateFr(d.date_doc) : '', taille(d.taille)].filter(Boolean).join(' · ')) + '</small></span>'
-      + '<span style="display:flex;gap:6px"><button class="da-btn" type="button" data-da="voir:' + esc(d.id) + '">Voir</button><button class="da-btn" type="button" data-da="suppr:' + esc(d.id) + '" aria-label="Supprimer">🗑️</button></span></div>';
+      + '<span style="display:flex;gap:6px"><button class="da-btn" type="button" data-da="voir:' + esc(d.id) + '">Voir</button><button class="da-btn" type="button" data-da="docmod:' + esc(d.id) + '" aria-label="Modifier">✏️</button><button class="da-btn" type="button" data-da="docarch:' + esc(d.id) + '" aria-label="' + (d.archive ? 'Désarchiver' : 'Archiver') + '">' + (d.archive ? '📤' : '📦') + '</button><button class="da-btn" type="button" data-da="suppr:' + esc(d.id) + '" aria-label="Supprimer">🗑️</button></span></div>';
   }
   // Coffre-fort d'un salarié : documents attendus ✓/✗ + documents rangés. suffixe 'c' = retour au coffre-fort
   function blocCoffreSalarie(s, suffixe) {
-    var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id; });
+    var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id && !d.archive; });
     var h = '<div class="da-form" style="gap:6px">';
     OBLIG_PERSO.forEach(function (types) {
       var ok = docs.some(function (d) { return types.indexOf(d.categorie) > -1; });
@@ -465,18 +724,24 @@
       var h = '<div class="da-wrap">' + entete('menu')
         + '<div class="da-item" style="cursor:default"><span class="i">🗄️</span><span><b>Coffre-fort</b><small>✓ reçu · ＋ à ajouter</small></span></div>'
         + '<button class="da-main" type="button" data-da="import">📥 Importer plusieurs documents</button>'
-        + '<details class="da-form" open><summary style="cursor:pointer;font-weight:800">🏢 Société</summary>';
-      OBLIG_SOC.forEach(function (x) {
-        var ok = (cacheDocs || []).some(function (d) { return d.pole === x[0] && d.categorie === x[1]; });
-        h += '<div class="da-rub" style="border:none;padding:6px 2px;border-bottom:1px solid #eef0f6;border-radius:0"><span>' + esc(x[1]) + '</span>'
-          + (ok ? '<button class="da-btn" type="button" data-da="doc:' + x[0] + ':' + rubIndex(x[0], x[1]) + '" style="color:#15803d">✓ Voir</button>'
-                : '<button class="da-btn" type="button" data-da="ajoutsoc:' + x[0] + ':' + rubIndex(x[0], x[1]) + '" style="color:#b45309">＋ Ajouter</button>') + '</div>';
+        + '<p class="da-note">Un document n\'est enregistré qu\'une fois : ajouté ici, dans son pôle ou dans la fiche du salarié, il apparaît partout. Déclaration d\'activité, PMS, contrats nuisibles/biodéchets, formations et visites médicales sont aussi copiés dans le module Documents de l\'app (Pack DDPP), et inversement.</p>';
+      // Société : TOUTES les rubriques des pôles Associés et Déclarations (les mêmes documents que dans ces pôles)
+      [['associes', '🏛️ Dossier des associés'], ['declarations', '📋 Déclarations et obligations']].forEach(function (pp) {
+        var pole = POLES.filter(function (x) { return x.id === pp[0]; })[0];
+        h += '<details class="da-form" open><summary style="cursor:pointer;font-weight:800">' + pp[1] + '</summary>';
+        pole.rub.forEach(function (r, i) {
+          var n = (cacheDocs || []).filter(function (d) { return d.pole === pp[0] && d.categorie === r[0] && !d.archive; }).length;
+          var oblig = OBLIG_SOC.some(function (x) { return x[0] === pp[0] && x[1] === r[0]; });
+          h += '<div class="da-rub" style="border:none;padding:6px 2px;border-bottom:1px solid #eef0f6;border-radius:0"><span>' + esc(r[0]) + (oblig ? ' <small style="display:inline;color:#b45309">· obligatoire</small>' : '') + '</span>'
+            + (n ? '<button class="da-btn" type="button" data-da="doc:' + pp[0] + ':' + i + '" style="color:#15803d">✓ ' + n + ' document' + (n > 1 ? 's' : '') + '</button>'
+                 : '<button class="da-btn" type="button" data-da="ajoutsoc:' + pp[0] + ':' + i + '" style="color:' + (oblig ? '#b45309' : '#5b5e78') + '">＋ Ajouter</button>') + '</div>';
+        });
+        h += '</details>';
       });
-      h += '</details>';
       var actifs = (cacheSalaries || []).filter(function (s) { return s.statut !== 'ancien'; });
       h += '<div class="da-sect">👥 Salariés en activité · ' + actifs.length + '</div>';
       actifs.forEach(function (s) {
-        var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id; });
+        var docs = (cacheDocs || []).filter(function (d) { return d.salarie_id === s.id && !d.archive; });
         var manque = OBLIG_PERSO.filter(function (types) { return !docs.some(function (d) { return types.indexOf(d.categorie) > -1; }); }).length;
         h += '<details class="da-form"><summary style="cursor:pointer;display:flex;justify-content:space-between;gap:8px;font-weight:800"><span>' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + '</span>'
           + (manque ? '<span class="da-warn" style="margin:0">' + manque + ' manquant' + (manque > 1 ? 's' : '') + '</span>' : '<span class="da-go" style="background:#e8f6ed;color:#15803d">complet</span>') + '</summary>'
@@ -579,9 +844,10 @@
               etat.textContent = 'Envoi…';
               return lireFichier(f).then(function (x) {
                 if (x.b64.length > 9000000) { ko++; etat.textContent = '✗ trop gros (6 Mo max)'; return; }
-                return rpc('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
+                return rpcAvecProgression('da_document_ajouter', { p_code: codeCompte(), p_pin: pinSession, p_d: {
                   pole: tv[0], categorie: tv[1], titre: f.name.replace(/\.[^.]+$/, ''), salarie_id: tv[0] === 'personnel' && sv ? sv : null,
-                  nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } }).then(function (r) {
+                  nom_fichier: x.nom, type_mime: x.type, taille: Math.round(x.b64.length * 0.75), contenu: x.b64 } },
+                  function (pc) { etat.textContent = pc < 100 ? 'Envoi… ' + pc + ' %' : 'Enregistrement…'; }).then(function (r) {
                   if (r && r.ok) { ok++; etat.style.color = '#15803d'; etat.textContent = '✓ importé'; }
                   else { ko++; etat.style.color = '#b91c1c'; etat.textContent = '✗ ' + messageRefus(r); }
                 });
@@ -592,6 +858,7 @@
             msg.style.color = ko ? '#b91c1c' : '#15803d';
             msg.textContent = ok + ' importé' + (ok > 1 ? 's' : '') + (ko ? ', ' + ko + ' en erreur' : '') + '. Voir le coffre-fort.';
             btn.textContent = '🗄️ Ouvrir le coffre-fort'; btn.disabled = false; btn.setAttribute('data-fini', '1');
+            synchroApp();
           }).catch(function () { msg.textContent = 'Import interrompu (dossier verrouillé).'; });
         });
       });
@@ -628,6 +895,618 @@
     });
   }
 
+  // ══════════════════════════════════════════════════════════════════
+  // PROCÉDURES : rappel à l'ordre, mise en garde, avertissement, blâme
+  // (lettre à signer) ; mise à pied et licenciement (convocation à
+  // l'entretien préalable avec calcul automatique des délais).
+  // Repris de la maquette validée. Enregistré dans da_procedures.
+  // ══════════════════════════════════════════════════════════════════
+  var TYPES_PROC = {
+    rappel: { titre: "Rappel à l'ordre", lourd: false,
+      fin: "Le présent courrier constitue un simple rappel à l'ordre. Il n'a pas le caractère d'une sanction disciplinaire.",
+      note: "Un rappel à l'ordre écrit doit rester neutre : formulé comme un reproche avec menace, un juge peut le requalifier en sanction." },
+    garde: { titre: "Mise en garde", lourd: false,
+      fin: "Nous vous mettons en garde : si ces faits se reproduisaient, nous pourrions être amenés à envisager une sanction disciplinaire.",
+      note: "Une mise en garde écrite peut être considérée comme une sanction par un juge. Texte à faire relire." },
+    avert: { titre: "Avertissement", lourd: false,
+      fin: "En conséquence, nous vous notifions par la présente un avertissement. Cette sanction sera versée à votre dossier personnel.",
+      note: "Sanction disciplinaire : à notifier dans les 2 mois après les faits, par écrit et motivée." },
+    blame: { titre: "Blâme", lourd: false,
+      fin: "En conséquence, nous vous notifions par la présente un blâme. Cette sanction sera versée à votre dossier personnel.",
+      note: "Sanction disciplinaire : à notifier dans les 2 mois après les faits, par écrit et motivée." },
+    map: { titre: "Mise à pied", lourd: true },
+    licen: { titre: "Licenciement", lourd: true }
+  };
+  var REGLES = [
+    { g:"Nettoyage et désinfection", h:1, l:[
+      ["Sol non nettoyé","le nettoyage des sols de la cuisine et des zones de préparation"],
+      ["Plan de travail non nettoyé ou non désinfecté","le nettoyage et la désinfection des plans de travail après chaque utilisation"],
+      ["Couteaux ou ustensiles non nettoyés","le nettoyage et la désinfection des couteaux et ustensiles après chaque usage"],
+      ["Planches à découper sales ou mal utilisées","l'utilisation de planches à découper propres et réservées à chaque type de produit"],
+      ["Trancheuse, robot ou hachoir non nettoyé","le démontage et le nettoyage du matériel de préparation après chaque usage"],
+      ["Réfrigérateur ou chambre froide sale","le nettoyage régulier des réfrigérateurs et chambres froides"],
+      ["Four, plaque, hotte ou friteuse sale","le nettoyage des équipements de cuisson"],
+      ["Vaisselle mal lavée","le lavage correct de la vaisselle et des contenants"],
+      ["Éponges ou torchons sales","l'utilisation de lavettes propres ou d'essuie-tout à usage unique"],
+      ["Poubelles non vidées ou sales","la vidange et le nettoyage des poubelles"],
+      ["Produits d'entretien près des aliments","le rangement des produits d'entretien à l'écart des denrées alimentaires"],
+      ["Plan de nettoyage non rempli","l'enregistrement des nettoyages réalisés dans le plan de nettoyage"],
+      ["Lave-mains encombré ou sans savon","le maintien du lave-mains dégagé et approvisionné (savon, essuie-mains)"]
+    ]},
+    { g:"Températures et chaîne du froid", h:1, l:[
+      ["Température du frigo non respectée","le maintien des denrées réfrigérées entre 0 et +4 °C"],
+      ["Relevé des températures non fait","le relevé des températures des enceintes froides à l'ouverture et à la fermeture"],
+      ["Porte du frigo ou de la chambre froide laissée ouverte","la fermeture des portes des réfrigérateurs et chambres froides"],
+      ["Produit laissé à température ambiante","la remise immédiate au froid des denrées périssables"],
+      ["Livraison rangée trop tard","le rangement immédiat des livraisons au froid"],
+      ["Décongélation à l'air libre","la décongélation des produits au réfrigérateur"],
+      ["Produit décongelé recongelé","l'interdiction de recongeler un produit décongelé"],
+      ["Surgelés au-dessus de −18 °C","la conservation des surgelés à −18 °C ou moins"],
+      ["Plat chaud sous +63 °C","le maintien des plats chauds à +63 °C minimum jusqu'au service"],
+      ["Refroidissement rapide non respecté","le refroidissement rapide des préparations, de +63 °C à moins de +10 °C en moins de 2 heures"],
+      ["Température à cœur non vérifiée","la vérification de la température à cœur lors des cuissons"],
+      ["Remise en température non conforme","la remise en température des plats à +63 °C en moins d'une heure"]
+    ]},
+    { g:"Réception et stockage", h:1, l:[
+      ["Livraison non contrôlée","le contrôle des livraisons à la réception (température, emballage, date limite)"],
+      ["Produit non conforme accepté","le refus des produits non conformes à la réception"],
+      ["Produits posés au sol","le stockage des denrées sur des étagères, jamais au sol"],
+      ["Cartons dans la chambre froide","le retrait des cartons d'emballage avant stockage en chambre froide"],
+      ["Cru et cuit mélangés dans le frigo","la séparation des produits crus et des produits cuits dans le stockage"],
+      ["Aliments non protégés (sans film ni couvercle)","la protection des denrées stockées par un film ou un contenant fermé"],
+      ["Ordre des stocks non respecté","la rotation des stocks : les produits les plus anciens sont utilisés en premier"],
+      ["Réserve sèche mal rangée","le rangement propre et ordonné de la réserve sèche"]
+    ]},
+    { g:"Étiquetage et traçabilité", h:1, l:[
+      ["Préparation non étiquetée","l'étiquetage des préparations (nom, date de fabrication, date limite)"],
+      ["Produit ouvert sans date d'ouverture","l'indication de la date d'ouverture sur les produits entamés"],
+      ["Produit périmé (DLC dépassée) conservé ou utilisé","le retrait immédiat des produits dont la date limite est dépassée"],
+      ["Étiquettes ou bons de livraison jetés","la conservation des étiquettes et des bons de livraison pour la traçabilité"],
+      ["Plat témoin non réalisé","la réalisation et la conservation des plats témoins"],
+      ["Consignes sur les allergènes non respectées","le respect des consignes relatives aux allergènes"]
+    ]},
+    { g:"Hygiène du personnel", h:1, l:[
+      ["Pas de coiffe ou de charlotte","le port d'une coiffe couvrant entièrement les cheveux"],
+      ["Tenue sale ou incomplète","le port d'une tenue de travail propre et complète"],
+      ["Port de bijoux ou de montre","l'interdiction du port de bijoux et de montre en zone de préparation"],
+      ["Mains non lavées","le lavage des mains à la prise de poste, entre deux tâches et après chaque passage aux toilettes"],
+      ["Ongles longs ou vernis","des ongles courts, propres et sans vernis"],
+      ["Plaie non protégée","la protection de toute plaie par un pansement étanche et un gant"],
+      ["Gants non changés","le changement des gants entre deux tâches"],
+      ["Téléphone en cuisine","l'interdiction d'utiliser son téléphone en zone de préparation"],
+      ["Manger, boire ou fumer en cuisine","l'interdiction de manger, boire ou fumer en zone de préparation"],
+      ["Maladie non signalée","le signalement de tout symptôme (diarrhée, vomissements, fièvre) avant la prise de poste"],
+      ["Chaussures de travail non portées","le port de chaussures de travail adaptées"]
+    ]},
+    { g:"Préparation et cuisson", h:1, l:[
+      ["Contamination entre cru et cuit","la séparation des produits crus et cuits pendant les préparations"],
+      ["Fruits et légumes non lavés","le lavage des fruits et légumes avant utilisation"],
+      ["Huile de friture non contrôlée ou non changée","le contrôle et le changement de l'huile de friture"],
+      ["Restes déjà servis réutilisés","l'interdiction de réutiliser des aliments déjà servis à un client"],
+      ["Préparation aux œufs crus gardée trop longtemps","la consommation dans la journée des préparations à base d'œufs crus"],
+      ["Contrôle non enregistré dans Nomos","l'enregistrement des contrôles d'hygiène dans l'application Nomos"]
+    ]},
+    { g:"Locaux, déchets et nuisibles", h:1, l:[
+      ["Porte ou fenêtre laissée ouverte","la fermeture des portes et fenêtres donnant sur l'extérieur"],
+      ["Trace de nuisibles non signalée","le signalement immédiat de toute trace de nuisibles"],
+      ["Déchets non évacués","l'évacuation des déchets en fin de service"],
+      ["Biodéchets non triés","le tri des biodéchets"]
+    ]},
+    { g:"Horaires et présence", h:0, l:[
+      ["Retard","le respect des horaires de travail"],
+      ["Retards répétés","le respect des horaires de travail, sans retard répété"],
+      ["Absence non justifiée","la justification de toute absence dans les 48 heures"],
+      ["Abandon de poste","la présence à son poste pendant toute la durée du service"],
+      ["Départ avant la fin du service sans autorisation","l'accord préalable de la direction pour tout départ anticipé"],
+      ["Pause dépassée ou prise sans accord","le respect des horaires et de la durée des pauses"],
+      ["Arrêt maladie non transmis à temps","l'envoi de l'arrêt de travail à l'employeur dans les 48 heures"],
+      ["Heures déclarées fausses (pointage)","la déclaration exacte des heures travaillées"]
+    ]},
+    { g:"Obéissance et consignes", h:0, l:[
+      ["Insubordination (refus d'obéir)","l'exécution des tâches et des consignes données par la direction"],
+      ["Refus d'exécuter une tâche de son poste","l'exécution des tâches prévues par son contrat de travail"],
+      ["Non-respect du règlement intérieur","le respect du règlement intérieur de l'établissement"],
+      ["Travail mal fait ou négligé","l'exécution soignée et complète des tâches confiées"],
+      ["Téléphone personnel pendant le service","l'interdiction d'utiliser son téléphone personnel pendant le service"],
+      ["Consignes de fermeture non respectées (gaz, alarme, portes)","le respect des consignes de fermeture de l'établissement"],
+      ["Informations de l'entreprise divulguées","la discrétion sur les informations internes de l'entreprise"],
+      ["Dénigrement de l'entreprise (réseaux sociaux)","la loyauté envers l'entreprise, y compris sur les réseaux sociaux"]
+    ]},
+    { g:"Comportement", h:0, l:[
+      ["Manque de respect envers un collègue","un comportement correct et respectueux envers ses collègues"],
+      ["Manque de respect envers la direction","un comportement correct et respectueux envers la direction"],
+      ["Manque de respect envers un client","un comportement courtois envers la clientèle"],
+      ["Insultes ou propos grossiers","l'interdiction de tout propos injurieux ou grossier"],
+      ["Menaces ou violence","l'interdiction de toute menace et de toute violence"],
+      ["Propos ou gestes déplacés (harcèlement)","l'interdiction de tout propos ou geste constitutif de harcèlement"],
+      ["Propos discriminatoires","l'interdiction de tout propos discriminatoire"],
+      ["Dispute pendant le service","le maintien d'un climat de travail serein"],
+      ["État d'ébriété ou alcool au travail","l'interdiction de consommer de l'alcool et de travailler en état d'ébriété"],
+      ["Consommation de stupéfiants","l'interdiction de consommer ou de détenir des stupéfiants sur le lieu de travail"],
+      ["Fumer ou vapoter dans les locaux","l'interdiction de fumer et de vapoter dans les locaux"]
+    ]},
+    { g:"Caisse, biens et matériel", h:0, l:[
+      ["Erreur ou écart de caisse","le respect des procédures d'encaissement"],
+      ["Encaissement non enregistré","l'enregistrement en caisse de toute vente"],
+      ["Repas ou marchandises pris sans autorisation","l'interdiction de prendre ou de consommer des marchandises sans autorisation"],
+      ["Vol ou détournement","le respect des biens et des fonds de l'entreprise"],
+      ["Matériel dégradé ou cassé par négligence","le soin apporté au matériel de l'entreprise"],
+      ["Gaspillage de marchandises","l'utilisation raisonnée des marchandises"]
+    ]},
+    { g:"Sécurité au travail", h:0, l:[
+      ["Chaussures de sécurité non portées","le port des équipements de protection fournis (chaussures de sécurité)"],
+      ["Consigne de sécurité non respectée","le respect des consignes de sécurité"],
+      ["Issue de secours ou extincteur encombré","le dégagement permanent des issues de secours et des extincteurs"],
+      ["Mauvaise utilisation des couteaux ou machines","l'utilisation prudente des couteaux et des machines"],
+      ["Accident non signalé","le signalement immédiat de tout accident ou incident"]
+    ]}
+  ];
+  // En-tête de la société : mémorisé sur l'appareil (données publiques de l'entreprise, pas de données salariés)
+  function cleEntete() { return 'haccp_da_entete_' + codeCompte(); }
+  function enteteSociete() {
+    var e = {}; try { e = JSON.parse(localStorage.getItem(cleEntete()) || '{}') || {}; } catch (x) { e = {}; }
+    var E = (typeof ETAB !== 'undefined' && ETAB) ? ETAB : {};
+    var ville = e.ville || E.ville || '';
+    var cormeilles = /cormeilles/i.test(ville + ' ' + (E.adresse || ''));
+    return {
+      nom: e.nom || E.nom || '', forme: e.forme || '', adresse: e.adresse || [E.adresse, [E.cp, E.ville].filter(Boolean).join(' ')].filter(Boolean).join(', '),
+      ids: e.ids || (E.siret ? 'SIRET ' + E.siret : ''), tel: e.tel || E.tel || '', ville: ville, signataire: e.signataire || 'Le Président',
+      mairie: e.mairie || (cormeilles ? 'mairie de Cormeilles-en-Parisis, 3 avenue Maurice Berteaux, 95240 Cormeilles-en-Parisis' : ''),
+      inspection: e.inspection || (cormeilles ? 'inspection du travail du Val-d\'Oise (DDETS), Immeuble Atrium, 3 boulevard de l\'Oise, CS 20305, 95014 Cergy-Pontoise Cedex' : '')
+    };
+  }
+  function memoriserEntete(e) { try { localStorage.setItem(cleEntete(), JSON.stringify(e)); } catch (x) {} }
+
+  // Délais légaux en jours ouvrables (hors dimanches et jours fériés)
+  function paques(y) { var a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), mo = Math.floor((h + l - 7 * m + 114) / 31), da = ((h + l - 7 * m + 114) % 31) + 1; return new Date(y, mo - 1, da); }
+  function iso(dt) { return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0'); }
+  function plus(dt, n) { var x = new Date(dt); x.setDate(x.getDate() + n); return x; }
+  function feries(y) { var p = paques(y); return [y + '-01-01', iso(plus(p, 1)), y + '-05-01', y + '-05-08', iso(plus(p, 39)), iso(plus(p, 50)), y + '-07-14', y + '-08-15', y + '-11-01', y + '-11-11', y + '-12-25']; }
+  function ouvrable(dt) { return dt.getDay() !== 0 && feries(dt.getFullYear()).indexOf(iso(dt)) < 0; }
+  function apresOuvrables(dt, n) { var x = new Date(dt), c = 0; while (c < n) { x = plus(x, 1); if (ouvrable(x)) c++; } return x; }
+  function parseD(v) { if (!v) return null; var p = String(v).slice(0, 10).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function jourLong(dt) { return dt.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
+  function delais(dateLettre, lrar, dateEnt) {
+    var lettre = parseD(dateLettre); if (!lettre) return null;
+    var remise = lrar ? apresOuvrables(lettre, 3) : lettre;          // 1re présentation estimée large
+    var r = { remise: remise, minEnt: apresOuvrables(remise, 6), consEnt: apresOuvrables(remise, 8) };
+    var ent = parseD(dateEnt);
+    if (ent) { r.ent = ent; r.minLet = apresOuvrables(ent, 2); r.consLet = apresOuvrables(ent, 3); var mx = new Date(ent); mx.setMonth(mx.getMonth() + 1); r.maxLet = mx; }
+    return r;
+  }
+
+  function lettreHTML(f, s) {
+    var t = TYPES_PROC[f.type], soc = f.soc, civ = f.civ || 'Monsieur';
+    function v(x) { return x ? '<span style="background:#fff3c4">' + esc(x) + '</span>' : '<span style="background:#fff3c4;color:#9a6b00;font-style:italic">à compléter</span>'; }
+    var nomSal = ((s.prenom || '') + ' ' + (s.nom || '')).trim();
+    var h = '<div style="font-family:Georgia,serif;font-size:13.5px;line-height:1.55;color:#111">'
+      + '<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px"><div><b>' + esc(soc.nom) + '</b><br>' + esc(soc.forme) + (soc.forme ? '<br>' : '') + esc(soc.adresse) + '<br>' + esc(soc.ids) + (soc.tel ? '<br>Tél. ' + esc(soc.tel) : '') + '</div>'
+      + '<div style="text-align:right">' + esc(soc.ville || '') + ', le ' + v(dateFr(f.date_lettre)) + '</div></div>'
+      + '<div style="margin:16px 0 0 auto;max-width:60%;min-width:180px">' + esc(civ) + ' ' + esc(nomSal) + '<br>' + v(s.adresse) + '</div>';
+    var remise = f.remise === 'lrar' ? 'Lettre recommandée avec avis de réception' : 'Lettre remise en main propre contre décharge';
+    if (!t.lourd) {
+      h += '<p style="margin-top:16px;font-weight:600">Objet : ' + esc(t.titre) + '<br>' + remise + '</p><p>' + esc(civ) + ',</p>'
+        + '<p>Le ' + v(dateFr(f.date_faits)) + (f.heure ? ' à ' + esc(f.heure) : '') + ', ' + v(f.lieu) + ', ' + v(f.faits) + '.</p>'
+        + (function () {
+          var L = Array.isArray(f.regles) ? f.regles.map(function (r) { return r.t; }) : (f.regle ? [f.regle] : []);
+          var poste = 'Nous vous rappelons que votre poste' + (s.poste ? ' de ' + esc(String(s.poste).toLowerCase()) : '') + ' impose ';
+          var hyg = f.hygiene ? 'conformément aux règles d\'hygiène applicables à notre établissement (plan de maîtrise sanitaire, méthode HACCP)' : '';
+          if (L.length <= 1) return '<p>' + poste + v(L[0]) + (hyg ? ', ' + hyg + '.' : '.') + '</p>';
+          return '<p>' + poste + 'notamment' + (hyg ? ', ' + hyg : '') + ' :</p><ul style="margin:0 0 10px">'
+            + L.map(function (t, i) { return '<li>' + esc(t) + (i < L.length - 1 ? ' ;' : '.') + '</li>'; }).join('') + '</ul>';
+        })()
+        + '<p>Nous vous demandons de ' + v(f.demande) + '.</p><p>' + esc(t.fin) + '</p>';
+    } else {
+      var nature = f.type === 'map' ? 'une sanction disciplinaire pouvant aller jusqu\'à une mise à pied' : 'une mesure de licenciement';
+      h += '<p style="margin-top:16px;font-weight:600">Objet : Convocation à un entretien préalable ' + (f.type === 'licen' ? 'à un éventuel licenciement' : 'à une éventuelle sanction') + (f.map_cons ? ', avec mise à pied conservatoire' : '') + '<br>' + remise + '</p>'
+        + '<p>' + esc(civ) + ',</p><p>Nous sommes conduits à envisager à votre égard ' + nature + '.</p>'
+        + (f.map_cons ? '<p>Compte tenu de la gravité des faits qui vous sont reprochés, nous vous notifions par la présente votre <b>mise à pied conservatoire</b>, à effet immédiat, dans l\'attente de la décision qui sera prise à l\'issue de la procédure. Pendant cette période, vous ne devez pas vous présenter à votre poste de travail. Cette mesure ne constitue pas une sanction.</p>' : '')
+        + '<p>Avant toute décision, et conformément à l\'article ' + (f.type === 'map' ? 'L. 1332-2' : 'L. 1232-2') + ' du code du travail, nous vous convoquons à un entretien préalable qui se tiendra le ' + v(f.date_ent ? jourLong(parseD(f.date_ent)) : '') + ' à ' + v(f.heure_ent) + ', ' + v(f.lieu_ent) + '.</p>'
+        + '<p>Au cours de cet entretien, nous vous indiquerons les motifs de la décision envisagée et nous recueillerons vos explications. Aucune décision n\'est prise à ce jour.</p>'
+        + '<p>Vous pouvez vous faire assister, lors de cet entretien, par une personne de votre choix appartenant au personnel de l\'entreprise. L\'entreprise ne comportant pas d\'institution représentative du personnel, vous pouvez également vous faire assister par un conseiller du salarié choisi sur une liste dressée par l\'autorité administrative (article L. 1232-4 du code du travail). Cette liste est arrêtée par le préfet dans chaque département et tenue à la disposition des salariés dans chaque inspection du travail et dans chaque mairie. Vous pouvez notamment la consulter :</p>'
+        + '<p>– à la ' + v(soc.mairie) + ' ;<br>– à l\'' + v(soc.inspection) + '.</p>'
+        + '<p>Si vous étiez empêché, nous vous invitons à nous en informer sans délai ; votre absence à l\'entretien ne ferait pas obstacle à la poursuite de la procédure.</p>';
+    }
+    h += '<p>Nous vous prions d\'agréer, ' + esc(civ) + ', l\'expression de nos salutations distinguées.</p>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;font-size:12px"><div style="border-top:1px solid #999;padding-top:6px;min-height:84px">Pour ' + esc(soc.nom) + ',<br>' + esc(soc.signataire) + '<br>Signature :</div>'
+      + '<div style="border-top:1px solid #999;padding-top:6px;min-height:84px">' + esc(nomSal) + '<br>« Reçu en main propre le ............ »<br>Signature :</div></div></div>';
+    return h;
+  }
+  function imprimer(html, titre) {
+    try {
+      var ifr = document.createElement('iframe'); ifr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+      document.body.appendChild(ifr);
+      var w = ifr.contentWindow, d = w.document;
+      d.open(); d.write('<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' + esc(titre) + '</title><style>body{margin:16mm}</style></head><body>' + html + '</body></html>'); d.close();
+      setTimeout(function () { try { w.focus(); w.print(); } catch (e) { window.print(); } setTimeout(function () { try { ifr.remove(); } catch (e) {} }, 2000); }, 300);
+    } catch (e) { window.print(); }
+  }
+
+  // ── Affichages obligatoires : une affiche = un fichier indépendant, avec l'en-tête de la société ──
+  var AFF_SOC = [['nom', 'Nom de la société'], ['forme', 'Forme et capital'], ['adresse', 'Adresse'], ['tel', 'Téléphone'], ['ids', 'RCS / SIRET'], ['inspection', 'Inspection du travail (adresse)']];
+  var AFF_CHAMPS = [
+    ['insp_nom', 'Inspecteur ou contrôleur du travail compétent (nom)'], ['insp_tel', 'Inspection du travail : téléphone'],
+    ['med', 'Service de santé au travail : nom, adresse, téléphone'],
+    ['extincteurs', 'Emplacement des extincteurs'], ['rassemblement', 'Point de rassemblement en cas d\'évacuation'],
+    ['horaires', 'Horaires collectifs : un jour par ligne (ex. : Lundi : 10h-15h / 18h-23h)', 'textarea'], ['repos', 'Jour(s) de repos hebdomadaire'],
+    ['consult', 'Lieu où les documents sont consultables (ex. : bureau de la direction)'],
+    ['conges', 'Période de prise des congés payés (ex. : du 1er mai au 31 octobre)'],
+    ['viande', 'Origine des viandes bovines servies (ex. : France)'], ['mediateur', 'Médiateur de la consommation : nom, adresse, site internet']
+  ];
+  function affLigne(x) { return x ? esc(x) : '<span style="display:inline-block;min-width:70mm;border-bottom:1px dotted #555">&nbsp;</span>'; }
+  var AFFICHES = [
+    { t: 'Inspection du travail', p: 'sal', ref: 'Article D. 4711-1 du code du travail', c: function (s, f) {
+      return '<p>Adresse : <b>' + affLigne(s.inspection) + '</b></p><p>Inspecteur ou contrôleur compétent : <b>' + affLigne(f.insp_nom) + '</b></p><p>Téléphone : <b>' + affLigne(f.insp_tel) + '</b></p>'; } },
+    { t: 'Médecine du travail', p: 'sal', ref: 'Article D. 4711-1 du code du travail', c: function (s, f) {
+      return '<p>Service de prévention et de santé au travail :</p><p style="font-size:20px"><b>' + affLigne(f.med) + '</b></p>'; } },
+    { t: 'Numéros d\'urgence', p: 'sal', ref: 'Article D. 4711-1 du code du travail', c: function () {
+      return '<table style="width:100%;font-size:22px;border-collapse:collapse">' + [['SAMU', '15'], ['Pompiers', '18'], ['Police secours', '17'], ['Numéro d\'urgence européen', '112'], ['Urgence pour personnes sourdes ou malentendantes (SMS)', '114'], ['Centre antipoison (Paris)', '01 40 05 48 48']]
+        .map(function (l) { return '<tr><td style="padding:10px;border-bottom:1px solid #ccc">' + l[0] + '</td><td style="padding:10px;border-bottom:1px solid #ccc;text-align:right;font-weight:800;font-size:30px">' + l[1] + '</td></tr>'; }).join('') + '</table>'; } },
+    { t: 'Consignes de sécurité incendie', p: 'sal', ref: 'Articles R. 4227-37 et R. 4227-38 du code du travail', c: function (s, f) {
+      return '<p><b>Si vous découvrez un feu :</b></p><ol><li>Donnez l\'alerte : appelez les <b>pompiers (18 ou 112)</b> et prévenez la direction.</li><li>Coupez le gaz et l\'électricité des appareils de cuisson si c\'est sans danger.</li><li>Feu d\'huile ou de friteuse : <b>ne jetez jamais d\'eau</b>, couvrez avec un couvercle ou une couverture anti-feu.</li><li>Attaquez le feu avec un extincteur uniquement si vous ne courez aucun risque.</li></ol>'
+        + '<p><b>En cas d\'évacuation :</b> faites sortir les clients, fermez les portes derrière vous, n\'utilisez pas l\'ascenseur, ne revenez pas en arrière.</p>'
+        + '<p>Extincteurs : <b>' + affLigne(f.extincteurs) + '</b></p><p>Point de rassemblement : <b>' + affLigne(f.rassemblement) + '</b></p>'; } },
+    { t: 'Interdiction de fumer et de vapoter', p: 'cli', ref: 'Articles L. 3512-8, R. 3512-2, L. 3513-6 et R. 3513-2 du code de la santé publique', c: function () {
+      return '<p style="text-align:center;font-size:110px;margin:10px 0">🚭</p><p style="text-align:center;font-size:26px;font-weight:800">Il est interdit de fumer et de vapoter dans ces locaux.</p><p style="text-align:center">Toute infraction expose son auteur à une amende.</p>'; } },
+    { t: 'Horaires collectifs de travail', p: 'sal', ref: 'Articles L. 3171-1 et D. 3171-2 à D. 3171-4 du code du travail', c: function (s, f) {
+      var L = String(f.horaires || '').split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
+      if (!L.length) L = ['Lundi :', 'Mardi :', 'Mercredi :', 'Jeudi :', 'Vendredi :', 'Samedi :', 'Dimanche :'];
+      return '<table style="width:100%;font-size:18px;border-collapse:collapse">' + L.map(function (l) { return '<tr><td style="padding:9px;border:1px solid #999">' + esc(l) + '</td></tr>'; }).join('') + '</table>'
+        + '<p>Repos hebdomadaire : <b>' + affLigne(f.repos) + '</b></p><p>Copie adressée à l\'inspection du travail avant sa mise en service.</p>'
+        + '<p style="margin-top:24px">Date : ........................ &nbsp; Signature de l\'employeur :</p>'; } },
+    { t: 'Convention collective', p: 'sal', ref: 'Article R. 2262-3 du code du travail', c: function (s, f) {
+      return '<p>Convention collective applicable :</p><p style="font-size:20px"><b>Convention collective nationale des hôtels, cafés, restaurants (HCR) du 30 avril 1997 — IDCC 1979</b></p><p>Elle peut être consultée : <b>' + affLigne(f.consult) + '</b></p>'; } },
+    { t: 'Égalité de rémunération entre les femmes et les hommes', p: 'sal', ref: 'Articles L. 3221-1 à L. 3221-7 et R. 3221-2 du code du travail', c: function (s, f) {
+      return '<p><b>Article L. 3221-2 :</b> « Tout employeur assure, pour un même travail ou pour un travail de valeur égale, l\'égalité de rémunération entre les femmes et les hommes. »</p><p>Sont considérés comme ayant une valeur égale les travaux qui exigent des salariés un ensemble comparable de connaissances professionnelles, de capacités, de responsabilités et de charge physique ou nerveuse.</p><p>Toute disposition contraire est nulle. Le texte intégral des articles L. 3221-1 à L. 3221-7 peut être consulté : <b>' + affLigne(f.consult) + '</b></p>'; } },
+    { t: 'Harcèlement moral et sexuel', p: 'sal', ref: 'Articles L. 1152-4 et L. 1153-5 du code du travail', c: function (s, f) {
+      return '<p><b>Article 222-33-2 du code pénal :</b> « Le fait de harceler autrui par des propos ou comportements répétés ayant pour objet ou pour effet une dégradation des conditions de travail susceptible de porter atteinte à ses droits et à sa dignité, d\'altérer sa santé physique ou mentale ou de compromettre son avenir professionnel, est puni de deux ans d\'emprisonnement et de 30 000 € d\'amende. »</p>'
+        + '<p><b>Article 222-33 du code pénal (extrait) :</b> « Le harcèlement sexuel est le fait d\'imposer à une personne, de façon répétée, des propos ou comportements à connotation sexuelle ou sexiste qui soit portent atteinte à sa dignité en raison de leur caractère dégradant ou humiliant, soit créent à son encontre une situation intimidante, hostile ou offensante. Est assimilé au harcèlement sexuel le fait, même non répété, d\'user de toute forme de pression grave dans le but réel ou apparent d\'obtenir un acte de nature sexuelle. » Puni de deux ans d\'emprisonnement et de 30 000 € d\'amende.</p>'
+        + '<p><b>Qui contacter :</b><br>– Médecine du travail : ' + affLigne(f.med) + '<br>– Inspection du travail : ' + affLigne(s.inspection) + (f.insp_tel ? ' — ' + esc(f.insp_tel) : '') + '<br>– Défenseur des droits : 09 69 39 00 00 — defenseurdesdroits.fr<br>– Violences sexistes et sexuelles : 3919</p>'; } },
+    { t: 'Lutte contre les discriminations', p: 'sal', ref: 'Article L. 1142-6 du code du travail — articles 225-1 à 225-4 du code pénal', c: function () {
+      return '<p><b>Article 225-1 du code pénal (extrait) :</b> constitue une discrimination toute distinction opérée entre les personnes à raison de leur origine, de leur sexe, de leur situation de famille, de leur grossesse, de leur apparence physique, de la particulière vulnérabilité résultant de leur situation économique, de leur patronyme, de leur lieu de résidence, de leur état de santé, de leur perte d\'autonomie, de leur handicap, de leurs caractéristiques génétiques, de leurs mœurs, de leur orientation sexuelle, de leur identité de genre, de leur âge, de leurs opinions politiques, de leurs activités syndicales, de leur qualité de lanceur d\'alerte, de leur capacité à s\'exprimer dans une langue autre que le français, de leur appartenance ou de leur non-appartenance, vraie ou supposée, à une ethnie, une nation, une prétendue race ou une religion déterminée.</p>'
+        + '<p><b>Article 225-2 :</b> la discrimination, notamment lorsqu\'elle consiste à refuser d\'embaucher, à sanctionner ou à licencier une personne, est punie de trois ans d\'emprisonnement et de 45 000 € d\'amende.</p><p>Défenseur des droits : 09 69 39 00 00 — defenseurdesdroits.fr</p>'; } },
+    { t: 'Document unique d\'évaluation des risques', p: 'sal', ref: 'Article R. 4121-4 du code du travail', c: function (s, f) {
+      return '<p>Le document unique d\'évaluation des risques professionnels (DUERP) est tenu à la disposition des salariés, du médecin du travail et de l\'inspection du travail.</p><p>Il peut être consulté : <b>' + affLigne(f.consult) + '</b>, sur simple demande auprès de la direction.</p>'; } },
+    { t: 'Congés payés', p: 'sal', ref: 'Articles L. 3141-13, D. 3141-5 et D. 3141-6 du code du travail', c: function (s, f) {
+      return '<p>Période de prise des congés payés :</p><p style="font-size:22px"><b>' + affLigne(f.conges) + '</b></p><p>L\'ordre des départs est communiqué à chaque salarié au moins un mois avant son départ.</p>'; } },
+    { t: 'Protection des mineurs et répression de l\'ivresse publique', p: 'cli', ref: 'Articles L. 3342-1, L. 3342-4 et L. 3353-3 du code de la santé publique', c: function () {
+      return '<p style="font-size:22px;font-weight:800;text-align:center">La vente et l\'offre gratuite de boissons alcooliques à des mineurs de moins de 18 ans sont interdites.</p><p style="text-align:center">La personne qui délivre la boisson peut exiger la preuve de la majorité. Infraction punie de 7 500 € d\'amende.</p>'
+        + '<p style="font-size:20px;font-weight:800;text-align:center;margin-top:20px">Il est interdit de servir des boissons alcooliques à une personne manifestement ivre.</p>'; } },
+    { t: 'Origine des viandes bovines', p: 'cli', ref: 'Décret n° 2002-1465 du 17 décembre 2002', c: function (s, f) {
+      return '<p style="font-size:24px;text-align:center">Les viandes bovines servies dans notre établissement sont :</p><p style="font-size:26px;text-align:center"><b>nées, élevées et abattues en : ' + affLigne(f.viande) + '</b></p>'; } },
+    { t: 'Allergènes', p: 'cli', ref: 'Articles R. 412-12 à R. 412-16 du code de la consommation', c: function () {
+      return '<p style="font-size:22px;text-align:center">Les informations sur les <b>14 allergènes majeurs</b> présents dans nos plats sont disponibles <b>par écrit</b>, sur simple demande auprès de notre personnel.</p><p style="text-align:center">Gluten · crustacés · œufs · poissons · arachides · soja · lait · fruits à coque · céleri · moutarde · sésame · sulfites · lupin · mollusques</p>'; } },
+    { t: 'Médiateur de la consommation', p: 'cli', ref: 'Articles L. 612-1 et L. 616-1 du code de la consommation', c: function (s, f) {
+      return '<p>En cas de litige non résolu avec notre établissement, vous pouvez recourir gratuitement au médiateur de la consommation :</p><p style="font-size:20px"><b>' + affLigne(f.mediateur) + '</b></p>'; } }
+  ];
+  function affHTML(a, s, f) {
+    return '<div style="font-family:Arial,Helvetica,sans-serif;color:#111;font-size:16px;line-height:1.5">'
+      + '<div style="border-bottom:3px solid #111;padding-bottom:8px;margin-bottom:18px;font-size:13px"><b style="font-size:17px">' + esc(s.nom || '') + '</b>'
+      + (s.forme ? ' — ' + esc(s.forme) : '') + '<br>' + esc(s.adresse || '') + '<br>' + [s.tel ? 'Tél. ' + esc(s.tel) : '', esc(s.ids || '')].filter(Boolean).join(' · ') + '</div>'
+      + '<h1 style="font-size:30px;text-align:center;margin:8px 0 4px;text-transform:uppercase">' + esc(a.t) + '</h1>'
+      + '<div style="text-align:center;font-size:12px;color:#444;margin-bottom:22px">' + esc(a.ref) + '</div>'
+      + a.c(s, f) + '<div style="margin-top:28px;font-size:11px;color:#555">Affiché le ' + new Date().toLocaleDateString('fr-FR') + '</div></div>';
+  }
+  function affDonnees() {
+    var s = enteteSociete(), e = {}; try { e = JSON.parse(localStorage.getItem(cleEntete()) || '{}') || {}; } catch (x) { e = {}; }
+    var f = {}; AFF_CHAMPS.forEach(function (c) { f[c[0]] = e['aff_' + c[0]] || ''; }); return { s: s, f: f };
+  }
+  function vueAffichages() {
+    if (!encoreOuvert()) return;
+    var o = overlay(), D = affDonnees();
+    var rIdx = rubIndex('declarations', 'Affichages obligatoires');
+    function ligne(a, k) {
+      return '<div class="da-rub"><span><b>' + esc(a.t) + '</b><small>' + esc(a.ref) + '</small></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">'
+        + '<button class="da-btn" type="button" data-aff="voir" data-k="' + k + '">Voir</button><button class="da-btn" type="button" data-aff="imp" data-k="' + k + '">🖨️</button><button class="da-btn" type="button" data-aff="pdf" data-k="' + k + '">PDF</button></span></div>';
+    }
+    var h = '<div class="da-wrap">' + entete('declarations')
+      + '<div class="da-item" style="cursor:default"><span class="i">📌</span><span><b>Affichages obligatoires</b><small>Une affiche par fichier, avec l\'en-tête de la société : imprimez-les une par une</small></span></div>'
+      + '<details class="da-form"><summary style="cursor:pointer;font-weight:800">✏️ Informations à afficher (mémorisées)</summary>'
+      + AFF_SOC.map(function (c) { return '<label for="aff_s_' + c[0] + '">' + esc(c[1]) + '<input id="aff_s_' + c[0] + '" value="' + esc(D.s[c[0]] || '') + '"></label>'; }).join('')
+      + AFF_CHAMPS.map(function (c) { return '<label for="aff_' + c[0] + '">' + esc(c[1]) + (c[2] === 'textarea' ? '<textarea id="aff_' + c[0] + '" rows="7">' + esc(D.f[c[0]]) + '</textarea>' : '<input id="aff_' + c[0] + '" value="' + esc(D.f[c[0]]) + '">') + '</label>'; }).join('')
+      + '<button class="da-main" type="button" id="affSave">💾 Enregistrer</button><p class="da-note" id="affMsg">Ce qui reste vide s\'imprime en pointillés, à remplir à la main.</p></details>'
+      + '<div class="da-sect">👥 Pour les salariés</div>' + AFFICHES.map(function (a, k) { return a.p === 'sal' ? ligne(a, k) : ''; }).join('')
+      + '<div class="da-sect">🍽️ Pour les clients</div>' + AFFICHES.map(function (a, k) { return a.p === 'cli' ? ligne(a, k) : ''; }).join('')
+      + '<div id="affApercu"></div>'
+      + '<button class="da-btn" type="button" data-da="doc:declarations:' + rIdx + '">📁 Affiches signées ou scannées rangées ici</button></div>';
+    o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    function lireForm() {
+      var e = {}; try { e = JSON.parse(localStorage.getItem(cleEntete()) || '{}') || {}; } catch (x) { e = {}; }
+      AFF_SOC.forEach(function (c) { e[c[0]] = o.querySelector('#aff_s_' + c[0]).value.trim(); });
+      AFF_CHAMPS.forEach(function (c) { e['aff_' + c[0]] = o.querySelector('#aff_' + c[0]).value.trim(); });
+      return e;
+    }
+    o.querySelector('#affSave').addEventListener('click', function () { memoriserEntete(lireForm()); var m = o.querySelector('#affMsg'); m.style.color = '#15803d'; m.textContent = '✓ Enregistré.'; });
+    o.querySelectorAll('[data-aff]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (!encoreOuvert()) return;
+        memoriserEntete(lireForm());
+        var D2 = affDonnees(), a = AFFICHES[+b.getAttribute('data-k')], html = affHTML(a, D2.s, D2.f), act = b.getAttribute('data-aff');
+        if (act === 'imp') return imprimer(html, a.t);
+        if (act === 'pdf') {
+          var el = document.createElement('div'); el.style.cssText = 'background:#fff;padding:10px'; el.innerHTML = html;
+          var nom = 'Affichage - ' + sansAccent(a.t).trim().replace(/ /g, '-') + '.pdf';
+          if (typeof window._packEnvoyerPDF === 'function') return window._packEnvoyerPDF(el, nom, b);
+          return imprimer(html, a.t);
+        }
+        var ap = o.querySelector('#affApercu');
+        ap.innerHTML = '<div class="da-sect">Aperçu : ' + esc(a.t) + '</div><div style="background:#fff;border-radius:8px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow-x:auto">' + html + '</div>';
+        ap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  var cacheProcs = null;
+  function vueProcs() {
+    if (!encoreOuvert()) return;
+    var o = overlay();
+    o.innerHTML = '<div class="da-wrap">' + entete('personnel') + '<p class="da-note">Chargement…</p></div>'; brancher(o);
+    chargerSalariesSiBesoin().then(function () { return rpc('da_procedures_liste', { p_code: codeCompte(), p_pin: pinSession }); }).then(function (r) {
+      if (!r || r.ok !== true) { o.innerHTML = '<div class="da-wrap">' + entete('personnel') + '<p class="da-err">' + esc(messageRefus(r)) + '</p></div>'; brancher(o); return; }
+      cacheProcs = r.procedures || [];
+      var h = '<div class="da-wrap">' + entete('personnel') + '<div class="da-item" style="cursor:default"><span class="i">⚖️</span><span><b>Procédures</b><small>Lettres et convocations, rangées par salarié</small></span></div>'
+        + '<button class="da-main" type="button" data-da="procnew">＋ Nouvelle procédure</button>';
+      if (!cacheProcs.length) h += '<p class="da-note">Aucune procédure enregistrée.</p>';
+      function ligneProc(p) {
+        var t = TYPES_PROC[p.type] || { titre: p.type };
+        return '<button class="da-item" type="button" data-da="procvoir:' + esc(p.id) + '"><span class="i">' + (p.statut === 'archivee' ? '📦' : (t.lourd ? '🔴' : '🟠')) + '</span><span><b>' + esc(t.titre) + ' — ' + esc(nomSalarie(p.salarie_id) || '?') + '</b><small>'
+          + esc(['Lettre du ' + dateFr(p.date_lettre), p.date_entretien ? 'entretien le ' + dateFr(p.date_entretien) : ''].filter(Boolean).join(' · ')) + '</small></span><span class="ch">›</span></button>';
+      }
+      var enCours = cacheProcs.filter(function (p) { return p.statut !== 'archivee'; }), archives = cacheProcs.filter(function (p) { return p.statut === 'archivee'; });
+      h += enCours.map(ligneProc).join('');
+      if (archives.length) h += '<details class="da-form"><summary style="cursor:pointer;font-weight:800">📦 Archivées · ' + archives.length + '</summary>' + archives.map(ligneProc).join('') + '</details>';
+      h += '</div>';
+      o.innerHTML = h; brancher(o); o.scrollTop = 0;
+    }, function () { o.innerHTML = '<div class="da-wrap">' + entete('personnel') + '<p class="da-err">Pas de connexion internet.</p></div>'; brancher(o); });
+  }
+  function vueProcVoir(id) {
+    if (!encoreOuvert()) return;
+    var p = (cacheProcs || []).filter(function (x) { return x.id === id; })[0]; if (!p) return vueProcs();
+    var t = TYPES_PROC[p.type] || { titre: p.type };
+    var html = (p.donnees && p.donnees.html) || '';
+    var o = overlay();
+    o.innerHTML = '<div class="da-wrap">' + entete('procs') + '<b style="font-size:17px">' + esc(t.titre) + ' — ' + esc(nomSalarie(p.salarie_id)) + '</b>'
+      + '<div style="background:#fff;border-radius:8px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow-x:auto">' + html + '</div>'
+      + '<button class="da-main" type="button" id="daProcPrint">🖨️ Imprimer</button>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'
+      + '<button class="da-btn" type="button" data-da="procmod:' + esc(p.id) + '">✏️ Modifier</button>'
+      + '<button class="da-btn" type="button" data-da="procarch:' + esc(p.id) + '">' + (p.statut === 'archivee' ? '📤 Désarchiver' : '📦 Archiver') + '</button>'
+      + '<button class="da-btn" type="button" data-da="procsuppr:' + esc(p.id) + '" style="color:#b91c1c">🗑️ Supprimer</button></div></div>';
+    brancher(o); o.scrollTop = 0;
+    o.querySelector('#daProcPrint').addEventListener('click', function () { imprimer(html, t.titre); });
+  }
+  function archiverProc(id) {
+    if (!encoreOuvert()) return;
+    var p = (cacheProcs || []).filter(function (x) { return x.id === id; })[0]; if (!p) return vueProcs();
+    rpc('da_procedure_modifier', { p_code: codeCompte(), p_pin: pinSession, p_id: id, p_p: { statut: p.statut === 'archivee' ? 'preparee' : 'archivee' } }).then(function (r) {
+      if (!r || r.ok !== true) { alert(messageRefus(r)); return; }
+      vueProcs();
+    });
+  }
+  function supprimerProc(id, btn) {
+    if (!encoreOuvert()) return;
+    if (btn.getAttribute('data-confirme') !== '1') { btn.setAttribute('data-confirme', '1'); btn.textContent = 'Toucher encore pour confirmer la suppression'; return; }
+    rpc('da_procedure_supprimer', { p_code: codeCompte(), p_pin: pinSession, p_id: id }).then(function () { vueProcs(); });
+  }
+  function vueProcNouvelle(pEdit) {
+    if (!encoreOuvert()) return;
+    var o = overlay();
+    chargerSalariesSiBesoin().then(function (sal) {
+      var actifs = sal.filter(function (s) { return s.statut !== 'ancien'; });
+      var soc = enteteSociete(), auj = iso(new Date());
+      var optSal = actifs.map(function (s) { return '<option value="' + esc(s.id) + '">' + esc(((s.prenom || '') + ' ' + (s.nom || '')).trim()) + '</option>'; }).join('');
+      var optRegle = REGLES.map(function (g) { return '<optgroup label="' + esc(g.g) + '">' + g.l.map(function (r) { return '<option value="' + esc(r[1]) + '" data-h="' + g.h + '">' + esc(r[0]) + '</option>'; }).join('') + '</optgroup>'; }).join('')
+        + '<optgroup label="Autre"><option value="__autre__" data-h="0">Autre (à préciser)</option></optgroup>';
+      var types = Object.keys(TYPES_PROC).map(function (k) { var t = TYPES_PROC[k]; return '<button type="button" class="da-btn dap-type" data-t="' + k + '" style="text-align:left;border-radius:12px;padding:10px">' + esc(t.titre) + '<br><small style="font-weight:500;color:' + (t.lourd ? '#b91c1c' : '#5b5e78') + '">' + (t.lourd ? 'entretien préalable obligatoire' : 'lettre à signer') + '</small></button>'; }).join('');
+      o.innerHTML = '<div class="da-wrap">' + entete('procs') + '<form class="da-form" id="dapForm">'
+        + '<b style="font-size:17px">' + (pEdit ? 'Modifier la procédure' : 'Nouvelle procédure') + '</b>'
+        + '<label for="dap_sal">Salarié<select id="dap_sal">' + optSal + '</select></label>'
+        + '<label for="dap_civ">Civilité<select id="dap_civ"><option>Monsieur</option><option>Madame</option></select></label>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="dapTypes">' + types + '</div>'
+        + '<div id="dapSimple">'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label for="dap_df">Date des faits<input id="dap_df" type="date" value="' + auj + '"></label><label for="dap_h">Heure<input id="dap_h" type="time"></label></div>'
+        + '<label for="dap_lieu">Lieu<input id="dap_lieu" placeholder="Ex. : en cuisine, pendant le service du midi"></label>'
+        + '<label for="dap_faits">Ce qui s\'est passé<textarea id="dap_faits" placeholder="Ex. : vous ne portiez pas de coiffe et le sol de la cuisine n\'avait pas été nettoyé"></textarea></label>'
+        + '<div style="display:flex;flex-direction:column;gap:6px"><b style="font-size:14px">Règles non respectées <small style="font-weight:500;color:#5b5e78">(une ou plusieurs)</small></b><div id="dapRegles"></div>'
+        + '<label for="dap_regle">＋ Ajouter une règle<select id="dap_regle"><option value="">— Choisir une règle —</option>' + optRegle + '</select></label>'
+        + '<div id="dapAutreW" hidden><div style="display:flex;gap:6px"><input id="dap_autre" placeholder="Précisez la règle" aria-label="Autre règle" style="flex:1"><button type="button" class="da-btn" id="dapAutreOk">Ajouter</button></div></div></div>'
+        + '<label for="dap_dem">Ce que nous attendons<input id="dap_dem" value="respecter cette règle à chaque service, dès aujourd\'hui"></label></div>'
+        + '<div id="dapLourd" hidden>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label for="dap_de">Date de l\'entretien<input id="dap_de" type="date"></label><label for="dap_he">Heure<input id="dap_he" type="time" value="15:00"></label></div>'
+        + '<label for="dap_le">Lieu de l\'entretien<input id="dap_le" value="au restaurant, ' + esc(soc.adresse) + ', dans le bureau de la direction"></label>'
+        + '<label for="dap_mapc">Modèle<select id="dap_mapc"><option value="">Sans mise à pied conservatoire</option><option value="1">Avec mise à pied conservatoire (effet immédiat)</option></select></label>'
+        + '<div id="dapDelais" style="border:2px solid #4338ca;background:#eef0ff;border-radius:12px;padding:10px;font-size:13px"></div>'
+        + '<button type="button" class="da-btn" id="dapConseil">Revenir à la date d\'entretien conseillée</button></div>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><label for="dap_dl">Date de la lettre<input id="dap_dl" type="date" value="' + auj + '"></label>'
+        + '<label for="dap_rem">Remise<select id="dap_rem"><option value="main">En main propre</option><option value="lrar">Lettre recommandée</option></select></label></div>'
+        + '<details><summary style="cursor:pointer;font-weight:700">En-tête de la société (mémorisé)</summary>'
+        + [['nom', 'Nom'], ['forme', 'Forme et capital (ex. : SAS au capital de 1 000 €)'], ['adresse', 'Adresse'], ['ids', 'RCS / SIRET'], ['tel', 'Téléphone'], ['ville', 'Ville (« Fait à »)'], ['signataire', 'Signataire'], ['mairie', 'Mairie où consulter la liste des conseillers'], ['inspection', 'Inspection du travail (adresse)']]
+          .map(function (c) { return '<label for="dap_s_' + c[0] + '">' + esc(c[1]) + '<input id="dap_s_' + c[0] + '" value="' + esc(soc[c[0]] || '') + '"></label>'; }).join('')
+        + '</details><p class="da-note" id="dapNote"></p></form>'
+        + '<b>La lettre, prête à imprimer</b><div id="dapLettre" style="background:#fff;border-radius:8px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.12);overflow-x:auto"></div>'
+        + '<button class="da-main" type="button" id="dapPrint">🖨️ Imprimer</button><button class="da-main" type="button" id="dapSave" style="background:#15803d">💾 Enregistrer dans le dossier du salarié</button><p class="da-err" id="dapMsg"></p></div>';
+      brancher(o); o.scrollTop = 0;
+      var type = 'rappel', entManuel = false, regles = [];
+      function $(id) { return o.querySelector('#' + id); }
+      var DEM1 = 'respecter cette règle à chaque service, dès aujourd\'hui', DEM2 = 'respecter ces règles à chaque service, dès aujourd\'hui';
+      function dessinerRegles() {
+        var box = $('dapRegles');
+        box.innerHTML = regles.length ? regles.map(function (r, i) {
+          return '<div style="display:flex;align-items:center;gap:8px;background:#eef0ff;border:1px solid #c7cbf5;border-radius:10px;padding:8px 10px;font-size:14px"><span style="flex:1">' + (i + 1) + '. ' + esc(r.t) + '</span>'
+            + '<button type="button" class="da-btn" data-retire="' + i + '" aria-label="Retirer cette règle" style="padding:4px 9px">✕</button></div>';
+        }).join('') : '<span class="da-note">Aucune règle choisie : ajoutez-en une ou plusieurs ci-dessous.</span>';
+        box.querySelectorAll('[data-retire]').forEach(function (b) { b.addEventListener('click', function () { regles.splice(+b.getAttribute('data-retire'), 1); dessinerRegles(); rendre(); }); });
+        var dem = $('dap_dem'); if (dem.value === DEM1 || dem.value === DEM2) dem.value = regles.length > 1 ? DEM2 : DEM1;
+      }
+      function ajouterRegle(t, h) {
+        t = String(t || '').trim(); if (!t) return;
+        if (!regles.some(function (r) { return r.t === t; })) regles.push({ t: t, h: !!h });
+        dessinerRegles(); rendre();
+      }
+      $('dap_regle').addEventListener('change', function () {
+        var sel = this, opt = sel.selectedOptions[0];
+        if (sel.value === '__autre__') { $('dapAutreW').hidden = false; $('dap_autre').focus(); }
+        else if (sel.value) { ajouterRegle(sel.value, opt && opt.getAttribute('data-h') === '1'); $('dapAutreW').hidden = true; }
+        sel.value = '';
+      });
+      function ajouterAutre() { ajouterRegle($('dap_autre').value, false); $('dap_autre').value = ''; $('dapAutreW').hidden = true; }
+      $('dapAutreOk').addEventListener('click', ajouterAutre);
+      $('dap_autre').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); ajouterAutre(); } });
+      if (pEdit && pEdit.donnees) {
+        var dv = pEdit.donnees; type = pEdit.type || dv.type || 'rappel'; entManuel = true;
+        var map = { dap_sal: pEdit.salarie_id, dap_civ: dv.civ, dap_df: dv.date_faits, dap_h: dv.heure, dap_lieu: dv.lieu, dap_faits: dv.faits, dap_dem: dv.demande,
+          dap_de: dv.date_ent, dap_he: dv.heure_ent, dap_le: dv.lieu_ent, dap_mapc: dv.map_cons ? '1' : '', dap_dl: dv.date_lettre, dap_rem: dv.remise };
+        Object.keys(map).forEach(function (k) { if (map[k] != null && $(k)) $(k).value = map[k]; });
+        // Anciennes lettres : une seule règle (dv.regle) ; nouvelles : liste (dv.regles)
+        regles = Array.isArray(dv.regles) ? dv.regles.map(function (r) { return { t: r.t, h: !!r.h }; }) : (dv.regle ? [{ t: dv.regle, h: !!dv.hygiene }] : []);
+        if (dv.soc) Object.keys(dv.soc).forEach(function (k) { if ($('dap_s_' + k)) $('dap_s_' + k).value = dv.soc[k] || ''; });
+      }
+      function lire() {
+        var socv = {}; ['nom', 'forme', 'adresse', 'ids', 'tel', 'ville', 'signataire', 'mairie', 'inspection'].forEach(function (k) { socv[k] = $('dap_s_' + k).value.trim(); });
+        return { type: type, salarie_id: $('dap_sal').value, civ: $('dap_civ').value, date_faits: $('dap_df').value, heure: $('dap_h').value, lieu: $('dap_lieu').value.trim(),
+          faits: $('dap_faits').value.trim(), regles: regles.slice(), regle: regles.map(function (r) { return r.t; }).join(' ; '), hygiene: regles.some(function (r) { return r.h; }),
+          demande: $('dap_dem').value.trim(), date_ent: $('dap_de').value, heure_ent: $('dap_he').value, lieu_ent: $('dap_le').value.trim(), map_cons: $('dap_mapc').value === '1',
+          date_lettre: $('dap_dl').value, remise: $('dap_rem').value, soc: socv };
+      }
+      function salarie() { var id = $('dap_sal').value; return actifs.filter(function (s) { return s.id === id; })[0] || {}; }
+      function rendre() {
+        var t = TYPES_PROC[type];
+        o.querySelectorAll('.dap-type').forEach(function (b) { var on = b.getAttribute('data-t') === type; b.style.background = on ? '#eef0ff' : '#fff'; b.style.borderColor = on ? '#4338ca' : '#d9dbe8'; });
+        $('dapSimple').hidden = t.lourd; $('dapLourd').hidden = !t.lourd;
+        $('dapNote').textContent = t.lourd ? 'Mise à pied ou licenciement : l\'entretien préalable est obligatoire. La convocation est remise en main propre contre décharge ou envoyée en recommandé.' : t.note;
+        if (t.lourd) {
+          var r = delais($('dap_dl').value, $('dap_rem').value === 'lrar', $('dap_de').value);
+          if (r && !entManuel) { $('dap_de').value = iso(r.consEnt); r = delais($('dap_dl').value, $('dap_rem').value === 'lrar', $('dap_de').value); }
+          if (r) {
+            var h = '<b>Calculateur automatique des délais</b><br>1. Remise : ' + ($('dap_rem').value === 'lrar' ? '1re présentation estimée au plus tard le ' : 'en main propre le ') + jourLong(r.remise)
+              + '<br>2. Entretien possible à partir du ' + jourLong(r.minEnt) + ' (5 jours ouvrables pleins). Date conseillée : <b>' + jourLong(r.consEnt) + '</b>';
+            if (r.ent) {
+              if (r.ent < r.minEnt) h += '<br><b style="color:#b91c1c">⚠ Date d\'entretien trop tôt : délai de 5 jours non respecté.</b>';
+              else if (!ouvrable(r.ent)) h += '<br><b style="color:#b91c1c">⚠ Dimanche ou jour férié.</b>';
+              h += '<br>3. Lettre ' + (type === 'map' ? 'de mise à pied' : 'de licenciement') + ' : pas avant le ' + jourLong(r.minLet) + ' (2 jours ouvrables après l\'entretien), conseillé le <b>' + jourLong(r.consLet) + '</b>, au plus tard le ' + jourLong(r.maxLet) + '.';
+            }
+            $('dapDelais').innerHTML = h;
+          }
+        }
+        $('dapLettre').innerHTML = lettreHTML(lire(), salarie());
+      }
+      o.querySelectorAll('.dap-type').forEach(function (b) { b.addEventListener('click', function () { type = b.getAttribute('data-t'); rendre(); }); });
+      $('dap_de').addEventListener('input', function () { entManuel = true; });
+      $('dapConseil').addEventListener('click', function () { entManuel = false; rendre(); });
+      o.querySelectorAll('#dapForm input,#dapForm select,#dapForm textarea').forEach(function (el) { el.addEventListener('input', rendre); el.addEventListener('change', rendre); });
+      $('dapPrint').addEventListener('click', function () { imprimer($('dapLettre').innerHTML, TYPES_PROC[type].titre); });
+      $('dapSave').addEventListener('click', function () {
+        if (!encoreOuvert()) return;
+        var f = lire(), msg = $('dapMsg');
+        if (!f.salarie_id) { msg.textContent = 'Choisissez un salarié.'; return; }
+        if (!TYPES_PROC[f.type].lourd && !f.regles.length) { msg.textContent = 'Ajoutez au moins une règle non respectée.'; return; }
+        memoriserEntete(f.soc);
+        msg.style.color = '#5b5e78'; msg.textContent = 'Enregistrement…';
+        var donnees = JSON.parse(JSON.stringify(f)); donnees.html = $('dapLettre').innerHTML;
+        var donneesProc = {
+          salarie_id: f.salarie_id, type: f.type, statut: (pEdit && pEdit.statut) || 'preparee', date_lettre: f.date_lettre || null,
+          date_entretien: TYPES_PROC[f.type].lourd && f.date_ent ? f.date_ent + 'T' + (f.heure_ent || '00:00') + ':00' : null, donnees: donnees };
+        (pEdit ? rpc('da_procedure_modifier', { p_code: codeCompte(), p_pin: pinSession, p_id: pEdit.id, p_p: donneesProc })
+               : rpc('da_procedure_enregistrer', { p_code: codeCompte(), p_pin: pinSession, p_p: donneesProc })).then(function (r) {
+          if (!r || r.ok !== true) { msg.style.color = '#b91c1c'; msg.textContent = messageRefus(r); return; }
+          vueProcs();
+        }, function () { msg.style.color = '#b91c1c'; msg.textContent = 'Pas de connexion internet : rien n\'a été enregistré.'; });
+      });
+      dessinerRegles();
+      rendre();
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════════
+  // REGISTRE UNIQUE DU PERSONNEL (articles L1221-13 et D1221-23 à D1221-27)
+  // Tous les salariés, dans l'ordre des embauches, y compris ceux qui sont partis.
+  // Mentions : nom et prénoms, nationalité, date de naissance, sexe, emploi et
+  // qualification, dates d'entrée et de sortie, type de contrat (CDD, temps
+  // partiel…), et pour les étrangers soumis à autorisation : type et n° du titre.
+  // Conservation : 5 ans après le départ du salarié. Aucune ligne n'est supprimée.
+  // ══════════════════════════════════════════════════════════════════
+  var NAT_SANS_AUTORISATION = ['francaise', 'francais', 'allemande', 'autrichienne', 'belge', 'bulgare', 'chypriote', 'croate', 'danoise', 'espagnole', 'estonienne', 'finlandaise', 'grecque', 'hongroise', 'irlandaise', 'italienne', 'lettone', 'lituanienne', 'luxembourgeoise', 'maltaise', 'neerlandaise', 'polonaise', 'portugaise', 'roumaine', 'slovaque', 'slovene', 'suedoise', 'tcheque', 'islandaise', 'liechtensteinoise', 'norvegienne', 'suisse'];
+  function autorisationRequise(s) {
+    var n = sansAccent(s.nationalite || '').trim();
+    if (!n) return null; // nationalité inconnue : à compléter
+    return !NAT_SANS_AUTORISATION.some(function (x) { return n.indexOf(x) === 0; });
+  }
+  function typeContrat(s) {
+    var c = String(s.contrat || '');
+    var duree = /cdd/i.test(c) ? 'CDD' : (/cdi/i.test(c) ? 'CDI' : '');
+    var temps = s.heures_hebdo ? (Number(s.heures_hebdo) < 35 ? 'temps partiel (' + s.heures_hebdo + ' h)' : 'temps complet') : '';
+    return [duree, temps].filter(Boolean).join(', ') || c;
+  }
+  function lignesRegistre(sal) {
+    return sal.slice().sort(function (a, b) {
+      var da = a.date_embauche || '9999', db = b.date_embauche || '9999';
+      return da < db ? -1 : (da > db ? 1 : String(a.nom || '').localeCompare(String(b.nom || '')));
+    }).map(function (s, i) {
+      var aut = autorisationRequise(s);
+      var manque = [];
+      ['nom', 'prenom', 'nationalite', 'naissance_date', 'sexe', 'poste', 'qualification', 'date_embauche', 'contrat'].forEach(function (k) { if (!s[k]) manque.push(k); });
+      if (aut === true && !(s.titre_travail_type && s.titre_travail_num)) manque.push('titre');
+      if (s.statut === 'ancien' && !s.date_sortie) manque.push('date_sortie');
+      return { n: i + 1, s: s, aut: aut, manque: manque };
+    });
+  }
+  var LIB_MANQUE = { nom: 'nom', prenom: 'prénom', nationalite: 'nationalité', naissance_date: 'date de naissance', sexe: 'sexe', poste: 'emploi', qualification: 'qualification', date_embauche: 'date d\'entrée', contrat: 'type de contrat', titre: 'titre de séjour (type et n°)', date_sortie: 'date de sortie' };
+  function tableRegistre(L, pourImpression) {
+    var td = pourImpression ? 'border:1px solid #999;padding:4px 6px;vertical-align:top' : 'border-bottom:1px solid #e3e4ef;padding:6px;vertical-align:top';
+    var th = pourImpression ? 'border:1px solid #999;padding:4px 6px;background:#eee;text-align:left' : 'padding:6px;background:#eef0ff;text-align:left;position:sticky;top:0';
+    var h = '<table style="border-collapse:collapse;font-size:' + (pourImpression ? '10px' : '12px') + ';min-width:900px;width:100%"><thead><tr>'
+      + ['N°', 'Nom et prénoms', 'Nationalité', 'Date de naissance', 'Sexe', 'Emploi', 'Qualification', 'Date d\'entrée', 'Date de sortie', 'Type de contrat', 'Titre de séjour (type et n°)']
+        .map(function (x) { return '<th style="' + th + '">' + esc(x) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    L.forEach(function (l) {
+      var s = l.s, v = function (x) { return x ? esc(x) : (pourImpression ? '' : '<span style="color:#b45309">à compléter</span>'); };
+      var aut = l.aut === true ? (s.titre_travail_type || s.titre_travail_num ? esc([s.titre_travail_type, s.titre_travail_num].filter(Boolean).join(' n° ')) : v('')) : (l.aut === false ? 'Non requis' : v(''));
+      h += '<tr><td style="' + td + '">' + l.n + '</td><td style="' + td + '"><b>' + esc(String(s.nom || '').toUpperCase()) + '</b> ' + esc(s.prenom || '') + '</td>'
+        + '<td style="' + td + '">' + v(s.nationalite) + '</td><td style="' + td + '">' + v(dateFr(s.naissance_date)) + '</td><td style="' + td + '">' + v(s.sexe) + '</td>'
+        + '<td style="' + td + '">' + v(s.poste) + '</td><td style="' + td + '">' + v(s.qualification) + '</td><td style="' + td + '">' + v(dateFr(s.date_embauche)) + '</td>'
+        + '<td style="' + td + '">' + (s.date_sortie ? esc(dateFr(s.date_sortie)) : (s.statut === 'ancien' ? v('') : '')) + '</td>'
+        + '<td style="' + td + '">' + v(typeContrat(s)) + '</td><td style="' + td + '">' + aut + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
+  function vueRegistre() {
+    if (!encoreOuvert()) return;
+    var o = overlay();
+    o.innerHTML = '<div class="da-wrap">' + entete('personnel') + '<p class="da-note">Chargement…</p></div>'; brancher(o);
+    cacheSalaries = null;
+    chargerSalariesSiBesoin().then(function (sal) {
+      var L = lignesRegistre(sal), incomplets = L.filter(function (l) { return l.manque.length; });
+      var soc = enteteSociete();
+      var h = '<div class="da-wrap" style="max-width:1100px">' + entete('personnel')
+        + '<div class="da-item" style="cursor:default"><span class="i">📒</span><span><b>Registre unique du personnel</b><small>' + L.length + ' salarié' + (L.length > 1 ? 's' : '') + ', dans l\'ordre des embauches, y compris les départs</small></span></div>'
+        + '<div class="da-form" style="font-size:13px;gap:6px"><b>Ce que dit la loi</b>'
+        + '<span>• Obligatoire dès le premier salarié, tenu dans l\'établissement (article L1221-13 du Code du travail).</span>'
+        + '<span>• Mentions obligatoires : nom, prénoms, nationalité, date de naissance, sexe, emploi, qualification, dates d\'entrée et de sortie, type de contrat (CDD, temps partiel…), et pour un salarié étranger hors UE le type et le numéro de son titre de séjour (articles D1221-23 à D1221-25).</span>'
+        + '<span>• Inscription dans l\'ordre des embauches, sans rien effacer. Conservation <b>5 ans après le départ</b> du salarié (article R1221-26).</span>'
+        + '<span>• À présenter à l\'inspection du travail sur demande.</span></div>';
+      if (incomplets.length) {
+        h += '<div class="da-form" style="border-color:#f59e0b;background:#fff8eb;font-size:13px;gap:4px"><b style="color:#b45309">⚠ ' + incomplets.length + ' ligne' + (incomplets.length > 1 ? 's' : '') + ' incomplète' + (incomplets.length > 1 ? 's' : '') + '</b>'
+          + incomplets.map(function (l) { return '<button type="button" class="da-btn" data-da="fiche:' + esc(l.s.id) + '" style="text-align:left">' + esc(((l.s.prenom || '') + ' ' + (l.s.nom || '')).trim()) + ' : ' + esc(l.manque.map(function (k) { return LIB_MANQUE[k]; }).join(', ')) + ' ›</button>'; }).join('')
+          + '<span class="da-note">Les anciens salariés partis depuis moins de 5 ans doivent aussi y figurer : ajoutez-les dans Salariés avec le statut « Ancien salarié » et leur date de sortie.</span></div>';
+      }
+      h += '<div style="overflow-x:auto;background:#fff;border:1px solid #e3e4ef;border-radius:12px">' + tableRegistre(L, false) + '</div>'
+        + '<button class="da-main" type="button" id="daRegPrint">🖨️ Imprimer le registre</button>'
+        + '<button class="da-btn" type="button" id="daRegCsv">⬇️ Télécharger (tableur)</button></div>';
+      o.innerHTML = h; brancher(o); o.scrollTop = 0;
+      o.querySelector('#daRegPrint').addEventListener('click', function () {
+        var entetePrint = '<h2 style="font-family:Arial;margin:0 0 4px">Registre unique du personnel</h2><div style="font-family:Arial;font-size:11px;margin-bottom:10px">'
+          + esc(soc.nom) + ' · ' + esc(soc.adresse) + ' · ' + esc(soc.ids) + ' · édité le ' + new Date().toLocaleDateString('fr-FR') + '</div>';
+        imprimer('<style>@page{size:A4 landscape;margin:10mm}body{font-family:Arial,sans-serif}</style>' + entetePrint + tableRegistre(L, true), 'Registre unique du personnel');
+      });
+      o.querySelector('#daRegCsv').addEventListener('click', function () {
+        var lignes = [['N°', 'Nom', 'Prénoms', 'Nationalité', 'Date de naissance', 'Sexe', 'Emploi', 'Qualification', 'Date d\'entrée', 'Date de sortie', 'Type de contrat', 'Titre de séjour']];
+        L.forEach(function (l) { var s = l.s; lignes.push([l.n, s.nom, s.prenom, s.nationalite, dateFr(s.naissance_date), s.sexe, s.poste, s.qualification, dateFr(s.date_embauche), dateFr(s.date_sortie), typeContrat(s), l.aut === false ? 'Non requis' : [s.titre_travail_type, s.titre_travail_num].filter(Boolean).join(' n° ')]); });
+        var csv = '﻿' + lignes.map(function (r) { return r.map(function (x) { return '"' + String(x == null ? '' : x).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n');
+        var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'registre-unique-du-personnel.csv';
+        document.body.appendChild(a); a.click(); setTimeout(function () { try { a.remove(); } catch (e) {} }, 1000);
+      });
+    });
+  }
+
   // ── Code secret à 6 chiffres, vérifié par le serveur ──
   function vueCode() {
     var code = '';
@@ -644,7 +1523,7 @@
       var err = o.querySelector('#daErr');
       err.style.color = '#5b5e78'; err.textContent = 'Vérification…';
       rpc('da_ouvrir', { p_code: codeCompte(), p_pin: code }).then(function (r) {
-        if (r && r.ok === true) { pinSession = code; actif(); vueMenu(); return; }
+        if (r && r.ok === true) { pinSession = code; actif(); vueMenu(); synchroApp(); return; }
         err.style.color = '#b91c1c'; err.textContent = messageRefus(r); code = ''; maj();
       }, function () { err.style.color = '#b91c1c'; err.textContent = 'Pas de connexion internet.'; code = ''; maj(); });
     }
@@ -688,12 +1567,19 @@
       }
       var tete = document.querySelector('#page-home .ph4-row1');
       var hote = tete ? tete.parentNode : document.querySelector('#page-home .ph4-wrap');
-      if (hote && !document.getElementById('daTuileExpert')) {
+      var hero = document.querySelector('#page-home > .hero');
+      if (!document.getElementById('daTuileExpert') && (hote || hero)) {
         var w2 = document.createElement('div');
         w2.id = 'daTuileExpert';
-        w2.style.cssText = 'margin-top:44px'; // laisse la place au bouton flottant « Mes rapports »
         w2.innerHTML = bouton;
-        hote.insertBefore(w2, tete ? tete.nextSibling : hote.firstChild);
+        if (hote) {
+          w2.style.cssText = 'margin-top:44px'; // laisse la place au bouton flottant « Mes rapports »
+          hote.insertBefore(w2, tete ? tete.nextSibling : hote.firstChild);
+        } else {
+          // Tableau de bord classique (site Nomos) : juste sous le bandeau du haut
+          w2.style.cssText = 'padding:12px 16px 0';
+          hero.parentNode.insertBefore(w2, hero.nextSibling);
+        }
       }
     } catch (e) {}
   }
