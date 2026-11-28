@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=556">
-    <script src="pms_secteurs.js?v=556" defer></script>
-    <script src="script.js?v=556" defer></script>
-<script src="patch_photo_bl.js?v=556" defer></script>
-<script src="pms_generateur.js?v=556" defer></script>
+    <link rel="stylesheet" href="style.css?v=557">
+    <script src="pms_secteurs.js?v=557" defer></script>
+    <script src="script.js?v=557" defer></script>
+<script src="patch_photo_bl.js?v=557" defer></script>
+<script src="pms_generateur.js?v=557" defer></script>
 <script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
@@ -3002,37 +3002,36 @@ html, body { max-width: 100%; overflow-x: hidden; }
  </div>
  <div class="sig-required" id="nuis_sig_required">Signature + nom obligatoires pour valider</div>
  </div>
- </div>
- <div class="cta">
- <!-- DOCUMENTS PRESTATAIRE NUISIBLES — AJOUT UNIQUEMENT, NE PAS MODIFIER LE CODE EXISTANT -->
- <div class="fblock" style="border-left:4px solid #0f766e;margin-bottom:16px;margin-top:4px">
+ <!-- DOCUMENTS PRESTATAIRE NUISIBLES — v557 : extrait de la .cta pour que celle-ci
+      ne contienne que les boutons Retour/Valider (sinon la .cta fixed couvrait
+      tout l'écran avec ces documents, bloquant le scroll de la page). -->
+ <div class="fblock" style="border-left:3px solid #0f766e">
  <div class="fblock-title" style="color:#0f766e">Documents prestataire nuisibles</div>
- <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#92400e;font-weight:600">Stockage local uniquement — ces documents restent sur cet appareil. Ils ne sont pas envoyés sur un serveur.</div>
+ <div style="background:#fefce8;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:11.5px;color:#8b6f1d;font-weight:500;line-height:1.5">Stockage local uniquement — ces documents restent sur cet appareil. Ils ne sont pas envoyés sur un serveur.</div>
  <!-- Contrats & Avenants -->
  <div style="margin-bottom:14px">
- <div class="flabel">Contrats & Avenants</div>
+ <div class="flabel">Contrats &amp; Avenants</div>
  <div id="nuis_docs_contrat_list" style="margin:6px 0"></div>
- <button onclick="nuisAddDoc('contrat')" style="background:#0f766e;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;margin-top:4px">+ Ajouter un contrat</button>
+ <button onclick="nuisAddDoc('contrat')" style="background:#0f766e;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px">+ Ajouter un contrat</button>
  </div>
  <!-- Comptes rendus -->
  <div style="margin-bottom:14px">
  <div class="flabel">Comptes rendus d'intervention</div>
  <div id="nuis_docs_cr_list" style="margin:6px 0"></div>
- <button onclick="nuisAddDoc('cr')" style="background:#0f766e;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;margin-top:4px">+ Ajouter un compte rendu</button>
+ <button onclick="nuisAddDoc('cr')" style="background:#0f766e;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px">+ Ajouter un compte rendu</button>
  </div>
  <!-- Rapports d'intervention -->
  <div style="margin-bottom:8px">
  <div class="flabel">Rapports d'intervention</div>
  <div id="nuis_docs_rapport_list" style="margin:6px 0"></div>
- <button onclick="nuisAddDoc('rapport')" style="background:#0f766e;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;margin-top:4px">+ Ajouter un rapport</button>
+ <button onclick="nuisAddDoc('rapport')" style="background:#0f766e;color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px">+ Ajouter un rapport</button>
  </div>
- <div style="font-size:11px;color:#6b7280;margin-top:8px;text-align:center">Documents conservés localement — rechargés automatiquement à chaque ouverture</div>
+ <div style="font-size:11px;color:#9b9a97;margin-top:8px;text-align:center;font-weight:500">Documents conservés localement — rechargés automatiquement à chaque ouverture</div>
  </div>
- <!-- FIN DOCUMENTS PRESTATAIRE NUISIBLES -->
- <div class="btn-row">
+ </div>
+ <div class="cta">
  <button class="btn-s" onclick="goHome()">← Retour</button>
- <button class="btn-p" style="background:linear-gradient(135deg,#115e59,#0f766e);box-shadow:0 4px 20px rgba(15,118,110,.35)" onclick="validerNuisibles()">✓ Valider & Enregistrer</button>
- </div>
+ <button class="btn-p" style="background:linear-gradient(135deg,#115e59,#0f766e);box-shadow:0 4px 20px rgba(15,118,110,.35)" onclick="validerNuisibles()">✓ Valider &amp; Enregistrer</button>
  </div>
  </div>
  <!-- MODULE PLAT TÉMOIN — RESTAURATION COLLECTIVE UNIQUEMENT -->
