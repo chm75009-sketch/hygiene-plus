@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v551';
+var APP_BUILD = 'v552';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -25100,68 +25100,33 @@ function _peuplerListeRapports(content, attenteCloud) {
 })();
 
 // ════════════════════════════════════════════════════════════════
-// Bandeau en-tête module : SECTEUR actif + DATE/HEURE en cours
-// Affiché en haut de chaque module pour éviter toute confusion de secteur
-// (cf. désynchro corrigée) et dater visuellement la saisie en cours.
+// v552 : Bandeau "Secteur + date/heure" en haut de chaque module SUPPRIMÉ.
+// Il alourdissait inutilement l'interface (déjà présents dans la topbar) et
+// générait des emojis parasites sur iPhone. Compat : _majEnteteModule reste
+// défini en no-op pour tout appel résiduel ailleurs dans le code.
+// Cleanup au load : retire tout .secteur-date-badge déjà inséré par un
+// ancien bundle en cache.
 // ════════════════════════════════════════════════════════════════
 (function() {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
-
-  function cfgSecteur() {
-    try { return (typeof SECTEURS_CONFIG !== 'undefined' && SECTEURS_CONFIG[SECTEUR_ACTIF]) || null; }
-    catch (e) { return null; }
+  function cleanupBadges(){
+    try { document.querySelectorAll('.secteur-date-badge').forEach(function(b){ b.remove(); }); } catch (e) {}
   }
-  function maintenant() {
-    var d = new Date();
-    return {
-      date: d.toLocaleDateString('fr-FR'),
-      heure: ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2)
-    };
-  }
-  function majEnteteModule() {
-    try {
-      var active = document.querySelector('.page.active');
-      if (!active || String(active.id).indexOf('page-') !== 0) return;
-      var header = active.querySelector('.mod-header');
-      if (!header) return; // page sans en-tête module → on ignore
-      var badge = header.querySelector('.secteur-date-badge');
-      if (!badge) {
-        badge = document.createElement('div');
-        badge.className = 'secteur-date-badge';
-        badge.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px';
-        header.insertBefore(badge, header.firstChild);
-      }
-      var cfg = cfgSecteur();
-      var now = maintenant();
-      // v551 : pilules v7 Nomos avec !important pour forcer la couleur même
-      // si un ancien CSS en cache garde color:#fff hérité du .mod-header.
-      var pill = 'display:inline-flex !important;align-items:center;gap:5px;background:#f0faf7 !important;color:#0f766e !important;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;line-height:1.3;border:1px solid #c5e5db !important;font-family:inherit;letter-spacing:.02em;text-shadow:none';
-      var pillGold = 'display:inline-flex !important;align-items:center;gap:5px;background:#fefce8 !important;color:#8b6f1d !important;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;line-height:1.3;border:1px solid #fde68a !important;font-family:inherit;letter-spacing:.02em;text-shadow:none';
-      var html = '';
-      if (cfg && cfg.label) {
-        // On nettoie aussi d'éventuels emojis dans le libellé du secteur.
-        var lbl = String(cfg.label).replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\u{200D}]+/gu, '').trim();
-        if (lbl) html += '<span style="' + pill + '">' + _echap(lbl) + '</span>';
-      }
-      html += '<span class="sd-datetime" style="' + pillGold + '">' + _echap(now.date) + ' · ' + _echap(now.heure) + '</span>';
-      badge.innerHTML = html;
-    } catch (e) {}
-  }
-
-  // Mise à jour à chaque changement de page
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', cleanupBadges);
+  else cleanupBadges();
+  // Hook showPage : nettoie à chaque navigation (si un cache réinjecte).
   try {
     var orig = window.showPage;
     if (typeof orig === 'function') {
       window.showPage = function() {
         var r = orig.apply(this, arguments);
-        setTimeout(majEnteteModule, 40);
+        setTimeout(cleanupBadges, 50);
         return r;
       };
     }
   } catch (e) {}
-  // Horloge : rafraîchit la date/heure du module ouvert toutes les 30 s
-  setInterval(majEnteteModule, 30000);
-  window._majEnteteModule = majEnteteModule;
+  // No-op pour la compat.
+  window._majEnteteModule = function() { cleanupBadges(); };
 })();
 
 // ══════════════════════════════════════════════════════════════════
