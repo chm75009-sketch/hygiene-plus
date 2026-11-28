@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=539">
-    <script src="pms_secteurs.js?v=539" defer></script>
-    <script src="script.js?v=539" defer></script>
-<script src="patch_photo_bl.js?v=539" defer></script>
-<script src="pms_generateur.js?v=539" defer></script>
+    <link rel="stylesheet" href="style.css?v=540">
+    <script src="pms_secteurs.js?v=540" defer></script>
+    <script src="script.js?v=540" defer></script>
+<script src="patch_photo_bl.js?v=540" defer></script>
+<script src="pms_generateur.js?v=540" defer></script>
 <script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
@@ -4481,7 +4481,13 @@ html, body { max-width: 100%; overflow-x: hidden; }
       <style>
         /* === RÉGLAGES v7 — cohérent avec Modules, Historique, Rapports, Dashboard === */
         #page-settings{background:#faf8f3;color:#37352f;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-        #page-settings .st-wrap{padding:16px 16px 28px}
+        /* Neutralisation défensive : masque tout .mod-header résiduel ou .mod-header-ico
+         * parasite qu'un ancien bundle en cache tenterait d'injecter en haut de la page. */
+        #page-settings > .mod-header,#page-settings .mod-header-ico{display:none !important}
+        #page-settings .st-wrap{padding:18px 16px 28px;position:relative;overflow:hidden}
+        #page-settings .st-wrap::before{content:'';position:absolute;top:-80px;right:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(15,118,110,.08) 0%,transparent 65%);pointer-events:none;z-index:0}
+        #page-settings .st-wrap::after{content:'';position:absolute;top:140px;left:-80px;width:220px;height:220px;background:radial-gradient(circle,rgba(210,173,70,.07) 0%,transparent 65%);pointer-events:none;z-index:0}
+        #page-settings .st-wrap > *{position:relative;z-index:1}
 
         /* Header */
         #page-settings .st-top{display:flex;align-items:center;gap:8px;margin-bottom:14px}
@@ -4496,18 +4502,24 @@ html, body { max-width: 100%; overflow-x: hidden; }
         #page-settings .st-cap-s{display:block;font-size:12px;color:#787774;font-weight:500;margin-top:4px}
         #page-settings .st-cap-s em{font-style:normal;color:var(--accent,#0f766e);font-weight:600}
 
-        /* Sections type Notion */
-        #page-settings .st-section{font-size:11px;font-weight:700;color:#37352f;letter-spacing:.06em;text-transform:uppercase;margin:4px 2px 10px;display:flex;align-items:center;gap:8px}
-        #page-settings .st-section-dot{width:6px;height:6px;border-radius:50%;background:var(--accent,#0f766e)}
-        #page-settings .st-section-dot.gold{background:#d2ad46}
-        #page-settings .st-section-dot.alert{background:#b91c1c}
-        #page-settings .st-section-dot.info{background:#0ea5e9}
+        /* Sections type Notion — avec icône colorée */
+        #page-settings .st-section{display:flex;align-items:center;gap:10px;margin:4px 2px 10px}
+        #page-settings .st-section-ico{width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;box-shadow:0 2px 6px -1px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.18)}
+        #page-settings .st-section-ico svg{width:13px;height:13px;stroke-width:2.1}
+        #page-settings .st-section-ico.accent{background:linear-gradient(135deg,var(--accent,#0f766e),#115e59);box-shadow:0 3px 8px -2px rgba(15,118,110,.35),inset 0 1px 0 rgba(255,255,255,.18)}
+        #page-settings .st-section-ico.gold{background:linear-gradient(135deg,#d2ad46,#8b6f1d);box-shadow:0 3px 8px -2px rgba(210,173,70,.35),inset 0 1px 0 rgba(255,255,255,.18)}
+        #page-settings .st-section-ico.info{background:linear-gradient(135deg,#0ea5e9,#0369a1);box-shadow:0 3px 8px -2px rgba(14,165,233,.35),inset 0 1px 0 rgba(255,255,255,.18)}
+        #page-settings .st-section-ico.alert{background:linear-gradient(135deg,#dc2626,#991b1b);box-shadow:0 3px 8px -2px rgba(220,38,38,.35),inset 0 1px 0 rgba(255,255,255,.18)}
+        #page-settings .st-section-lbl{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+        #page-settings .st-section-lbl b{font-size:13.5px;font-weight:700;color:#1f1e1b;letter-spacing:-.005em}
+        #page-settings .st-section-lbl small{font-size:11px;color:#9b9a97;font-weight:500;margin-top:1px}
 
-        /* Card type v7 */
-        #page-settings .st-card{background:#fff;border:1px solid #e9e9e7;border-radius:12px;padding:14px 14px 10px;margin-bottom:18px;box-shadow:0 2px 6px -1px rgba(10,10,10,.04),0 1px 3px rgba(10,10,10,.03)}
-        #page-settings .st-card.gold{border-color:#fde68a;background:linear-gradient(180deg,#fff 0%,#fefce8 100%)}
-        #page-settings .st-card.info{border-color:#bae6fd;background:linear-gradient(180deg,#fff 0%,#f0f9ff 100%)}
-        #page-settings .st-card.danger{border-color:#fecaca;background:linear-gradient(180deg,#fff 0%,#fef2f2 100%)}
+        /* Card type v7 avec léger effet relief */
+        #page-settings .st-card{background:#fff;border:1px solid #e9e9e7;border-radius:14px;padding:16px 14px 12px;margin-bottom:20px;box-shadow:0 4px 12px -3px rgba(10,10,10,.06),0 1px 3px rgba(10,10,10,.03);transition:box-shadow .2s}
+        #page-settings .st-card:hover{box-shadow:0 8px 20px -4px rgba(10,10,10,.08),0 2px 4px rgba(10,10,10,.04)}
+        #page-settings .st-card.gold{border-color:#fde68a;background:linear-gradient(135deg,#fff 0%,#fefce8 100%)}
+        #page-settings .st-card.info{border-color:#bae6fd;background:linear-gradient(135deg,#fff 0%,#f0f9ff 100%)}
+        #page-settings .st-card.danger{border-color:#fecaca;background:linear-gradient(135deg,#fff 0%,#fef2f2 100%)}
 
         /* Champs : labels + inputs cohérents */
         #page-settings .st-row{margin-bottom:10px}
@@ -4569,7 +4581,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
 
         <!-- 1. Mon établissement -->
-        <div class="st-section"><span class="st-section-dot"></span>Mon établissement</div>
+        <div class="st-section">
+          <span class="st-section-ico accent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg></span>
+          <span class="st-section-lbl"><b>Mon établissement</b><small>Coordonnées et informations légales</small></span>
+        </div>
         <div class="st-card">
           <div class="st-row"><label class="st-label" for="set_nom">Nom de l'établissement</label><input class="st-input finput" id="set_nom" placeholder="Nom de l'établissement"/></div>
           <div class="st-row"><label class="st-label" for="set_adresse">Adresse</label><input class="st-input finput" id="set_adresse" placeholder="Adresse"/></div>
@@ -4586,7 +4601,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
 
         <!-- 2. Responsable HACCP -->
-        <div class="st-section"><span class="st-section-dot gold"></span>Responsable HACCP</div>
+        <div class="st-section">
+          <span class="st-section-ico gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <span class="st-section-lbl"><b>Responsable HACCP</b><small>Signataire des documents réglementaires</small></span>
+        </div>
         <div class="st-card">
           <div class="st-row"><label class="st-label" for="set_responsable">Nom &amp; Prénom</label><input class="st-input finput" id="set_responsable" placeholder="Nom &amp; Prénom"/></div>
           <div class="st-row"><label class="st-label" for="set_fonction">Fonction</label>
@@ -4605,7 +4623,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
         <button type="button" class="st-save" onclick="sauvegarderReglages()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer les modifications</button>
 
         <!-- 3. Stockage local & maintenance -->
-        <div class="st-section"><span class="st-section-dot gold"></span>Stockage local &amp; maintenance</div>
+        <div class="st-section">
+          <span class="st-section-ico gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
+          <span class="st-section-lbl"><b>Stockage local</b><small>Cache de l'appareil et maintenance</small></span>
+        </div>
         <div class="st-card gold" id="storage_indicator">
           <div class="st-storage-head"><b>Espace utilisé : <span id="storage_mo">—</span> / <span id="storage_total">5</span> Mo</b></div>
           <div class="st-storage-track"><div class="st-storage-bar" id="storage_bar"></div></div>
@@ -4617,14 +4638,20 @@ html, body { max-width: 100%; overflow-x: hidden; }
         </div>
 
         <!-- 4. Capteurs de température (bêta) -->
-        <div class="st-section"><span class="st-section-dot info"></span>Capteurs de température</div>
+        <div class="st-section">
+          <span class="st-section-ico info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></span>
+          <span class="st-section-lbl"><b>Capteurs de température</b><small>Sondes connectées (bêta)</small></span>
+        </div>
         <div class="st-card info" id="capteursBetaBtn">
           <div style="font-size:11.5px;color:#0c4a6e;font-weight:500;line-height:1.5;margin-bottom:10px">Relier une sonde connectée (UbiBot) pour lire la température automatiquement. <b>Espace de test interne.</b></div>
           <button type="button" class="st-action info" onclick="ouvrirCapteursBeta()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>Ouvrir les capteurs</button>
         </div>
 
         <!-- 5. Zone danger -->
-        <div class="st-section"><span class="st-section-dot alert"></span>Zone danger</div>
+        <div class="st-section">
+          <span class="st-section-ico alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+          <span class="st-section-lbl"><b>Zone sensible</b><small>Déconnexion et réinitialisation</small></span>
+        </div>
         <div class="st-card danger">
           <button type="button" class="st-action danger" aria-label="Se déconnecter de l'application" onclick="seDeconnecter()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Se déconnecter</button>
           <button type="button" class="st-action danger" onclick="if(confirm('Réinitialiser toutes les données ? Action irréversible.')){localStorage.clear();location.reload();}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></svg>Réinitialiser toutes les données</button>
