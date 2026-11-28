@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v555';
+var APP_BUILD = 'v556';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1377,7 +1377,9 @@ async function sbSauvegarderEtab(etabData) {
     '.fblock-sub', '.frow',
     'button.btn-p', 'button.btn-s', 'button.status-btn',
     '.cta', '.cat-band', '.cat-tabs',
-    '.mod', '.mod-name', '.mod-fn'
+    '.mod', '.mod-name', '.mod-fn',
+    // v556 : labels de <option> dans les <select> (Type de compartiment, etc.)
+    'option'
   ];
   function nettoyerTexte(t){
     if(!t) return t;
@@ -6922,38 +6924,38 @@ function getProduitOptions() {
 
 var VEH_CATEGORIES = {
   resto:      [
-    {val:'-18', label:'❄️ Surgelés — seuil ≤ -18°C'},
-    {val:'2',   label:'🔴 Ultra-frais (viande hachée, poisson, coquillages) — seuil ≤ +2°C'},
-    {val:'4',   label:'🟠 Frais réfrigéré (viandes, volailles, laitages...) — seuil ≤ +4°C'},
-    {val:'8',   label:'🟡 Réfrigéré (œufs, beurre, fromages affinés) — seuil ≤ +8°C'},
-    {val:'amb', label:'📦 Épicerie sèche — température ambiante'},
+    {val:'-18', label:'Surgelés — seuil ≤ -18°C'},
+    {val:'2',   label:'Ultra-frais (viande hachée, poisson, coquillages) — seuil ≤ +2°C'},
+    {val:'4',   label:'Frais réfrigéré (viandes, volailles, laitages...) — seuil ≤ +4°C'},
+    {val:'8',   label:'Réfrigéré (œufs, beurre, fromages affinés) — seuil ≤ +8°C'},
+    {val:'amb', label:'Épicerie sèche — température ambiante'},
   ],
   bp:         [
-    {val:'-18', label:'❄️ Surgelés (beurre tourage, pâtes, fruits...) — seuil ≤ -18°C'},
-    {val:'4',   label:'🟠 Frais (beurre frais, crème, levure, œufs liquides...) — seuil ≤ +4°C'},
-    {val:'8',   label:'🟡 Réfrigéré (œufs, chocolat couverture, beurre...) — seuil ≤ +8°C'},
-    {val:'amb', label:'📦 Ambiant (farines, sucres, chocolat sec, épices...)'},
+    {val:'-18', label:'Surgelés (beurre tourage, pâtes, fruits...) — seuil ≤ -18°C'},
+    {val:'4',   label:'Frais (beurre frais, crème, levure, œufs liquides...) — seuil ≤ +4°C'},
+    {val:'8',   label:'Réfrigéré (œufs, chocolat couverture, beurre...) — seuil ≤ +8°C'},
+    {val:'amb', label:'Ambiant (farines, sucres, chocolat sec, épices...)'},
   ],
   rapide:     [
-    {val:'-18', label:'❄️ Surgelés (steaks, nuggets, frites, pain burger...) — seuil ≤ -18°C'},
-    {val:'2',   label:'🔴 Ultra-frais (steak haché, poulet cru frais) — seuil ≤ +2°C'},
-    {val:'4',   label:'🟠 Frais (viandes, sauces, fromages, légumes...) — seuil ≤ +4°C'},
-    {val:'8',   label:'🟡 Réfrigéré (œufs, beurre, fromages) — seuil ≤ +8°C'},
-    {val:'amb', label:'📦 Ambiant (pains, condiments, boissons...)'},
+    {val:'-18', label:'Surgelés (steaks, nuggets, frites, pain burger...) — seuil ≤ -18°C'},
+    {val:'2',   label:'Ultra-frais (steak haché, poulet cru frais) — seuil ≤ +2°C'},
+    {val:'4',   label:'Frais (viandes, sauces, fromages, légumes...) — seuil ≤ +4°C'},
+    {val:'8',   label:'Réfrigéré (œufs, beurre, fromages) — seuil ≤ +8°C'},
+    {val:'amb', label:'Ambiant (pains, condiments, boissons...)'},
   ],
   boucherie:  [
-    {val:'-18', label:'❄️ Surgelés (carcasses, viandes en découpe...) — seuil ≤ -18°C'},
-    {val:'2',   label:'🔴 Ultra-frais (viande hachée, abats frais) — seuil ≤ +2°C'},
-    {val:'4',   label:'🟠 Frais (viandes découpées, charcuterie, volaille...) — seuil ≤ +4°C'},
-    {val:'8',   label:'🟡 Réfrigéré (œufs, fromages pour farce) — seuil ≤ +8°C'},
-    {val:'amb', label:'📦 Ambiant (épices, sel, boyaux secs...)'},
+    {val:'-18', label:'Surgelés (carcasses, viandes en découpe...) — seuil ≤ -18°C'},
+    {val:'2',   label:'Ultra-frais (viande hachée, abats frais) — seuil ≤ +2°C'},
+    {val:'4',   label:'Frais (viandes découpées, charcuterie, volaille...) — seuil ≤ +4°C'},
+    {val:'8',   label:'Réfrigéré (œufs, fromages pour farce) — seuil ≤ +8°C'},
+    {val:'amb', label:'Ambiant (épices, sel, boyaux secs...)'},
   ],
   collective: [
-    {val:'-18', label:'❄️ Surgelés (légumes, viandes, plats cuisinés...) — seuil ≤ -18°C'},
-    {val:'2',   label:'🔴 Ultra-frais (viande hachée, poisson frais) — seuil ≤ +2°C'},
-    {val:'4',   label:'🟠 Frais (viandes, volailles, laitages, légumes 4G...) — seuil ≤ +4°C'},
-    {val:'8',   label:'🟡 Réfrigéré (œufs, beurre, fromages) — seuil ≤ +8°C'},
-    {val:'amb', label:'📦 Ambiant (riz, pâtes, conserves, boissons...)'},
+    {val:'-18', label:'Surgelés (légumes, viandes, plats cuisinés...) — seuil ≤ -18°C'},
+    {val:'2',   label:'Ultra-frais (viande hachée, poisson frais) — seuil ≤ +2°C'},
+    {val:'4',   label:'Frais (viandes, volailles, laitages, légumes 4G...) — seuil ≤ +4°C'},
+    {val:'8',   label:'Réfrigéré (œufs, beurre, fromages) — seuil ≤ +8°C'},
+    {val:'amb', label:'Ambiant (riz, pâtes, conserves, boissons...)'},
   ],
 };
 
