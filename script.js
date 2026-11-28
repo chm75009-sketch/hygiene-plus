@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v549';
+var APP_BUILD = 'v550';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -25133,10 +25133,18 @@ function _peuplerListeRapports(content, attenteCloud) {
       }
       var cfg = cfgSecteur();
       var now = maintenant();
-      var pill = 'display:inline-block;background:rgba(255,255,255,.22);color:#fff;font-weight:800;font-size:12px;padding:4px 11px;border-radius:20px;line-height:1.3';
+      // v550 : pilules repeintes façon v7 Nomos (fond cream + border teal clair,
+      // texte teal), et retrait des emojis 📅 / 🕐 qui s'affichaient en haut de
+      // chaque module (rendu "boîtes" sur iPhone).
+      var pill = 'display:inline-flex;align-items:center;gap:5px;background:#f0faf7;color:#0f766e;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;line-height:1.3;border:1px solid #c5e5db;font-family:inherit;letter-spacing:.02em';
+      var pillGold = 'display:inline-flex;align-items:center;gap:5px;background:#fefce8;color:#8b6f1d;font-weight:700;font-size:11px;padding:4px 10px;border-radius:999px;line-height:1.3;border:1px solid #fde68a;font-family:inherit;letter-spacing:.02em';
       var html = '';
-      if (cfg && cfg.label) html += '<span style="' + pill + '">' + _echap(cfg.label) + '</span>';
-      html += '<span class="sd-datetime" style="' + pill + '">📅 ' + _echap(now.date) + ' · 🕐 ' + _echap(now.heure) + '</span>';
+      if (cfg && cfg.label) {
+        // On nettoie aussi d'éventuels emojis dans le libellé du secteur.
+        var lbl = String(cfg.label).replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\u{200D}]+/gu, '').trim();
+        if (lbl) html += '<span style="' + pill + '">' + _echap(lbl) + '</span>';
+      }
+      html += '<span class="sd-datetime" style="' + pillGold + '">' + _echap(now.date) + ' · ' + _echap(now.heure) + '</span>';
       badge.innerHTML = html;
     } catch (e) {}
   }
