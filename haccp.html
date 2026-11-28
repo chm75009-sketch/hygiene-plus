@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=526">
-    <script src="pms_secteurs.js?v=526" defer></script>
-    <script src="script.js?v=526" defer></script>
-<script src="patch_photo_bl.js?v=526" defer></script>
-<script src="pms_generateur.js?v=526" defer></script>
+    <link rel="stylesheet" href="style.css?v=527">
+    <script src="pms_secteurs.js?v=527" defer></script>
+    <script src="script.js?v=527" defer></script>
+<script src="patch_photo_bl.js?v=527" defer></script>
+<script src="pms_generateur.js?v=527" defer></script>
 <script src="dossier_admin.js?v=18" defer></script>
 </head>
 <body>
@@ -4545,6 +4545,9 @@ html, body { max-width: 100%; overflow-x: hidden; }
         if(panel) panel.classList.add('open');
         if(overlay) overlay.classList.add('open');
         document.body.style.overflow='hidden';
+        // Masquer la bnav fixée au bas de l'écran pour libérer la zone de saisie
+        // (champ texte + bouton micro) qui était recouverte par Modules/Historique/…
+        try { document.querySelectorAll('.bnav').forEach(function(n){ n.dataset.prevDisplay = n.style.display || ''; n.style.display = 'none'; }); } catch(e){}
         welcomeIfNeeded();
         setTimeout(function(){ try{ input.focus(); }catch(e){} }, 320);
       };
@@ -4552,6 +4555,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
         if(panel) panel.classList.remove('open');
         if(overlay) overlay.classList.remove('open');
         document.body.style.overflow='';
+        // Rétablir la bnav exactement comme elle était avant l'ouverture du chatbot
+        try { document.querySelectorAll('.bnav').forEach(function(n){ n.style.display = (n.dataset.prevDisplay !== undefined ? n.dataset.prevDisplay : ''); delete n.dataset.prevDisplay; }); } catch(e){}
         if(_rec){ try{ _rec.stop(); }catch(e){} _rec=null; mic && mic.classList.remove('rec'); }
       };
       document.addEventListener('keydown', function(e){
