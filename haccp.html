@@ -183,11 +183,11 @@ html, body { max-width: 100%; overflow-x: hidden; }
      emailjs + dexie passés en defer pour ne plus bloquer le rendu initial de la page. -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer onerror="console.warn('CDN non chargé: emailjs')"></script>
 <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js" defer onerror="console.warn('CDN non chargé: dexie')"></script>
-    <link rel="stylesheet" href="style.css?v=528">
-    <script src="pms_secteurs.js?v=528" defer></script>
-    <script src="script.js?v=528" defer></script>
-<script src="patch_photo_bl.js?v=528" defer></script>
-<script src="pms_generateur.js?v=528" defer></script>
+    <link rel="stylesheet" href="style.css?v=529">
+    <script src="pms_secteurs.js?v=529" defer></script>
+    <script src="script.js?v=529" defer></script>
+<script src="patch_photo_bl.js?v=529" defer></script>
+<script src="pms_generateur.js?v=529" defer></script>
 <script src="dossier_admin.js?v=19" defer></script>
 </head>
 <body>
@@ -4177,30 +4177,99 @@ html, body { max-width: 100%; overflow-x: hidden; }
       </div>
     </div>
     <div class="page" id="page-history">
-      <div class="mod-header">
-        <button class="btn-back" onclick="goHome()">← Retour</button>
-        <div class="mod-header-ico"></div>
-        <div class="mod-header-num">Archivage légal — 3 ans minimum</div>
-        <div class="mod-header-title">Historique</div>
-        <div class="mod-header-intro">Traçabilité complète de tous vos enregistrements HACCP.</div>
-      </div>
-      <div class="fwrap">
-        <div class="fblock">
-          <div class="fblock-title">Filtrer</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="stat-btn" onclick="filtrerHistorique('all')" id="hist_all" style="background:#2563eb;color:white">Tout</button>
-            <button class="stat-btn" onclick="filtrerHistorique('today')" id="hist_today">Aujourd'hui</button>
-            <button class="stat-btn" onclick="filtrerHistorique('week')" id="hist_week">Cette semaine</button>
-            <button class="stat-btn" onclick="filtrerHistorique('month')" id="hist_month">Ce mois</button>
+      <style>
+        /* === HISTORIQUE v7 — style Notion + couleurs Nomos === */
+        #page-history{background:#faf8f3;color:#37352f;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+        #page-history .hh-wrap{padding:16px 16px 28px}
+
+        /* Header sobre : retour discret + titre + sous-titre */
+        #page-history .hh-top{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+        #page-history .hh-back{display:inline-flex;align-items:center;gap:4px;background:#fff;border:1px solid #e9e9e7;color:#37352f;font-family:inherit;font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer;transition:all .15s;box-shadow:0 1px 2px rgba(10,10,10,.04)}
+        #page-history .hh-back:hover{background:#f7f6f3;border-color:#d3d1cb}
+        #page-history .hh-back svg{width:13px;height:13px;stroke-width:2}
+        #page-history .hh-cap{flex:1;min-width:0}
+        #page-history .hh-cap-l{display:block;font-size:11px;color:var(--accent,#0f766e);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+        #page-history .hh-cap-t{display:block;font-size:22px;color:#1f1e1b;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
+
+        /* Carte stats type callout v7 */
+        #page-history .hh-stats{background:linear-gradient(135deg,#fff 0%,#f0faf7 100%);border:1px solid #d6ede5;border-radius:12px;padding:14px 16px 12px;margin-bottom:12px;box-shadow:0 2px 8px -2px rgba(15,118,110,.08),0 1px 3px rgba(10,10,10,.04);position:relative;overflow:hidden}
+        #page-history .hh-stats::before{content:'';position:absolute;top:-40px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(210,173,70,.12) 0%,transparent 65%);pointer-events:none}
+        #page-history .hh-stats-row{display:flex;align-items:center;justify-content:space-between;position:relative}
+        #page-history .hh-stats-l{display:flex;align-items:baseline;gap:8px}
+        #page-history .hh-stats-num{font-size:34px;font-weight:800;color:var(--accent,#0f766e);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+        #page-history .hh-stats-lbl{font-size:12.5px;color:#37352f;font-weight:500}
+        #page-history .hh-stats-lbl em{font-style:normal;color:var(--accent,#0f766e);font-weight:600}
+        #page-history .hh-stats-info{font-size:10.5px;color:#787774;font-weight:500;background:#eceae6;padding:3px 9px;border-radius:999px}
+
+        /* Section title (Filtrer / Enregistrements) */
+        #page-history .hh-section{font-size:11px;font-weight:700;color:#37352f;letter-spacing:.06em;text-transform:uppercase;margin:20px 2px 10px}
+
+        /* Segment control filtres (identique onglets dashboard) */
+        #page-history .hh-fils{display:flex;gap:3px;margin:0 0 14px;overflow-x:auto;scrollbar-width:none;padding:4px;background:#eceae6;border-radius:10px;box-shadow:inset 0 1px 2px rgba(10,10,10,.05)}
+        #page-history .hh-fils::-webkit-scrollbar{display:none}
+        #page-history .hh-fil{flex:1 1 auto;min-width:fit-content;padding:7px 12px;background:transparent;border:none;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:600;color:#787774;cursor:pointer;transition:all .15s ease;white-space:nowrap}
+        #page-history .hh-fil:hover{color:#37352f}
+        #page-history .hh-fil.active,#page-history .hh-fil.on{background:#fff;color:var(--accent,#0f766e);box-shadow:0 2px 6px -1px rgba(10,10,10,.1),0 1px 2px rgba(10,10,10,.06)}
+
+        /* Container entrées : liste de cards v7 */
+        #page-history #histContainer{display:flex;flex-direction:column;gap:6px}
+        #page-history #histContainer > div{background:#fff !important;border:1px solid #e9e9e7 !important;border-radius:10px !important;padding:12px 14px !important;margin-bottom:0 !important;box-shadow:0 1px 3px rgba(10,10,10,.04) !important;transition:all .18s cubic-bezier(.22,.6,.36,1) !important;display:flex !important;align-items:center !important;gap:12px !important}
+        #page-history #histContainer > div:hover{transform:translateY(-1px) !important;border-color:#d3d1cb !important;box-shadow:0 6px 14px -4px rgba(10,10,10,.08),0 1px 3px rgba(10,10,10,.04) !important}
+        #page-history #histContainer > div > div:first-child{width:36px !important;height:36px !important;border-radius:10px !important;background:linear-gradient(135deg,#f0faf7 0%,#d6ede5 100%) !important;color:var(--accent,#0f766e) !important;font-size:16px !important;flex-shrink:0 !important;display:flex !important;align-items:center !important;justify-content:center !important;box-shadow:0 1px 2px rgba(15,118,110,.08) !important}
+        #page-history #histContainer > div > div:nth-child(2){flex:1 !important;line-height:1.3 !important;min-width:0 !important}
+        #page-history #histContainer > div > div:nth-child(2) > div:first-child{font-size:13.5px !important;font-weight:600 !important;color:#1f1e1b !important;letter-spacing:-.005em !important;margin-bottom:3px !important}
+        #page-history #histContainer > div > div:nth-child(2) > div:nth-child(2){font-size:11px !important;color:#787774 !important;font-weight:500 !important;font-variant-numeric:tabular-nums !important}
+        #page-history #histContainer > div > div:nth-child(2) > div:nth-child(3){font-size:11px !important;color:#37352f !important;font-weight:500 !important;margin-top:2px !important}
+        #page-history #histContainer > div > button{background:var(--accent,#0f766e) !important;border:none !important;color:#fff !important;border-radius:8px !important;padding:7px 10px !important;font-size:12px !important;cursor:pointer !important;flex-shrink:0 !important;font-family:inherit !important;font-weight:700 !important;box-shadow:0 2px 6px -1px rgba(15,118,110,.3) !important;transition:all .15s !important}
+        #page-history #histContainer > div > button:hover{background:#115e59 !important;transform:translateY(-1px) !important}
+        #page-history #histContainer > div[style*="padding:12px"][style*="text-align:center"]{background:#fff !important;border:1px dashed #e9e9e7 !important;color:#9b9a97 !important;font-size:12.5px !important;font-weight:500 !important;padding:20px !important;justify-content:center !important;box-shadow:none !important;display:block !important;text-align:center !important}
+
+        /* Zone danger (vider l'historique) */
+        #page-history .hh-danger{margin-top:22px;padding:14px;background:#fff;border:1px solid #fecaca;border-radius:10px}
+        #page-history .hh-danger-lbl{font-size:11px;font-weight:700;color:#b91c1c;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+        #page-history .hh-danger-btn{width:100%;background:#fff;border:1px solid #fecaca;color:#b91c1c;border-radius:8px;padding:10px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+        #page-history .hh-danger-btn:hover{background:#fef2f2;border-color:#f87171}
+        #page-history .hh-danger-btn svg{width:14px;height:14px}
+      </style>
+
+      <div class="hh-wrap">
+        <!-- 1. En-tête : retour + titre + sous-titre -->
+        <div class="hh-top">
+          <button type="button" class="hh-back" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
+        </div>
+        <div class="hh-cap">
+          <span class="hh-cap-l">Archivage légal · 3 ans</span>
+          <span class="hh-cap-t">Historique</span>
+        </div>
+
+        <!-- 2. Bloc stats : nombre d'enregistrements sur la période -->
+        <div class="hh-stats">
+          <div class="hh-stats-row">
+            <div class="hh-stats-l">
+              <span class="hh-stats-num" id="hist_count_num">0</span>
+              <span class="hh-stats-lbl">contrôle<span id="hist_count_s"></span> <em id="hist_count_label">au total</em></span>
+            </div>
+            <span class="hh-stats-info">tout secteur</span>
           </div>
         </div>
-        <div class="fblock">
-          <div class="fblock-title">Enregistrements <span id="hist_count" style="color:#2563eb;font-size:12px"></span></div>
-          <div id="histContainer"></div>
+
+        <!-- 3. Filtres : segment control v7 -->
+        <div class="hh-section">Période</div>
+        <div class="hh-fils">
+          <button type="button" class="hh-fil active" onclick="filtrerHistorique('all')" id="hist_all">Tout</button>
+          <button type="button" class="hh-fil" onclick="filtrerHistorique('today')" id="hist_today">Aujourd'hui</button>
+          <button type="button" class="hh-fil" onclick="filtrerHistorique('week')" id="hist_week">7 jours</button>
+          <button type="button" class="hh-fil" onclick="filtrerHistorique('month')" id="hist_month">30 jours</button>
         </div>
-        <div class="fblock">
-          <div class="fblock-title">Gestion</div>
-          <button class="btn-s" style="color:#dc2626;border-color:#dc2626;width:100%" onclick="if(confirm('Supprimer tout l\'historique ?')){lsRemove('haccp_historique');chargerHistorique();}">Vider l'historique</button>
+
+        <!-- 4. Liste des enregistrements (cards v7 via override CSS) -->
+        <div class="hh-section">Enregistrements <span id="hist_count" style="color:#787774;font-weight:500;letter-spacing:0;text-transform:none"></span></div>
+        <div id="histContainer"></div>
+
+        <!-- 5. Zone danger : vider l'historique -->
+        <div class="hh-danger">
+          <div class="hh-danger-lbl">Zone de suppression</div>
+          <button type="button" class="hh-danger-btn" onclick="if(confirm('Supprimer tout l\'historique ? Action irréversible.')){lsRemove('haccp_historique');chargerHistorique();}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>Vider l'historique</button>
         </div>
       </div>
     </div>
