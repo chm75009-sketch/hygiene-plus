@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v547';
+var APP_BUILD = 'v548';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -1288,6 +1288,60 @@ async function sbSauvegarderEtab(etabData) {
 // Legacy : le bouton #modeExpertBtn vivait dans page-guide (supprimée).
 // Guard préservé au cas où un hook externe le réinjecterait un jour.
 (function(){ var _b = document.getElementById('modeExpertBtn'); if (_b) _b.addEventListener('click', function(){ showPage('page-home'); renderMods('quotidien'); }); })();
+
+// === v548 : Chasse aux "4 emojis en haut" — défensif radical ===
+// Scanne au load (et après chaque showPage) tous les éléments positionnés
+// (fixed/absolute/sticky) dont la boîte tombe dans la bande 0-120px du viewport
+// ET dont le contenu textuel est UNIQUEMENT un emoji isolé (plans pictogrammes).
+// Les cache via display:none !important pour couper court à tout composant
+// parasite (ancien bundle en cache, overlay orphelin, favicons d'app).
+(function(){
+  if (typeof window === 'undefined') return;
+  var PICTO_ONLY = /^[\s\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\u{200D}\u{1F3FB}-\u{1F3FF}]+$/u;
+  var SAFE_IDS = {
+    'appTopbar':1,'logoBrand':1,'topbarEtabBox':1,'datePill':1,'topbarLogoutBtn':1,
+    'floatTop':1,'prChatbotFab':1,'prChatbotPanel':1,'prChatbotOverlay':1,
+    'daOverlay':1,'exportHomeOverlay':1,'sqOverlay':1,'rthOverlay':1,
+    'capteurs_beta_overlay':1,'ttModal':1,'modalPdf':1
+  };
+  function dansSafe(el){
+    while(el && el !== document.body){ if(el.id && SAFE_IDS[el.id]) return true; el = el.parentElement; }
+    return false;
+  }
+  function chasseParasites(){
+    try{
+      var tous = document.body.querySelectorAll('*');
+      tous.forEach(function(el){
+        if (dansSafe(el)) return;
+        if (el.children && el.children.length > 0) return; // ne cibler que les feuilles
+        var txt = (el.textContent || '').trim();
+        if (!txt || txt.length > 3) return; // 3 car certains emojis font 2 code units
+        if (!PICTO_ONLY.test(txt)) return;
+        var cs = getComputedStyle(el);
+        if (cs.position !== 'fixed' && cs.position !== 'absolute' && cs.position !== 'sticky') return;
+        var r = el.getBoundingClientRect();
+        if (r.top > 160 || r.bottom < 0) return; // seulement la bande haute du viewport
+        if (r.width > 100 || r.height > 100) return; // juste les micro-éléments type icône
+        el.setAttribute('data-emoji-parasite','1');
+        el.style.setProperty('display','none','important');
+      });
+    }catch(e){}
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', chasseParasites);
+  else chasseParasites();
+  // Re-passe à chaque changement de .page.active (showPage)
+  try{
+    var moP = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        if (m.type === 'attributes' && m.target && m.target.classList && m.target.classList.contains('page') && m.target.classList.contains('active')) {
+          setTimeout(chasseParasites, 80);
+          setTimeout(chasseParasites, 400);
+        }
+      });
+    });
+    moP.observe(document.body, { subtree:true, attributes:true, attributeFilter:['class'] });
+  }catch(e){}
+})();
 
 // === v543 : Nettoyage global des emojis décoratifs — version renforcée ===
 // Retire les emojis Unicode des plans pictogrammes 2600-27BF, 1F300-1F9FF,
