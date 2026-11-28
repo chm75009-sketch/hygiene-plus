@@ -2,7 +2,7 @@
 // SW-7 — Jeton de version unique côté application. DOIT correspondre au nom de
 // cache du Service Worker (sw.js : 'haccp-pro-vXX'). Centralisé ici pour éviter
 // des numéros de version désynchronisés affichés dans l'app.
-var APP_BUILD = 'v545';
+var APP_BUILD = 'v546';
 try { if (window.history && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch(e){}
 // MISE À JOUR FIABLE & UNIVERSELLE — on lit la version RÉELLEMENT déployée (ver.txt,
 // sans cache) et on compare à la version qui tourne. Si l'appareil est sur un vieux
@@ -9672,13 +9672,11 @@ function updateEnceinteRef(id) {
   var numEl = document.getElementById('enc_ref_num_' + id);
   var titleEl = document.querySelector('#enc_block_' + id + ' .fblock-title span');
   if (!titleEl) return;
-  var cfg = SEUILS_ENCEINTE[typeEnceinteCourant] || {ico:'🌡️'};
   var typeTxt = typeEl && typeEl.value ? typeEl.value : '';
   var numTxt = numEl && numEl.value ? ' — ' + numEl.value : '';
-  // Keep original icon + update label
+  // Sans emoji : juste le type et le numéro.
   var origText = titleEl.textContent;
-  var icoMatch = origText.match(/^(\S+)/); var ico = icoMatch ? icoMatch[1] : '🌡️';
-  if (typeTxt) titleEl.textContent = ico + ' ' + typeTxt + numTxt;
+  if (typeTxt) titleEl.textContent = typeTxt + numTxt;
   else if (numTxt) titleEl.textContent = origText.split(' — ')[0] + numTxt;
 }
 
@@ -9726,9 +9724,9 @@ function buildEnceinteBlock(id, nom, type, seuil) {
     seuilDisplay = '<div class="tcard-seuil" id="enc_seuil_display_' + id + '" style="color:#f59e0b">—</div>';
   }
 
-  return '<div class="fblock" id="enc_block_' + id + '" style="border-left:4px solid #0891b2">' +
+  return '<div class="fblock" id="enc_block_' + id + '" style="border-left:3px solid #0f766e">' +
     '<div class="fblock-title">' +
-      '<span>' + cfg.ico + ' ' + nom + '</span>' +
+      '<span>' + nom + '</span>' +
     '</div>' +
     '<div class="frow" style="margin-bottom:8px">' +
       '<div class="flabel">Localisation / Emplacement</div>' +
@@ -9837,14 +9835,13 @@ function onTypeEnceinteChange(selectEl) {
     nomWrap.style.display = (type === 'autre' || type === '') ? 'block' : 'none';
   }
 
-  // Mettre à jour le titre du bloc
+  // Mettre à jour le titre du bloc (sans emoji).
   var titleEl = document.querySelector('#enc_block_' + id + ' .fblock-title span');
   if (titleEl && type) {
-    var ico = cfg.ico || '🌡️';
-    // Garder le nom actuel mais mettre à jour l'icône
     var currentText = titleEl.textContent;
-    var namePart = currentText.replace(/^.\s*/, '').trim();
-    titleEl.textContent = ico + ' ' + namePart;
+    // Retire tout emoji en tête (pictogrammes, symboles, variation selectors).
+    var namePart = currentText.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\s]+/u, '').trim();
+    titleEl.textContent = namePart;
   }
 }
 
